@@ -1,0 +1,155 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class DJTableUI : MonoBehaviour
+{
+    [SerializeField] private DJTableReference dJTableReference;
+    [SerializeField] private BuildReference build;
+
+    [SerializeField] private List<PartyLightController> partyLights;
+    [SerializeField] private DJTableController dJTableController;
+    
+    [SerializeField] private Slider trackSlider;
+    [SerializeField] private Slider bpmSlider;
+
+    [SerializeField] private DJTrackUI leftTrack;
+    [SerializeField] private DJTrackUI rightTrack;
+
+    private Coroutine partyCoroutine;
+
+    public float staggerTime = 0.25f; // delay between groups in alternating
+
+    private void Awake()
+    {
+        
+
+        dJTableReference.OnTrackValueChanged += StartPartyLights;
+
+        bpmSlider.value = dJTableReference.BPM;
+        bpmSlider.onValueChanged.AddListener(value =>
+        {
+            dJTableReference.SetBPM(value);
+        });
+    }
+
+    private IEnumerator Start()
+    {
+        yield return new WaitForFixedUpdate();
+
+        trackSlider.onValueChanged.AddListener(value =>
+        {
+            dJTableReference.SetTrackValue(value);
+        });
+
+        Build_OnBuildLoaded();
+    }
+
+    private void OnEnable()
+    {
+        build.OnBuildUpdated += Build_OnBuildLoaded;
+    }
+
+    private void OnDisable()
+    {
+        build.OnBuildUpdated -= Build_OnBuildLoaded;
+    }
+
+    private void Build_OnBuildLoaded()
+    {
+        partyLights = FindObjectsOfType<PartyLightController>().ToList();
+
+        if (!dJTableController)
+        {
+            dJTableController = FindObjectOfType<DJTableController>();
+
+            if (dJTableController)
+            {
+                StartPartyLights();
+            }
+        }
+
+        for (int i = 0; i < partyLights.Count; i++)
+        {
+            if (i % 2 == 0)
+            {
+                partyLights[i].phaseOffset = 0f;      // group 1
+                partyLights[i].rotationSpeed *= 1;
+            }
+            else
+            {
+                partyLights[i].phaseOffset = 0.5f;
+                partyLights[i].rotationSpeed *= -1;
+            }
+        }
+    }
+
+    private void StartPartyLights()
+    {
+        if (partyCoroutine != null) StopCoroutine(partyCoroutine);
+
+        partyCoroutine = StartCoroutine(PartyLightsRoutine());
+    }
+
+    private IEnumerator PartyLightsRoutine()
+    {
+        yield return new WaitUntil(() => dJTableReference.DominantTrack);
+        while (true)
+        {
+            switch (dJTableReference.DominantTrack.PartyMode)
+            {
+                case PartyMode.Regular:
+                    foreach (var light in partyLights)
+                        light.SetEnabled(true);
+
+                    yield return new WaitForSeconds(dJTableReference.BeatDuration);
+
+                    foreach (var light in partyLights)
+                        light.SetEnabled(false);
+
+                    yield return new WaitForSeconds(dJTableReference.BeatDuration);
+                    break;
+
+                case PartyMode.Alternating:
+                    int groups = 2; // can change to 3 for thirds
+                    for (int group = 0; group < groups; group++)
+                    {
+                        for (int i = 0; i < partyLights.Count; i++)
+                        {
+                            if (i % groups == group)
+                                partyLights[i].SetEnabled(true);
+                        }
+
+                        yield return new WaitForSeconds(dJTableReference.BeatDuration / 2);
+
+                        for (int i = 0; i < partyLights.Count; i++)
+                        {
+                            if (i % groups == group)
+                                partyLights[i].SetEnabled(false);
+                        }
+
+                        yield return new WaitForSeconds(dJTableReference.BeatDuration / 2);
+                    }
+                    break;
+
+                case PartyMode.Strobe:
+                    foreach (var light in partyLights)
+                    {
+                        light.SetEnabled(true);
+                    }
+
+                    yield return new WaitForSeconds(dJTableReference.BeatDuration / 4f); // 4 strobes per beat
+
+                    foreach (var light in partyLights)
+                    {
+                        light.SetEnabled(false);
+                    }
+
+                    yield return new WaitForSeconds(dJTableReference.BeatDuration / 4f); // 4 strobes per beat
+                    break;
+            }
+        }
+    }
+}

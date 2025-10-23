@@ -1,0 +1,133 @@
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
+
+[CreateAssetMenu]
+public class PartyReference : ScriptableObject
+{
+    [Header("References")]
+    [SerializeField] private Navigation navigation;
+    [SerializeField] private ViewReference partyListView;
+    [SerializeField] private ViewReference partyHUD;
+    [SerializeField] private ViewReference debriefView;
+    [SerializeField] private ViewReference gameplayView;
+    [SerializeField] private UnitListReference unitList;
+    [SerializeField] private DialogueReference dialogueReference;
+    [SerializeField] private PhotoReference photoReference;
+    [SerializeField] private InventoryReference inventoryReference;
+
+    [Header("Data")]
+    [SerializeField] private List<PartyData> parties;
+
+    [Header("Runtime")]
+    [SerializeField] private bool isActive;
+    [SerializeField] private PartyData currentParty;
+    [SerializeField] private int score;
+    [SerializeField] private int sporesCollected;
+    [SerializeField] private List<UnitController> guests;
+
+    public List<PartyData> Parties => parties;
+
+    public bool IsActive => isActive;
+    public PartyData CurrentParty => currentParty;
+    public int Score => score;
+    public int SporesCollected => sporesCollected;
+    public List<UnitController> Guests => guests;
+
+    public event UnityAction OnPartyStarted;
+    public event UnityAction OnPartyComplete;
+    public event UnityAction OnPartyDebriefComplete;
+    public event UnityAction OnScoreChanged;
+    public event UnityAction<int, Vector3> OnVibeIncreased;
+
+    public void Initialize()
+    {
+        currentParty = null;
+        isActive = false;
+        guests = new List<UnitController>();
+        dialogueReference.OnDialogueResponse += DialogueReference_OnChatResponded;
+        dialogueReference.OnDialogueComplete += DialogueReference_OnDialogueComplete;
+        photoReference.OnPhotoTaken += PhotoReference_OnPhotoTaken;
+        inventoryReference.OnSporeCollected += InventoryReference_OnSporeCollected;
+    }
+
+    private void DialogueReference_OnChatResponded(Response response)
+    {
+        IncrementScore((int)response.XP, dialogueReference.Unit.transform.position);
+    }
+
+    private void InventoryReference_OnSporeCollected(SporeController spore)
+    {
+        sporesCollected += 1;
+        IncrementScore(1, spore.transform.position);
+    }
+
+    private void PhotoReference_OnPhotoTaken()
+    {
+        IncrementScore(25, photoReference.LookTarget.position);
+    }
+
+    private void DialogueReference_OnDialogueComplete()
+    {
+        IncrementScore(15, dialogueReference.Unit.transform.position);
+    }
+
+    public void IncrementScore(int value, Vector3 source)
+    {
+        if (isActive)
+        {
+            score += value;
+            OnScoreChanged?.Invoke();
+            OnVibeIncreased?.Invoke(value, source);
+        }
+    }
+
+    public void ShowPartyList()
+    {
+        navigation.Navigate(partyListView);
+    }
+
+    public void StartParty(PartyData party)
+    {
+        Debug.Log("Starting the party");
+
+        score = 0;
+        OnScoreChanged?.Invoke();
+        sporesCollected = 0;
+        isActive = true;
+        currentParty = party;
+
+        navigation.Navigate(gameplayView);
+
+        OnPartyStarted?.Invoke();
+    }
+
+    public void StopParty()
+    {
+        if (!isActive) return;
+
+        Debug.Log("Stopping the party");
+        foreach (var guest in guests)
+        {
+            guest.gameObject.SetActive(false);
+        }
+
+        guests = new List<UnitController>();
+
+        navigation.Navigate(debriefView);
+        OnPartyComplete?.Invoke();
+    }
+
+    public void CompleteDebrief()
+    {
+        navigation.GoBack();
+        OnPartyDebriefComplete?.Invoke();
+        isActive = false;
+        currentParty = null;
+    }
+
+    public void AddGuest(UnitController unit)
+    {
+        guests.Add(unit);
+    }
+}

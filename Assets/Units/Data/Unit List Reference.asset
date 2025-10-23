@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62c1d7fd27bbd4f029ebb7635d741a81, type: 3}
+  m_Name: Unit List Reference
+  m_EditorClassIdentifier: 
+  localData: {fileID: 11400000, guid: 81d22df7435974c419891ceb2bc9e4ee, type: 2}
+  navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
+  fungalView: {fileID: 11400000, guid: b567c6b858223415bb50a5ea9dd5a9db, type: 2}
+  fungalListView: {fileID: 11400000, guid: 9e8a5cc6158f748cf807b1602af16bc2, type: 2}
+  textAsset: {fileID: 4900000, guid: 653e626fc96d2478fa72e028a19d495d, type: 3}
+  initialUnits:
+  - {fileID: 11400000, guid: 257ef15ae4f0f4d25922df389b660b46, type: 2}
+  - {fileID: 11400000, guid: 463ba2838266e4c609022c9ca93d4c8a, type: 2}
+  - {fileID: 11400000, guid: 72e0f639e631d41768805d21444be136, type: 2}
+  - {fileID: 11400000, guid: 68aeec7fa1b32483689b83c8fed18ae7, type: 2}
+  - {fileID: 11400000, guid: 22b52f9c2c3764d2faba1ba896a71851, type: 2}
+  playerUnit: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
+  unitCollection:
+  - {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
+  - {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
+  - {fileID: 11400000, guid: a0789f36ed7f54fe7bb95cee622eeb16, type: 2}
+  - {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
+  - {fileID: 11400000, guid: 84acf7738ffbc4db09e660e7ce20b7a1, type: 2}
+  jobCollection:
+  - {fileID: 11400000, guid: 36c70f9e85b5d44f3bfe2ace33b2f7f6, type: 2}
+  - {fileID: 11400000, guid: e0ccc44be171f4a238e11d7e110c89cc, type: 2}
+  skillCollection:
+  - {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+  - {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+  colorPalettes:
+  - {fileID: 0}
+  - {fileID: 11400000, guid: 3489c52b81a94463aaa5e67d4ebd81b4, type: 2}
+  - {fileID: 11400000, guid: ce39a3a65f2424e0092d5fca616737ee, type: 2}
+  - {fileID: 11400000, guid: 3c13432d94b8348578ddb25afa96c0a9, type: 2}
+  - {fileID: 11400000, guid: 28fd44a00cafe4888abe1427813e8334, type: 2}
+  units:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

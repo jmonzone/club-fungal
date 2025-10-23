@@ -1,0 +1,43 @@
+﻿using System.Collections;
+using UnityEngine;
+
+public class ScaleController : MonoBehaviour
+{
+    public float scaleDuration = 0.3f;
+    private Vector3 originalScale = Vector3.one;
+
+    public IEnumerator ScaleDown()
+    {
+        // Animate scale down
+        float elapsed = 0f;
+        Vector3 startScale = originalScale;
+        while (elapsed < scaleDuration)
+        {
+            float t = elapsed / scaleDuration;
+            float easedT = Mathf.SmoothStep(0, 1, t);
+            transform.localScale = Vector3.Lerp(startScale, Vector3.zero, easedT);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    public IEnumerator ScaleUp()
+    {
+        transform.localScale = Vector3.zero;
+        gameObject.SetActive(true);
+
+        // Respawn and scale up
+        float elapsed = 0f;
+
+        while (elapsed < scaleDuration)
+        {
+            float t = elapsed / scaleDuration;
+            float easedT = Mathf.SmoothStep(0, 1, t);
+            transform.localScale = Vector3.Lerp(Vector3.zero, originalScale, easedT);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.localScale = originalScale;
+    }
+}

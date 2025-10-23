@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a15c53bbcd6f4931aab23e291100cc3, type: 3}
+  m_Name: Spore Boom
+  m_EditorClassIdentifier: 
+  trackName: boom loop
+  artist: splitwave
+  description: Spore
+  audioClip: {fileID: 8300000, guid: b4536b6a152aa4f31895cbb1ec12b54f, type: 3}
+  partyMode: 1
+  bpm: 100
+  glyph: {fileID: 11400000, guid: 29a2523e954394b54b23e203347771c6, type: 2}
