@@ -17,7 +17,7 @@ public abstract class ActivityController<T> : MonoBehaviour where T : ActivityBe
     protected ActivityReference Activity => activity;
     protected Skill PrimarySkill => primarySkill;
     protected bool PlayerIsActive => activity.PlayerIsActive;
-    protected bool PlayerIsSelected => currentUnit.IsPlayer;
+    protected bool PlayerIsSelected => currentUnit && currentUnit.IsPlayer;
 
     protected T Player => player;
 
@@ -67,6 +67,7 @@ public abstract class ActivityController<T> : MonoBehaviour where T : ActivityBe
 
     protected virtual void OnActivityStart()
     {
+        Debug.Log($"[{name}] OnActivityStart");
         transform.position = activity.Origin;
 
         currentIndex = -1;
@@ -75,11 +76,12 @@ public abstract class ActivityController<T> : MonoBehaviour where T : ActivityBe
 
     protected virtual void OnActivityEnded()
     {
+        Debug.Log($"[{name}] OnActivityEnded");
     }
 
     protected void OnUnitEnter(ActivityUnit unit)
     {
-        Debug.Log($"{unit.name} OnUnitEnter");
+        Debug.Log($"[{name}] OnUnitEnter {unit.name}");
         var activityBehaviour = unit.GetComponent<T>();
         unit.SetBehaviour(activityBehaviour);
         OnUnitBehaviourApplied(activityBehaviour);
@@ -87,6 +89,7 @@ public abstract class ActivityController<T> : MonoBehaviour where T : ActivityBe
 
     protected void OnUnitExit(ActivityUnit unit)
     {
+        Debug.Log($"[{name}] OnUnitExit {unit.name}");
         var activityBehaviour = unit.GetComponent<T>();
         OnUnitBehaviourRemoved(activityBehaviour);
     }
@@ -125,6 +128,7 @@ public abstract class ActivityController<T> : MonoBehaviour where T : ActivityBe
 
     public void SelectNextUnit()
     {
+        if (Activity.Units.Count == 0) return;
         currentIndex = (currentIndex + 1) % Activity.Units.Count;
         SelectUnit(units[currentIndex]);
     }

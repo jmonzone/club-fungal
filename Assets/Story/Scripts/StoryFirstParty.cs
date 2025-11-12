@@ -21,6 +21,8 @@ public class StoryFirstParty : MonoBehaviour
     [SerializeField] private Transform danceZoneAnchor;
     [SerializeField] private ActivityReference sporeActivity;
     [SerializeField] private Transform sporeZoneAnchor;
+    [SerializeField] private ActivityReference shruneReadingActivity;
+    [SerializeField] private Transform shruneReadingAnchor;
 
     [SerializeField] private InitialUI initialUI;
     [SerializeField] private Navigation navigation;
@@ -67,6 +69,8 @@ public class StoryFirstParty : MonoBehaviour
 
         danceActivity.StartActivity(danceZoneAnchor.position, new List<UnitController> { unitManager.UnitControllers[1] });
         sporeActivity.StartActivity(sporeZoneAnchor.position, new List<UnitController> { unitManager.UnitControllers[2] });
+        shruneReadingActivity.StartActivity(shruneReadingAnchor.position, new List<UnitController>());
+
         //sporeActivity.StartActivity(sporeZoneAnchor.position, new List<UnitController> { partyReference.Guests[0], partyReference.Guests[1], partyReference.Guests[2] });
 
         //yield return new WaitUntil(() => timesInteractedWithGuests > 5);

@@ -16,7 +16,6 @@ MonoBehaviour:
   navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
   fungalView: {fileID: 11400000, guid: b567c6b858223415bb50a5ea9dd5a9db, type: 2}
   fungalListView: {fileID: 11400000, guid: 9e8a5cc6158f748cf807b1602af16bc2, type: 2}
-  textAsset: {fileID: 4900000, guid: 653e626fc96d2478fa72e028a19d495d, type: 3}
   initialUnits:
   - {fileID: 11400000, guid: 257ef15ae4f0f4d25922df389b660b46, type: 2}
   - {fileID: 11400000, guid: 463ba2838266e4c609022c9ca93d4c8a, type: 2}
@@ -33,9 +32,11 @@ MonoBehaviour:
   jobCollection:
   - {fileID: 11400000, guid: 36c70f9e85b5d44f3bfe2ace33b2f7f6, type: 2}
   - {fileID: 11400000, guid: e0ccc44be171f4a238e11d7e110c89cc, type: 2}
+  - {fileID: 11400000, guid: 79968776cf7f5435a80d546dad47a1e9, type: 2}
   skillCollection:
   - {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
   - {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+  - {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
   colorPalettes:
   - {fileID: 0}
   - {fileID: 11400000, guid: 3489c52b81a94463aaa5e67d4ebd81b4, type: 2}
@@ -43,6 +44,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3c13432d94b8348578ddb25afa96c0a9, type: 2}
   - {fileID: 11400000, guid: 28fd44a00cafe4888abe1427813e8334, type: 2}
   units:
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}

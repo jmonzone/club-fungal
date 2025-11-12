@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe303b2489eec4bac84bc126b3bdb444, type: 3}
-  m_Name: Sporekeeper
+  m_Name: Shrune Reader Job
   m_EditorClassIdentifier: 
-  id: sporekeeper
-  actionName: Pass the Spore
-  actionColor: {r: 0.3647059, g: 0.78431374, b: 0.58431375, a: 1}
-  actionSprite: {fileID: 21300000, guid: eeced34d807f6405d87b3b325e7a2337, type: 3}
+  id: shrunereader
+  actionName: Shrune Reader
+  actionColor: {r: 0.84313726, g: 0.5803922, b: 0.87058824, a: 1}
+  actionSprite: {fileID: 21300000, guid: 70f18116c47b14aa18f2905121c4e3fb, type: 3}
   activity: {fileID: 11400000, guid: 20234f3cd19d34d52ba858ad98b27405, type: 2}

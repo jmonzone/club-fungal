@@ -16,7 +16,6 @@ public enum GlyphPattern
 public class PTS_ActivityUI : ActivityUI<PTS_Unit, PTS_ActivityController>
 {
     [Header("Pass The Spore References")]
-    [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private Button passButton;
     [SerializeField] private PTS_Glyph glyphPrefab;
     [SerializeField] private float glyphDuration;
@@ -39,13 +38,6 @@ public class PTS_ActivityUI : ActivityUI<PTS_Unit, PTS_ActivityController>
         });
     }
 
-    protected override void OnPlayerEnter(ActivityUnit player)
-    {
-        base.OnPlayerEnter(player);
-        virtualCamera.Priority = 11;
-        //PlayerReference.TogglePOVCamera(true);
-    }
-
     protected override void OnPlayerExit(ActivityUnit player)
     {
         StopAllCoroutines();
@@ -63,7 +55,6 @@ public class PTS_ActivityUI : ActivityUI<PTS_Unit, PTS_ActivityController>
         }
 
         base.OnPlayerExit(player);
-        virtualCamera.Priority = 0;
     }
 
     protected override void OnUnitSelected(PTS_Unit unit)

@@ -18,13 +18,7 @@ MonoBehaviour:
   friendshipXP: 0
   skills: []
   element: 0
-  job: {fileID: 0}
+  job: {fileID: 11400000, guid: 79968776cf7f5435a80d546dad47a1e9, type: 2}
   colorPalette: {fileID: 0}
   friends:
   - {fileID: 11400000, guid: 463ba2838266e4c609022c9ca93d4c8a, type: 2}
-  introDialogue:
-    text: 
-    responses: []
-    type: 0
-    action: 0
-    element: 

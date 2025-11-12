@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c9c434a0cc067404b8e0162b0584df5f, type: 3}
-  m_Name: Sporekeeping
+  m_Name: Shrune Reading Skill
   m_EditorClassIdentifier: 
-  id: sporekeeping
-  sprite: {fileID: 21300000, guid: 981ac9c3f063848ca8f0f7ee544beb13, type: 3}
+  id: shrunereading
+  sprite: {fileID: 21300000, guid: 255b1d665906547088b7e7b060452b87, type: 3}
