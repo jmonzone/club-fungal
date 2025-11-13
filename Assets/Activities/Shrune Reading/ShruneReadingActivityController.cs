@@ -6,6 +6,7 @@ public enum ShruneReadingState
     NULL,
     SETUP,
     CARD,
+    REVEAL,
 }
 
 public class ShruneReadingActivityController : ActivityController<ShruneReadingUnit>
@@ -35,5 +36,10 @@ public class ShruneReadingActivityController : ActivityController<ShruneReadingU
     public void StartReading()
     {
         SetState(ShruneReadingState.CARD);
+    }
+
+    public void RevealCard()
+    {
+        SetState(ShruneReadingState.REVEAL);
     }
 }

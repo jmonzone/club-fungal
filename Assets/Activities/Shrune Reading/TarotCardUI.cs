@@ -11,6 +11,8 @@ public class TarotCardUI : MonoBehaviour
     [SerializeField] private float rotationSpeed = 10f;
     [SerializeField] private bool isFaceDown = true;
 
+    public event UnityAction OnCardFlipped;
+
     private void Awake()
     {
         button.onClick.AddListener(() => StartFlipCard());
@@ -48,6 +50,7 @@ public class TarotCardUI : MonoBehaviour
         }
 
         onComplete?.Invoke();
+        OnCardFlipped?.Invoke();
     }
 
     private void FlipCard(bool isFaceDown)

@@ -1,4 +1,5 @@
-using Cinemachine;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,28 +10,39 @@ public class ShruneReadingActivityUI : ActivityUI<ShruneReadingUnit, ShruneReadi
     [SerializeField] private Button continueButton;
     [SerializeField] private GameObject cardContainer;
 
+    private List<TarotCardUI> tarotCardList;
+
     protected override void Awake()
     {
         base.Awake();
         Controller.OnStateChanged += Controller_OnStateChanged;
         continueButton.onClick.AddListener(Controller.StartReading);
+
+        tarotCardList = GetComponentsInChildren<TarotCardUI>().ToList();
+        foreach(var tarotCard in tarotCardList)
+        {
+            tarotCard.OnCardFlipped += () => Controller.RevealCard();
+        }
     }
 
     private void Controller_OnStateChanged(ShruneReadingState state)
     {
-        SetIntroActive(state == ShruneReadingState.SETUP);
         cardContainer.SetActive(state == ShruneReadingState.CARD);
-    }
 
-    private void SetIntroActive(bool value)
-    {
-        if (value)
+        switch (state)
         {
-            StartCoroutine(typewriterEffect.ShowAndType("What is it that you seek?"));
-        }
-        else
-        {
-            StartCoroutine(typewriterEffect.Hide());
+            case ShruneReadingState.SETUP:
+                StartCoroutine(typewriterEffect.ShowAndType("What is it that you seek?"));
+                continueButton.gameObject.SetActive(true);
+                break;
+            case ShruneReadingState.CARD:
+                continueButton.gameObject.SetActive(false);
+                break;
+            case ShruneReadingState.REVEAL:
+                continueButton.gameObject.SetActive(true);
+                break;
+            case ShruneReadingState.NULL:
+                break;
         }
     }
 }
