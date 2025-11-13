@@ -16,9 +16,9 @@ public class TypewriterEffect : MonoBehaviour
         yield return TypeRoutine(fullText);
     }
 
-    public void Hide()
+    public IEnumerator Hide()
     {
-        StartCoroutine(fadeCanvasGroup.FadeOut());
+        yield return fadeCanvasGroup.FadeOut();
     }
 
     public IEnumerator TypeRoutine(string fullText, UnityAction onComplete = null)

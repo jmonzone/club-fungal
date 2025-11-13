@@ -13,10 +13,10 @@ public class TarotCardUI : MonoBehaviour
 
     private void Awake()
     {
-        //button.onClick.AddListener(OnClick);
+        button.onClick.AddListener(() => StartFlipCard());
     }
 
-    public void StartFlipCard(UnityAction onComplete)
+    public void StartFlipCard(UnityAction onComplete = null)
     {
         StartCoroutine(FlipCardRoutine(onComplete));
     }

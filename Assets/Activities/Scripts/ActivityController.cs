@@ -126,6 +126,8 @@ public abstract class ActivityController<T> : MonoBehaviour where T : ActivityBe
         }
     }
 
+    //todo: separate unit selection to another component
+    //it is not ActivityController specific
     public void SelectNextUnit()
     {
         if (Activity.Units.Count == 0) return;

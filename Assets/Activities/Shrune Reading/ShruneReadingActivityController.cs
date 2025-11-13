@@ -1,16 +1,39 @@
 using UnityEngine;
+using UnityEngine.Events;
+
+public enum ShruneReadingState
+{
+    NULL,
+    SETUP,
+    CARD,
+}
 
 public class ShruneReadingActivityController : ActivityController<ShruneReadingUnit>
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private ShruneReadingState currentState;
+
+    public event UnityAction<ShruneReadingState> OnStateChanged;
+
+    protected override void OnPlayerEnter(ActivityUnit player)
     {
-        
+        base.OnPlayerEnter(player);
+        SetState(ShruneReadingState.SETUP);
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void OnPlayerExit(ActivityUnit player)
     {
-        
+        base.OnPlayerExit(player);
+        SetState(ShruneReadingState.NULL);
+    }
+
+    private void SetState(ShruneReadingState state)
+    {
+        currentState = state;
+        OnStateChanged?.Invoke(state);
+    }
+
+    public void StartReading()
+    {
+        SetState(ShruneReadingState.CARD);
     }
 }
