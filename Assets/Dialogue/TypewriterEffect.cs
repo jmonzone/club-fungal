@@ -1,14 +1,27 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TypewriterEffect : MonoBehaviour
 {
+    [SerializeField] private FadeCanvasGroup fadeCanvasGroup;
     [SerializeField] private TextMeshProUGUI textUI;
     [SerializeField] private float baseSpeed = 0.03f;
     [SerializeField] private float punctuationPause = 0.2f;
 
-    public IEnumerator TypeRoutine(string fullText, System.Action onComplete)
+    public IEnumerator ShowAndType(string fullText)
+    {
+        yield return fadeCanvasGroup.FadeIn();
+        yield return TypeRoutine(fullText);
+    }
+
+    public void Hide()
+    {
+        StartCoroutine(fadeCanvasGroup.FadeOut());
+    }
+
+    public IEnumerator TypeRoutine(string fullText, UnityAction onComplete = null)
     {
         textUI.text = "";
 

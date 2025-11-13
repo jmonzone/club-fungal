@@ -69,7 +69,7 @@ public class StoryFirstParty : MonoBehaviour
 
         danceActivity.StartActivity(danceZoneAnchor.position, new List<UnitController> { unitManager.UnitControllers[1] });
         sporeActivity.StartActivity(sporeZoneAnchor.position, new List<UnitController> { unitManager.UnitControllers[2] });
-        shruneReadingActivity.StartActivity(shruneReadingAnchor.position, new List<UnitController>());
+        shruneReadingActivity.StartActivity(shruneReadingAnchor.position, new List<UnitController> { unitManager.UnitControllers[3] });
 
         //sporeActivity.StartActivity(sporeZoneAnchor.position, new List<UnitController> { partyReference.Guests[0], partyReference.Guests[1], partyReference.Guests[2] });
 
