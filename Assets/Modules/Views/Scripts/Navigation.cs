@@ -73,7 +73,6 @@ public class Navigation : ScriptableObject
         }
     }
 
-
     private void SetCurrentView(ViewReference view)
     {
         currentView = view;

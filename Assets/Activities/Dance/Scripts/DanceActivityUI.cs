@@ -8,13 +8,15 @@ public class DanceActivityUI : ActivityUI<DanceActivityUnit, DanceActivityContro
     [SerializeField] private DJTableReference djTableReference;
     [SerializeField] private DanceBackground background;
     [SerializeField] private DanceMoveUIManager danceMoveUIManager;
+    [SerializeField] private PlayerActivityReference activityLevelUI;
 
-    protected override Camera Camera => background.DominantCamera;
+    public override Camera Camera => background.DominantCamera;
 
     protected override void Awake()
     {
         base.Awake();
         danceMoveUIManager.Initialize();
+        activityLevelUI.OnLevelUpHide += UpdateMovesUI;
     }
 
     protected override void OnPlayerEnter(ActivityUnit player)
@@ -57,12 +59,12 @@ public class DanceActivityUI : ActivityUI<DanceActivityUnit, DanceActivityContro
                 StartCoroutine(danceMoveUIManager.Show(Controller.CurrentUnit, moves, () =>
                 {
                     danceMoveUIManager.ToggleInteractable(false);
-                    SetExitButtonInteractable(false);
+                    activityLevelUI.SetCanExit(false);
                 },
                 () =>
                 {
                     Controller.SelectNextUnit();
-                    SetExitButtonInteractable(true);
+                    activityLevelUI.SetCanExit(true);
                 }));
             }
             else
@@ -70,27 +72,5 @@ public class DanceActivityUI : ActivityUI<DanceActivityUnit, DanceActivityContro
                 danceMoveUIManager.Hide();
             }
         }
-    }
-
-    protected override IEnumerator LevelUI_OnExitRoutine()
-    {
-        UpdateMovesUI();
-        yield return base.LevelUI_OnExitRoutine();
-    }
-
-    private bool TryRaycastUnit(out UnitController unit)
-    {
-        var ray = Camera.ScreenPointToRay(Input.mousePosition);
-
-        var raycastHits = Physics.RaycastAll(ray);
-
-        foreach(var hit in raycastHits)
-        {
-            unit = hit.transform.GetComponentInParent<UnitController>();
-            if (unit) return unit;
-        }
-
-        unit = null;
-        return false;
     }
 }

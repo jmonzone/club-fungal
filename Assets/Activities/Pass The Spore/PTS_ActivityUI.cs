@@ -16,7 +16,6 @@ public enum GlyphPattern
 public class PTS_ActivityUI : ActivityUI<PTS_Unit, PTS_ActivityController>
 {
     [Header("Pass The Spore References")]
-    [SerializeField] private Button passButton;
     [SerializeField] private PTS_Glyph glyphPrefab;
     [SerializeField] private float glyphDuration;
     [SerializeField] private int glyphCount;
@@ -25,18 +24,7 @@ public class PTS_ActivityUI : ActivityUI<PTS_Unit, PTS_ActivityController>
     [SerializeField] private GlyphPattern glyphPattern = GlyphPattern.Fairy;
     [SerializeField, Min(1)] private int psychicLoops = 2; // number of full rotations for psychic pattern
 
-
     private List<PTS_Glyph> glyphs = new List<PTS_Glyph>();
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        passButton.onClick.AddListener(() =>
-        {
-            Controller.OnSporeComplete();
-        });
-    }
 
     protected override void OnPlayerExit(ActivityUnit player)
     {
@@ -60,7 +48,6 @@ public class PTS_ActivityUI : ActivityUI<PTS_Unit, PTS_ActivityController>
     protected override void OnUnitSelected(PTS_Unit unit)
     {
         base.OnUnitSelected(unit);
-        passButton.interactable = unit.IsPlayer;
 
         if (unit.IsPlayer)
         {

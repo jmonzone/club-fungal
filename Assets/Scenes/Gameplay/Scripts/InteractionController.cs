@@ -18,6 +18,7 @@ public class InteractionController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private PlayerActivityReference activityUIReference;
     [SerializeField] private DialogueReference dialogue;
     [SerializeField] private LayerMask interactableMask;
     [SerializeField] private LayerMask groundMask;
@@ -106,8 +107,7 @@ public class InteractionController : MonoBehaviour
                 var zone = hit.transform.GetComponentInParent<ActivityZoneController>();
                 if (zone)
                 {
-                    zone.Activity.EnterActivity(playerReference.Player
-                        .GetComponent<ActivityUnit>());
+                    activityUIReference.EnterActivity(zone.Activity);
                     return;
                 }
             }

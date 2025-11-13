@@ -7,11 +7,9 @@ using UnityEngine.Events;
 public class ActivityReference : ScriptableObject
 {
     [Header("References")]
-    [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference activityView;
     [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private UnitListReference unitListReference;
-
     [SerializeField] private Skill primarySkill;
 
     [Header("Runtime")]
@@ -19,8 +17,9 @@ public class ActivityReference : ScriptableObject
     [SerializeField] private ActivityUnit player;
     [SerializeField] private List<ActivityUnit> units = new List<ActivityUnit>();
 
-    public Vector3 Origin => origin;
+    public ViewReference ViewReference => activityView;
     public Skill PrimarySkill => primarySkill;
+    public Vector3 Origin => origin;
     public bool PlayerIsActive => player;
     public List<ActivityUnit> Units => units;
 
@@ -78,7 +77,6 @@ public class ActivityReference : ScriptableObject
     {
         this.player = player;
         AddUnit(player);
-        navigation.Navigate(activityView);
         OnPlayerEnter?.Invoke(player);
     }
 
@@ -86,7 +84,6 @@ public class ActivityReference : ScriptableObject
     {
         this.player = null;
         RemoveUnit(player);
-        navigation.GoBackToRoot();
         OnPlayerExit?.Invoke(player);
     }
 
