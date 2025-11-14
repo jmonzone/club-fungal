@@ -23,8 +23,6 @@ public class DialogueUI : MonoBehaviour
     [SerializeField] private DialogueChatUI chatPage;
     [SerializeField] private DialogueGlyphUI glyphPage;
     [SerializeField] private DialogueFriendshipUI friendshipPage;
-
-    [SerializeField] private TarotCardUI tarotCard;
     [SerializeField] private Button closeButton;
 
     private DialoguePageUI currentPage;

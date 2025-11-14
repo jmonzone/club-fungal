@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ActivityCameraController : MonoBehaviour
 {
-    [SerializeField] private ActivityReference activity;
+    [SerializeField] private PlayerActivityReference activity;
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
 
     protected virtual void OnEnable()

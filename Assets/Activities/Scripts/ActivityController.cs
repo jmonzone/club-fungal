@@ -2,10 +2,15 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public abstract class ActivityController<T> : MonoBehaviour where T : ActivityBehaviour
+public abstract class ActivityController : MonoBehaviour
 {
     [Header("Activity References")]
     [SerializeField] private ActivityReference activity;
+    public ActivityReference Activity => activity;
+}
+
+public abstract class ActivityController<T> : ActivityController where T : ActivityBehaviour
+{
     [SerializeField] private Skill primarySkill;
 
     [Header("Activity Runtime")]
@@ -14,9 +19,8 @@ public abstract class ActivityController<T> : MonoBehaviour where T : ActivityBe
     [SerializeField] private T currentUnit;
     [SerializeField] private List<T> units;
 
-    protected ActivityReference Activity => activity;
     protected Skill PrimarySkill => primarySkill;
-    protected bool PlayerIsActive => activity.PlayerIsActive;
+    protected bool PlayerIsActive => Activity.PlayerIsActive;
     protected bool PlayerIsSelected => currentUnit && currentUnit.IsPlayer;
 
     protected T Player => player;
@@ -34,22 +38,22 @@ public abstract class ActivityController<T> : MonoBehaviour where T : ActivityBe
 
     private void OnEnable()
     {
-        activity.OnActivityHasStarted += OnActivityStart;
-        activity.OnActivityHasEnded += OnActivityEnded;
-        activity.OnUnitEnter += OnUnitEnter;
-        activity.OnUnitExit += OnUnitExit;
-        activity.OnPlayerEnter += OnPlayerEnter;
-        activity.OnPlayerExit += OnPlayerExit;
+        Activity.OnActivityHasStarted += OnActivityStart;
+        Activity.OnActivityHasEnded += OnActivityEnded;
+        Activity.OnUnitEnter += OnUnitEnter;
+        Activity.OnUnitExit += OnUnitExit;
+        Activity.OnPlayerEnter += OnPlayerEnter;
+        Activity.OnPlayerExit += OnPlayerExit;
     }
 
     private void OnDisable()
     {
-        activity.OnActivityHasStarted -= OnActivityStart;
-        activity.OnActivityHasEnded -= OnActivityEnded;
-        activity.OnUnitEnter -= OnUnitEnter;
-        activity.OnUnitExit -= OnUnitExit;
-        activity.OnPlayerEnter -= OnPlayerEnter;
-        activity.OnPlayerExit -= OnPlayerExit;
+        Activity.OnActivityHasStarted -= OnActivityStart;
+        Activity.OnActivityHasEnded -= OnActivityEnded;
+        Activity.OnUnitEnter -= OnUnitEnter;
+        Activity.OnUnitExit -= OnUnitExit;
+        Activity.OnPlayerEnter -= OnPlayerEnter;
+        Activity.OnPlayerExit -= OnPlayerExit;
     }
 
     protected virtual void OnPlayerEnter(ActivityUnit player)
@@ -68,7 +72,7 @@ public abstract class ActivityController<T> : MonoBehaviour where T : ActivityBe
     protected virtual void OnActivityStart()
     {
         Debug.Log($"[{name}] OnActivityStart");
-        transform.position = activity.Origin;
+        transform.position = Activity.Origin;
 
         currentIndex = -1;
         SelectNextUnit();

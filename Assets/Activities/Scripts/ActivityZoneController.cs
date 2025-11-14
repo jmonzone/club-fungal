@@ -4,18 +4,23 @@ using UnityEngine;
 public class ActivityZoneController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private ActivityReference activity;
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private GameObject zoneController;
-
-    public ActivityReference Activity => activity;
-
-    private Material material; 
 
     [Header("Settings")]
     [SerializeField] private float scaleDuration = 0.5f;
     [SerializeField] private Vector3 startScale;
     [SerializeField] private Vector3 endScale;
+
+    public ActivityReference Activity => activity;
+
+    private ActivityReference activity;
+    private Material material;
+
+    private void Awake()
+    {
+        activity = GetComponentInParent<ActivityController>().Activity;
+    }
 
     private void OnEnable()
     {

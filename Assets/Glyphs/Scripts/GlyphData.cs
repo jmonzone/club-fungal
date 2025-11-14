@@ -26,6 +26,7 @@ public class GlyphData : ScriptableObject
 
     public int Tier => tier;
     public Element Element => element;
+    public bool IsPure => (Fire > 0 ? 1 : 0) + (Water > 0 ? 1 : 0) + (Air > 0 ? 1 : 0) + (Earth > 0 ? 1 : 0) == 1;
 
     public Color Color
     {

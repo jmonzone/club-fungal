@@ -14,6 +14,8 @@ public class GlyphCollection : ScriptableObject
     public List<GlyphData> Glyphs => glyphs;
     public List<GlyphFusion> Fusions => fusions;
 
+    public List<GlyphData> GetPureGlyphs() => glyphs.Where(g => g.IsPure).ToList();
+
     public void Initialize()
     {
         BuildLookup();

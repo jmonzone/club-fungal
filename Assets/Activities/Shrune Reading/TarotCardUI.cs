@@ -8,10 +8,11 @@ public class TarotCardUI : MonoBehaviour
     [SerializeField] private Button button;
     [SerializeField] private Transform front;
     [SerializeField] private Transform back;
+    [SerializeField] private Image glyphImage;
     [SerializeField] private float rotationSpeed = 10f;
     [SerializeField] private bool isFaceDown = true;
 
-    public event UnityAction OnCardFlipped;
+    public event UnityAction<TarotCardUI> OnCardFlipped;
 
     private void Awake()
     {
@@ -28,10 +29,15 @@ public class TarotCardUI : MonoBehaviour
         FlipCard(true);
     }
 
+    public void SetGlyph(GlyphData glyph)
+    {
+        glyphImage.sprite = glyph.Sprite;
+    }
+
     private IEnumerator FlipCardRoutine(UnityAction onComplete)
     {
         var i = 0f;
-        while(i < 90f)
+        while (i < 90f)
         {
             transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
             i += rotationSpeed * Time.deltaTime;
@@ -50,7 +56,7 @@ public class TarotCardUI : MonoBehaviour
         }
 
         onComplete?.Invoke();
-        OnCardFlipped?.Invoke();
+        OnCardFlipped?.Invoke(this);
     }
 
     private void FlipCard(bool isFaceDown)
@@ -59,5 +65,10 @@ public class TarotCardUI : MonoBehaviour
 
         front.gameObject.SetActive(!this.isFaceDown);
         back.gameObject.SetActive(this.isFaceDown);
+    }
+
+    public void Reveal()
+    {
+        FlipCard(false);
     }
 }
