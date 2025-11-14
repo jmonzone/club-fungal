@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public abstract class ActivityUI : MonoBehaviour
@@ -16,16 +15,28 @@ public abstract class ActivityUI : MonoBehaviour
 
 public abstract class ActivityUI<T1, T2> : ActivityUI where T1 : ActivityBehaviour where T2: ActivityController<T1>
 {
+    [Header("Activity References")]
+    [SerializeField] private PlayerActivityReference playerActivityReference;
     [SerializeField] private ActivityReference activity;
     [SerializeField] private PlayerReference playerReference;
-    [SerializeField] private T1 player;
     [SerializeField] private T2 controller;
+    [SerializeField] private Button backButton;
+
+    [Header("Activity Runtime")]
+    [SerializeField] private T1 player;
 
     protected ActivityReference Activity => activity;
     protected PlayerReference PlayerReference => playerReference;
     protected T1 Player => player;
     protected T2 Controller => controller;
+    protected Button BackButton => backButton;
     protected bool PlayerIsSelected => player == controller.CurrentUnit;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        BackButton.onClick.AddListener(playerActivityReference.ExitActivity);
+    }
 
     protected virtual void OnEnable()
     {

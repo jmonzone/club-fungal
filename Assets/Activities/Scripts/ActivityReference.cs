@@ -19,6 +19,7 @@ public class ActivityReference : ScriptableObject
 
     public ViewReference ViewReference => activityView;
     public Skill PrimarySkill => primarySkill;
+
     public Vector3 Origin => origin;
     public bool PlayerIsActive => player;
     public List<ActivityUnit> Units => units;

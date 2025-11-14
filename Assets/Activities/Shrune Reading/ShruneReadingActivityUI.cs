@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ShruneReadingActivityUI : ActivityUI<ShruneReadingUnit, ShruneReadingActivityController>
 {
-    [Header("Shrune Reading UI")]
+    [Header("Shrune Reading References")]
     [SerializeField] private TypewriterEffect typewriterEffect;
     [SerializeField] private Button continueButton;
     [SerializeField] private GameObject cardContainer;

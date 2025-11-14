@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class DanceActivityController : ActivityController<DanceActivityUnit>
 {
+    [Header("Dance References")]
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private Light spotlight;
     [SerializeField] private UnitManager unitManager;

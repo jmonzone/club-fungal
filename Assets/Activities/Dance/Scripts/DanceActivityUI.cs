@@ -1,14 +1,13 @@
-using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DanceActivityUI : ActivityUI<DanceActivityUnit, DanceActivityController>
 {
-    [Header("References")]
+    [Header("Dance References")]
     [SerializeField] private UnitManager unitManager;
     [SerializeField] private DJTableReference djTableReference;
     [SerializeField] private DanceBackground background;
     [SerializeField] private DanceMoveUIManager danceMoveUIManager;
-    [SerializeField] private PlayerActivityReference activityLevelUI;
 
     public override Camera Camera => background.DominantCamera;
 
@@ -16,9 +15,18 @@ public class DanceActivityUI : ActivityUI<DanceActivityUnit, DanceActivityContro
     {
         base.Awake();
         danceMoveUIManager.Initialize();
-        activityLevelUI.OnLevelUpHide += UpdateMovesUI;
     }
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        UpdateMovesUI();
+    }
+
+    protected override void OnUnitEnter(ActivityUnit unit)
+    {
+        base.OnUnitEnter(unit);
+    }
     protected override void OnPlayerEnter(ActivityUnit player)
     {
         base.OnPlayerEnter(player);
@@ -59,12 +67,12 @@ public class DanceActivityUI : ActivityUI<DanceActivityUnit, DanceActivityContro
                 StartCoroutine(danceMoveUIManager.Show(Controller.CurrentUnit, moves, () =>
                 {
                     danceMoveUIManager.ToggleInteractable(false);
-                    activityLevelUI.SetCanExit(false);
+                    BackButton.interactable = false;
                 },
                 () =>
                 {
                     Controller.SelectNextUnit();
-                    activityLevelUI.SetCanExit(true);
+                    BackButton.interactable = true;
                 }));
             }
             else
