@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -21,6 +22,8 @@ public class UnitDJ : UnitBehaviour
     {
         navMeshAgent.enabled = false;
         transform.position = djReference.Controller.DJPosition;
+
+        playlist = playlist.OrderBy(x => Random.value).ToList();
 
         // Start with first track on the Left
         trackIndex = 0;
