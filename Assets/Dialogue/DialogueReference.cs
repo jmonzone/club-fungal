@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "DialogueReference", menuName = "Club Fungal/Dialogue/Dialogue Reference")]
 public class DialogueReference : ScriptableObject
 {
     [Header("References")]
@@ -110,7 +110,7 @@ public class DialogueReference : ScriptableObject
         currentUnit.Unfocus();
         OnDialogueComplete?.Invoke();
 
-        foreach(var unit in units)
+        foreach (var unit in units)
         {
             unit.Dialogue.CompleteDialogue();
         }

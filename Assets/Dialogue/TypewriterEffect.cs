@@ -10,10 +10,10 @@ public class TypewriterEffect : MonoBehaviour
     [SerializeField] private float baseSpeed = 0.03f;
     [SerializeField] private float punctuationPause = 0.2f;
 
-    public IEnumerator ShowAndType(string fullText)
+    public IEnumerator ShowAndType(string fullText, UnityAction onComplete = null)
     {
         yield return fadeCanvasGroup.FadeIn();
-        yield return TypeRoutine(fullText);
+        yield return TypeRoutine(fullText, onComplete);
     }
 
     public IEnumerator Hide()
@@ -38,5 +38,10 @@ public class TypewriterEffect : MonoBehaviour
         }
 
         onComplete?.Invoke();
+    }
+
+    public void ClearText()
+    {
+        textUI.text = "";
     }
 }

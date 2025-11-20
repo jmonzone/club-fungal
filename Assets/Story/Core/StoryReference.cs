@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "StoryReference", menuName = "Club Fungal/Story/Story Reference")]
 public class StoryReference : ScriptableObject
 {
     [Header("References")]
@@ -31,7 +31,8 @@ public class StoryReference : ScriptableObject
                     {
                         var storyData = allStories.Find(story => story.Id == storyJson["id"].ToString());
                         completedStories.Add(storyData);
-                    };
+                    }
+                    ;
                 }
             }
         }

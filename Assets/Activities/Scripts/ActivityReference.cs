@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "ActivityReference", menuName = "Club Fungal/Activities/Activity Reference")]
 public class ActivityReference : ScriptableObject
 {
     [Header("References")]
@@ -41,7 +41,7 @@ public class ActivityReference : ScriptableObject
         this.origin = origin;
         this.units = new List<ActivityUnit>();
 
-        foreach(var unit in units)
+        foreach (var unit in units)
         {
             AddUnit(unit.GetComponent<ActivityUnit>());
         }
@@ -115,7 +115,7 @@ public class ActivityReference : ScriptableObject
     {
         UnitController.ArrangeUnitsInRadius(origin, units.Select(unit => unit.Controller).ToList());
 
-        foreach(var unit in units)
+        foreach (var unit in units)
         {
             unit.SetActivityPosition(unit.Controller.Destination.Destination);
         }

@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "ViewReference", menuName = "Club Fungal/Views/View Reference")]
 public class ViewReference : ScriptableObject
 {
     public FadeCanvasGroup Canvas { get; private set; }

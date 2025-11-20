@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "InteractionReference", menuName = "Club Fungal/Dialogue/Interaction Reference")]
 public class InteractionReference : ScriptableObject
 {
     [SerializeField] private DialogueReference dialogueReference;
@@ -18,14 +18,14 @@ public class InteractionReference : ScriptableObject
                     unit,
                 };
 
-                foreach(var target in unit.Dialogue.Targets)
+                foreach (var target in unit.Dialogue.Targets)
                 {
                     units.Add(target);
                 }
 
                 var origin = GetMidpoint(unit);
 
-               
+
                 dialogueReference.StartGroupDialogue(origin, unit.Dialogue.GreetingDialogue, units);
             }
             else

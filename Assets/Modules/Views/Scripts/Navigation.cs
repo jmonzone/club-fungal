@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 // todo: centralize with SceneNavigation
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "Navigation", menuName = "Club Fungal/Views/Navigation")]
 public class Navigation : ScriptableObject
 {
     [SerializeField] private List<ViewReference> views;

@@ -32,8 +32,9 @@ public class PlayerActivityReference : ScriptableObject
         activity.OnPlayerExit += OnPlayerExit;
         activity.OnXPIncreased += OnXPIncreased;
 
-        activity.EnterActivity(playerReference.Player.GetComponent<ActivityUnit>());
         navigation.Navigate(activity.ViewReference);
+
+        activity.EnterActivity(playerReference.Player.GetComponent<ActivityUnit>());
     }
 
     public void ExitActivity()

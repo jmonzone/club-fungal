@@ -64,7 +64,7 @@ public class DanceActivityUnit : ActivityBehaviour
 
     private IEnumerator DanceMoveRoutine(DanceMoveInstance danceMove, UnityAction onComplete)
     {
-        Debug.Log("OnDanceMoveStarted");
+        // Debug.Log("OnDanceMoveStarted");
 
         animator.ResetTrigger("Complete");
 
@@ -98,7 +98,7 @@ public class DanceActivityUnit : ActivityBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        Debug.Log("OnDanceMoveUsed");
+        // Debug.Log("OnDanceMoveUsed");
 
         OnDanceMoveUsed?.Invoke(this, danceMove);
         animator.SetBool("IsDancing", false);
@@ -109,7 +109,7 @@ public class DanceActivityUnit : ActivityBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        Debug.Log("OnDanceMoveComplete");
+        // Debug.Log("OnDanceMoveComplete");
         onComplete?.Invoke();
         isUsingDanceMove = false;
     }

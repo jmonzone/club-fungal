@@ -32,9 +32,9 @@ public class FadeCanvasGroup : MonoBehaviour
     public IEnumerator FadeIn() => Fade(0f, 1f, duration);
     public IEnumerator FadeIn(float duration) => Fade(0f, 1f, duration);
 
-    public IEnumerator FadeOut()
+    public IEnumerator FadeOut(UnityAction onComplete = null)
     {
-        if (IsVisible) yield return Fade(1f, 0, duration);
+        if (IsVisible) yield return Fade(1f, 0, duration, onComplete);
     }
 
     public IEnumerator FadeOut(float duration, UnityAction onComplete = null) => Fade(1f, 0, duration, onComplete);

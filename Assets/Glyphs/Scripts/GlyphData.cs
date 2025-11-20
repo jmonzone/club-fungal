@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu]
@@ -9,6 +10,36 @@ public class GlyphData : ScriptableObject
     [SerializeField] private int water;
     [SerializeField] private int air;
     [SerializeField] private int earth;
+
+    private static readonly Dictionary<(int fire, int water, int air, int earth), string> descriptions = new Dictionary<(int, int, int, int), string>
+    {
+        {(1, 0, 0, 0), "a rush, an epiphany, sudden energy"},
+        {(2, 0, 0, 0), "making a plan, visualizing, optimism"},
+        {(3, 0, 0, 0), "taking first steps, courage, readiness"},
+        {(4, 0, 0, 0), "a celebration, success, a checkpoint"},
+        {(0, 1, 0, 0), "a feeling, an instict, a connection"},
+        {(0, 2, 0, 0), "partnership, being in agreement, acknowleding a feeling"},
+        {(0, 3, 0, 0), "being a part of something, community, feeling seen"},
+        {(0, 4, 0, 0), "having doubt, uncertainty on what is for you"},
+        {(0, 0, 1, 0), "new ideas, a memory, a perspective shift"},
+        {(0, 0, 2, 0), "making descisions, taking a risk, trusting yourself"},
+        {(0, 0, 3, 0), "pain, regret, tragedy"},
+        {(0, 0, 4, 0), "recovering from the past, learning from mistakes, resting"},
+        {(0, 0, 0, 1), "an opportunity, a foot in the door, an investment"},
+        {(0, 0, 0, 2), "being balanced, juggling between two things, understanding costs"},
+        {(0, 0, 0, 3), "teamwork, collaboration, shared goals, assigned roles"},
+        {(0, 0, 0, 4), "taking things into your own hands, greed, doubt" },
+    };
+
+    public string Description
+    {
+        get
+        {
+            if (descriptions.TryGetValue((fire, water, air, earth), out var desc))
+                return desc;
+            return "none";
+        }
+    }
 
     [SerializeField] private Element element;
     [SerializeField] private int tier;

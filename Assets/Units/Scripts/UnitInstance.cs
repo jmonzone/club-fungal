@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "UnitInstance", menuName = "Club Fungal/Units/Unit Instance")]
 public class UnitInstance : ScriptableObject
 {
     [SerializeField] private string id;
@@ -28,7 +28,7 @@ public class UnitInstance : ScriptableObject
     public Element Element => element;
     public Job Job => job;
     public ColorPalette ColorPalette => colorPalette;
-    
+
     public UnitSkill GetSkill(Skill skill) => Skills[skill];
 
     public int FriendshipLevel => friendshipLevel;
@@ -72,7 +72,7 @@ public class UnitInstance : ScriptableObject
             skill.OnXpChanged += value => OnXpChanged?.Invoke(value);
         }
     }
-    
+
     public static string GenerateMongoLikeId()
     {
         byte[] bytes = new byte[12];

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public enum ShruneReadingState
 {
     NULL,
-    SETUP,
+    INTRO,
     CARD,
     REVEAL,
     SUMMARY,
@@ -16,18 +16,37 @@ public class ShruneReadingActivityController : ActivityController<ShruneReadingU
 {
     [Header("Shrune Reading References")]
     [SerializeField] private GlyphCollection glyphCollection;
+    [SerializeField] private List<ShruneReadingSpread> availableSpreads = new();
+    [SerializeField] private Sprite mindBodySpiritIcon;
+    [SerializeField] private Sprite situationProblemAdviceIcon;
+    [SerializeField] private Sprite pastPresentFutureIcon;
 
     [Header("Shrune Reading Runtime Data")]
     [SerializeField] private ShruneReadingState currentState;
-    [SerializeField] private int cardsRead = 0;
+    [SerializeField] private int cardIndex = 0;
     [SerializeField] private List<GlyphData> selectedGlyphs = new();
-    [SerializeField] private List<TarotCardUI> revealedCards = new();
+    [SerializeField] private List<GlyphData> revealedGlyphs = new();
+
+    private ShruneReadingSpread selectedSpread;
+
+    public List<ShruneReadingSpread> AvailableSpreads => availableSpreads;
 
     public ShruneReadingState CurrentState => currentState;
     public List<GlyphData> SelectedGlyphs => selectedGlyphs;
-    public List<TarotCardUI> RevealedCards => revealedCards;
-
+    public List<GlyphData> RevealedGlyphs => revealedGlyphs;
+    public ShruneReadingSpread SelectedSpread => selectedSpread;
+    public ShruneReadingSpread.SpreadSlot CurrentSelectionSlot => selectedSpread.SpreadSlots[cardIndex];
     public event UnityAction<ShruneReadingState> OnStateChanged;
+    protected override void Awake()
+    {
+        base.Awake();
+        availableSpreads = new List<ShruneReadingSpread>
+        {
+            ShruneReadingSpread.CreateMindBodySpiritSpread(mindBodySpiritIcon),
+            ShruneReadingSpread.CreateSituationProblemAdviceSpread(situationProblemAdviceIcon),
+            ShruneReadingSpread.CreatePastPresentFutureSpread( pastPresentFutureIcon),
+        };
+    }
 
     private void SetState(ShruneReadingState state)
     {
@@ -38,33 +57,40 @@ public class ShruneReadingActivityController : ActivityController<ShruneReadingU
     protected override void OnPlayerEnter(ActivityUnit player)
     {
         base.OnPlayerEnter(player);
-        cardsRead = 0;
-        revealedCards.Clear();
-        SetState(ShruneReadingState.SETUP);
+        cardIndex = -1;
+        revealedGlyphs.Clear();
+        SetState(ShruneReadingState.INTRO);
     }
 
-    public void StartReading()
+    public void StartReading(ShruneReadingSpread spread)
     {
-        selectedGlyphs = glyphCollection.GetPureGlyphs().OrderBy(x => Random.value).Take(3).ToList();
+        selectedSpread = spread;
+        ShowNextCard();
+    }
+
+    private void ShowNextCard()
+    {
+        var availableGlyphs = glyphCollection.GetPureGlyphs().Except(revealedGlyphs).ToList();
+        selectedGlyphs = availableGlyphs.OrderBy(x => Random.value).Take(3).ToList();
+        cardIndex++;
         SetState(ShruneReadingState.CARD);
     }
 
-    public void RevealCard(TarotCardUI card)
+    public void RevealCard(GlyphData glyph)
     {
-        revealedCards.Add(card);
-        cardsRead++;
+        revealedGlyphs.Add(glyph);
         SetState(ShruneReadingState.REVEAL);
     }
 
     public void CompleteReading()
     {
-        if (cardsRead >= 3)
+        if ((cardIndex + 1) >= selectedSpread.SpreadSlots.Count)
         {
             SetState(ShruneReadingState.SUMMARY);
         }
         else
         {
-            SetState(ShruneReadingState.CARD);
+            ShowNextCard();
         }
     }
 

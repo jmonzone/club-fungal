@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "BuildInstance", menuName = "Club Fungal/Build/Build Instance")]
 public class BuildInstance : ScriptableObject
 {
     [SerializeField] private Item item;

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "PlayerReference", menuName = "Club Fungal/Player/Player Reference")]
 public class PlayerReference : ScriptableObject
 {
     [Header("References")]

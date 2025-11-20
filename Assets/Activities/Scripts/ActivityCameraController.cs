@@ -3,27 +3,33 @@ using UnityEngine;
 
 public class ActivityCameraController : MonoBehaviour
 {
-    [SerializeField] private PlayerActivityReference activity;
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
 
-    protected virtual void OnEnable()
+    private ActivityController activityController;
+
+    private void Awake()
     {
-        activity.OnPlayerEnter += OnPlayerEnter;
-        activity.OnPlayerExit += OnPlayerExit;
+        activityController = GetComponentInParent<ActivityController>();
     }
 
-    protected virtual void OnDisable()
+    private void OnEnable()
     {
-        activity.OnPlayerEnter -= OnPlayerEnter;
-        activity.OnPlayerExit -= OnPlayerExit;
+        activityController.OnPlayerEnterEvent += OnPlayerEnter;
+        activityController.OnPlayerExitEvent += OnPlayerExit;
     }
 
-    protected void OnPlayerEnter(ActivityUnit player)
+    private void OnDisable()
+    {
+        activityController.OnPlayerEnterEvent -= OnPlayerEnter;
+        activityController.OnPlayerExitEvent -= OnPlayerExit;
+    }
+
+    private void OnPlayerEnter(ActivityUnit player)
     {
         virtualCamera.Priority = 11;
     }
 
-    protected void OnPlayerExit(ActivityUnit player)
+    private void OnPlayerExit(ActivityUnit player)
     {
         virtualCamera.Priority = 0;
     }

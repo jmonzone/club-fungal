@@ -109,15 +109,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -481,15 +483,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -519,7 +523,6 @@ GameObject:
   - component: {fileID: 2297470627113650123}
   - component: {fileID: 7460702922668487088}
   - component: {fileID: 4757102168057205773}
-  - component: {fileID: 4024781346382530002}
   - component: {fileID: 5512460290587325456}
   m_Layer: 5
   m_Name: Skill Level UI
@@ -588,8 +591,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelText: {fileID: 1256478985992614688}
-  nextLevelText: {fileID: 8341575401822557079}
-  skill: 0
+  valueBarParticleManager: {fileID: 0}
+  fillImage: {fileID: 0}
+  unitImage: {fileID: 0}
+  useAudio: 1
 --- !u!114 &4757102168057205773
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -641,49 +646,6 @@ MonoBehaviour:
   colorPulseStrength: 0.01
   targetValue: 0
   animatedColor: {r: 0, g: 0, b: 0, a: 0}
---- !u!114 &4024781346382530002
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5088353975829597024}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b20b85cdc33e8443d9fa549318b53d95, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetUI: {fileID: 6107663927371580548}
-  canvas: {fileID: 0}
-  particlePrefab: {fileID: 1348427375487834283, guid: 9440ae4f82ca2485faaa9b37455b9072,
-    type: 3}
-  barController: {fileID: 4757102168057205773}
-  mintravelTime: 0.75
-  maxtravelTime: 1.25
-  arcCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!82 &5512460290587325456
 AudioSource:
   m_ObjectHideFlags: 0
@@ -694,7 +656,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: c1a2583afe9254f42aea97784095f264, type: 3}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: c1a2583afe9254f42aea97784095f264, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1039,15 +1002,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0

@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "InventoryViewReference", menuName = "Club Fungal/Views/Inventory View Reference")]
 public class InventoryViewReference : ViewReference
 {
     [SerializeField] private ItemInventory inventory;
@@ -15,5 +15,5 @@ public class InventoryViewReference : ViewReference
         remove => inventory.OnInventoryUpdated -= value;
     }
 
-    
+
 }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "StoryData", menuName = "Club Fungal/Story/Story Data")]
 public class StoryData : ScriptableObject
 {
     [SerializeField] private string id;

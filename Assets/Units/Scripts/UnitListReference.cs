@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "UnitListReference", menuName = "Club Fungal/Units/Unit List Reference")]
 public class UnitListReference : ScriptableObject
 {
     [Header("References")]
@@ -88,7 +88,8 @@ public class UnitListReference : ScriptableObject
                     instance.InitializeSkills(skills);
 
                     RegisterUnit(instance, false);
-                };
+                }
+                ;
             }
         }
 
@@ -113,7 +114,7 @@ public class UnitListReference : ScriptableObject
 
         if (units.Count == 0)
         {
-            foreach(var unit in initialUnits)
+            foreach (var unit in initialUnits)
             {
                 CopyUnit(unit, false);
             }
@@ -306,7 +307,7 @@ public class UnitListReference : ScriptableObject
 
             var skillsJson = new JArray();
 
-            foreach(var skill in unit.Skills.Keys)
+            foreach (var skill in unit.Skills.Keys)
             {
                 var skillJson = new JObject
                 {

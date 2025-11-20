@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "Skill", menuName = "Club Fungal/Activities/Skill")]
 public class Skill : ScriptableObject
 {
     [SerializeField] private string id;

@@ -7,6 +7,24 @@ public abstract class ActivityController : MonoBehaviour
     [Header("Activity References")]
     [SerializeField] private ActivityReference activity;
     public ActivityReference Activity => activity;
+
+    public event UnityAction<ActivityUnit> OnPlayerEnterEvent;
+    public event UnityAction<ActivityUnit> OnPlayerExitEvent;
+
+    protected virtual void Awake()
+    {
+    }
+
+    protected virtual void OnPlayerEnter(ActivityUnit player)
+    {
+        OnPlayerEnterEvent?.Invoke(player);
+    }
+
+    protected virtual void OnPlayerExit(ActivityUnit player)
+    {
+        OnPlayerExitEvent?.Invoke(player);
+    }
+
 }
 
 public abstract class ActivityController<T> : ActivityController where T : ActivityBehaviour
@@ -32,10 +50,6 @@ public abstract class ActivityController<T> : ActivityController where T : Activ
 
     public event UnityAction<T> OnUnitSelected;
 
-    protected virtual void Awake()
-    {
-    }
-
     private void OnEnable()
     {
         Activity.OnActivityHasStarted += OnActivityStart;
@@ -56,16 +70,15 @@ public abstract class ActivityController<T> : ActivityController where T : Activ
         Activity.OnPlayerExit -= OnPlayerExit;
     }
 
-    protected virtual void OnPlayerEnter(ActivityUnit player)
+    protected override void OnPlayerEnter(ActivityUnit player)
     {
+        base.OnPlayerEnter(player);
         this.player = player.GetComponent<T>();
-
-        //currentIndex = units.FindIndex(unit => unit == player);
-        //SelectUnit(player.GetComponent<T>());
     }
 
-    protected virtual void OnPlayerExit(ActivityUnit player)
+    protected override void OnPlayerExit(ActivityUnit player)
     {
+        base.OnPlayerExit(player);
         if (PlayerIsSelected) SelectNextUnit();
     }
 

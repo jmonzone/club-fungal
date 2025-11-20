@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "DanceMove", menuName = "Club Fungal/Activities/Dance/Dance Move")]
 public class DanceMove : ScriptableObject, IMilestone
 {
     [SerializeField] private string label;
@@ -56,7 +56,7 @@ public class DanceMoveInstance : ScriptableObject
         this.data = data;
         this.skill = skill;
 
-        foreach(var upgrade in data.Upgrades)
+        foreach (var upgrade in data.Upgrades)
         {
             if (skill.Level >= upgrade.Level)
             {

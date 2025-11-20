@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "PhotoReference", menuName = "Club Fungal/Photo/Photo Reference")]
 public class PhotoReference : ScriptableObject
 {
     [Header("References")]

@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "DJTableReference", menuName = "Club Fungal/DJ/DJ Table Reference")]
 public class DJTableReference : ScriptableObject
 {
     [Header("References")]

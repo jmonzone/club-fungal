@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "Unit", menuName = "Club Fungal/Units/Unit")]
 public class Unit : ScriptableObject
 {
     [SerializeField] private new string name;

@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "BuildReference", menuName = "Club Fungal/Build/Build Reference")]
 public class BuildReference : ScriptableObject
 {
     [Header("References")]
@@ -104,7 +104,8 @@ public class BuildReference : ScriptableObject
                         {
                             Debug.LogWarning($"Item {buildJson} not found in game data");
                         }
-                    };
+                    }
+                    ;
                 }
             }
             else

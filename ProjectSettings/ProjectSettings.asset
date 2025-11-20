@@ -167,7 +167,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.thefungalnetwork.allisbog
     Standalone: com.Unity-Technologies.com.unity.template.urp-blank
-    iPhone: com.onehitkheo.monsters
+    iPhone: com.onehitkheo.club-fungal
   buildNumber:
     Standalone: 0
     VisionOS: 0

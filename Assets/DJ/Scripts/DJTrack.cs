@@ -7,12 +7,12 @@ public enum PartyMode
     Strobe
 }
 
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "DJTrack", menuName = "Club Fungal/DJ/DJ Track")]
 public class DJTrack : ScriptableObject
 {
     [SerializeField] private string trackName;
     [SerializeField] private string artist;
-    [SerializeField] [TextArea] private string description;
+    [SerializeField][TextArea] private string description;
     [SerializeField] private AudioClip audioClip;
     [SerializeField] private PartyMode partyMode;
     [SerializeField] private float bpm;

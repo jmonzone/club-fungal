@@ -13,15 +13,23 @@ public class TarotCardUI : MonoBehaviour
     [SerializeField] private bool isFaceDown = true;
 
     public event UnityAction<TarotCardUI> OnCardFlipped;
+    public event UnityAction OnFlipStarted;
+    public event UnityAction OnCardSelected;
+
+    public GlyphData Glyph { get; private set; }
+
+    public void SetInteractable(bool interactable)
+    {
+        button.interactable = interactable;
+    }
 
     private void Awake()
     {
-        button.onClick.AddListener(() => StartFlipCard());
-    }
-
-    public void StartFlipCard(UnityAction onComplete = null)
-    {
-        StartCoroutine(FlipCardRoutine(onComplete));
+        button.onClick.AddListener(() =>
+        {
+            Debug.Log($"Card {name} selected.");
+            OnCardSelected?.Invoke();
+        });
     }
 
     public void Reset()
@@ -31,7 +39,14 @@ public class TarotCardUI : MonoBehaviour
 
     public void SetGlyph(GlyphData glyph)
     {
+        Glyph = glyph;
         glyphImage.sprite = glyph.Sprite;
+    }
+
+    public void StartFlipCard(UnityAction onComplete = null)
+    {
+        OnFlipStarted?.Invoke();
+        StartCoroutine(FlipCardRoutine(onComplete));
     }
 
     private IEnumerator FlipCardRoutine(UnityAction onComplete)
@@ -70,5 +85,31 @@ public class TarotCardUI : MonoBehaviour
     public void Reveal()
     {
         FlipCard(false);
+    }
+
+    public void PrepareForSelection(GlyphData glyph, TransformData transformData, Vector3 scale)
+    {
+        if (glyph != null)
+        {
+            SetGlyph(glyph);
+        }
+        Reset();
+        gameObject.SetActive(true);
+        transform.localPosition = transformData.position;
+        transform.localRotation = transformData.rotation;
+        transform.localScale = scale;
+        SetInteractable(true);
+    }
+
+    public void PrepareForReveal()
+    {
+        transform.localPosition = Vector3.zero;
+        transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+    }
+
+    public void PrepareForSummary()
+    {
+        gameObject.SetActive(true);
+        Reveal();
     }
 }
