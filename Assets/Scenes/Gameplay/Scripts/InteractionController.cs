@@ -11,14 +11,12 @@ public interface ITarget
 public interface IInteractable : ITarget
 {
     public void Select();
-    public void OnProximityChanged(bool value);
 }
 
 public class InteractionController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private PlayerReference playerReference;
-    [SerializeField] private PlayerActivityReference activityUIReference;
     [SerializeField] private DialogueReference dialogue;
     [SerializeField] private LayerMask interactableMask;
     [SerializeField] private LayerMask groundMask;
@@ -61,14 +59,14 @@ public class InteractionController : MonoBehaviour
         // Handle leaving proximity
         foreach (var interactable in previousInteractables.Except(proximityInteractables).ToList())
         {
-            interactable.OnProximityChanged(false);
+            // interactable.OnProximityChanged(false);
             previousInteractables.Remove(interactable);
         }
 
         // Handle entering proximity
         foreach (var interactable in proximityInteractables.Except(previousInteractables).ToList())
         {
-            interactable.OnProximityChanged(true);
+            // interactable.OnProximityChanged(true);
             previousInteractables.Add(interactable);
         }
 
@@ -101,13 +99,6 @@ public class InteractionController : MonoBehaviour
                     OnEntitySelected?.Invoke(interactable.Transform);
 
                     selected = interactable.Transform;
-                    return;
-                }
-
-                var zone = hit.transform.GetComponentInParent<ActivityZoneController>();
-                if (zone)
-                {
-                    activityUIReference.EnterActivity(zone.Activity);
                     return;
                 }
             }

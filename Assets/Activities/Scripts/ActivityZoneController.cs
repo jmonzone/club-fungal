@@ -1,9 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
-public class ActivityZoneController : MonoBehaviour
+public class ActivityZoneController : MonoBehaviour, IInteractable
 {
     [Header("References")]
+    [SerializeField] private PlayerActivityReference activityUIReference;
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private GameObject zoneController;
 
@@ -12,7 +13,7 @@ public class ActivityZoneController : MonoBehaviour
     [SerializeField] private Vector3 startScale;
     [SerializeField] private Vector3 endScale;
 
-    public ActivityReference Activity => activity;
+    Transform ITarget.Transform => transform;
 
     private ActivityReference activity;
     private Material material;
@@ -87,5 +88,10 @@ public class ActivityZoneController : MonoBehaviour
         }
 
         target.localScale = to;
+    }
+
+    void IInteractable.Select()
+    {
+        activityUIReference.EnterActivity(activity);
     }
 }

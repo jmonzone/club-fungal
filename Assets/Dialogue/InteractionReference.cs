@@ -8,6 +8,7 @@ public class InteractionReference : ScriptableObject
 
     public void StartInteraction(PlayerController player, IInteractable interactable)
     {
+        // todo: should be handled by unit controller?
         if (interactable is UnitController unit)
         {
             if (unit.Dialogue.GreetingDialogue != null)
@@ -33,6 +34,7 @@ public class InteractionReference : ScriptableObject
                 dialogueReference.StartIntroDialogue(unit);
             }
         }
+        else interactable.Select();
     }
 
     Vector3 GetMidpoint(UnitController unit)

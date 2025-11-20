@@ -145,10 +145,6 @@ public class DJTableController : MonoBehaviour, IInteractable
         navigation.Navigate(djView);
     }
 
-    void IInteractable.OnProximityChanged(bool value)
-    {
-    }
-
     private void OnEnable()
     {
         djReference.OnLeftTrackChanged += PlayLeftTrack;
