@@ -29,6 +29,12 @@ public class PlayerReference : ScriptableObject
         activityUnit = player.GetComponent<ActivityUnit>();
     }
 
+    public void TeleportPlayer(Vector3 position)
+    {
+        Debug.Log($"Teleporting player to position: {position}");
+        player.Destination.TeleportToPosition(position);
+    }
+
     public void SetTargetPosition(Vector3 targetPosition)
     {
         this.targetPosition = targetPosition;

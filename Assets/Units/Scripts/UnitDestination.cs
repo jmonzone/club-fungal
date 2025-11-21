@@ -30,6 +30,7 @@ public class UnitDestination : MonoBehaviour
         //Debug.Log("Setting destination");
         target = null;
         this.destination = destination;
+        navMeshAgent.enabled = true;
         navMeshAgent.isStopped = false;
         isAtDestination = false;
         navMeshAgent.SetDestination(destination);
@@ -38,10 +39,25 @@ public class UnitDestination : MonoBehaviour
     public void SetTarget(Transform target)
     {
         this.target = target;
+        navMeshAgent.enabled = true;
         navMeshAgent.isStopped = false;
         isAtDestination = false;
 
         OnTargetSelected?.Invoke();
+    }
+
+    public void TeleportToPosition(Vector3 position)
+    {
+        Debug.Log($"Teleporting unit to position: {position}");
+        if (navMeshAgent != null)
+        {
+            Debug.Log("Disabling navmesh agent for teleport");
+            target = null;
+            navMeshAgent.enabled = false;
+            transform.position = position;
+            destination = position;
+            isAtDestination = true;
+        }
     }
 
     private void Update()

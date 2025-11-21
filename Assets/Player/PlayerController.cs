@@ -19,7 +19,7 @@ public class PlayerController : UnitController
         get => materials[0].GetColor("_Outer_Color");
         set
         {
-            foreach(var material in materials)
+            foreach (var material in materials)
             {
                 material.SetColor("_Outer_Color", value);
             }
@@ -92,6 +92,7 @@ public class PlayerController : UnitController
     private Coroutine interactRoutine;
     private IEnumerator InteractRoutine()
     {
+        Debug.Log("Starting interact routine");
         Destination.SetTarget(playerReference.TargetInteractable.Transform);
         yield return new WaitUntil(() => Destination.IsAtDestination);
         playerReference.SelectInteractable(playerReference.TargetInteractable);
@@ -101,6 +102,7 @@ public class PlayerController : UnitController
     {
         if (playerReference.TargetInteractable == null)
         {
+            Debug.Log("Setting player target position");
             SetLookPosition(playerReference.TargetPosition);
             Destination.SetDestination(playerReference.TargetPosition);
         }
