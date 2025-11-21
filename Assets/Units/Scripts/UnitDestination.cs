@@ -54,9 +54,11 @@ public class UnitDestination : MonoBehaviour
             Debug.Log("Disabling navmesh agent for teleport");
             target = null;
             navMeshAgent.enabled = false;
+            navMeshAgent.Warp(position);
             transform.position = position;
             destination = position;
             isAtDestination = true;
+            navMeshAgent.enabled = true;
         }
     }
 

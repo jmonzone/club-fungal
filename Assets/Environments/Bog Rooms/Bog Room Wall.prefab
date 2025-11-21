@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6524552320701153775}
   - component: {fileID: 4261175414420856817}
   m_Layer: 7
-  m_Name: Cube
+  m_Name: Outer Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -301,7 +301,7 @@ GameObject:
   - component: {fileID: 2666746130323962990}
   - component: {fileID: 502881882735851157}
   m_Layer: 7
-  m_Name: Plane
+  m_Name: Inner Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -409,6 +409,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4025850278682996651}
+  - component: {fileID: 1046024407066740317}
   m_Layer: 7
   m_Name: Bog Room Wall
   m_TagString: Untagged
@@ -432,3 +433,17 @@ Transform:
   - {fileID: 2443496624991547617}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1046024407066740317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5168348824248163176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a517c7a99a4ee4d869a92528a3ee9fa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  outerWallObject: {fileID: 1487785394420433297}
+  innerWallObject: {fileID: 3261747007990324763}
