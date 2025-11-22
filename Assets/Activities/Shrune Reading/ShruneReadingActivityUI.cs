@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-
 public struct TransformData
 {
     public Vector3 position;
@@ -21,27 +20,21 @@ public class ShruneReadingActivityUI : ActivityUI<ShruneReadingUnit, ShruneReadi
     [SerializeField] private TypewriterEffect bodyText;
     [SerializeField] private ShruneReadingSpreadOptionListUI spreadOptionListUI;
     [SerializeField] private Button continueButton;
-
     [SerializeField] private RectTransform cardContainer;
     [SerializeField] private RectTransform spreadSlotContainer;
     [SerializeField] private RectTransform centerCardAnchor;
     [SerializeField] private RectTransform summaryCardAnchor;
-
     [SerializeField] private OpenAITextGenerator textGenerator;
     [SerializeField] private TarotCardUI tarotCardPrefab;
-    [SerializeField] private Transform tarotCardParent;
     [SerializeField] private List<Transform> shruneSlotParent;
 
     [Header("Card Container Animation")]
     [SerializeField] private Vector3 cardContainerCenterScale = Vector3.one * 1.5f;
     [SerializeField] private float cardContainerAnimDuration = 0.5f;
-
     private Vector3 originalCardContainerPosition;
     private string currentCardPrompt = "";
-
     private List<TarotCardUI> tarotCardList;
     private TarotCardUI selectedCard;
-
     protected override void Awake()
     {
         base.Awake();

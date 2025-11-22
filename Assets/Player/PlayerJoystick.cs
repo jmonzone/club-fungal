@@ -1,56 +1,67 @@
 ﻿using UnityEngine;
 
+public interface IJoystickSelectable
+{
+    void Select();
+}
+
 public class PlayerJoystick : MonoBehaviour
 {
     [SerializeField] private PlayerReference playerReference;
-    [SerializeField] private CameraPanController cameraPanController;
     [SerializeField] private VirtualJoystick virtualJoystick;
     [SerializeField] private InteractionController interaction;
-    [SerializeField] private PhotoReference photoReference;
 
     private Camera mainCamera;
 
     private void Awake()
     {
         mainCamera = Camera.main;
-        virtualJoystick.OnJoystickStart += VirtualJoystick_OnJoystickStart;
-        virtualJoystick.OnJoystickUpdate += VirtualJoystick_OnJoystickUpdate;
-        virtualJoystick.OnJoystickEnd += VirtualJoystick_OnJoystickEnd; ;
-    }
+        virtualJoystick.OnJoystickStart += position =>
+        {
+            interaction.Unselect();
+        };
 
-    private void VirtualJoystick_OnJoystickEnd()
-    {
-        playerReference.SetTargetPosition(playerReference.TargetPosition);
-    }
+        virtualJoystick.OnJoystickUpdate += direction =>
+        {
+            // Map joystick to XZ plane
+            direction.z = direction.y;
+            direction.y = 0;
 
-    private void VirtualJoystick_OnJoystickStart(Vector3 arg0)
-    {
-        interaction.Unselect();
-    }
+            // Get camera forward/right on XZ plane
+            Vector3 camForward = mainCamera.transform.forward;
+            camForward.y = 0;
+            camForward.Normalize();
 
-    private void VirtualJoystick_OnJoystickUpdate(Vector3 direction)
-    {
-        // Map joystick to XZ plane
-        direction.z = direction.y;
-        direction.y = 0;
+            Vector3 camRight = mainCamera.transform.right;
+            camRight.y = 0;
+            camRight.Normalize();
 
-        // Get camera forward/right on XZ plane
-        Vector3 camForward = mainCamera.transform.forward;
-        camForward.y = 0;
-        camForward.Normalize();
+            // Rotate joystick input to be relative to camera
+            Vector3 moveDir = camForward * direction.z + camRight * direction.x;
 
-        Vector3 camRight = mainCamera.transform.right;
-        camRight.y = 0;
-        camRight.Normalize();
+            // Compute target position
+            var targetPosition = playerReference.Player.transform.position + moveDir.normalized;
 
-        // Rotate joystick input to be relative to camera
-        Vector3 moveDir = camForward * direction.z + camRight * direction.x;
+            // Detect IJoystickSelectable at target position
+            Collider[] hitColliders = Physics.OverlapSphere(targetPosition, 0.5f);
+            foreach (var hitCollider in hitColliders)
+            {
+                var interactable = hitCollider.GetComponentInParent<IJoystickSelectable>();
+                if (interactable != null)
+                {
+                    interactable.Select();
+                    break;
+                }
+            }
 
-        // Compute target position
-        var targetPosition = playerReference.Player.transform.position + moveDir.normalized;
+            // Move player
+            playerReference.SetTargetPosition(targetPosition);
+        };
 
-        // Move player
-        playerReference.SetTargetPosition(targetPosition);
+        virtualJoystick.OnJoystickEnd += () =>
+        {
+            playerReference.SetTargetPosition(playerReference.TargetPosition);
+        };
     }
 
 }

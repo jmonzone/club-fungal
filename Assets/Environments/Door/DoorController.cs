@@ -1,17 +1,18 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class DoorController : MonoBehaviour, IInteractable
+public class DoorController : MonoBehaviour, IInteractable, IJoystickSelectable
 {
     [Header("Runtime")]
     [SerializeField] private RoomController roomController;
     [SerializeField] private WallController wallController;
     [SerializeField] private DoorController otherDoor;
-    Transform ITarget.Transform => transform;
 
+    Transform ITarget.Transform => transform;
     public WallController Wall => wallController;
     public RoomController Room => roomController;
     public DoorController OtherDoor => otherDoor;
+
     public event UnityAction OnDoorSelected;
 
     private void Awake()
@@ -20,7 +21,7 @@ public class DoorController : MonoBehaviour, IInteractable
         roomController = GetComponentInParent<RoomController>();
     }
 
-    void IInteractable.Select()
+    public void Select()
     {
         OnDoorSelected?.Invoke();
     }
