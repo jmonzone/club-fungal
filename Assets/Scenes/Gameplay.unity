@@ -4215,7 +4215,7 @@ MonoBehaviour:
   spreadSlotContainer: {fileID: 628184121}
   centerCardAnchor: {fileID: 990908057}
   summaryCardAnchor: {fileID: 1804429760}
-  textGenerator: {fileID: 11400000, guid: 4907a20d48a4b46eb8031fa7ac2239a7, type: 2}
+  textGenerator: {fileID: 11400000, guid: fcccc1bfe77644a2d8cf47654c293542, type: 2}
   tarotCardPrefab: {fileID: 3968404229160462133, guid: cf8cfb108cd2244d6a8581603e8f7ca1,
     type: 3}
   tarotCardParent: {fileID: 366300664}
