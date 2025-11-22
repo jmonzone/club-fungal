@@ -10,6 +10,8 @@ public class VirtualJoystick : MonoBehaviour
     [SerializeField] private GameObject target;
     [SerializeField] private float sensitivity;
 
+    [Header("Runtime")]
+    [SerializeField] private Vector3 direction;
     public event UnityAction<Vector3> OnJoystickStart;
     public event UnityAction<Vector3> OnJoystickUpdate;
     public event UnityAction OnJoystickEnd;
@@ -54,7 +56,7 @@ public class VirtualJoystick : MonoBehaviour
         // Handle joystick movement
         if (IsActive && IsInputHeld())
         {
-            var direction = Vector3.ClampMagnitude(GetInputPosition() - startPosition, JOYSTICK_LENGTH);
+            direction = Vector3.ClampMagnitude(GetInputPosition() - startPosition, JOYSTICK_LENGTH);
             joystickRect.anchoredPosition = direction;
             OnJoystickUpdate?.Invoke(direction * sensitivity);
         }

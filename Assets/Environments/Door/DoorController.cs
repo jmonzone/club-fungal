@@ -1,19 +1,32 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class DoorController : MonoBehaviour, IInteractable
 {
+    [Header("Runtime")]
     [SerializeField] private RoomController roomController;
+    [SerializeField] private WallController wallController;
     [SerializeField] private DoorController otherDoor;
-    [SerializeField] private PlayerReference playerReference;
-
     Transform ITarget.Transform => transform;
+
+    public WallController Wall => wallController;
+    public RoomController Room => roomController;
+    public DoorController OtherDoor => otherDoor;
+    public event UnityAction OnDoorSelected;
+
+    private void Awake()
+    {
+        wallController = GetComponentInParent<WallController>();
+        roomController = GetComponentInParent<RoomController>();
+    }
 
     void IInteractable.Select()
     {
-        Debug.Log($"Door selected name: {gameObject.name} going to door: {otherDoor.gameObject.name} at position: {otherDoor.transform.position}");
-        playerReference.TeleportPlayer(otherDoor.transform.position + otherDoor.transform.forward * -2f);
+        OnDoorSelected?.Invoke();
+    }
 
-        roomController.SetAsOuterRoom();
-        otherDoor.roomController.SetAsInnerRoom();
+    public void SetOtherDoor(DoorController door)
+    {
+        otherDoor = door;
     }
 }

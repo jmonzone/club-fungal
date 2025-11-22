@@ -48,10 +48,10 @@ public class UnitDestination : MonoBehaviour
 
     public void TeleportToPosition(Vector3 position)
     {
-        Debug.Log($"Teleporting unit to position: {position}");
+        // Debug.Log($"Teleporting unit to position: {position}");
         if (navMeshAgent != null)
         {
-            Debug.Log("Disabling navmesh agent for teleport");
+            // Debug.Log("Disabling navmesh agent for teleport");
             target = null;
             navMeshAgent.enabled = false;
             navMeshAgent.Warp(position);

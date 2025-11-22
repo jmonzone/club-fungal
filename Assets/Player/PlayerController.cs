@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PlayerController : UnitController
 {
@@ -50,6 +51,12 @@ public class PlayerController : UnitController
 
         materials = mats.ToArray();
 
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(transform.position, out hit, 5.0f, NavMesh.AllAreas))
+        {
+            GetComponent<NavMeshAgent>().Warp(hit.position);
+            transform.position = hit.position;
+        }
         playerReference.SetPlayer(this);
         playerReference.SetTargetPosition(transform.position);
     }
@@ -92,7 +99,7 @@ public class PlayerController : UnitController
     private Coroutine interactRoutine;
     private IEnumerator InteractRoutine()
     {
-        Debug.Log("Starting interact routine");
+        // Debug.Log("Starting interact routine");
         Destination.SetTarget(playerReference.TargetInteractable.Transform);
         yield return new WaitUntil(() => Destination.IsAtDestination);
         playerReference.SelectInteractable(playerReference.TargetInteractable);
@@ -102,7 +109,7 @@ public class PlayerController : UnitController
     {
         if (playerReference.TargetInteractable == null)
         {
-            Debug.Log("Setting player target position");
+            // Debug.Log("Setting player target position");
             SetLookPosition(playerReference.TargetPosition);
             Destination.SetDestination(playerReference.TargetPosition);
         }

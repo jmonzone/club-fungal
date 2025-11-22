@@ -31,8 +31,9 @@ public class PlayerReference : ScriptableObject
 
     public void TeleportPlayer(Vector3 position)
     {
-        Debug.Log($"Teleporting player to position: {position}");
+        // Debug.Log($"Teleporting player to position: {position}");
         player.Destination.TeleportToPosition(position);
+        player.SetLookPosition(position);
     }
 
     public void SetTargetPosition(Vector3 targetPosition)

@@ -156,5 +156,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f1d641fcb663475fb2186c57221d43e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  otherDoor: {fileID: 0}
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
+  roomController: {fileID: 0}
+  otherDoor: {fileID: 0}
+  roomControllerPrefab: {fileID: 7063167596283546541, guid: 39a86af59e75d41dfaeeca6d7af1a972,
+    type: 3}
