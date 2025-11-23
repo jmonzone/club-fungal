@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Obsolete("StoryFirstParty is out of date, but kept for reference.")]
 public class StoryFirstParty : MonoBehaviour
 {
     [Header("References")]

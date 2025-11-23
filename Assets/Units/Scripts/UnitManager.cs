@@ -47,7 +47,7 @@ public class UnitManager : MonoBehaviour
         OnAllUnitsSummoned?.Invoke();
     }
 
-    protected UnitController SummonUnit(UnitInstance unit, Vector3 spawnPosition)
+    public UnitController SummonUnit(UnitInstance unit, Vector3 spawnPosition)
     {
         var unitController = Instantiate(unitPrefab, spawnPosition, Quaternion.identity);
         unitController.Initialize(unit);
@@ -76,19 +76,27 @@ public class UnitManager : MonoBehaviour
     private void OnEnable()
     {
         unitList.OnFriendInvited += UnitList_OnFriendInvited;
+        unitList.OnUnitSpawned += UnitList_OnUnitSpawned;
     }
 
     private void OnDisable()
     {
         unitList.OnFriendInvited -= UnitList_OnFriendInvited;
+        unitList.OnUnitSpawned -= UnitList_OnUnitSpawned;
     }
 
     private void UnitList_OnFriendInvited(UnitController unit, UnitInstance friend)
     {
-        StartCoroutine(SpawnRoutine(unit, friend));
+        StartCoroutine(SpawnFriendRoutine(unit, friend));
     }
 
-    private IEnumerator SpawnRoutine(UnitController unit, UnitInstance friend)
+    private void UnitList_OnUnitSpawned(UnitInstance unit, Vector3 position, UnityAction<UnitController> onSpawned)
+    {
+        var unitController = SummonUnit(unit, position);
+        onSpawned?.Invoke(unitController);
+    }
+
+    private IEnumerator SpawnFriendRoutine(UnitController unit, UnitInstance friend)
     {
         yield return new WaitForSeconds(2f);
 

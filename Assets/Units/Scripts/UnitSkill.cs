@@ -41,7 +41,7 @@ public class UnitSkill
         this.xp = xp;
         level = GetLevelFromXP(xp);
 
-        
+
         moves = new List<DanceMoveInstance>();
 
         if (!unit.Data)
@@ -50,6 +50,7 @@ public class UnitSkill
             return;
         }
 
+        Debug.Log($"Initializing skill {skill.Id} for unit {unit.Data.Name} at level {level} with {xp} XP");
         foreach (var move in unit.Data.Moves)
         {
             if (level >= move.LevelRequirement)

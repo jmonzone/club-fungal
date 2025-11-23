@@ -11,6 +11,7 @@ public class ActivityReference : ScriptableObject
     [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private UnitListReference unitListReference;
     [SerializeField] private Skill primarySkill;
+    [SerializeField] private ActivityController activityControllerPrefab;
 
     [Header("Runtime")]
     [SerializeField] private Vector3 origin;
@@ -37,6 +38,7 @@ public class ActivityReference : ScriptableObject
 
     public void StartActivity(Vector3 origin, List<UnitController> units)
     {
+        var activityController = Instantiate(activityControllerPrefab, origin, Quaternion.identity);
         Debug.Log($"Starting activity {name}");
         this.origin = origin;
         this.units = new List<ActivityUnit>();

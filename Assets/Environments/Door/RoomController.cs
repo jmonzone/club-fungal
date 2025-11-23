@@ -4,8 +4,13 @@ using UnityEngine.Events;
 
 public class RoomController : MonoBehaviour
 {
+    [Header("Systems")]
+    [SerializeField] private UnitListReference unitCollection;
+    [SerializeField] private ActivityReference activityReference;
+
     [Header("References")]
     [SerializeField] private GameObject ceilingObject;
+    [SerializeField] private Transform activityAnchor;
     private List<WallController> walls = new List<WallController>();
 
     public List<WallController> Walls => walls;
@@ -27,8 +32,13 @@ public class RoomController : MonoBehaviour
         }
     }
 
-    public void SetTexture(Texture texture)
+    public void Initialize(Texture texture)
     {
+        unitCollection.SpawnNewUnit(unit => unit.Moves.Count > 0, activityAnchor.position, onSpawned: unit =>
+        {
+            activityReference.StartActivity(activityAnchor.position, new List<UnitController> { unit });
+        });
+
         walls.ForEach(wall => wall.SetTexture(texture));
     }
 

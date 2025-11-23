@@ -17,6 +17,7 @@ public class RoomManager : MonoBehaviour
     [SerializeField] private RoomController roomControllerPrefab;
     [SerializeField] private List<Texture> wallTextures;
 
+
     [Header("Runtime")]
     [SerializeField] private List<RoomController> roomControllers;
     [SerializeField] private bool isTransitioning = false;
@@ -63,7 +64,7 @@ public class RoomManager : MonoBehaviour
         var targetRotation = door.Room.transform.rotation;
         var newRoom = Instantiate(roomControllerPrefab, targetPosition, targetRotation, transform);
         var randomtexture = wallTextures[Random.Range(0, wallTextures.Count)];
-        newRoom.SetTexture(randomtexture);
+        newRoom.Initialize(randomtexture);
         newRoom.name = $"Room_{roomControllers.Count}";
         newRoom.OnDoorSelected += door => OnDoorSelected(door);
         roomControllers.Add(newRoom);

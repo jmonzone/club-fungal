@@ -130,6 +130,28 @@ public class UnitListReference : ScriptableObject
         SaveData();
     }
 
+    public delegate bool UnitQuery(Unit unit);
+    private UnitInstance CreateNewUnit(UnitQuery query = null)
+    {
+        var (newUnit, newElement) = GenerateNewUnit(query);
+        var newUnitInstance = CreateInstance<UnitInstance>();
+
+        var matchingColorPalette = GetColorPaletteByElement(newElement);
+
+        newUnitInstance.Initialize(newUnit, element: newElement, colorPalette: matchingColorPalette);
+
+        var skills = new List<UnitSkill>();
+
+        foreach (var skill in skillCollection)
+        {
+            skills.Add(new UnitSkill(newUnitInstance, skill, 0));
+        }
+
+        newUnitInstance.InitializeSkills(skills);
+        RegisterUnit(newUnitInstance);
+        return newUnitInstance;
+    }
+
     public UnitInstance CopyUnit(UnitInstance instance, bool saveData = true)
     {
         var copiedUnit = CreateInstance<UnitInstance>();
@@ -146,12 +168,17 @@ public class UnitListReference : ScriptableObject
         return RegisterUnit(copiedUnit, saveData);
     }
 
-    public (Unit unit, Element element) GenerateNewUnit()
+    public (Unit unit, Element element) GenerateNewUnit(UnitQuery predicate)
     {
         // Skip the player's own unit
         var availableUnits = unitCollection
             .Where(unit => unit != playerUnit)
             .ToList();
+
+        if (predicate != null)
+        {
+            availableUnits = availableUnits.Where(unit => predicate(unit)).ToList();
+        }
 
         // Safety check: if no available units, fallback to player unit
         if (availableUnits.Count == 0)
@@ -164,7 +191,7 @@ public class UnitListReference : ScriptableObject
 
         if (unseenUnits.Count > 0)
         {
-            var chosenUnit = unseenUnits[Random.Range(0, unseenUnits.Count)];
+            var chosenUnit = unseenUnits[UnityEngine.Random.Range(0, unseenUnits.Count)];
             TryPickUnseenElementForUnit(chosenUnit, out Element chosenElement);
             return (chosenUnit, chosenElement);
         }
@@ -241,15 +268,9 @@ public class UnitListReference : ScriptableObject
 
     private UnitInstance CreateNewFriend(UnitInstance unit)
     {
-        var (newUnit, newElement) = GenerateNewUnit();
-        var friend = CreateInstance<UnitInstance>();
-
-        var matchingColorPalette = GetColorPaletteByElement(newElement);
-
-        friend.Initialize(newUnit, element: newElement, colorPalette: matchingColorPalette);
+        var friend = CreateNewUnit();
         unit.Friends.Add(friend);
         friend.Friends.Add(unit);
-        RegisterUnit(friend);
         return friend;
     }
 
@@ -343,5 +364,12 @@ public class UnitListReference : ScriptableObject
     {
         var friend = CreateNewFriend(unit.Instance);
         OnFriendInvited?.Invoke(unit, friend);
+    }
+
+    public event UnityAction<UnitInstance, Vector3, UnityAction<UnitController>> OnUnitSpawned;
+    public void SpawnNewUnit(UnitQuery unitQuery, Vector3 position, UnityAction<UnitController> onSpawned = null)
+    {
+        var unit = CreateNewUnit(unitQuery);
+        OnUnitSpawned?.Invoke(unit, position, onSpawned);
     }
 }
