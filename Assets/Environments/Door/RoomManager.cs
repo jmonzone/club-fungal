@@ -13,11 +13,13 @@ public class RoomManager : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private TransitionReference transitionReference;
     [SerializeField] private RoomController roomControllerPrefab;
     [SerializeField] private List<Texture> wallTextures;
 
     [Header("Runtime")]
     [SerializeField] private List<RoomController> roomControllers;
+    [SerializeField] private bool isTransitioning = false;
 
     // Grid to track room positions using integer grid coordinates
     private Dictionary<Vector3Int, RoomController> roomGrid = new Dictionary<Vector3Int, RoomController>();
@@ -32,75 +34,86 @@ public class RoomManager : MonoBehaviour
         }
     }
 
-    //todo: not always create a new room, sometimes use an existing one
     private void OnDoorSelected(DoorController door)
     {
-        // Check if the door already has an otherDoor assigned
-        if (!door.OtherDoor)
+        if (isTransitioning) return;
+        isTransitioning = true;
+        transitionReference.StartTransition(TransitionType.CIRCLE_IN, () =>
         {
-            var targetPosition = GetNewRoomPosition(door.Room.transform.position, door.transform.position);
-            var targetRotation = door.Room.transform.rotation;
-            var newRoom = Instantiate(roomControllerPrefab, targetPosition, targetRotation, transform);
-            var randomtexture = wallTextures[Random.Range(0, wallTextures.Count)];
-            newRoom.SetTexture(randomtexture);
-            newRoom.name = $"Room_{roomControllers.Count}";
-            newRoom.OnDoorSelected += door => OnDoorSelected(door);
-            roomControllers.Add(newRoom);
-            roomGrid[WorldToGrid(targetPosition)] = newRoom;
+            // Check if the door already has an otherDoor assigned
+            if (!door.OtherDoor) CreateNewRoom(door);
 
-            var oppositeSide = door.Wall.Direction switch
-            {
-                Direction.NorthEast => Direction.SouthWest,
-                Direction.NorthWest => Direction.SouthEast,
-                Direction.SouthEast => Direction.NorthWest,
-                Direction.SouthWest => Direction.NorthEast,
-                _ => throw new System.ArgumentOutOfRangeException()
-            };
+            var teleportDirection = (door.OtherDoor.Room.transform.position - door.OtherDoor.transform.position).normalized;
+            var teleportPosition = door.OtherDoor.transform.position + teleportDirection * 2f;
+            playerReference.TeleportPlayer(teleportPosition);
 
-            var wallIndex = oppositeSide switch
-            {
-                Direction.NorthWest => 0,
-                Direction.NorthEast => 1,
-                Direction.SouthWest => 2,
-                Direction.SouthEast => 3,
-                _ => throw new System.ArgumentOutOfRangeException()
-            };
+            door.Room.SetAsOuterRoom();
+            door.OtherDoor.Room.SetAsInnerRoom();
 
-            Debug.Log($"Linking door from {door.Room.name} to {newRoom.name} via walls {door.Wall.Direction} and {oppositeSide}");
+            transitionReference.StartTransition(TransitionType.CIRCLE_OUT, () =>
+            {
+                isTransitioning = false;
+            });
+        });
+    }
 
-            var oppositeDoor = newRoom.Walls[wallIndex].DoorController;
-            door.SetOtherDoor(oppositeDoor);
-            oppositeDoor.SetOtherDoor(door);
-            newRoom.ActivateDoor(oppositeDoor);
+    private void CreateNewRoom(DoorController door)
+    {
+        var targetPosition = GetNewRoomPosition(door.Room.transform.position, door.transform.position);
+        var targetRotation = door.Room.transform.rotation;
+        var newRoom = Instantiate(roomControllerPrefab, targetPosition, targetRotation, transform);
+        var randomtexture = wallTextures[Random.Range(0, wallTextures.Count)];
+        newRoom.SetTexture(randomtexture);
+        newRoom.name = $"Room_{roomControllers.Count}";
+        newRoom.OnDoorSelected += door => OnDoorSelected(door);
+        roomControllers.Add(newRoom);
+        roomGrid[WorldToGrid(targetPosition)] = newRoom;
 
-            // Activate a random new door in addition to the opposite door, only if no room exists at the target position
-            var candidateDoors = new List<DoorController>();
-            foreach (var wall in newRoom.Walls)
+        var oppositeSide = door.Wall.Direction switch
+        {
+            Direction.NorthEast => Direction.SouthWest,
+            Direction.NorthWest => Direction.SouthEast,
+            Direction.SouthEast => Direction.NorthWest,
+            Direction.SouthWest => Direction.NorthEast,
+            _ => throw new System.ArgumentOutOfRangeException()
+        };
+
+        var wallIndex = oppositeSide switch
+        {
+            Direction.NorthWest => 0,
+            Direction.NorthEast => 1,
+            Direction.SouthWest => 2,
+            Direction.SouthEast => 3,
+            _ => throw new System.ArgumentOutOfRangeException()
+        };
+
+        Debug.Log($"Linking door from {door.Room.name} to {newRoom.name} via walls {door.Wall.Direction} and {oppositeSide}");
+
+        var oppositeDoor = newRoom.Walls[wallIndex].DoorController;
+        door.SetOtherDoor(oppositeDoor);
+        oppositeDoor.SetOtherDoor(door);
+        newRoom.ActivateDoor(oppositeDoor);
+
+        // Activate a random new door in addition to the opposite door, only if no room exists at the target position
+        var candidateDoors = new List<DoorController>();
+        foreach (var wall in newRoom.Walls)
+        {
+            if (wall.DoorController == oppositeDoor) continue;
+            var candidatePos = GetNewRoomPosition(newRoom.transform.position, wall.DoorController.transform.position);
+            if (!roomGrid.ContainsKey(WorldToGrid(candidatePos)))
             {
-                if (wall.DoorController == oppositeDoor) continue;
-                var candidatePos = GetNewRoomPosition(newRoom.transform.position, wall.DoorController.transform.position);
-                if (!roomGrid.ContainsKey(WorldToGrid(candidatePos)))
-                {
-                    candidateDoors.Add(wall.DoorController);
-                }
-            }
-            if (candidateDoors.Count > 0)
-            {
-                var randomDoor = candidateDoors[Random.Range(0, candidateDoors.Count)];
-                newRoom.ActivateDoor(randomDoor);
-            }
-            else
-            {
-                Debug.LogWarning("No candidate doors available for additional activation.");
+                candidateDoors.Add(wall.DoorController);
             }
         }
-
-        var teleportDirection = (door.OtherDoor.Room.transform.position - door.OtherDoor.transform.position).normalized;
-        var teleportPosition = door.OtherDoor.transform.position + teleportDirection * 2f;
-        playerReference.TeleportPlayer(teleportPosition);
-
-        door.Room.SetAsOuterRoom();
-        door.OtherDoor.Room.SetAsInnerRoom();
+        if (candidateDoors.Count > 0)
+        {
+            var randomDoor = candidateDoors[Random.Range(0, candidateDoors.Count)];
+            newRoom.ActivateDoor(randomDoor);
+        }
+        else
+        {
+            Debug.LogWarning("No candidate doors available for additional activation.");
+        }
     }
 
     private const float RoomOffset = 15f;

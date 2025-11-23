@@ -81,3 +81,5 @@ crashlytics-build.properties
 
 # Ignore secrets directory
 /[Aa]ssets/[Ss]ecrets/
+Assets/.DS_Store
+.DS_Store

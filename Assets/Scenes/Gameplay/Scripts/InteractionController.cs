@@ -20,9 +20,9 @@ public class InteractionController : MonoBehaviour
     [SerializeField] private DialogueReference dialogue;
     [SerializeField] private LayerMask interactableMask;
     [SerializeField] private LayerMask groundMask;
-    [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference homeView;
-    [SerializeField] private ViewReference partyView;
+    [SerializeField] private VirtualJoystick virtualJoystick;
+    [SerializeField] private CameraRotationController cameraRotationController;
 
     [Header("Runtime")]
     [SerializeField] private Transform selected;
@@ -39,6 +39,16 @@ public class InteractionController : MonoBehaviour
     {
         mainCamera = Camera.main;
         dialogue.OnDialogueComplete += Unselect;
+
+        virtualJoystick.OnJoystickStart += position =>
+        {
+            cameraRotationController.SetCanOrbit(false);
+        };
+
+        virtualJoystick.OnJoystickEnd += () =>
+        {
+            cameraRotationController.SetCanOrbit(true);
+        };
     }
 
     private float raycastMaxDistance = 100f;

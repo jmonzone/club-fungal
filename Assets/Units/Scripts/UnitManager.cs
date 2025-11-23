@@ -38,11 +38,11 @@ public class UnitManager : MonoBehaviour
     {
         playerController.Initialize(unitList.Units[0]);
 
-        foreach (var unit in unitList.Units)
-        {
-            if (unit == playerController.Instance) continue;
-            SummonUnit(unit, GetRandomSpawnPosition());
-        }
+        // foreach (var unit in unitList.Units)
+        // {
+        //     if (unit == playerController.Instance) continue;
+        //     SummonUnit(unit, GetRandomSpawnPosition());
+        // }
 
         OnAllUnitsSummoned?.Invoke();
     }

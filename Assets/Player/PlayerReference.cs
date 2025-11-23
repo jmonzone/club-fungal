@@ -60,4 +60,9 @@ public class PlayerReference : ScriptableObject
         interactionReference.StartInteraction(Player, interactable);
         Player.ApplyDefaultBehaviour();
     }
+
+    public void SetCameraZoom(float t)
+    {
+        player.RenderRoot.gameObject.SetActive(t >= 0.01f);
+    }
 }

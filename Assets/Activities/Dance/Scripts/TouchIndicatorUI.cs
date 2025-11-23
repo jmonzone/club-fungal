@@ -50,7 +50,7 @@ public class TouchIndicatorUI : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = elapsed / touchDuration;
             touchIndicator.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one * touchScale, t);
-            touchIndicator.color = Color.Lerp(djReference.DominantTrack.Glyph.Color, Color.clear, t);
+            touchIndicator.color = Color.Lerp(djReference.Color, Color.clear, t);
             yield return null;
         }
 

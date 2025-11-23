@@ -1,6 +1,7 @@
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 public class CameraRotationController : MonoBehaviour
 {
@@ -90,6 +91,8 @@ public class CameraRotationController : MonoBehaviour
         }
     }
 
+    private bool canOrbit = true;
+
     void Update()
     {
         if (target == null || vCam == null) return;
@@ -98,9 +101,14 @@ public class CameraRotationController : MonoBehaviour
         if (EventSystem.current.IsPointerOverGameObject()) return;
         if (Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)) return;
 
-        HandleOrbitInput();    // one-finger = yaw, two-finger = yaw+pitch
+        if (canOrbit) HandleOrbitInput();    // one-finger = yaw, two-finger = yaw+pitch
         HandleZoomInput();     // scroll/pinch -> ZoomCamera(..) per provided snippet
 
+    }
+
+    public void SetCanOrbit(bool canOrbit)
+    {
+        this.canOrbit = canOrbit;
     }
 
     void HandleOrbitInput()
@@ -167,6 +175,8 @@ public class CameraRotationController : MonoBehaviour
         }
     }
 
+    [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private float t;
     // ZoomCamera adjusts the target distance (dolly). We'll also update targetFov.
     void ZoomCamera(float delta)
     {
@@ -177,7 +187,9 @@ public class CameraRotationController : MonoBehaviour
         targetHeight = Mathf.Clamp(targetHeight, 0, 8);
 
         // update targetFov mapped to distance (close -> fovMin, far -> fovMax)
-        float t = Mathf.InverseLerp(minDistance, maxDistance, targetDistance);
+        t = Mathf.InverseLerp(minDistance, maxDistance, targetDistance);
+        playerReference.SetCameraZoom(t);
+
         targetFov = Mathf.Lerp(fovMin, fovMax, t);
     }
 

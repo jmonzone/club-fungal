@@ -30,6 +30,7 @@ public class DJTableReference : ScriptableObject
     public DJTrack LeftTrack => leftTrack;
     public DJTrack RightTrack => rightTrack;
     public DJTrack DominantTrack => dominantTrack;
+    public Color Color => dominantTrack?.Glyph.Color ?? Color.white;
 
     public float LeftValue => leftValue;
     public float RightValue => rightValue;
