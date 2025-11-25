@@ -11,8 +11,8 @@ public class PlayerController : UnitController
     [SerializeField] private InventoryReference inventoryReference;
     [SerializeField] private CinemachineVirtualCamera povCamera;
 
+    private NavMeshAgent navMeshAgent;
     private UnitGlyphCollect unitGlyphCollect;
-
     private Material[] materials;
 
     public override Color Color
@@ -51,12 +51,16 @@ public class PlayerController : UnitController
 
         materials = mats.ToArray();
 
+        navMeshAgent = GetComponent<NavMeshAgent>();
+        navMeshAgent.speed = playerReference.Speed;
+
         NavMeshHit hit;
         if (NavMesh.SamplePosition(transform.position, out hit, 5.0f, NavMesh.AllAreas))
         {
-            GetComponent<NavMeshAgent>().Warp(hit.position);
+            navMeshAgent.Warp(hit.position);
             transform.position = hit.position;
         }
+
         playerReference.SetPlayer(this);
         playerReference.SetTargetPosition(transform.position);
     }

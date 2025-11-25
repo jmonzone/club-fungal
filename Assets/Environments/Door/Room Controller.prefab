@@ -360,10 +360,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8647cda6a1c584ce1b1d226a563fdec3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomController
-  ceilingObject: {fileID: 3466135205452436865}
-  activityReference: {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}
-  activityAnchor: {fileID: 8584821059854230054}
   unitCollection: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2, type: 2}
+  activityCollection: {fileID: 11400000, guid: aec2ccd386a894c10881576dbb50d6c7, type: 2}
+  ceilingObject: {fileID: 3466135205452436865}
+  activityAnchor: {fileID: 8584821059854230054}
 --- !u!1 &7019768654400002335
 GameObject:
   m_ObjectHideFlags: 0

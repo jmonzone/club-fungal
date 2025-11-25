@@ -6,7 +6,7 @@ public class RoomController : MonoBehaviour
 {
     [Header("Systems")]
     [SerializeField] private UnitListReference unitCollection;
-    [SerializeField] private ActivityReference activityReference;
+    [SerializeField] private ActivityCollection activityCollection;
 
     [Header("References")]
     [SerializeField] private GameObject ceilingObject;
@@ -34,9 +34,11 @@ public class RoomController : MonoBehaviour
 
     public void Initialize(Texture texture)
     {
+        var randomActivity = activityCollection.GetRandomActivity();
+
         unitCollection.SpawnNewUnit(unit => unit.Moves.Count > 0, activityAnchor.position, onSpawned: unit =>
         {
-            activityReference.StartActivity(activityAnchor.position, new List<UnitController> { unit });
+            randomActivity.StartActivity(activityAnchor.position, new List<UnitController> { unit });
         });
 
         walls.ForEach(wall => wall.SetTexture(texture));

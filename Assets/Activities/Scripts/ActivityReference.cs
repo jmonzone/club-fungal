@@ -39,6 +39,8 @@ public class ActivityReference : ScriptableObject
     public void StartActivity(Vector3 origin, List<UnitController> units)
     {
         var activityController = Instantiate(activityControllerPrefab, origin, Quaternion.identity);
+        activityController.Initialize(this);
+
         Debug.Log($"Starting activity {name}");
         this.origin = origin;
         this.units = new List<ActivityUnit>();

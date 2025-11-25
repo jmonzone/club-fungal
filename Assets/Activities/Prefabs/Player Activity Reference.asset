@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69315ee8484814e2994bbcb2d756d10e, type: 3}
   m_Name: Player Activity Reference
   m_EditorClassIdentifier: Assembly-CSharp::PlayerActivityReference
-  activity: {fileID: 11400000, guid: 6acca8bf6674942fc809a4d20308a3af, type: 2}
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
-  canExit: 0
   navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
-  activityLevelView: {fileID: 11400000, guid: c2830a5c6cf944a8ca2e6760c39e19ed, type: 2}
+  levelUpView: {fileID: 11400000, guid: c2830a5c6cf944a8ca2e6760c39e19ed, type: 2}
+  activity: {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}

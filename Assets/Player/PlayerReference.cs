@@ -7,12 +7,21 @@ public class PlayerReference : ScriptableObject
     [Header("References")]
     [SerializeField] private InteractionReference interactionReference;
 
+    [Header("Settings")]
+    [SerializeField] private float speed = 2f;
+
+    [Header("Editor Settings")]
+    [SerializeField] private float editorSpeed = 5f;
+
+
     [Header("Runtime")]
     [SerializeField] private PlayerController player;
     [SerializeField] private Vector3 targetPosition;
     [SerializeField] private IInteractable targetInteractable;
 
     private ActivityUnit activityUnit;
+
+    public float Speed => Application.isEditor ? editorSpeed : speed;
 
     public PlayerController Player => player;
     public ActivityUnit ActivityUnit => activityUnit;

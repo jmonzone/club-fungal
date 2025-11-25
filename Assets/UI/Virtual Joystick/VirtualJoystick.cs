@@ -33,32 +33,22 @@ public class VirtualJoystick : MonoBehaviour
 
     private void Update()
     {
-        // Handle joystick release
         if (IsActive && IsInputReleased())
         {
-            IsActive = false;
-            activeTouchIndex = -1;
-            rect.position = defaultPosition;
-            joystickRect.anchoredPosition = Vector3.zero;
-            OnJoystickEnd?.Invoke();
+            HandleJoystickRelease();
         }
 
         // Handle joystick start
         if (!IsActive && IsInputPressed(out int touchIndex))
         {
-            IsActive = true;
             activeTouchIndex = touchIndex;
-            startPosition = GetInputPosition();
-            rect.position = startPosition;
-            OnJoystickStart?.Invoke(startPosition);
+            HandleJoystickStart(GetInputPosition());
         }
 
         // Handle joystick movement
         if (IsActive && IsInputHeld())
         {
-            direction = Vector3.ClampMagnitude(GetInputPosition() - startPosition, JOYSTICK_LENGTH);
-            joystickRect.anchoredPosition = direction;
-            OnJoystickUpdate?.Invoke(direction * sensitivity);
+            HandleJoystickUpdate(GetInputPosition());
         }
     }
 
@@ -128,5 +118,28 @@ public class VirtualJoystick : MonoBehaviour
         return !target || (results.Count > 0 && results[0].gameObject == target);
     }
 
+    public void HandleJoystickStart(Vector3 inputPosition)
+    {
+        IsActive = true;
+        startPosition = inputPosition;
+        rect.position = startPosition;
+        OnJoystickStart?.Invoke(startPosition);
+    }
+
+    public void HandleJoystickUpdate(Vector3 inputPosition)
+    {
+        direction = Vector3.ClampMagnitude(inputPosition - startPosition, JOYSTICK_LENGTH);
+        joystickRect.anchoredPosition = direction;
+        OnJoystickUpdate?.Invoke(direction * sensitivity);
+    }
+
+    public void HandleJoystickRelease()
+    {
+        IsActive = false;
+        activeTouchIndex = -1;
+        rect.position = defaultPosition;
+        joystickRect.anchoredPosition = Vector3.zero;
+        OnJoystickEnd?.Invoke();
+    }
 
 }

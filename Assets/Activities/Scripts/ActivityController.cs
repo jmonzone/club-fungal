@@ -1,18 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 public abstract class ActivityController : MonoBehaviour
 {
-    [Header("Activity References")]
+    [Header("Runtime")]
     [SerializeField] private ActivityReference activity;
     public ActivityReference Activity => activity;
 
+    public event UnityAction OnInitialized;
     public event UnityAction<ActivityUnit> OnPlayerEnterEvent;
     public event UnityAction<ActivityUnit> OnPlayerExitEvent;
 
     protected virtual void Awake()
     {
+    }
+
+    public virtual void Initialize(ActivityReference activity)
+    {
+        Debug.Log($"[{name}] Initializing ActivityController with activity {activity.name}");
+        this.activity = activity;
+        OnInitialized?.Invoke();
     }
 
     protected virtual void OnPlayerEnter(ActivityUnit player)
@@ -29,19 +38,12 @@ public abstract class ActivityController : MonoBehaviour
 
 public abstract class ActivityController<T> : ActivityController where T : ActivityBehaviour
 {
-    [SerializeField] private Skill primarySkill;
-
-    [Header("Activity Runtime")]
-    [SerializeField] private T player;
     [SerializeField] private int currentIndex;
     [SerializeField] private T currentUnit;
     [SerializeField] private List<T> units;
 
-    protected Skill PrimarySkill => primarySkill;
     protected bool PlayerIsActive => Activity.PlayerIsActive;
     protected bool PlayerIsSelected => currentUnit && currentUnit.IsPlayer;
-
-    protected T Player => player;
 
     public T CurrentUnit => currentUnit;
     public T NextUnit => units[(currentIndex + 1) % units.Count];
@@ -50,8 +52,26 @@ public abstract class ActivityController<T> : ActivityController where T : Activ
 
     public event UnityAction<T> OnUnitSelected;
 
+    public override void Initialize(ActivityReference activity)
+    {
+        if (Activity) UnbindEvents();
+        base.Initialize(activity);
+        BindEvents();
+    }
+
     private void OnEnable()
     {
+        BindEvents();
+    }
+
+    private void OnDisable()
+    {
+        UnbindEvents();
+    }
+
+    private void BindEvents()
+    {
+        if (Activity == null) return;
         Activity.OnActivityHasStarted += OnActivityStart;
         Activity.OnActivityHasEnded += OnActivityEnded;
         Activity.OnUnitEnter += OnUnitEnter;
@@ -60,20 +80,15 @@ public abstract class ActivityController<T> : ActivityController where T : Activ
         Activity.OnPlayerExit += OnPlayerExit;
     }
 
-    private void OnDisable()
+    private void UnbindEvents()
     {
+        if (Activity == null) return;
         Activity.OnActivityHasStarted -= OnActivityStart;
         Activity.OnActivityHasEnded -= OnActivityEnded;
         Activity.OnUnitEnter -= OnUnitEnter;
         Activity.OnUnitExit -= OnUnitExit;
         Activity.OnPlayerEnter -= OnPlayerEnter;
         Activity.OnPlayerExit -= OnPlayerExit;
-    }
-
-    protected override void OnPlayerEnter(ActivityUnit player)
-    {
-        base.OnPlayerEnter(player);
-        this.player = player.GetComponent<T>();
     }
 
     protected override void OnPlayerExit(ActivityUnit player)
@@ -143,8 +158,7 @@ public abstract class ActivityController<T> : ActivityController where T : Activ
         }
     }
 
-    //todo: separate unit selection to another component
-    //it is not ActivityController specific
+    [Obsolete("This script shouldn't handle unit selection directly. Use a separate UnitSelectionController instead.")]
     public void SelectNextUnit()
     {
         if (Activity.Units.Count == 0) return;

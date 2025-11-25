@@ -5,8 +5,11 @@ using UnityEngine.Events;
 
 public class CircleTransitionController : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private TransitionReference transitionReference;
     [SerializeField] private Image circleImage;
+
+    [Header("Settings")]
     [SerializeField] private float maxSize = 1f;
     [SerializeField] private float circleInDuration = 1f;
     [SerializeField] private AnimationCurve circleInCurve = AnimationCurve.Linear(0, 0, 1, 1);
@@ -51,5 +54,10 @@ public class CircleTransitionController : MonoBehaviour
         }
         circleImage.material.SetFloat("_Size", to);
         onComplete?.Invoke();
+    }
+
+    private void OnApplicationQuit()
+    {
+        circleImage.material.SetFloat("_Size", maxSize);
     }
 }

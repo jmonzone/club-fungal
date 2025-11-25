@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -20,17 +21,44 @@ public class ActivityZoneController : MonoBehaviour, IInteractable
 
     private void Awake()
     {
-        activity = GetComponentInParent<ActivityController>().Activity;
+        var activityController = GetComponentInParent<ActivityController>();
+
+        if (activityController.Activity)
+        {
+            activity = activityController.Activity;
+            BindEvents();
+        }
+
+        activityController.OnInitialized += () =>
+        {
+            if (activity) UnbindEvents();
+            activity = activityController.Activity;
+            BindEvents();
+        };
     }
 
     private void OnEnable()
     {
-        //djReference.OnTrackValueChanged += DjReference_OnTrackValueChanged;
+        BindEvents();
+    }
+
+    private void OnDisable()
+    {
+        UnbindEvents();
+    }
+
+    private void BindEvents()
+    {
+        if (activity == null) return;
         activity.OnActivityHasStarted += OnActivityStart;
         activity.OnActivityHasEnded += OnActivityHasEnded;
+    }
 
-        //material = zoneController.GetComponentInChildren<Renderer>().material;
-        //DjReference_OnTrackValueChanged();
+    private void UnbindEvents()
+    {
+        if (activity == null) return;
+        activity.OnActivityHasStarted -= OnActivityStart;
+        activity.OnActivityHasEnded -= OnActivityHasEnded;
     }
 
     private void DjReference_OnTrackValueChanged()
@@ -44,13 +72,6 @@ public class ActivityZoneController : MonoBehaviour, IInteractable
         {
             material.SetColor("_BottomColor", djReference.DominantTrack.Glyph.Color);
         }
-    }
-
-    private void OnDisable()
-    {
-        //djReference.OnTrackValueChanged -= DjReference_OnTrackValueChanged;
-        activity.OnActivityHasStarted -= OnActivityStart;
-        activity.OnActivityHasEnded -= OnActivityHasEnded;
     }
 
     private void OnActivityStart()
@@ -90,6 +111,7 @@ public class ActivityZoneController : MonoBehaviour, IInteractable
         target.localScale = to;
     }
 
+    [Obsolete("Move IInteractable logic to a separate component.")]
     void IInteractable.Select()
     {
         activityUIReference.EnterActivity(activity);
