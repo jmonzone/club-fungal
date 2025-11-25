@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class DanceActivityUnit : ActivityBehaviour
+public class DanceActivityUnit : ActivityUnitBehaviour
 {
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private string baseDanceAnimation;

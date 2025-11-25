@@ -47,7 +47,7 @@ public class ActivityUnit : MonoBehaviour
         controller.ApplyDefaultBehaviour();
     }
 
-    public void SetBehaviour(ActivityBehaviour behaviour)
+    public void SetBehaviour(ActivityUnitBehaviour behaviour)
     {
         controller.SetBehaviour(behaviour);
     }

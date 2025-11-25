@@ -2,7 +2,7 @@
 
 // interface between ActivityBehaviour and Activity Unit
 [RequireComponent(typeof(ActivityUnit))]
-public abstract class ActivityBehaviour : UnitBehaviour
+public abstract class ActivityUnitBehaviour : UnitBehaviour
 {
     [SerializeField] private ActivityReference activityReference;
 

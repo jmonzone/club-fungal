@@ -3,24 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public abstract class ActivityController : MonoBehaviour
+public abstract class ActivityController : ActivityBehaviour
 {
-    [Header("Runtime")]
-    [SerializeField] private ActivityReference activity;
-    public ActivityReference Activity => activity;
-
     public event UnityAction OnInitialized;
     public event UnityAction<ActivityUnit> OnPlayerEnterEvent;
     public event UnityAction<ActivityUnit> OnPlayerExitEvent;
 
-    protected virtual void Awake()
-    {
-    }
-
-    public virtual void Initialize(ActivityReference activity)
+    public void Initialize(ActivityReference activity)
     {
         Debug.Log($"[{name}] Initializing ActivityController with activity {activity.name}");
-        this.activity = activity;
+        SetActivity(activity);
         OnInitialized?.Invoke();
     }
 
@@ -36,7 +28,7 @@ public abstract class ActivityController : MonoBehaviour
 
 }
 
-public abstract class ActivityController<T> : ActivityController where T : ActivityBehaviour
+public abstract class ActivityController<T> : ActivityController where T : ActivityUnitBehaviour
 {
     [SerializeField] private int currentIndex;
     [SerializeField] private T currentUnit;
@@ -52,26 +44,8 @@ public abstract class ActivityController<T> : ActivityController where T : Activ
 
     public event UnityAction<T> OnUnitSelected;
 
-    public override void Initialize(ActivityReference activity)
+    protected override void BindEvents()
     {
-        if (Activity) UnbindEvents();
-        base.Initialize(activity);
-        BindEvents();
-    }
-
-    private void OnEnable()
-    {
-        BindEvents();
-    }
-
-    private void OnDisable()
-    {
-        UnbindEvents();
-    }
-
-    private void BindEvents()
-    {
-        if (Activity == null) return;
         Activity.OnActivityHasStarted += OnActivityStart;
         Activity.OnActivityHasEnded += OnActivityEnded;
         Activity.OnUnitEnter += OnUnitEnter;
@@ -80,9 +54,8 @@ public abstract class ActivityController<T> : ActivityController where T : Activ
         Activity.OnPlayerExit += OnPlayerExit;
     }
 
-    private void UnbindEvents()
+    protected override void UnbindEvents()
     {
-        if (Activity == null) return;
         Activity.OnActivityHasStarted -= OnActivityStart;
         Activity.OnActivityHasEnded -= OnActivityEnded;
         Activity.OnUnitEnter -= OnUnitEnter;

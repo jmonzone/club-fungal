@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PTS_Unit : ActivityBehaviour
+public class PTS_Unit : ActivityUnitBehaviour
 {
     [SerializeField] private Vector3 sporeOffset;
 

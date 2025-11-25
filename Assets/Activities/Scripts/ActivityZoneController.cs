@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class ActivityZoneController : MonoBehaviour, IInteractable
+public class ActivityZoneController : ActivityComponent, IInteractable
 {
     [Header("References")]
     [SerializeField] private PlayerActivityReference activityUIReference;
@@ -16,49 +16,20 @@ public class ActivityZoneController : MonoBehaviour, IInteractable
 
     Transform ITarget.Transform => transform;
 
-    private ActivityReference activity;
     private Material material;
 
-    private void Awake()
+    protected override void BindEvents()
     {
-        var activityController = GetComponentInParent<ActivityController>();
-
-        if (activityController.Activity)
-        {
-            activity = activityController.Activity;
-            BindEvents();
-        }
-
-        activityController.OnInitialized += () =>
-        {
-            if (activity) UnbindEvents();
-            activity = activityController.Activity;
-            BindEvents();
-        };
+        base.BindEvents();
+        Activity.OnActivityHasStarted += OnActivityStart;
+        Activity.OnActivityHasEnded += OnActivityHasEnded;
     }
 
-    private void OnEnable()
+    protected override void UnbindEvents()
     {
-        BindEvents();
-    }
-
-    private void OnDisable()
-    {
-        UnbindEvents();
-    }
-
-    private void BindEvents()
-    {
-        if (activity == null) return;
-        activity.OnActivityHasStarted += OnActivityStart;
-        activity.OnActivityHasEnded += OnActivityHasEnded;
-    }
-
-    private void UnbindEvents()
-    {
-        if (activity == null) return;
-        activity.OnActivityHasStarted -= OnActivityStart;
-        activity.OnActivityHasEnded -= OnActivityHasEnded;
+        base.UnbindEvents();
+        Activity.OnActivityHasStarted -= OnActivityStart;
+        Activity.OnActivityHasEnded -= OnActivityHasEnded;
     }
 
     private void DjReference_OnTrackValueChanged()
@@ -114,6 +85,6 @@ public class ActivityZoneController : MonoBehaviour, IInteractable
     [Obsolete("Move IInteractable logic to a separate component.")]
     void IInteractable.Select()
     {
-        activityUIReference.EnterActivity(activity);
+        activityUIReference.EnterActivity(Activity);
     }
 }

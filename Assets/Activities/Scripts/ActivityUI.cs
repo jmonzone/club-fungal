@@ -1,32 +1,95 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class ActivityUI : MonoBehaviour
+public abstract class ActivityBehaviour : MonoBehaviour
+{
+    [SerializeField] private ActivityReference activity;
+
+    public ActivityReference Activity => activity;
+
+    protected virtual void Awake()
+    {
+    }
+
+    protected virtual void OnEnable()
+    {
+        BindEvents();
+    }
+
+    protected virtual void OnDisable()
+    {
+        UnbindEvents();
+    }
+
+    protected virtual void BindEvents()
+    {
+        if (activity == null) return;
+    }
+
+    protected virtual void UnbindEvents()
+    {
+        if (activity == null) return;
+    }
+
+    protected void SetActivity(ActivityReference newActivity)
+    {
+        if (activity != null)
+        {
+            UnbindEvents();
+        }
+
+        activity = newActivity;
+
+        if (activity != null)
+        {
+            BindEvents();
+        }
+    }
+}
+
+public abstract class ActivityComponent : ActivityBehaviour
+{
+    protected override void Awake()
+    {
+        base.Awake();
+
+        var activityController = GetComponentInParent<ActivityController>();
+
+        if (activityController.Activity)
+        {
+            SetActivity(activityController.Activity);
+        }
+
+        activityController.OnInitialized += () =>
+        {
+            SetActivity(activityController.Activity);
+        };
+    }
+}
+
+public abstract class ActivityUI : ActivityComponent
 {
     private Camera mainCamera;
 
     public virtual Camera Camera => mainCamera;
 
-    protected virtual void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         mainCamera = Camera.main;
     }
 }
 
-public abstract class ActivityUI<T1, T2> : ActivityUI where T1 : ActivityBehaviour where T2: ActivityController<T1>
+public abstract class ActivityUI<T1, T2> : ActivityUI where T1 : ActivityUnitBehaviour where T2 : ActivityController<T1>
 {
     [Header("Activity References")]
     [SerializeField] private PlayerActivityReference playerActivityReference;
-    [SerializeField] private ActivityReference activity;
-    [SerializeField] private PlayerReference playerReference;
     [SerializeField] private T2 controller;
     [SerializeField] private Button backButton;
 
     [Header("Activity Runtime")]
     [SerializeField] private T1 player;
 
-    protected ActivityReference Activity => activity;
-    protected PlayerReference PlayerReference => playerReference;
     protected T1 Player => player;
     protected T2 Controller => controller;
     protected Button BackButton => backButton;
@@ -38,20 +101,22 @@ public abstract class ActivityUI<T1, T2> : ActivityUI where T1 : ActivityBehavio
         BackButton.onClick.AddListener(playerActivityReference.ExitActivity);
     }
 
-    protected virtual void OnEnable()
+    protected override void OnEnable()
     {
-        activity.OnUnitEnter += OnUnitEnter;
-        activity.OnUnitExit += OnUnitExit;
-        activity.OnPlayerEnter += OnPlayerEnter;
-        activity.OnPlayerExit += OnPlayerExit;
+        base.OnEnable();
+        Activity.OnUnitEnter += OnUnitEnter;
+        Activity.OnUnitExit += OnUnitExit;
+        Activity.OnPlayerEnter += OnPlayerEnter;
+        Activity.OnPlayerExit += OnPlayerExit;
     }
 
-    protected virtual void OnDisable()
+    protected override void OnDisable()
     {
-        activity.OnUnitEnter -= OnUnitEnter;
-        activity.OnUnitExit -= OnUnitExit;
-        activity.OnPlayerEnter -= OnPlayerEnter;
-        activity.OnPlayerExit -= OnPlayerExit;
+        base.OnDisable();
+        Activity.OnUnitEnter -= OnUnitEnter;
+        Activity.OnUnitExit -= OnUnitExit;
+        Activity.OnPlayerEnter -= OnPlayerEnter;
+        Activity.OnPlayerExit -= OnPlayerExit;
     }
 
     protected virtual void OnUnitEnter(ActivityUnit unit)

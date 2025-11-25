@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ShruneReadingUnit : ActivityBehaviour
+public class ShruneReadingUnit : ActivityUnitBehaviour
 {
     protected override void OnBehaviourStart()
     {
