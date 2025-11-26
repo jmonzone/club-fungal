@@ -22,7 +22,6 @@ public class RoomManager : MonoBehaviour
     [SerializeField] private List<RoomController> roomControllers;
     [SerializeField] private bool isTransitioning = false;
 
-    // Grid to track room positions using integer grid coordinates
     private Dictionary<Vector3Int, RoomController> roomGrid = new Dictionary<Vector3Int, RoomController>();
 
     private void Awake()
@@ -30,9 +29,36 @@ public class RoomManager : MonoBehaviour
         roomControllers = new List<RoomController>(GetComponentsInChildren<RoomController>());
         foreach (var room in roomControllers)
         {
-            room.OnDoorSelected += door => OnDoorSelected(door);
-            roomGrid[WorldToGrid(room.transform.position)] = room;
+            RegisterRoom(room);
         }
+    }
+
+    private void Start()
+    {
+        // wait for rooms to initialize
+        foreach (var room in roomControllers)
+        {
+            foreach (var wall in room.Walls)
+            {
+                var door = wall.DoorController;
+                if (!door || !door.gameObject.activeSelf) continue;
+
+                var candidatePos = GetNewRoomPosition(room, door);
+                if (roomGrid.ContainsKey(candidatePos))
+                {
+                    var otherRoom = roomGrid[candidatePos];
+                    var oppositeDoor = GetOppositeDoor(wall.Direction, otherRoom);
+                    door.SetOtherDoor(oppositeDoor);
+                }
+            }
+        }
+    }
+
+    private void RegisterRoom(RoomController room)
+    {
+        room.OnDoorSelected += door => OnDoorSelected(door);
+        var targetPosition = WorldToGrid(room.transform.localPosition);
+        roomGrid[targetPosition] = room;
     }
 
     private void OnDoorSelected(DoorController door)
@@ -68,31 +94,11 @@ public class RoomManager : MonoBehaviour
         var randomtexture = wallTextures[Random.Range(0, wallTextures.Count)];
         newRoom.Initialize(randomtexture);
         newRoom.name = $"Room_{roomControllers.Count}";
-        newRoom.OnDoorSelected += door => OnDoorSelected(door);
+        RegisterRoom(newRoom);
         roomControllers.Add(newRoom);
-        roomGrid[targetPosition] = newRoom;
 
-        var oppositeSide = door.Wall.Direction switch
-        {
-            Direction.NorthEast => Direction.SouthWest,
-            Direction.NorthWest => Direction.SouthEast,
-            Direction.SouthEast => Direction.NorthWest,
-            Direction.SouthWest => Direction.NorthEast,
-            _ => throw new System.ArgumentOutOfRangeException()
-        };
+        var oppositeDoor = GetOppositeDoor(door.Wall.Direction, newRoom);
 
-        var wallIndex = oppositeSide switch
-        {
-            Direction.NorthWest => 0,
-            Direction.NorthEast => 1,
-            Direction.SouthWest => 2,
-            Direction.SouthEast => 3,
-            _ => throw new System.ArgumentOutOfRangeException()
-        };
-
-        Debug.Log($"Linking door from {door.Room.name} to {newRoom.name} via walls {door.Wall.Direction} and {oppositeSide}");
-
-        var oppositeDoor = newRoom.Walls[wallIndex].DoorController;
         door.SetOtherDoor(oppositeDoor);
         oppositeDoor.SetOtherDoor(door);
         newRoom.ActivateDoor(oppositeDoor);
@@ -117,6 +123,29 @@ public class RoomManager : MonoBehaviour
         {
             Debug.LogWarning("No candidate doors available for additional activation.");
         }
+    }
+
+    private DoorController GetOppositeDoor(Direction direction, RoomController otherRoom)
+    {
+        var oppositeSide = direction switch
+        {
+            Direction.NorthEast => Direction.SouthWest,
+            Direction.NorthWest => Direction.SouthEast,
+            Direction.SouthEast => Direction.NorthWest,
+            Direction.SouthWest => Direction.NorthEast,
+            _ => throw new System.ArgumentOutOfRangeException()
+        };
+
+        var wallIndex = oppositeSide switch
+        {
+            Direction.NorthWest => 0,
+            Direction.NorthEast => 1,
+            Direction.SouthWest => 2,
+            Direction.SouthEast => 3,
+            _ => throw new System.ArgumentOutOfRangeException()
+        };
+
+        return otherRoom.Walls[wallIndex].DoorController;
     }
 
     private const float RoomOffset = 15f;
