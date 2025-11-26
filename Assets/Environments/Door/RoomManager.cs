@@ -60,15 +60,17 @@ public class RoomManager : MonoBehaviour
 
     private void CreateNewRoom(DoorController door)
     {
-        var targetPosition = GetNewRoomPosition(door.Room.transform.position, door.transform.position);
+        var targetPosition = GetNewRoomPosition(door.Room, door);
         var targetRotation = door.Room.transform.rotation;
-        var newRoom = Instantiate(roomControllerPrefab, targetPosition, targetRotation, transform);
+        var newRoom = Instantiate(roomControllerPrefab, transform);
+        newRoom.transform.localPosition = targetPosition;
+        newRoom.transform.rotation = targetRotation;
         var randomtexture = wallTextures[Random.Range(0, wallTextures.Count)];
         newRoom.Initialize(randomtexture);
         newRoom.name = $"Room_{roomControllers.Count}";
         newRoom.OnDoorSelected += door => OnDoorSelected(door);
         roomControllers.Add(newRoom);
-        roomGrid[WorldToGrid(targetPosition)] = newRoom;
+        roomGrid[targetPosition] = newRoom;
 
         var oppositeSide = door.Wall.Direction switch
         {
@@ -100,8 +102,8 @@ public class RoomManager : MonoBehaviour
         foreach (var wall in newRoom.Walls)
         {
             if (wall.DoorController == oppositeDoor) continue;
-            var candidatePos = GetNewRoomPosition(newRoom.transform.position, wall.DoorController.transform.position);
-            if (!roomGrid.ContainsKey(WorldToGrid(candidatePos)))
+            var candidatePos = GetNewRoomPosition(newRoom, wall.DoorController);
+            if (!roomGrid.ContainsKey(candidatePos))
             {
                 candidateDoors.Add(wall.DoorController);
             }
@@ -119,21 +121,20 @@ public class RoomManager : MonoBehaviour
 
     private const float RoomOffset = 15f;
 
-    // Converts a world position to a grid position for reliable dictionary keys
     private Vector3Int WorldToGrid(Vector3 position)
     {
-        // Use Mathf.RoundToInt for robustness
         return new Vector3Int(
-            Mathf.RoundToInt(position.x / RoomOffset),
-            Mathf.RoundToInt(position.y / RoomOffset),
-            Mathf.RoundToInt(position.z / RoomOffset)
+            Mathf.RoundToInt(position.x),
+            Mathf.RoundToInt(position.y),
+            Mathf.RoundToInt(position.z)
         );
     }
-
-    private Vector3 GetNewRoomPosition(Vector3 roomPosition, Vector3 doorPosition)
+    private Vector3Int GetNewRoomPosition(RoomController room, DoorController door)
     {
-        var direction = doorPosition - roomPosition;
-        var offset = RoomOffset * direction.normalized;
-        return roomPosition + offset;
+        var direction = door.transform.position - room.transform.position;
+        var offset = Quaternion.Inverse(room.transform.rotation) * (RoomOffset * direction.normalized);
+        var position = room.transform.localPosition + offset;
+
+        return WorldToGrid(position);
     }
 }
