@@ -4,6 +4,7 @@ using UnityEngine;
 public class VirtualJoystickWASD : MonoBehaviour
 {
     private VirtualJoystick virtualJoystick;
+    [SerializeField] private bool isActive = false;
 
     private void Awake()
     {
@@ -15,15 +16,16 @@ public class VirtualJoystickWASD : MonoBehaviour
         Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         if (input.magnitude > 0.1f)
         {
-            if (!virtualJoystick.IsActive)
+            if (!isActive)
             {
                 virtualJoystick.HandleJoystickStart(virtualJoystick.transform.position);
+                isActive = true;
             }
-
             virtualJoystick.HandleJoystickUpdate(new Vector3(input.x, input.y, 0f) * 100f + virtualJoystick.transform.position);
         }
-        else if (virtualJoystick.IsActive)
+        else if (isActive)
         {
+            isActive = false;
             virtualJoystick.HandleJoystickRelease();
         }
     }

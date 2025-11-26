@@ -11,6 +11,7 @@ public class VirtualJoystick : MonoBehaviour
     [SerializeField] private float sensitivity;
 
     [Header("Runtime")]
+    [SerializeField] private bool isActive;
     [SerializeField] private Vector3 direction;
     public event UnityAction<Vector3> OnJoystickStart;
     public event UnityAction<Vector3> OnJoystickUpdate;
@@ -21,7 +22,7 @@ public class VirtualJoystick : MonoBehaviour
     private Vector3 defaultPosition;
     private Vector3 startPosition;
 
-    public bool IsActive { get; private set; }
+    public bool IsActive => isActive;
 
     private void Start()
     {
@@ -120,7 +121,7 @@ public class VirtualJoystick : MonoBehaviour
 
     public void HandleJoystickStart(Vector3 inputPosition)
     {
-        IsActive = true;
+        isActive = true;
         startPosition = inputPosition;
         rect.position = startPosition;
         OnJoystickStart?.Invoke(startPosition);
@@ -135,7 +136,7 @@ public class VirtualJoystick : MonoBehaviour
 
     public void HandleJoystickRelease()
     {
-        IsActive = false;
+        isActive = false;
         activeTouchIndex = -1;
         rect.position = defaultPosition;
         joystickRect.anchoredPosition = Vector3.zero;
