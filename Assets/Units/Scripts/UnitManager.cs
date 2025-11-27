@@ -7,9 +7,7 @@ public class UnitManager : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private UnitListReference unitList;
-    [SerializeField] private UnitController unitPrefab;
     [SerializeField] private Transform unitSpawnAnchor;
-    [SerializeField] private PlayerController playerController;
     [SerializeField] private TextAsset textAsset;
 
     [Header("Runtime")]
@@ -18,23 +16,14 @@ public class UnitManager : MonoBehaviour
 
     [Header("Spawn Settings")]
     [SerializeField] private PortalController portalPrefab;
-    [SerializeField] private float spawnOffsetY = -1f; // how deep the Fungal starts below ground
     [SerializeField] private AnimationCurve riseCurve;
     [SerializeField] private float riseDuration = 1f;
 
     public List<UnitController> UnitControllers => unitControllers;
 
-    public event UnityAction OnAllUnitsSummoned;
-
     private void Awake()
     {
         unitControllers = new List<UnitController>();
-    }
-
-    private void Start()
-    {
-        playerController.Initialize(unitList.Units[0]);
-        OnAllUnitsSummoned?.Invoke();
     }
 
     private Vector3 GetRandomSpawnPosition()

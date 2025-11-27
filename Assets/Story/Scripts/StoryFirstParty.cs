@@ -52,7 +52,7 @@ public class StoryFirstParty : MonoBehaviour
         if (!storyReference.HasCompleted(firstParty))
         {
             initialUI.enabled = false;
-            unitManager.OnAllUnitsSummoned += UnitManager_OnAllUnitsSummoned;
+            // unitManager.OnAllUnitsSummoned += UnitManager_OnAllUnitsSummoned;
         }
     }
 

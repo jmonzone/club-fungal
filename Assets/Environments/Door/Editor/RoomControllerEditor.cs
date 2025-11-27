@@ -224,8 +224,21 @@ public class RoomControllerEditor : Editor
         // Calculate offset based on direction using Direction.GetOffset
         Vector3 offset = direction.GetOffset(RoomManager.RoomOffset);
 
-        // Duplicate the GameObject
-        GameObject duplicatedObject = Instantiate(original.gameObject, original.transform.parent);
+        // Duplicate the GameObject as a prefab instance
+        GameObject sourcePrefab = PrefabUtility.GetCorrespondingObjectFromSource(original.gameObject);
+        GameObject duplicatedObject;
+
+        if (sourcePrefab != null)
+        {
+            // Instantiate from prefab to maintain prefab connection
+            duplicatedObject = (GameObject)PrefabUtility.InstantiatePrefab(sourcePrefab, original.transform.parent);
+        }
+        else
+        {
+            // Fallback to regular instantiate if not a prefab instance
+            duplicatedObject = Instantiate(original.gameObject, original.transform.parent);
+        }
+
         duplicatedObject.name = original.gameObject.name + $" ({direction})";
 
         // Position it in the specified direction

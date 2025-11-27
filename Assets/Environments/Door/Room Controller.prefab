@@ -455,13 +455,12 @@ MonoBehaviour:
   ceilingObject: {fileID: 3466135205452436865}
   floor: {fileID: 7913294614010771482}
   activityAnchor: {fileID: 8584821059854230054}
-  unitParent: {fileID: 0}
+  unitParent: {fileID: 4883318988852174974}
   walls:
   - {fileID: 3375839933252159098}
   - {fileID: 1423550072983054479}
   - {fileID: 8789489316529182799}
   - {fileID: 5120350278990925991}
-  units: []
 --- !u!1 &7019768654400002335
 GameObject:
   m_ObjectHideFlags: 0
@@ -840,7 +839,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.083333336
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: afa2ac9b594a641759375f608270c004, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 943b18b5e152a4e09b93df5db1f50487, type: 2}
   m_BuildHeightMesh: 0
 --- !u!1001 &2109178416270470866
 PrefabInstance:
