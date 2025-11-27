@@ -4,7 +4,7 @@ using System.Linq;
 
 public interface INoteTarget : ITarget
 {
-    public int EmissionStep {get;}
+    public int EmissionStep { get; }
     public void OnHit(DJTrack track);
 }
 
@@ -15,7 +15,7 @@ public class DJNoteManager : MonoBehaviour
     [SerializeField] private DJNoteController notePrefab;
     [SerializeField] private int poolSize = 20;
     [SerializeField] private PlayerReference playerReference;
-    [SerializeField] private UnitManager unitManager;
+    [SerializeField] private UnitControllerService unitControllerService;
     [SerializeField] private BuildReference buildReference;
     [SerializeField] private List<PlantSporeEmitter> plants;
 
@@ -81,7 +81,7 @@ public class DJNoteManager : MonoBehaviour
     {
         var targets = track.PartyMode switch
         {
-            _ => unitManager.UnitControllers
+            _ => unitControllerService.UnitControllers
                 .Select(unit => unit.GetComponent<INoteTarget>())
                 .Concat(new List<INoteTarget> { playerReference.Player.GetComponent<INoteTarget>() }),
             //_ => plants.Cast<INoteTarget>()

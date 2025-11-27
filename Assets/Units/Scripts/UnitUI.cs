@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class UnitUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("References")]
-    [SerializeField] private UnitListReference unitListReference;
+    [SerializeField] private UnitInstanceService unitInstanceService;
     [SerializeField] private InventoryReference inventory;
 
     [Header("UI References")]
@@ -35,7 +35,7 @@ public class UnitUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             //unitListReference.SummonUnit(randomUnit);
         };
 
-        unitButton.onClick.AddListener(() => unitListReference.SelectFungal(unit));
+        // unitButton.onClick.AddListener(() => unitInstanceService.SelectFungal(unit));
     }
 
     public void SetUnit(UnitInstance unit)

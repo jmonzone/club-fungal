@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class DanceActivityUI : ActivityUI<DanceActivityUnit, DanceActivityController>
 {
     [Header("Dance References")]
-    [SerializeField] private UnitManager unitManager;
+    [SerializeField] private FriendManager unitManager;
     [SerializeField] private DJTableReference djTableReference;
     [SerializeField] private DanceBackground background;
     [SerializeField] private DanceMoveUIManager danceMoveUIManager;

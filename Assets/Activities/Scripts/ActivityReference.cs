@@ -9,7 +9,7 @@ public class ActivityReference : ScriptableObject
     [Header("References")]
     [SerializeField] private ViewReference activityView;
     [SerializeField] private DialogueReference dialogueReference;
-    [SerializeField] private UnitListReference unitListReference;
+    [SerializeField] private UnitControllerService unitControllerService;
     [SerializeField] private Skill primarySkill;
     [SerializeField] private ActivityController activityControllerPrefab;
 
@@ -74,7 +74,7 @@ public class ActivityReference : ScriptableObject
             dialogue: new Dialogue(targetUnit.Controller, "I just invited my friend, they should be coming by here soon."),
             onComplete: () =>
             {
-                unitListReference.InviteFriend(targetUnit.Controller);
+                unitControllerService.InviteFriend(targetUnit.Controller);
             });
     }
 

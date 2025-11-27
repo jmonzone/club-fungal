@@ -13,9 +13,7 @@ public enum DialoguePage
 public class DialogueUI : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private PlayerReference playerReference;
     [SerializeField] private DialogueReference dialogue;
-    [SerializeField] private UnitListReference unitListReference;
 
     [Header("UI Components")]
     [SerializeField] private SpeakerUI speakerUI;

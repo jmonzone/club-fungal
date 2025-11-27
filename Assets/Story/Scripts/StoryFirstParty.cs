@@ -9,10 +9,6 @@ public class StoryFirstParty : MonoBehaviour
     [Header("References")]
     [SerializeField] private PartyData tutorialParty;
     [SerializeField] private StoryData firstParty;
-    [SerializeField] private SceneNavigation sceneNavigation;
-    [SerializeField] private UnitListReference unitReference;
-    [SerializeField] private UnitManager unitManager;
-    [SerializeField] private PlayerReference playerReference;
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private StoryReference storyReference;
     [SerializeField] private PhotoReference photoReference;
@@ -69,9 +65,9 @@ public class StoryFirstParty : MonoBehaviour
         yield return new WaitForSeconds(1f);
         //unitReference.InviteFriend(unitManager.UnitControllers[1]);
 
-        danceActivity.StartActivity(danceZoneAnchor.position, new List<UnitController> { unitManager.UnitControllers[1] });
-        sporeActivity.StartActivity(sporeZoneAnchor.position, new List<UnitController> { unitManager.UnitControllers[2] });
-        shruneReadingActivity.StartActivity(shruneReadingAnchor.position, new List<UnitController> { unitManager.UnitControllers[3] });
+        // danceActivity.StartActivity(danceZoneAnchor.position, new List<UnitController> { unitManager.UnitControllers[1] });
+        // sporeActivity.StartActivity(sporeZoneAnchor.position, new List<UnitController> { unitManager.UnitControllers[2] });
+        // shruneReadingActivity.StartActivity(shruneReadingAnchor.position, new List<UnitController> { unitManager.UnitControllers[3] });
 
         //sporeActivity.StartActivity(sporeZoneAnchor.position, new List<UnitController> { partyReference.Guests[0], partyReference.Guests[1], partyReference.Guests[2] });
 

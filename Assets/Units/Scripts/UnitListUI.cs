@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UnitListUI : MonoBehaviour
 {
-    [SerializeField] private UnitListReference unitListReference;
+    [SerializeField] private UnitInstanceService unitInstanceService;
     [SerializeField] private Transform unitViewContainer;
     [SerializeField] private UnitUI unitViewPrefab;
 
@@ -36,7 +36,7 @@ public class UnitListUI : MonoBehaviour
     private void UpdateView()
     {
         // filter only hired units
-        var hiredUnits = unitListReference.Units.Where(u => u.IsFriends).ToList();
+        var hiredUnits = unitInstanceService.Units.Where(u => u.IsFriends).ToList();
 
         // ensure we have enough views
         while (unitViewList.Count < hiredUnits.Count)

@@ -10,7 +10,7 @@ public class StoryWorkTogether : MonoBehaviour
     [SerializeField] private StoryData workTogether;
     [SerializeField] private SceneNavigation sceneNavigation;
     [SerializeField] private PartyReference partyReference;
-    [SerializeField] private UnitManager unitManager;
+    [SerializeField] private FriendManager unitManager;
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private List<Dialogue> workTogetherDialogue;
@@ -45,15 +45,15 @@ public class StoryWorkTogether : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
 
-        var partyFrog = unitManager.UnitControllers[0];
-        partyFrog.SetBehaviour(partyFrog.GetComponent<UnitDJ>());
+        // var partyFrog = unitManager.UnitControllers[0];
+        // partyFrog.SetBehaviour(partyFrog.GetComponent<UnitDJ>());
 
-        partyFrog.transform.position = frogAnchor.position;
-        partyFrog.SetLookPosition(playerAnchor.position);
-        playerReference.Player.transform.position = playerAnchor.position;
-        playerReference.Player.SetLookPosition(frogAnchor.position);
+        // partyFrog.transform.position = frogAnchor.position;
+        // partyFrog.SetLookPosition(playerAnchor.position);
+        // playerReference.Player.transform.position = playerAnchor.position;
+        // playerReference.Player.SetLookPosition(frogAnchor.position);
 
-        dialogueReference.StartImmediateChat(partyFrog, new Dialogue(workTogetherDialogue, DialogueType.STORY));
+        // dialogueReference.StartImmediateChat(partyFrog, new Dialogue(workTogetherDialogue, DialogueType.STORY));
 
         yield return new WaitUntil(() => dialogueReference.Dialogue.Action == DialogueAction.GIFT);
 
@@ -68,7 +68,7 @@ public class StoryWorkTogether : MonoBehaviour
 
         buildReference.EndBuild();
 
-        dialogueReference.StartImmediateChat(partyFrog, new Dialogue(buildCompleteDialogue, DialogueType.STORY));
+        // dialogueReference.StartImmediateChat(partyFrog, new Dialogue(buildCompleteDialogue, DialogueType.STORY));
         yield return new WaitWhile(() => dialogueReference.IsActive);
 
         storyReference.CompleteStory(workTogether);

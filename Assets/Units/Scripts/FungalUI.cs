@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class FungalUI : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private UnitListReference unitListReference;
+    [SerializeField] private UnitInstanceService unitInstanceService;
     [SerializeField] private Image fungalImage;
     [SerializeField] private TextMeshProUGUI fungalName;
     [SerializeField] private Slider relationshipSlider;
@@ -17,12 +17,12 @@ public class FungalUI : MonoBehaviour
 
     private void OnEnable()
     {
-        unitListReference.OnFungalSelected += UnitListReference_OnFungalSelected;
+        // unitListReference.OnFungalSelected += UnitListReference_OnFungalSelected;
     }
 
     private void OnDisable()
     {
-        unitListReference.OnFungalSelected -= UnitListReference_OnFungalSelected;
+        // unitListReference.OnFungalSelected -= UnitListReference_OnFungalSelected;
     }
 
     private void UnitListReference_OnFungalSelected(UnitInstance unit)

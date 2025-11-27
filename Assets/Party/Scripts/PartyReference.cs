@@ -11,7 +11,6 @@ public class PartyReference : ScriptableObject
     [SerializeField] private ViewReference partyHUD;
     [SerializeField] private ViewReference debriefView;
     [SerializeField] private ViewReference gameplayView;
-    [SerializeField] private UnitListReference unitList;
     [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private PhotoReference photoReference;
     [SerializeField] private InventoryReference inventoryReference;

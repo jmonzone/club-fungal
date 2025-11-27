@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class PartyPageUI : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private UnitListReference unitList;
+    [SerializeField] private UnitInstanceService unitInstanceService;
     [SerializeField] private BuildReference build;
     [SerializeField] private Image partyImage;
     [SerializeField] private TextMeshProUGUI nameText;
@@ -50,7 +50,7 @@ public class PartyPageUI : MonoBehaviour
         var allRequirementsMet = true;
 
         var i = 0;
-        foreach(var requirement in party.Requirements)
+        foreach (var requirement in party.Requirements)
         {
             var requirementMet = requirement.Type switch
             {
@@ -75,7 +75,7 @@ public class PartyPageUI : MonoBehaviour
         }
 
         i = 0;
-        foreach(var unit in unitList.Units.Skip(1))
+        foreach (var unit in unitInstanceService.Units.Skip(1))
         {
             partyInvites[i].SetUnit(unit, true);
             i++;

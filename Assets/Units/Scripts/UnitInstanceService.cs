@@ -1,17 +1,14 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-[CreateAssetMenu(fileName = "UnitListReference", menuName = "Club Fungal/Units/Unit List Reference")]
-public class UnitListReference : ScriptableObject
+[CreateAssetMenu(fileName = "UnitInstanceService", menuName = "Club Fungal/Units/Unit Instance Service")]
+public class UnitInstanceService : ScriptableObject
 {
     [Header("References")]
     [SerializeField] private LocalData localData;
-    [SerializeField] private Navigation navigation;
-    [SerializeField] private ViewReference fungalView;
-    [SerializeField] private ViewReference fungalListView;
 
     [Header("Collections")]
     [SerializeField] private List<UnitInstance> initialUnits;
@@ -23,14 +20,12 @@ public class UnitListReference : ScriptableObject
 
     [Header("Runtime")]
     [SerializeField] private List<UnitInstance> units;
-    [SerializeField] private List<UnitController> unitControllers;
-
 
     public List<UnitInstance> Units => units;
 
     private const string UNIT_KEY = "units";
 
-    public event UnityAction<UnitInstance> OnFungalSelected;
+    public event UnityAction<float> OnXpChanged;
 
     public ColorPalette GetColorPaletteByElement(Element element)
     {
@@ -47,7 +42,6 @@ public class UnitListReference : ScriptableObject
             {
                 if (unit is JObject unitJson)
                 {
-
                     var unitName = unitJson.Value<string>("name");
                     var matchingUnit = unitCollection.Find(u => u.Name == unitName);
 
@@ -88,7 +82,6 @@ public class UnitListReference : ScriptableObject
 
                     RegisterUnit(instance, false);
                 }
-                ;
             }
         }
 
@@ -130,7 +123,8 @@ public class UnitListReference : ScriptableObject
     }
 
     public delegate bool UnitQuery(Unit unit);
-    private UnitInstance CreateUnit(UnitQuery query = null)
+
+    public UnitInstance CreateUnit(UnitQuery query = null)
     {
         var (newUnit, newElement) = GenerateNewUnit(query);
         var newUnitInstance = CreateInstance<UnitInstance>();
@@ -183,7 +177,7 @@ public class UnitListReference : ScriptableObject
         if (availableUnits.Count == 0)
             availableUnits.Add(playerUnit);
 
-        // Step 1: pick a unit the instance hasn’t seen yet
+        // Step 1: pick a unit the instance hasn't seen yet
         var unseenUnits = availableUnits
             .Where(u => !Units.Any(ui => ui.Data == u))
             .ToList();
@@ -265,7 +259,7 @@ public class UnitListReference : ScriptableObject
         return friend;
     }
 
-    private UnitInstance CreateNewFriend(UnitInstance unit)
+    public UnitInstance CreateNewFriend(UnitInstance unit)
     {
         var friend = CreateUnit();
         unit.Friends.Add(friend);
@@ -295,9 +289,9 @@ public class UnitListReference : ScriptableObject
                 lastSaveTime = Time.time;
                 SaveData();
             }
-        };
 
-        //unit.OnLevelChanged += (skill, level) => OnFungalUpdated?.Invoke();
+            OnXpChanged?.Invoke(value);
+        };
 
         units.Add(unit);
 
@@ -306,10 +300,8 @@ public class UnitListReference : ScriptableObject
         return unit;
     }
 
-
     public void SaveData()
     {
-        //Debug.Log("saving data");
         var unitsJson = new JArray();
 
         foreach (var unit in units)
@@ -344,54 +336,5 @@ public class UnitListReference : ScriptableObject
         }
 
         localData.SaveData(UNIT_KEY, unitsJson);
-    }
-
-    public void OpenFungals()
-    {
-        navigation.Navigate(fungalListView);
-    }
-
-    public void SelectFungal(UnitInstance unit)
-    {
-        OnFungalSelected?.Invoke(unit);
-        navigation.Navigate(fungalView);
-    }
-
-    public event UnityAction<UnitController, UnitInstance> OnFriendInvited;
-
-    public void InviteFriend(UnitController unit)
-    {
-        var friend = CreateNewFriend(unit.Instance);
-        OnFriendInvited?.Invoke(unit, friend);
-    }
-
-
-    public void SpawnNewUnit(UnitQuery unitQuery, Vector3 position, UnityAction<UnitController> onSpawned = null)
-    {
-        var unit = CreateUnit(unitQuery);
-        var unitController = SpawnUnit(unit, position, null);
-        onSpawned?.Invoke(unitController);
-    }
-
-    [SerializeField] private UnitController unitPrefab;
-    [SerializeField] private TextAsset textAsset;
-
-    public event UnityAction<UnitController> OnUnitSummoned;
-
-    public UnitController SpawnUnit(UnitInstance unit, Vector3 spawnPosition, Transform parent)
-    {
-        Debug.Log($"Spawning unit {unit.Data.Name} at position {spawnPosition}");
-        var unitController = Instantiate(unitPrefab, spawnPosition, Quaternion.identity, parent);
-        unitController.Initialize(unit);
-        Debug.Log($"Initialized unit controller for {unit.Data.Name} spawned at {unitController.transform.position}");
-        // string json = textAsset.text;
-        // JObject root = JObject.Parse(json);
-        // JObject data = (JObject)root[unit.Data.Name.ToLower()];
-        // unitController.Dialogue.Initialize(data);
-
-        unitControllers.Add(unitController);
-
-        OnUnitSummoned?.Invoke(unitController);
-        return unitController;
     }
 }

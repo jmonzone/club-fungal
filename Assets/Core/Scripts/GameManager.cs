@@ -17,7 +17,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private DisplayName displayName;
     [SerializeField] private BuildReference build;
     [SerializeField] private InventoryReference inventory;
-    [SerializeField] private UnitListReference unitList;
+    [SerializeField] private UnitInstanceService unitInstanceService;
+    [SerializeField] private UnitControllerService unitControllerService;
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private StoryReference partyLogReference;
     [SerializeField] private SporeReference sporeReference;
@@ -69,7 +70,8 @@ public class GameManager : MonoBehaviour
     {
         inventory.Initialize();
         build.Initialize();
-        unitList.Initialize();
+        unitInstanceService.Initialize();
+        unitControllerService.Initialize();
         partyReference.Initialize();
         partyLogReference.Initialize();
         sporeReference.Initialize();

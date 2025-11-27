@@ -1,30 +1,17 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class UnitManager : MonoBehaviour
+public class FriendManager : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private UnitListReference unitList;
+    [SerializeField] private UnitControllerService unitControllerService;
     [SerializeField] private Transform unitSpawnAnchor;
     [SerializeField] private TextAsset textAsset;
-
-    [Header("Runtime")]
-    [SerializeField] private List<UnitController> unitControllers;
-
 
     [Header("Spawn Settings")]
     [SerializeField] private PortalController portalPrefab;
     [SerializeField] private AnimationCurve riseCurve;
     [SerializeField] private float riseDuration = 1f;
-
-    public List<UnitController> UnitControllers => unitControllers;
-
-    private void Awake()
-    {
-        unitControllers = new List<UnitController>();
-    }
 
     private Vector3 GetRandomSpawnPosition()
     {
@@ -37,12 +24,12 @@ public class UnitManager : MonoBehaviour
 
     private void OnEnable()
     {
-        unitList.OnFriendInvited += UnitList_OnFriendInvited;
+        unitControllerService.OnFriendInvited += UnitList_OnFriendInvited;
     }
 
     private void OnDisable()
     {
-        unitList.OnFriendInvited -= UnitList_OnFriendInvited;
+        unitControllerService.OnFriendInvited -= UnitList_OnFriendInvited;
     }
 
     private void UnitList_OnFriendInvited(UnitController unit, UnitInstance friend)
@@ -66,7 +53,7 @@ public class UnitManager : MonoBehaviour
         yield return new WaitUntil(() => portalOpened);
 
         // Step 2: spawn fungal
-        var summonedUnit = unitList.SpawnUnit(friend, spawnPosition + Vector3.down, null);
+        var summonedUnit = unitControllerService.SpawnUnit(friend, spawnPosition + Vector3.down, null);
 
         // Animate the fungal rising out of the portal
         float elapsed = 0f;

@@ -6,7 +6,7 @@ public class DanceActivityController : ActivityController<DanceActivityUnit>
     [Header("Dance References")]
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private Light spotlight;
-    [SerializeField] private UnitManager unitManager;
+    [SerializeField] private FriendManager unitManager;
 
     protected override void OnActivityStart()
     {
@@ -68,7 +68,7 @@ public class DanceActivityController : ActivityController<DanceActivityUnit>
         base.SelectUnit(unit);
         spotlight.gameObject.SetActive(true);
         if (!unit.IsPlayer) StartCoroutine(PassRoutine());
-    }       
+    }
 
     private IEnumerator PassRoutine()
     {

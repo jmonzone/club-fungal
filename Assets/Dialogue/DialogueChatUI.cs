@@ -9,7 +9,6 @@ public class DialogueChatUI : DialoguePageUI
     [SerializeField] private TextMeshProUGUI unitNameText;
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private Button continueButton;
-    [SerializeField] private UnitListReference unitReference;
 
     protected override void Awake()
     {

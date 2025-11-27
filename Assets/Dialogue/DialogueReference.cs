@@ -8,7 +8,6 @@ public class DialogueReference : ScriptableObject
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private PhotoReference photoReference;
     [SerializeField] private InventoryReference inventory;
-    [SerializeField] private UnitListReference unitListReference;
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference dialogueView;
 

@@ -450,12 +450,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8647cda6a1c584ce1b1d226a563fdec3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomController
-  unitCollection: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2, type: 2}
+  unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
+    type: 2}
   activityCollection: {fileID: 11400000, guid: aec2ccd386a894c10881576dbb50d6c7, type: 2}
   ceilingObject: {fileID: 3466135205452436865}
   floor: {fileID: 7913294614010771482}
   activityAnchor: {fileID: 8584821059854230054}
   unitParent: {fileID: 4883318988852174974}
+  maxDoors: 2
   walls:
   - {fileID: 3375839933252159098}
   - {fileID: 1423550072983054479}

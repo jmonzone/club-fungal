@@ -7,7 +7,7 @@ using UnityEngine.Events;
 public class RoomController : MonoBehaviour
 {
     [Header("Systems")]
-    [SerializeField] private UnitListReference unitCollection;
+    [SerializeField] private UnitControllerService unitControllerService;
     [SerializeField] private ActivityCollection activityCollection;
 
     [Header("References")]
@@ -55,15 +55,13 @@ public class RoomController : MonoBehaviour
         {
             walls[i].SetDirection(directions[i]);
         }
-
-        Debug.Log($"Found {walls.Count} walls in room at position {transform.position}");
     }
 
     public void InitializeRandomActivity()
     {
         var randomActivity = activityCollection.GetRandomActivity();
 
-        unitCollection.SpawnNewUnit(unit => unit.Moves.Count > 0, activityAnchor.position, onSpawned: unit =>
+        unitControllerService.SpawnNewUnit(unit => unit.Moves.Count > 0, activityAnchor.position, onSpawned: unit =>
         {
             randomActivity.StartActivity(activityAnchor.position, new List<UnitController> { unit });
         });
@@ -101,6 +99,6 @@ public class RoomController : MonoBehaviour
 
     public void AddUnit(UnitInstance unit)
     {
-        unitCollection.SpawnUnit(unit, activityAnchor.position, unitParent);
+        unitControllerService.SpawnUnit(unit, activityAnchor.position, unitParent);
     }
 }

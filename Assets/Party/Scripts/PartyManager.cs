@@ -1,14 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
 
+[Obsolete("PartyManager is out of date, but kept for reference.")]
 public class PartyManager : MonoBehaviour
 {
     [SerializeField] private PartyReference partyReference;
-    [SerializeField] private UnitManager unitManager;
-    [SerializeField] private UnitListReference unitList;
+    [SerializeField] private FriendManager unitManager;
     [SerializeField] private Transform frogAnchor;
     [SerializeField] private UnitController unitPrefab;
     [SerializeField] private Transform spawnAnchor;
@@ -66,8 +65,8 @@ public class PartyManager : MonoBehaviour
     private void PartyReference_OnPartyStarted()
     {
         //todo: apply jobs to all units - party frog as dj is default
-        var partyFrog = unitManager.UnitControllers[0];
-        partyFrog.SetDefaultBehaviour(partyFrog.GetComponent<UnitDJ>());
+        // var partyFrog = unitManager.UnitControllers[0];
+        // partyFrog.SetDefaultBehaviour(partyFrog.GetComponent<UnitDJ>());
 
         return;
 
