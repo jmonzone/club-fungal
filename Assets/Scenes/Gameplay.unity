@@ -3245,14 +3245,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 104050920}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 940769017}
   - {fileID: 1694181736}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1655500717}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &107094067
 GameObject:
@@ -26634,6 +26634,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7063167596283546541, guid: 39a86af59e75d41dfaeeca6d7af1a972,
         type: 3}
+      propertyPath: maxDoors
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7063167596283546541, guid: 39a86af59e75d41dfaeeca6d7af1a972,
+        type: 3}
       propertyPath: units.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -42328,6 +42333,7 @@ Transform:
   - {fileID: 1080845533}
   - {fileID: 259494351}
   - {fileID: 486440887}
+  - {fileID: 104050921}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1660248603
@@ -48918,7 +48924,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1894889382}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 2
@@ -52183,15 +52189,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitList: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2, type: 2}
-  unitPrefab: {fileID: 4106141727428995005, guid: e9f8a044aacf9498eb482430f1da38f4,
-    type: 3}
   unitSpawnAnchor: {fileID: 1694181736}
-  playerController: {fileID: 2038075241}
   textAsset: {fileID: 4900000, guid: 653e626fc96d2478fa72e028a19d495d, type: 3}
   unitControllers: []
   portalPrefab: {fileID: 4051312024755215841, guid: e9a29fa9f135940e7825900f5cc5ce4f,
     type: 3}
-  spawnOffsetY: -1
   riseCurve:
     serializedVersion: 2
     m_Curve:
@@ -59491,6 +59493,5 @@ SceneRoots:
   - {fileID: 886885320}
   - {fileID: 2054594894}
   - {fileID: 1655500717}
-  - {fileID: 958196309}
   - {fileID: 1285744931}
-  - {fileID: 104050921}
+  - {fileID: 958196309}

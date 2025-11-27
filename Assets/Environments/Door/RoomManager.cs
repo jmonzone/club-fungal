@@ -84,7 +84,33 @@ public class RoomManager : MonoBehaviour
 
             Debug.Log($"Teleported player to {teleportPosition} door.OtherDoor.Room.transform.position {door.OtherDoor.Room.transform.position} door.OtherDoor.transform.position {door.OtherDoor.transform.position} teleportDirection {teleportDirection} ");
             if (useOuterWalls) door.Room.SetAsOuterRoom();
-            door.OtherDoor.Room.SetAsInnerRoom();
+            otherRoom.SetAsInnerRoom();
+
+            // Activate a random new door in addition to the opposite door, only if no room exists at the target position
+            if (otherRoom.Doors.Count < otherRoom.MaxDoors)
+            {
+                var candidateDoors = new List<DoorController>();
+                foreach (var wall in otherRoom.Walls)
+                {
+                    if (wall.DoorController == door.OtherDoor) continue;
+
+                    var candidatePos = GetNewRoomPosition(otherRoom, wall.DoorController);
+                    if (!roomGrid.ContainsKey(candidatePos))
+                    {
+                        candidateDoors.Add(wall.DoorController);
+                    }
+                }
+
+                if (candidateDoors.Count > 0)
+                {
+                    var randomDoor = candidateDoors[Random.Range(0, candidateDoors.Count)];
+                    otherRoom.ActivateDoor(randomDoor);
+                }
+                else
+                {
+                    Debug.LogWarning("No candidate doors available for additional activation.");
+                }
+            }
 
             transitionReference.StartTransition(TransitionType.CIRCLE_OUT, () =>
             {
@@ -116,27 +142,6 @@ public class RoomManager : MonoBehaviour
         door.SetOtherDoor(oppositeDoor);
         oppositeDoor.SetOtherDoor(door);
         newRoom.ActivateDoor(oppositeDoor);
-
-        // Activate a random new door in addition to the opposite door, only if no room exists at the target position
-        var candidateDoors = new List<DoorController>();
-        foreach (var wall in newRoom.Walls)
-        {
-            if (wall.DoorController == oppositeDoor) continue;
-            var candidatePos = GetNewRoomPosition(newRoom, wall.DoorController);
-            if (!roomGrid.ContainsKey(candidatePos))
-            {
-                candidateDoors.Add(wall.DoorController);
-            }
-        }
-        if (candidateDoors.Count > 0)
-        {
-            var randomDoor = candidateDoors[Random.Range(0, candidateDoors.Count)];
-            newRoom.ActivateDoor(randomDoor);
-        }
-        else
-        {
-            Debug.LogWarning("No candidate doors available for additional activation.");
-        }
     }
 
     private DoorController GetOppositeDoor(Direction direction, RoomController otherRoom)

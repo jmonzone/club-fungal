@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Cinemachine;
-using Newtonsoft.Json.Linq;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -45,7 +45,7 @@ public class UnitController : MonoBehaviour, IInteractable
         targetLookPosition = transform.position;
 
         var allBehaviours = GetComponents<UnitBehaviour>();
-        foreach(var behaviour in allBehaviours)
+        foreach (var behaviour in allBehaviours)
         {
             behaviour.OnBehaviourRequest += () => ApplyBehaviour(behaviour);
         }
@@ -68,8 +68,9 @@ public class UnitController : MonoBehaviour, IInteractable
         }
     }
 
-    protected virtual void Start()
+    protected virtual IEnumerator Start()
     {
+        yield return null;
         if (!currentBehaviour) ApplyDefaultBehaviour();
     }
 

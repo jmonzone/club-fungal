@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -15,10 +16,15 @@ public class RoomController : MonoBehaviour
     [SerializeField] private Transform activityAnchor;
     [SerializeField] private Transform unitParent;
 
+    [Header("Settings")]
+    [SerializeField] private int maxDoors = 2;
+    public int MaxDoors => maxDoors;
+
     [Header("Runtime")]
     [SerializeField] private List<WallController> walls = new List<WallController>();
 
     public List<WallController> Walls => walls;
+    public List<DoorController> Doors => walls.Where(wall => wall.DoorController.gameObject.activeSelf).Select(door => door.DoorController).ToList();
     public List<UnitController> Units => transform.GetComponentsInChildren<UnitController>(includeInactive: true).ToList();
     public Renderer Floor => floor;
     public Transform UnitParent => unitParent;
@@ -72,6 +78,7 @@ public class RoomController : MonoBehaviour
         }
     }
 
+    [Obsolete("Should have wall controler be responsible for activating doors")]
     public void ActivateDoor(DoorController door)
     {
         if (door != null && !door.gameObject.activeSelf)

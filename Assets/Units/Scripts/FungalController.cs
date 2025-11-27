@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.AI;
 
 public interface IJob
 {
@@ -37,6 +38,17 @@ public class FungalController : UnitController
         unitFollow = GetComponent<UnitFollow>();
         colorPalette = GetComponent<UnitColorPalette>();
     }
+
+    protected override IEnumerator Start()
+    {
+        var agent = GetComponent<NavMeshAgent>();
+        agent.enabled = false;
+        yield return null; // wait 1 frame
+        agent.enabled = true;
+        agent.Warp(transform.position);
+        yield return base.Start();
+    }
+
 
     protected override void OnEnable()
     {

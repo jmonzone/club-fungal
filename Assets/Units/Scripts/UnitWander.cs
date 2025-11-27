@@ -88,7 +88,7 @@ public class UnitWander : UnitBehaviour
     private Vector3 GetReachableRandomDestination(Vector3 origin, float radius, int layermask, int maxAttempts = 10)
     {
         // assume center of the NavMesh is Vector3.zero (or origin of surface)
-        Vector3 navMeshCenter = Vector3.back * 4f;
+        // Vector3 navMeshCenter = Vector3.back * 4f;
 
         for (int i = 0; i < maxAttempts; i++)
         {
@@ -98,7 +98,7 @@ public class UnitWander : UnitBehaviour
             Vector3 randomPoint = origin + randomDirection * biasedRadius;
 
             // 3. Apply gravitation (optional extra pull)
-            randomPoint = Vector3.Lerp(randomPoint, navMeshCenter, gravitateStrength);
+            // randomPoint = Vector3.Lerp(randomPoint, navMeshCenter, gravitateStrength);
 
             // 4. Project onto NavMesh
             if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, radius, layermask))

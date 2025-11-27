@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: ActivityCollection
   m_EditorClassIdentifier: Assembly-CSharp::ActivityCollection
   activities:
+  - {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}
   - {fileID: 11400000, guid: 20234f3cd19d34d52ba858ad98b27405, type: 2}
+  - {fileID: 11400000, guid: 6acca8bf6674942fc809a4d20308a3af, type: 2}
