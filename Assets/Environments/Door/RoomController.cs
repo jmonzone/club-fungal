@@ -10,39 +10,45 @@ public class RoomController : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private GameObject ceilingObject;
+    [SerializeField] private Renderer floor;
     [SerializeField] private Transform activityAnchor;
 
     [Header("Runtime")]
     [SerializeField] private List<WallController> walls = new List<WallController>();
 
-    private Texture currentTexture;
-
     public List<WallController> Walls => walls;
-    public Texture CurrentMaterial => currentTexture;
+    public Renderer Floor => floor;
 
     public event UnityAction<DoorController> OnDoorSelected;
 
     private void OnValidate()
     {
-        walls = new List<WallController>(GetComponentsInChildren<WallController>());
-
-        currentTexture = walls[0].Texture;
-
-        for (var i = 0; i < walls.Count; i++)
-        {
-            walls[i].SetDirection((Direction)i);
-        }
+        InitializeWalls();
     }
 
     private void Awake()
     {
+        InitializeWalls();
+
         foreach (var door in GetComponentsInChildren<DoorController>(includeInactive: true))
         {
             door.OnDoorSelected += () => OnDoorSelected?.Invoke(door);
         }
     }
 
-    public void Initialize(Texture texture)
+    private void InitializeWalls()
+    {
+        walls = new List<WallController>(GetComponentsInChildren<WallController>());
+
+        Direction[] directions = { Direction.NorthWest, Direction.NorthEast, Direction.SouthWest, Direction.SouthEast };
+        for (var i = 0; i < walls.Count && i < directions.Length; i++)
+        {
+            walls[i].SetDirection(directions[i]);
+        }
+
+    }
+
+    public void InitializeRandomActivity()
     {
         var randomActivity = activityCollection.GetRandomActivity();
 
@@ -50,8 +56,6 @@ public class RoomController : MonoBehaviour
         {
             randomActivity.StartActivity(activityAnchor.position, new List<UnitController> { unit });
         });
-
-        ApplyTextureToAllWalls(texture);
     }
 
     public void SetAsOuterRoom()
@@ -73,20 +77,13 @@ public class RoomController : MonoBehaviour
 
     public void SetAsInnerRoom()
     {
+#if UNITY_EDITOR
+        UnityEditor.Selection.activeGameObject = gameObject;
+#endif
         ceilingObject.SetActive(false);
         foreach (var wall in walls)
         {
             wall.SetAsInnerWall();
-        }
-    }
-
-    public void ApplyTextureToAllWalls(Texture texture)
-    {
-        currentTexture = texture;
-
-        foreach (var wall in walls)
-        {
-            wall.SetTexture(texture);
         }
     }
 }

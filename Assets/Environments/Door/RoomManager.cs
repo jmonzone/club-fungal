@@ -1,14 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Direction
-{
-    NorthWest,
-    NorthEast,
-    SouthWest,
-    SouthEast,
-}
-
 public class RoomManager : MonoBehaviour
 {
     [Header("References")]
@@ -17,6 +9,8 @@ public class RoomManager : MonoBehaviour
     [SerializeField] private RoomController roomControllerPrefab;
     [SerializeField] private List<Texture> wallTextureCollections;
 
+    [Header("Settings")]
+    [SerializeField] private bool useOuterWalls = false;
 
     [Header("Runtime")]
     [SerializeField] private List<RoomController> roomControllers;
@@ -65,16 +59,28 @@ public class RoomManager : MonoBehaviour
     {
         if (isTransitioning) return;
         isTransitioning = true;
+
+        bool isNewRoom = !door.OtherDoor;
+
+        if (isNewRoom)
+        {
+            CreateNewRoom(door);
+        }
+
         transitionReference.StartTransition(TransitionType.CIRCLE_IN, () =>
         {
-            // Check if the door already has an otherDoor assigned
-            if (!door.OtherDoor) CreateNewRoom(door);
+            if (isNewRoom)
+            {
+                door.OtherDoor.Room.InitializeRandomActivity();
+            }
 
+            // Check if the door already has an otherDoor assigned
             var teleportDirection = (door.OtherDoor.Room.transform.position - door.OtherDoor.transform.position).normalized;
             var teleportPosition = door.OtherDoor.transform.position + teleportDirection * 2f;
             playerReference.TeleportPlayer(teleportPosition);
 
-            door.Room.SetAsOuterRoom();
+            Debug.Log($"Teleported player to {teleportPosition} door.OtherDoor.Room.transform.position {door.OtherDoor.Room.transform.position} door.OtherDoor.transform.position {door.OtherDoor.transform.position} teleportDirection {teleportDirection} ");
+            if (useOuterWalls) door.Room.SetAsOuterRoom();
             door.OtherDoor.Room.SetAsInnerRoom();
 
             transitionReference.StartTransition(TransitionType.CIRCLE_OUT, () =>
@@ -91,10 +97,14 @@ public class RoomManager : MonoBehaviour
         var newRoom = Instantiate(roomControllerPrefab, transform);
         newRoom.transform.localPosition = targetPosition;
         newRoom.transform.rotation = targetRotation;
-
-        var randomMaterial = wallTextureCollections[Random.Range(0, wallTextureCollections.Count)];
-        newRoom.Initialize(randomMaterial);
         newRoom.name = $"Room_{roomControllers.Count}";
+
+        var randomTexture = wallTextureCollections[Random.Range(0, wallTextureCollections.Count)];
+        foreach (var wall in newRoom.Walls)
+        {
+            wall.Renderer.material.mainTexture = randomTexture;
+        }
+
         RegisterRoom(newRoom);
         roomControllers.Add(newRoom);
 
@@ -128,28 +138,10 @@ public class RoomManager : MonoBehaviour
 
     private DoorController GetOppositeDoor(Direction direction, RoomController otherRoom)
     {
-        var oppositeSide = direction switch
-        {
-            Direction.NorthEast => Direction.SouthWest,
-            Direction.NorthWest => Direction.SouthEast,
-            Direction.SouthEast => Direction.NorthWest,
-            Direction.SouthWest => Direction.NorthEast,
-            _ => throw new System.ArgumentOutOfRangeException()
-        };
-
-        var wallIndex = oppositeSide switch
-        {
-            Direction.NorthWest => 0,
-            Direction.NorthEast => 1,
-            Direction.SouthWest => 2,
-            Direction.SouthEast => 3,
-            _ => throw new System.ArgumentOutOfRangeException()
-        };
-
-        return otherRoom.Walls[wallIndex].DoorController;
+        return otherRoom.Walls[direction.Opposite.WallIndex].DoorController;
     }
 
-    private const float RoomOffset = 15f;
+    public const float RoomOffset = 15f;
 
     private Vector3Int WorldToGrid(Vector3 position)
     {
