@@ -8,6 +8,8 @@ public class RoomControllerEditor : Editor
     private TextureSelectorComponent wallTextureSelector;
     private MaterialSelectorComponent wallMaterialSelector;
     private MaterialSelectorComponent floorMaterialSelector;
+    private UnitSelectorComponent unitSelector;
+    private bool showUnits = true;
 
     private void OnEnable()
     {
@@ -38,6 +40,17 @@ public class RoomControllerEditor : Editor
             EditorUtility.SetDirty(roomController.Floor);
             PrefabUtility.RecordPrefabInstancePropertyModifications(roomController.Floor);
         });
+
+        unitSelector = new UnitSelectorComponent("Add Unit", (unit) =>
+        {
+            if (unit != null)
+            {
+                Undo.RecordObject(roomController, "Add Unit to Room");
+                roomController.AddUnit(unit);
+                EditorUtility.SetDirty(roomController);
+                unitSelector.Reset();
+            }
+        });
     }
 
     public override void OnInspectorGUI()
@@ -46,13 +59,9 @@ public class RoomControllerEditor : Editor
 
         RoomController roomController = (RoomController)target;
 
-
-
         // Initialize selectors with current materials
         wallTextureSelector.Initialize(roomController.Walls[0].Renderer.sharedMaterial.mainTexture);
         wallMaterialSelector.Initialize(roomController.Walls[0].Renderer.sharedMaterial);
-
-        Debug.Log("Initializing floor material selector with: " + roomController.Floor.sharedMaterial?.name);
         floorMaterialSelector.Initialize(roomController.Floor.sharedMaterial);
 
         EditorGUILayout.Space(10);
@@ -77,6 +86,12 @@ public class RoomControllerEditor : Editor
         wallTextureSelector.DrawGUI();
         wallMaterialSelector.DrawGUI();
         floorMaterialSelector.DrawGUI();
+
+        EditorGUILayout.Space(15);
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        EditorGUILayout.Space(5);
+
+        DrawUnitsSection(roomController);
 
         EditorGUILayout.Space(15);
 
@@ -116,6 +131,92 @@ public class RoomControllerEditor : Editor
         GUI.backgroundColor = Color.white;
 
         EditorGUILayout.EndVertical();
+    }
+
+    private void DrawUnitsSection(RoomController roomController)
+    {
+        // Header with foldout
+        GUIStyle foldoutStyle = new GUIStyle(EditorStyles.foldout)
+        {
+            fontStyle = FontStyle.Bold
+        };
+        showUnits = EditorGUILayout.Foldout(showUnits, $"Units ({roomController.Units.Count})", true, foldoutStyle);
+
+        if (showUnits)
+        {
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.Space(5);
+
+            // Display existing units
+            if (roomController.Units.Count > 0)
+            {
+                for (int i = 0; i < roomController.Units.Count; i++)
+                {
+                    var unitController = roomController.Units[i];
+                    if (unitController == null) continue;
+
+                    EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
+
+                    // Unit name and instance info
+                    string unitName = unitController.Instance != null
+                        ? unitController.Instance.Data.Name
+                        : "Unknown Unit";
+                    EditorGUILayout.LabelField($"{i + 1}. {unitName}", EditorStyles.boldLabel);
+
+                    // Select button
+                    if (GUILayout.Button("Select", GUILayout.Width(60)))
+                    {
+                        Selection.activeGameObject = unitController.gameObject;
+                        EditorGUIUtility.PingObject(unitController.gameObject);
+                    }
+
+                    // Remove button
+                    GUI.backgroundColor = new Color(1f, 0.5f, 0.5f, 1f);
+                    if (GUILayout.Button("✕", GUILayout.Width(30)))
+                    {
+                        if (EditorUtility.DisplayDialog("Remove Unit",
+                            $"Are you sure you want to remove {unitName}?",
+                            "Remove", "Cancel"))
+                        {
+                            Undo.RecordObject(roomController, "Remove Unit from Room");
+                            DestroyImmediate(unitController.gameObject);
+                            EditorUtility.SetDirty(roomController);
+                        }
+                    }
+                    GUI.backgroundColor = Color.white;
+
+                    EditorGUILayout.EndHorizontal();
+
+                    // Show unit instance details
+                    if (unitController.Instance != null)
+                    {
+                        EditorGUI.indentLevel++;
+                        EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+
+                        EditorGUI.BeginDisabledGroup(true);
+                        EditorGUILayout.ObjectField("Instance", unitController.Instance, typeof(UnitInstance), false);
+                        EditorGUI.EndDisabledGroup();
+
+                        EditorGUILayout.EndVertical();
+                        EditorGUI.indentLevel--;
+                    }
+
+                    EditorGUILayout.Space(5);
+                }
+            }
+            else
+            {
+                EditorGUILayout.HelpBox("No units in this room", MessageType.Info);
+                EditorGUILayout.Space(5);
+            }
+
+            // Add new unit section
+            EditorGUILayout.Space(5);
+            EditorGUILayout.LabelField("Add New Unit", EditorStyles.boldLabel);
+            unitSelector.DrawGUI();
+
+            EditorGUILayout.EndVertical();
+        }
     }
 
     private void DuplicateRoom(RoomController original, Direction direction)

@@ -23,11 +23,10 @@ public class UnitListReference : ScriptableObject
 
     [Header("Runtime")]
     [SerializeField] private List<UnitInstance> units;
+    [SerializeField] private List<UnitController> unitControllers;
+
 
     public List<UnitInstance> Units => units;
-    public List<UnitInstance> Friends => units.Where(unit => unit.IsFriends).ToList();
-    public List<ColorPalette> ColorPalettes => colorPalettes;
-    public ColorPalette RandomColorPalette => colorPalettes[Random.Range(0, colorPalettes.Count)];
 
     private const string UNIT_KEY = "units";
 
@@ -131,7 +130,7 @@ public class UnitListReference : ScriptableObject
     }
 
     public delegate bool UnitQuery(Unit unit);
-    private UnitInstance CreateNewUnit(UnitQuery query = null)
+    private UnitInstance CreateUnit(UnitQuery query = null)
     {
         var (newUnit, newElement) = GenerateNewUnit(query);
         var newUnitInstance = CreateInstance<UnitInstance>();
@@ -268,7 +267,7 @@ public class UnitListReference : ScriptableObject
 
     private UnitInstance CreateNewFriend(UnitInstance unit)
     {
-        var friend = CreateNewUnit();
+        var friend = CreateUnit();
         unit.Friends.Add(friend);
         friend.Friends.Add(unit);
         return friend;
@@ -366,10 +365,33 @@ public class UnitListReference : ScriptableObject
         OnFriendInvited?.Invoke(unit, friend);
     }
 
-    public event UnityAction<UnitInstance, Vector3, UnityAction<UnitController>> OnUnitSpawned;
+
     public void SpawnNewUnit(UnitQuery unitQuery, Vector3 position, UnityAction<UnitController> onSpawned = null)
     {
-        var unit = CreateNewUnit(unitQuery);
-        OnUnitSpawned?.Invoke(unit, position, onSpawned);
+        var unit = CreateUnit(unitQuery);
+        var unitController = SpawnUnit(unit, position, null);
+        onSpawned?.Invoke(unitController);
+    }
+
+    [SerializeField] private UnitController unitPrefab;
+    [SerializeField] private TextAsset textAsset;
+
+    public event UnityAction<UnitController> OnUnitSummoned;
+
+    public UnitController SpawnUnit(UnitInstance unit, Vector3 spawnPosition, Transform parent)
+    {
+        Debug.Log($"Spawning unit {unit.Data.Name} at position {spawnPosition}");
+        var unitController = Instantiate(unitPrefab, spawnPosition, Quaternion.identity, parent);
+        unitController.Initialize(unit);
+        Debug.Log($"Initialized unit controller for {unit.Data.Name} spawned at {unitController.transform.position}");
+        // string json = textAsset.text;
+        // JObject root = JObject.Parse(json);
+        // JObject data = (JObject)root[unit.Data.Name.ToLower()];
+        // unitController.Dialogue.Initialize(data);
+
+        unitControllers.Add(unitController);
+
+        OnUnitSummoned?.Invoke(unitController);
+        return unitController;
     }
 }

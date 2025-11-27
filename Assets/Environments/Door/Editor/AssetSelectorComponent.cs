@@ -59,7 +59,7 @@ public class AssetSelectorComponent<T> where T : UnityEngine.Object
             currentHistoryIndex = assetHistory.Count - 1;
             onAssetChanged?.Invoke(currentAsset);
 
-            Debug.Log($"Asset changed to: {currentAsset.name}. Asset History count: {assetHistory.Count}History count: {assetHistory.Count}, Current index: {currentHistoryIndex}");
+            Debug.Log($"Asset changed to: {currentAsset?.name}. Asset History count: {assetHistory.Count}History count: {assetHistory.Count}, Current index: {currentHistoryIndex}");
         }
         EditorGUILayout.EndHorizontal();
 

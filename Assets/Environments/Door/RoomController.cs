@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,23 +13,26 @@ public class RoomController : MonoBehaviour
     [SerializeField] private GameObject ceilingObject;
     [SerializeField] private Renderer floor;
     [SerializeField] private Transform activityAnchor;
+    [SerializeField] private Transform unitParent;
 
     [Header("Runtime")]
     [SerializeField] private List<WallController> walls = new List<WallController>();
 
     public List<WallController> Walls => walls;
+    public List<UnitController> Units => transform.GetComponentsInChildren<UnitController>(includeInactive: true).ToList();
     public Renderer Floor => floor;
+    public Transform UnitParent => unitParent;
 
     public event UnityAction<DoorController> OnDoorSelected;
 
     private void OnValidate()
     {
-        InitializeWalls();
+        InitializeComponents();
     }
 
     private void Awake()
     {
-        InitializeWalls();
+        InitializeComponents();
 
         foreach (var door in GetComponentsInChildren<DoorController>(includeInactive: true))
         {
@@ -36,7 +40,7 @@ public class RoomController : MonoBehaviour
         }
     }
 
-    private void InitializeWalls()
+    private void InitializeComponents()
     {
         walls = new List<WallController>(GetComponentsInChildren<WallController>());
 
@@ -46,6 +50,7 @@ public class RoomController : MonoBehaviour
             walls[i].SetDirection(directions[i]);
         }
 
+        Debug.Log($"Found {walls.Count} walls in room at position {transform.position}");
     }
 
     public void InitializeRandomActivity()
@@ -85,5 +90,10 @@ public class RoomController : MonoBehaviour
         {
             wall.SetAsInnerWall();
         }
+    }
+
+    public void AddUnit(UnitInstance unit)
+    {
+        unitCollection.SpawnUnit(unit, activityAnchor.position, unitParent);
     }
 }

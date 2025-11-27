@@ -195,7 +195,7 @@ MonoBehaviour:
   defaultBehaviour: {fileID: 0}
   destination: {fileID: 0}
   dialogue: {fileID: 4594485596784555639}
-  instance: {fileID: 0}
+  instance: {fileID: 11400000, guid: 9ec731d5476604d08a81d3c2cc5ac210, type: 2}
   currentBehaviour: {fileID: 0}
   targetLookPosition: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
@@ -214,7 +214,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a051968eeea74528b48fad3e9e998b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   lookAtTarget: 0
   isActive: 0
   targets: []

@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -26,7 +24,6 @@ public class UnitManager : MonoBehaviour
 
     public List<UnitController> UnitControllers => unitControllers;
 
-    public event UnityAction<UnitController> OnUnitSummoned;
     public event UnityAction OnAllUnitsSummoned;
 
     private void Awake()
@@ -37,31 +34,7 @@ public class UnitManager : MonoBehaviour
     private void Start()
     {
         playerController.Initialize(unitList.Units[0]);
-
-        // foreach (var unit in unitList.Units)
-        // {
-        //     if (unit == playerController.Instance) continue;
-        //     SummonUnit(unit, GetRandomSpawnPosition());
-        // }
-
         OnAllUnitsSummoned?.Invoke();
-    }
-
-    public UnitController SummonUnit(UnitInstance unit, Vector3 spawnPosition)
-    {
-        var unitController = Instantiate(unitPrefab, spawnPosition, Quaternion.identity);
-        unitController.Initialize(unit);
-
-
-        string json = textAsset.text;
-        JObject root = JObject.Parse(json);
-        JObject data = (JObject)root[unit.Data.Name.ToLower()];
-        unitController.Dialogue.Initialize(data);
-
-        unitControllers.Add(unitController);
-
-        OnUnitSummoned?.Invoke(unitController);
-        return unitController;
     }
 
     private Vector3 GetRandomSpawnPosition()
@@ -76,24 +49,16 @@ public class UnitManager : MonoBehaviour
     private void OnEnable()
     {
         unitList.OnFriendInvited += UnitList_OnFriendInvited;
-        unitList.OnUnitSpawned += UnitList_OnUnitSpawned;
     }
 
     private void OnDisable()
     {
         unitList.OnFriendInvited -= UnitList_OnFriendInvited;
-        unitList.OnUnitSpawned -= UnitList_OnUnitSpawned;
     }
 
     private void UnitList_OnFriendInvited(UnitController unit, UnitInstance friend)
     {
         StartCoroutine(SpawnFriendRoutine(unit, friend));
-    }
-
-    private void UnitList_OnUnitSpawned(UnitInstance unit, Vector3 position, UnityAction<UnitController> onSpawned)
-    {
-        var unitController = SummonUnit(unit, position);
-        onSpawned?.Invoke(unitController);
     }
 
     private IEnumerator SpawnFriendRoutine(UnitController unit, UnitInstance friend)
@@ -112,7 +77,7 @@ public class UnitManager : MonoBehaviour
         yield return new WaitUntil(() => portalOpened);
 
         // Step 2: spawn fungal
-        var summonedUnit = SummonUnit(friend, spawnPosition + Vector3.down);
+        var summonedUnit = unitList.SpawnUnit(friend, spawnPosition + Vector3.down, null);
 
         // Animate the fungal rising out of the portal
         float elapsed = 0f;

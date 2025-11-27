@@ -169,7 +169,7 @@ MonoBehaviour:
   defaultBehaviour: {fileID: 0}
   destination: {fileID: 0}
   dialogue: {fileID: 0}
-  instance: {fileID: 0}
+  instance: {fileID: 11400000, guid: c5fe3b2204b8a471f9ab1ed260b7d9b9, type: 2}
   currentBehaviour: {fileID: 0}
   targetLookPosition: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
