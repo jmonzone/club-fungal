@@ -11,21 +11,31 @@ public class RoomController : MonoBehaviour
     [Header("References")]
     [SerializeField] private GameObject ceilingObject;
     [SerializeField] private Transform activityAnchor;
-    private List<WallController> walls = new List<WallController>();
+
+    [Header("Runtime")]
+    [SerializeField] private List<WallController> walls = new List<WallController>();
+
+    private Texture currentTexture;
 
     public List<WallController> Walls => walls;
+    public Texture CurrentMaterial => currentTexture;
 
     public event UnityAction<DoorController> OnDoorSelected;
 
-    private void Awake()
+    private void OnValidate()
     {
-        walls.AddRange(GetComponentsInChildren<WallController>());
+        walls = new List<WallController>(GetComponentsInChildren<WallController>());
+
+        currentTexture = walls[0].Texture;
 
         for (var i = 0; i < walls.Count; i++)
         {
             walls[i].SetDirection((Direction)i);
         }
+    }
 
+    private void Awake()
+    {
         foreach (var door in GetComponentsInChildren<DoorController>(includeInactive: true))
         {
             door.OnDoorSelected += () => OnDoorSelected?.Invoke(door);
@@ -41,7 +51,7 @@ public class RoomController : MonoBehaviour
             randomActivity.StartActivity(activityAnchor.position, new List<UnitController> { unit });
         });
 
-        walls.ForEach(wall => wall.SetTexture(texture));
+        ApplyTextureToAllWalls(texture);
     }
 
     public void SetAsOuterRoom()
@@ -67,6 +77,16 @@ public class RoomController : MonoBehaviour
         foreach (var wall in walls)
         {
             wall.SetAsInnerWall();
+        }
+    }
+
+    public void ApplyTextureToAllWalls(Texture texture)
+    {
+        currentTexture = texture;
+
+        foreach (var wall in walls)
+        {
+            wall.SetTexture(texture);
         }
     }
 }

@@ -10,10 +10,16 @@ public class WallController : MonoBehaviour
 
     [Header("Runtime")]
     [SerializeField] private Direction direction;
-
-    public Direction Direction => direction;
+    [SerializeField] private Texture texture;
 
     public DoorController DoorController => doorController;
+    public Direction Direction => direction;
+    public Texture Texture => texture;
+
+    private void OnValidate()
+    {
+        texture = wallRenderer.sharedMaterial.mainTexture;
+    }
 
     public void SetAsOuterWall()
     {
@@ -29,7 +35,8 @@ public class WallController : MonoBehaviour
 
     public void SetTexture(Texture texture)
     {
-        wallRenderer.material.mainTexture = texture;
+        this.texture = texture;
+        wallRenderer.sharedMaterial.mainTexture = texture;
     }
 
     public void SetDirection(Direction dir)

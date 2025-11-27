@@ -15,7 +15,7 @@ public class RoomManager : MonoBehaviour
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private TransitionReference transitionReference;
     [SerializeField] private RoomController roomControllerPrefab;
-    [SerializeField] private List<Texture> wallTextures;
+    [SerializeField] private List<Texture> wallTextureCollections;
 
 
     [Header("Runtime")]
@@ -91,8 +91,9 @@ public class RoomManager : MonoBehaviour
         var newRoom = Instantiate(roomControllerPrefab, transform);
         newRoom.transform.localPosition = targetPosition;
         newRoom.transform.rotation = targetRotation;
-        var randomtexture = wallTextures[Random.Range(0, wallTextures.Count)];
-        newRoom.Initialize(randomtexture);
+
+        var randomMaterial = wallTextureCollections[Random.Range(0, wallTextureCollections.Count)];
+        newRoom.Initialize(randomMaterial);
         newRoom.name = $"Room_{roomControllers.Count}";
         RegisterRoom(newRoom);
         roomControllers.Add(newRoom);
