@@ -64,73 +64,55 @@ public class RoomControllerEditor : Editor
         wallMaterialSelector.Initialize(roomController.Walls[0].Renderer.sharedMaterial);
         floorMaterialSelector.Initialize(roomController.Floor.sharedMaterial);
 
-        EditorGUILayout.Space(10);
-        GUI.backgroundColor = new Color(0.65f, 0.25f, 0.7f, 0.4f);
-        GUIStyle paddedHelpBox = new GUIStyle(EditorStyles.helpBox)
+        GURUStyler.DrawGuruSection(() =>
         {
-            padding = new RectOffset(15, 15, 15, 15)
-        };
-        EditorGUILayout.BeginVertical(paddedHelpBox);
-        GUI.backgroundColor = Color.white;
+            wallTextureSelector.DrawGUI();
+            wallMaterialSelector.DrawGUI();
+            floorMaterialSelector.DrawGUI();
 
-        GUIStyle logoStyle = new GUIStyle(EditorStyles.boldLabel)
-        {
-            alignment = TextAnchor.MiddleCenter,
-            fontSize = 14,
-        };
-        EditorGUILayout.LabelField("GURU", logoStyle);
-        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-        EditorGUILayout.HelpBox("These fields apply changes to all walls of the room at once", MessageType.None);
-        EditorGUILayout.Space(15);
+            EditorGUILayout.Space(15);
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            EditorGUILayout.Space(5);
 
-        wallTextureSelector.DrawGUI();
-        wallMaterialSelector.DrawGUI();
-        floorMaterialSelector.DrawGUI();
+            DrawUnitsSection(roomController);
 
-        EditorGUILayout.Space(15);
-        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-        EditorGUILayout.Space(5);
+            EditorGUILayout.Space(15);
 
-        DrawUnitsSection(roomController);
+            // Door Status Display
+            EditorGUILayout.LabelField("Active Doors", EditorStyles.boldLabel);
+            DrawDoorStatusGrid(roomController);
 
-        EditorGUILayout.Space(15);
+            EditorGUILayout.Space(15);
 
-        // Door Status Display
-        EditorGUILayout.LabelField("Active Doors", EditorStyles.boldLabel);
-        DrawDoorStatusGrid(roomController);
+            // Duplicate room section
+            EditorGUILayout.LabelField("Duplicate Room", EditorStyles.boldLabel);
 
-        EditorGUILayout.Space(15);
+            GUI.backgroundColor = new Color(0.8f, 0.6f, 0.9f, 1f);
 
-        // Duplicate room section
-        EditorGUILayout.LabelField("Duplicate Room", EditorStyles.boldLabel);
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("↖ NW", GUILayout.Height(30)))
+            {
+                DuplicateRoom(roomController, Direction.NorthWest);
+            }
+            if (GUILayout.Button("↗ NE", GUILayout.Height(30)))
+            {
+                DuplicateRoom(roomController, Direction.NorthEast);
+            }
+            EditorGUILayout.EndHorizontal();
 
-        GUI.backgroundColor = new Color(0.8f, 0.6f, 0.9f, 1f);
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("↙ SW", GUILayout.Height(30)))
+            {
+                DuplicateRoom(roomController, Direction.SouthWest);
+            }
+            if (GUILayout.Button("↘ SE", GUILayout.Height(30)))
+            {
+                DuplicateRoom(roomController, Direction.SouthEast);
+            }
+            EditorGUILayout.EndHorizontal();
 
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("↖ NW", GUILayout.Height(30)))
-        {
-            DuplicateRoom(roomController, Direction.NorthWest);
-        }
-        if (GUILayout.Button("↗ NE", GUILayout.Height(30)))
-        {
-            DuplicateRoom(roomController, Direction.NorthEast);
-        }
-        EditorGUILayout.EndHorizontal();
-
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("↙ SW", GUILayout.Height(30)))
-        {
-            DuplicateRoom(roomController, Direction.SouthWest);
-        }
-        if (GUILayout.Button("↘ SE", GUILayout.Height(30)))
-        {
-            DuplicateRoom(roomController, Direction.SouthEast);
-        }
-        EditorGUILayout.EndHorizontal();
-
-        GUI.backgroundColor = Color.white;
-
-        EditorGUILayout.EndVertical();
+            GUI.backgroundColor = Color.white;
+        }, "These fields apply changes to all walls of the room at once");
     }
 
     private void DrawUnitsSection(RoomController roomController)

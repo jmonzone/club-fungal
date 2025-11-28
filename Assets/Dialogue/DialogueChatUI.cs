@@ -13,7 +13,11 @@ public class DialogueChatUI : DialoguePageUI
     protected override void Awake()
     {
         base.Awake();
-        continueButton.onClick.AddListener(() => ContinueDialogue());
+        continueButton.onClick.AddListener(() =>
+        {
+            dialogue.Dialogue.Continue();
+            StartCoroutine(Show());
+        });
     }
 
     public override IEnumerator Show()
@@ -22,28 +26,5 @@ public class DialogueChatUI : DialoguePageUI
         unitNameText.text = dialogue.Unit.Instance.Data.Name;
         dialogueText.text = dialogue.Dialogue.Text;
         yield return base.Show();
-    }
-
-    private void ContinueDialogue()
-    {
-        var targetDialogue = dialogue.Dialogue;
-
-        //if (targetDialogue.Responses.Count >= 2)
-        //{
-        //    var response = targetDialogue.Responses[0];
-        //    dialogue.RespondToChat(response);
-        //    if (response.Next != null) StartCoroutine(Show());
-        //    else InvokeClose();
-        //}
-
-        if (targetDialogue.Next != null)
-        {
-            dialogue.ContinueDialogue();
-            StartCoroutine(Show());
-        }
-        else
-        {
-            InvokeClose();
-        }
     }
 }

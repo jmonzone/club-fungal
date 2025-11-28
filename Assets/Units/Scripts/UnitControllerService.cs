@@ -61,8 +61,8 @@ public class UnitControllerService : ScriptableObject
         }
     }
 
-    public void ClearControllers()
+    public UnitController GetController(UnitInstance instance)
     {
-        unitControllers.Clear();
+        return unitControllers.Find(c => c.Instance == instance);
     }
 }

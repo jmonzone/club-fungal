@@ -17,12 +17,12 @@ public class GreetingDialogue
         this.unitA = unitA;
         this.unitB = unitB;
 
-        dialogue = new Dialogue(new List<Dialogue>
-        {
-            // new Dialogue("Hey this is my friend! Say hi :)"),
-            // new Dialogue("Hey it's great to meet you!"),
-            // new Dialogue("The party looks fun over here"),
-        });
+        // dialogue = new Dialogue(new List<Dialogue>
+        // {
+        // new Dialogue("Hey this is my friend! Say hi :)"),
+        // new Dialogue("Hey it's great to meet you!"),
+        // new Dialogue("The party looks fun over here"),
+        // });
     }
 }
 

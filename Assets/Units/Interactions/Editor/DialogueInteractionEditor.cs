@@ -6,62 +6,76 @@ using UnityEngine;
 [CustomEditor(typeof(DialogueInteraction))]
 public class DialogueInteractionEditor : Editor
 {
-    private SerializedProperty dialogueListProperty;
     private ReorderableList dialogueList;
 
     private void OnEnable()
     {
-        var stepsProperty = serializedObject.FindProperty("steps");
-        dialogueList = new ReorderableList(serializedObject, stepsProperty, true, true, true, true);
-        dialogueList.drawHeaderCallback = (Rect rect) => EditorGUI.LabelField(rect, "Interaction Steps");
-        dialogueList.drawElementCallback = DrawStepElement;
-        dialogueList.elementHeightCallback = GetStepElementHeight;
+        var actionsProperty = serializedObject.FindProperty("actions");
+        dialogueList = new ReorderableList(serializedObject, actionsProperty, true, true, false, false);
+        dialogueList.drawHeaderCallback = (Rect rect) => EditorGUI.LabelField(rect, "Interaction Actions");
+        dialogueList.drawElementCallback = DrawActionElement;
+        dialogueList.elementHeightCallback = GetActionElementHeight;
     }
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("dialogueReference"));
+        DrawDefaultInspector();
 
-        dialogueList.DoLayoutList();
+        GURUStyler.DrawGuruSection(() =>
+        {
+            dialogueList.DoLayoutList();
+
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Add Dialogue"))
+            {
+                AddAction(new DialogueAction());
+            }
+            if (GUILayout.Button("Add Action"))
+            {
+                ShowAddActionMenu();
+            }
+            if (GUILayout.Button("Remove"))
+            {
+                RemoveLastAction();
+            }
+            EditorGUILayout.EndHorizontal();
+        }, "Customize interaction actions for dialogue and other behaviors");
 
         serializedObject.ApplyModifiedProperties();
     }
 
-    private void DrawStepElement(Rect rect, int index, bool isActive, bool isFocused)
+    private void DrawActionElement(Rect rect, int index, bool isActive, bool isFocused)
     {
         var element = dialogueList.serializedProperty.GetArrayElementAtIndex(index);
-        var typeProp = element.FindPropertyRelative("type");
-        var dialogueDataProp = element.FindPropertyRelative("dialogueData");
-        var partyProp = element.FindPropertyRelative("party");
-
-        // Type dropdown
-        Rect typeRect = new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight);
-        EditorGUI.PropertyField(typeRect, typeProp, GUIContent.none);
-
-        var typeIndex = typeProp.enumValueIndex;
-        if (typeIndex == 0) // Dialogue
+        var action = element.managedReferenceValue;
+        if (action is DialogueAction)
         {
-            // Show dialogue data
-            DrawDialogueData(rect, dialogueDataProp);
+            DrawDialogueAction(rect, element);
         }
-        else if (typeIndex == 1) // JoinParty
+        else if (action is JoinPartyAction)
         {
-            // Show party field
-            Rect partyRect = new Rect(rect.x + 105, rect.y, rect.width - 105, EditorGUIUtility.singleLineHeight);
-            EditorGUI.PropertyField(partyRect, partyProp, GUIContent.none);
+            DrawJoinPartyAction(rect, element);
+        }
+        else
+        {
+            EditorGUI.LabelField(rect, "Unknown action type");
         }
     }
 
-    private void DrawDialogueData(Rect rect, SerializedProperty dialogueDataProp)
+    private void DrawDialogueAction(Rect rect, SerializedProperty element)
     {
-        var speakerProp = dialogueDataProp.FindPropertyRelative("speaker");
-        var unitInstanceProp = dialogueDataProp.FindPropertyRelative("unitInstance");
-        var textProp = dialogueDataProp.FindPropertyRelative("text");
+        var speakerProp = element.FindPropertyRelative("speaker");
+        var unitInstanceProp = element.FindPropertyRelative("unitInstance");
+        var textProp = element.FindPropertyRelative("text");
+
+        // Type label
+        Rect typeRect = new Rect(rect.x, rect.y, 80, EditorGUIUtility.singleLineHeight);
+        EditorGUI.LabelField(typeRect, "Dialogue", EditorStyles.boldLabel);
 
         // Display area
-        Rect displayRect = new Rect(rect.x + 105, rect.y, rect.width - 105 - 85, EditorGUIUtility.singleLineHeight);
+        Rect displayRect = new Rect(rect.x + 85, rect.y, rect.width - 85 - 85, EditorGUIUtility.singleLineHeight);
         var speakerIndex = speakerProp.enumValueIndex;
         if (speakerIndex == 2) // Specific
         {
@@ -94,27 +108,69 @@ public class DialogueInteractionEditor : Editor
             EditorGUI.LabelField(displayRect, label, EditorStyles.boldLabel);
         }
 
-        // Speaker dropdown (last column)
+        // Speaker dropdown
         Rect speakerRect = new Rect(rect.x + rect.width - 80, rect.y, 80, EditorGUIUtility.singleLineHeight);
         EditorGUI.PropertyField(speakerRect, speakerProp, GUIContent.none);
 
         // Text field
-        Rect textRect = new Rect(rect.x, rect.y + EditorGUIUtility.singleLineHeight + 2, rect.width, EditorGUIUtility.singleLineHeight * 2);
+        Rect textRect = new Rect(rect.x + 85, rect.y + EditorGUIUtility.singleLineHeight + 2, rect.width - 85, EditorGUIUtility.singleLineHeight * 2);
         textProp.stringValue = EditorGUI.TextArea(textRect, textProp.stringValue);
     }
 
-    private float GetStepElementHeight(int index)
+    private void DrawJoinPartyAction(Rect rect, SerializedProperty element)
+    {
+        // Type label
+        Rect typeRect = new Rect(rect.x, rect.y, 80, EditorGUIUtility.singleLineHeight);
+        EditorGUI.LabelField(typeRect, "Join Party", EditorStyles.boldLabel);
+    }
+
+    private void DrawDialogueData(Rect rect, SerializedProperty dialogueDataProp)
+    {
+        // This method is no longer used
+    }
+
+    private float GetActionElementHeight(int index)
     {
         var element = dialogueList.serializedProperty.GetArrayElementAtIndex(index);
-        var typeProp = element.FindPropertyRelative("type");
-        var typeIndex = typeProp.enumValueIndex;
-        if (typeIndex == 0) // Dialogue
+        var action = element.managedReferenceValue;
+        if (action is DialogueAction)
         {
-            return EditorGUIUtility.singleLineHeight * 3 + 4; // Dialogue height
+            return EditorGUIUtility.singleLineHeight * 3 + 4;
+        }
+        else if (action is JoinPartyAction)
+        {
+            return EditorGUIUtility.singleLineHeight + 4;
         }
         else
         {
-            return EditorGUIUtility.singleLineHeight + 4; // Simple height
+            return EditorGUIUtility.singleLineHeight + 4;
+        }
+    }
+
+    private void AddAction(InteractionAction action)
+    {
+        var actionsProp = serializedObject.FindProperty("actions");
+        actionsProp.InsertArrayElementAtIndex(actionsProp.arraySize);
+        var newElement = actionsProp.GetArrayElementAtIndex(actionsProp.arraySize - 1);
+        newElement.managedReferenceValue = action;
+        serializedObject.ApplyModifiedProperties();
+    }
+
+    private void ShowAddActionMenu()
+    {
+        var menu = new GenericMenu();
+        menu.AddItem(new GUIContent("Join Party"), false, () => AddAction(new JoinPartyAction()));
+        // Add more actions here as needed
+        menu.ShowAsContext();
+    }
+
+    private void RemoveLastAction()
+    {
+        var actionsProp = serializedObject.FindProperty("actions");
+        if (actionsProp.arraySize > 0)
+        {
+            actionsProp.DeleteArrayElementAtIndex(actionsProp.arraySize - 1);
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }
