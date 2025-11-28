@@ -8,6 +8,7 @@ public class ActivityZoneController : ActivityComponent, IInteractable
     [SerializeField] private PlayerActivityReference activityUIReference;
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private GameObject zoneController;
+    [SerializeField] private UnitInteraction enterActivity;
 
     [Header("Settings")]
     [SerializeField] private float scaleDuration = 0.5f;
@@ -82,8 +83,7 @@ public class ActivityZoneController : ActivityComponent, IInteractable
         target.localScale = to;
     }
 
-    [Obsolete("Move IInteractable logic to a separate component.")]
-    void IInteractable.Select()
+    void IInteractable.Select(UnitController source)
     {
         activityUIReference.EnterActivity(Activity);
     }

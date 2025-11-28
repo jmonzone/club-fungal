@@ -4,9 +4,6 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "PlayerReference", menuName = "Club Fungal/Player/Player Reference")]
 public class PlayerReference : ScriptableObject
 {
-    [Header("References")]
-    [SerializeField] private InteractionReference interactionReference;
-
     [Header("Settings")]
     [SerializeField] private float speed = 2f;
 
@@ -58,17 +55,6 @@ public class PlayerReference : ScriptableObject
     {
         this.targetInteractable = targetInteractable;
         OnTargetInteractableChanged?.Invoke();
-    }
-
-    public void TogglePOVCamera(bool value)
-    {
-        OnPOVCameraToggled?.Invoke(value);
-    }
-
-    public void SelectInteractable(IInteractable interactable)
-    {
-        interactionReference.StartInteraction(Player, interactable);
-        Player.ApplyDefaultBehaviour();
     }
 
     public void SetCameraZoom(float t)

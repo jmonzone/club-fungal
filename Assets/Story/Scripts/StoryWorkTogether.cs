@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Obsolete("No longer using this but keeping for reference.")]
 public class StoryWorkTogether : MonoBehaviour
 {
     [Header("References")]
@@ -55,7 +57,7 @@ public class StoryWorkTogether : MonoBehaviour
 
         // dialogueReference.StartImmediateChat(partyFrog, new Dialogue(workTogetherDialogue, DialogueType.STORY));
 
-        yield return new WaitUntil(() => dialogueReference.Dialogue.Action == DialogueAction.GIFT);
+        // yield return new WaitUntil(() => dialogueReference.Dialogue == DialogueAction.GIFT);
 
         plantGift.SetActive(true);
 

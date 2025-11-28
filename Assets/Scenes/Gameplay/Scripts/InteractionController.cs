@@ -10,7 +10,7 @@ public interface ITarget
 
 public interface IInteractable : ITarget
 {
-    public void Select();
+    public void Select(UnitController source);
 }
 
 public class InteractionController : MonoBehaviour

@@ -14,10 +14,6 @@ public interface IJob
 
 public class FungalController : UnitController
 {
-    [Header("Fungal References")]
-    [SerializeField] private GameObject chatIcon;
-    [SerializeField] private DialogueReference dialogueReference;
-
     private UnitFollow unitFollow;
     private UnitColorPalette colorPalette;
     private Animator animator;
@@ -49,24 +45,6 @@ public class FungalController : UnitController
         yield return base.Start();
     }
 
-
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-        dialogueReference.OnIsActiveChanged += DialogueReference_OnIsActiveChanged;
-    }
-
-    private void DialogueReference_OnIsActiveChanged()
-    {
-        OnProximityChanged(false);
-    }
-
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-        dialogueReference.OnIsActiveChanged -= DialogueReference_OnIsActiveChanged;
-    }
-
     public override void Initialize(UnitInstance instance)
     {
         Quaternion randomYRotation = Quaternion.Euler(0, Random.Range(135f, 225f), 0);
@@ -79,16 +57,6 @@ public class FungalController : UnitController
     {
         unitFollow.FollowUnit(leader);
         ApplyBehaviour(unitFollow);
-    }
-
-    public void TriggerDeath()
-    {
-        animator.Play("Death");
-    }
-
-    public void TriggerRespawn()
-    {
-        animator.SetTrigger("Respawn");
     }
 
     public override void OnProximityChanged(bool value)

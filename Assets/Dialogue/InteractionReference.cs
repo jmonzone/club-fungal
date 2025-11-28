@@ -1,64 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
+[Obsolete("InteractionReference is deprecated. Each interactable should handle its own interaction logic.")]
 [CreateAssetMenu(fileName = "InteractionReference", menuName = "Club Fungal/Dialogue/Interaction Reference")]
 public class InteractionReference : ScriptableObject
 {
     [SerializeField] private DialogueReference dialogueReference;
 
-    public void StartInteraction(PlayerController player, IInteractable interactable)
-    {
-        // todo: should be handled by unit controller?
-        if (interactable is UnitController unit)
-        {
-            if (unit.Dialogue.GreetingDialogue != null)
-            {
-                var units = new List<UnitController>
-                {
-                    player,
-                    unit,
-                };
-
-                foreach (var target in unit.Dialogue.Targets)
-                {
-                    units.Add(target);
-                }
-
-                var origin = GetMidpoint(unit);
-
-
-                dialogueReference.StartGroupDialogue(origin, unit.Dialogue.GreetingDialogue, units);
-            }
-            else
-            {
-                dialogueReference.StartIntroDialogue(unit);
-            }
-        }
-        else interactable.Select();
-    }
-
-    Vector3 GetMidpoint(UnitController unit)
-    {
-        if (unit == null) return Vector3.zero;
-
-        var positions = new List<Vector3> { unit.transform.position };
-
-        foreach (var target in unit.Dialogue.Targets)
-        {
-            if (target != null)
-                positions.Add(target.transform.position);
-        }
-
-        if (positions.Count == 0)
-            return Vector3.zero;
-
-        // Average all positions
-        Vector3 sum = Vector3.zero;
-        foreach (var pos in positions)
-            sum += pos;
-
-        return sum / positions.Count;
-    }
 
 
 }

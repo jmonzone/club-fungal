@@ -77,7 +77,7 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget
         });
     }
 
-    void IInteractable.Select()
+    void IInteractable.Select(UnitController source)
     {
         EmitSpore();
     }

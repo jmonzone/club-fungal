@@ -14,6 +14,7 @@ public class UnitController : MonoBehaviour, IInteractable
 
     public UnitDestination Destination => destination;
     public UnitDialogue Dialogue => dialogue;
+    public UnitInteraction CurrentInteraction => instance.Interaction;
 
     [Header("Runtime")]
     [SerializeField] private UnitInstance instance;
@@ -156,9 +157,9 @@ public class UnitController : MonoBehaviour, IInteractable
         ApplyBehaviour(behaviour);
     }
 
-    public void Select()
+    void IInteractable.Select(UnitController source)
     {
-
+        CurrentInteraction.StartInteraction(source, this);
     }
 
     public virtual void OnProximityChanged(bool value)

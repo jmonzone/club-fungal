@@ -22,7 +22,7 @@ public class UnitInstance : ScriptableObject
     [SerializeField] private Job job;
     [SerializeField] private ColorPalette colorPalette;
     [SerializeField] private List<UnitInstance> friends;
-
+    [SerializeField] private UnitInteraction interaction;
     public string Id => id;
     public Unit Data => data;
     public Element Element => element;
@@ -41,6 +41,7 @@ public class UnitInstance : ScriptableObject
     public float IntroduceNewFriendRate => Mathf.Lerp(minChance, maxChance, friendshipLevel / (float)3);
 
     public List<UnitInstance> Friends => friends;
+    public UnitInteraction Interaction => interaction;
 
     public JObject Json => json;
 

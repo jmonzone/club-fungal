@@ -31,7 +31,7 @@ public class DialogueActionsUI : DialoguePageUI
         base.Awake();
         chatButton.onClick.AddListener(() =>
         {
-            dialogue.StartImmediateChat(unit, unit.Dialogue.RandomDialogue);
+            Debug.LogWarning("Chat button clicked");
         });
 
         photoButton.onClick.AddListener(dialogue.StartPhoto);
@@ -56,8 +56,8 @@ public class DialogueActionsUI : DialoguePageUI
 
         actionButton.gameObject.SetActive(unit.Instance.Job);
 
-        var intro = unit.Dialogue.RandomDialogue;
-        yield return dialogueTypewriter.TypeRoutine(intro.Text, () => StartCoroutine(actionButtons.FadeIn()));
+        // var intro = unit.Dialogue.RandomDialogue;
+        // yield return dialogueTypewriter.TypeRoutine(intro.Text, () => StartCoroutine(actionButtons.FadeIn()));
     }
 
     private void UseAction()

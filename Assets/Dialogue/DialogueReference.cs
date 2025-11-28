@@ -31,71 +31,29 @@ public class DialogueReference : ScriptableObject
     public event UnityAction OnGiveComplete;
     public event UnityAction OnDialogueComplete;
 
-    // used for when interating with a fungal by itself
-    // opens basic menu with action buttons
-    public void StartIntroDialogue(UnitController unit)
-    {
-        unit.Dialogue.StartDialogue(playerReference.Player);
-        ApplyDialogue(unit, unit.Dialogue.RandomDialogue);
-        OnInteractionStart?.Invoke();
-    }
-
     private UnityAction onComplete;
-    // used for when interacting with a funal by itself
-    // immedialey opens dialogue, with no action buttons
-    public void StartImmediateChat(UnitController unit, Dialogue dialogue, UnityAction onComplete = null)
-    {
-        unit.Dialogue.StartDialogue(playerReference.Player);
-        ApplyDialogue(unit, dialogue);
-        OnDialogueStart?.Invoke();
-        this.onComplete = onComplete;
-    }
 
-    // used for when two fungals are already talking
-    // the player joining in, creates a group dialogue
-    public void StartGroupDialogue(Vector3 origin, GreetingDialogue dialogue, List<UnitController> units)
-    {
-        this.units = units;
-        UnitController.ArrangeUnitsInRadius(origin, units);
-        ApplyDialogue(dialogue.UnitA, dialogue.Dialogue);
-        OnDialogueStart?.Invoke();
-    }
 
-    private void ApplyDialogue(UnitController unit, Dialogue dialogue)
+    public void StartDialogue(Dialogue dialogue)
     {
-        //Debug.Log("setting target");
-        currentUnit = unit;
         this.dialogue = dialogue;
 
         isActive = true;
         OnIsActiveChanged?.Invoke();
+        OnDialogueStart?.Invoke();
 
-        unit.Focus();
-        if (navigation.CurrentView != dialogueView) navigation.Navigate(dialogueView);
-    }
-
-    public void RespondToChat(Response response)
-    {
-        Debug.Log($"RespondToChat {response.Next}");
-
-        if (response.Next != null) dialogue = response.Next;
-        relationship += response.Relationship;
-        OnDialogueResponse?.Invoke(response);
+        if (navigation.CurrentView != dialogueView)
+        {
+            navigation.Navigate(dialogueView);
+        }
     }
 
     public void ContinueDialogue()
     {
-        Debug.Log($"ContinueDialogue {dialogue.Next.Action}");
+        Debug.Log($"ContinueDialogue {dialogue.Next}");
 
         if (dialogue.Next != null)
         {
-            if (currentUnit != dialogue.Next.Unit)
-            {
-                currentUnit.Unfocus();
-                currentUnit = dialogue.Next.Unit;
-                currentUnit.Focus();
-            }
-
             dialogue = dialogue.Next;
         }
 
@@ -142,7 +100,7 @@ public class DialogueReference : ScriptableObject
     private void Inventory_OnItemSelected(Item arg0)
     {
         inventory.OnItemSelected -= Inventory_OnItemSelected;
-        dialogue = currentUnit.Dialogue.Dialogue[0];
+        // dialogue = currentUnit.Dialogue.Dialogue[0];
         OnGiveComplete?.Invoke();
         navigation.GoBack();
     }

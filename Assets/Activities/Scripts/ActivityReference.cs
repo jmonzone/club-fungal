@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
@@ -53,6 +54,7 @@ public class ActivityReference : ScriptableObject
         OnActivityHasStarted?.Invoke();
     }
 
+    [Obsolete("Add interaction")]
     public void EndActivity()
     {
         if (PlayerIsActive) ExitActivity(player);
@@ -68,14 +70,15 @@ public class ActivityReference : ScriptableObject
 
         // todo: add logic to select specific unit
         // todo: add logic to make this conditional
+        // use InteractionSsytem;
         var targetUnit = unitsToRemove[0];
-        dialogueReference.StartImmediateChat(
-            unit: targetUnit.Controller,
-            dialogue: new Dialogue(targetUnit.Controller, "I just invited my friend, they should be coming by here soon."),
-            onComplete: () =>
-            {
-                unitControllerService.InviteFriend(targetUnit.Controller);
-            });
+        // dialogueReference.StartImmediateChat(
+        //     unit: targetUnit.Controller,
+        //     // dialogue: new Dialogue("I just invited my friend, they should be coming by here soon."),
+        //     onComplete: () =>
+        //     {
+        //         unitControllerService.InviteFriend(targetUnit.Controller);
+        //     });
     }
 
     public void EnterActivity(ActivityUnit player)

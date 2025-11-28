@@ -2,7 +2,7 @@
 
 public interface IJoystickSelectable
 {
-    void Select();
+    void Select(UnitController source);
 }
 
 public class PlayerJoystick : MonoBehaviour
@@ -49,7 +49,7 @@ public class PlayerJoystick : MonoBehaviour
                 var interactable = hitCollider.GetComponentInParent<IJoystickSelectable>();
                 if (interactable != null)
                 {
-                    interactable.Select();
+                    interactable.Select(playerReference.Player);
                     break;
                 }
             }

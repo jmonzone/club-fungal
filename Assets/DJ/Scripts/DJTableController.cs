@@ -140,7 +140,7 @@ public class DJTableController : MonoBehaviour, IInteractable
         audioSource2.volume = djReference.RightValue;
     }
 
-    void IInteractable.Select()
+    void IInteractable.Select(UnitController source)
     {
         navigation.Navigate(djView);
     }

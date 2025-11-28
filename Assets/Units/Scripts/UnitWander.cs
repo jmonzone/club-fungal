@@ -10,12 +10,9 @@ public class UnitWander : UnitBehaviour
     [SerializeField] private float wanderRadius = 10f;
     [SerializeField] private float minIdleTime = 1f;
     [SerializeField] private float maxIdleTime = 4f;
-    [SerializeField] private float gravitateStrength = 0.5f;
 
     [Header("Runtime")]
     [SerializeField] private bool isIdle;
-
-    public bool IsIdle => isIdle;
 
     private NavMeshAgent navMeshAgent;
 

@@ -31,22 +31,6 @@ public class DialogueGlyphUI : DialoguePageUI
     private void OnGlyphDialogueComplete()
     {
         var targetDialogue = dialogue.Dialogue;
-
-        if (targetDialogue.Responses.Count >= 2)
-        {
-            var response = targetDialogue.Responses[0];
-            dialogue.RespondToChat(response);
-            if (response.Next != null) Show();
-            else InvokeClose();
-        }
-        else if (targetDialogue.Next != null)
-        {
-            StartCoroutine(ContinueRoutine());
-        }
-        else
-        {
-            StartCoroutine(CloseRoutine());
-        }
     }
 
     private IEnumerator ContinueRoutine()

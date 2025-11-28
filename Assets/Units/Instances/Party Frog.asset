@@ -22,9 +22,4 @@ MonoBehaviour:
   colorPalette: {fileID: 0}
   friends:
   - {fileID: 11400000, guid: 72e0f639e631d41768805d21444be136, type: 2}
-  introDialogue:
-    text: 
-    responses: []
-    type: 0
-    action: 0
-    element: 
+  interaction: {fileID: 11400000, guid: cd6893964a6274906b52bbbf6b56f4d8, type: 2}

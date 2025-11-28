@@ -21,7 +21,7 @@ public class DoorController : MonoBehaviour, IInteractable, IJoystickSelectable
         roomController = GetComponentInParent<RoomController>();
     }
 
-    public void Select()
+    public void Select(UnitController source)
     {
         OnDoorSelected?.Invoke();
     }

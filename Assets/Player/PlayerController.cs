@@ -106,7 +106,8 @@ public class PlayerController : UnitController
         // Debug.Log("Starting interact routine");
         Destination.SetTarget(playerReference.TargetInteractable.Transform);
         yield return new WaitUntil(() => Destination.IsAtDestination);
-        playerReference.SelectInteractable(playerReference.TargetInteractable);
+        playerReference.TargetInteractable.Select(this);
+        ApplyDefaultBehaviour();
     }
 
     private void PlayerReference_OnTargetPositionChanged()
