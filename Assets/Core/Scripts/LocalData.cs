@@ -20,10 +20,6 @@ public class LocalData : ScriptableObject
     {
         var saveDataPath = GetSaveDataPath();
 
-        Directory.CreateDirectory(Path.GetDirectoryName(saveDataPath));
-
-        if (Application.isEditor && resetDataOnAwake) ResetData();
-
         if (!File.Exists(saveDataPath)) JsonFile = new JObject();
         else
         {

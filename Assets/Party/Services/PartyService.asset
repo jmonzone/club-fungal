@@ -14,4 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PartyService
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   localData: {fileID: 11400000, guid: 81d22df7435974c419891ceb2bc9e4ee, type: 2}
-  partyMembers: []
+  unitInstanceService: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2,
+    type: 2}
+  partyInstances:
+  - {fileID: 0}
+  partyControllers: []

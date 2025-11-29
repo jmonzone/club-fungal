@@ -12,6 +12,7 @@ public class PlayerReference : ScriptableObject
 
 
     [Header("Runtime")]
+    [SerializeField] private UnitInstance playerInstance;
     [SerializeField] private PlayerController player;
     [SerializeField] private Vector3 targetPosition;
     [SerializeField] private IInteractable targetInteractable;
@@ -20,12 +21,12 @@ public class PlayerReference : ScriptableObject
 
     public float Speed => Application.isEditor ? editorSpeed : speed;
 
+    public UnitInstance PlayerInstance => playerInstance;
     public PlayerController Player => player;
     public ActivityUnit ActivityUnit => activityUnit;
     public Vector3 TargetPosition => targetPosition;
     public IInteractable TargetInteractable => targetInteractable;
 
-    public event UnityAction<PlayerController> OnPlayerSet;
     public event UnityAction OnTargetInteractableChanged;
     public event UnityAction OnTargetPositionChanged;
     public event UnityAction<bool> OnPOVCameraToggled;
@@ -34,7 +35,6 @@ public class PlayerReference : ScriptableObject
     {
         this.player = player;
         activityUnit = player.GetComponent<ActivityUnit>();
-        OnPlayerSet?.Invoke(player);
     }
 
     public void SetTargetPosition(Vector3 targetPosition)

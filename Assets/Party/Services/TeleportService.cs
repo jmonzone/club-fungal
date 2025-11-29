@@ -10,7 +10,7 @@ public class TeleportService : ScriptableObject
         if (partyService == null) return;
 
         // Teleport all party members
-        foreach (var member in partyService.PartyMembers)
+        foreach (var member in partyService.PartyControllers)
         {
             member.Teleport(position, parent);
         }

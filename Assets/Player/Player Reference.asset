@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49e7ffceae1c64ad39d17f6171535600, type: 3}
   m_Name: Player Reference
   m_EditorClassIdentifier: 
-  partyService: {fileID: 11400000, guid: bb09c959525894035a6335dd29940cec, type: 2}
   speed: 2
   editorSpeed: 5
+  playerInstance: {fileID: 11400000, guid: c5fe3b2204b8a471f9ab1ed260b7d9b9, type: 2}
   player: {fileID: 0}
   targetPosition: {x: 0, y: 0, z: 0}

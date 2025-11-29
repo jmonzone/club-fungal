@@ -38,16 +38,6 @@ public class UnitInstanceService : ScriptableObject
         localData.Initialize();
         units = new List<UnitInstance>();
 
-        List<string> partyIds = new List<string>();
-        if (localData.JsonFile.ContainsKey("party"))
-        {
-            var partyArray = localData.JsonFile["party"] as JArray;
-            if (partyArray != null)
-            {
-                partyIds = partyArray.Select(t => t.ToString()).ToList();
-            }
-        }
-
         if (localData.JsonFile.ContainsKey(UNIT_KEY))
         {
             foreach (var unit in localData.JsonFile[UNIT_KEY] as JArray)
@@ -77,8 +67,18 @@ public class UnitInstanceService : ScriptableObject
                     var displayName = unitJson.Value<string>("displayName") ?? unitName;
 
                     var instance = CreateInstance<UnitInstance>();
-                    instance.Initialize(matchingUnit, unitId, friendshipXP, element, matchingJob, matchingColorPalette, unitJson);
-                    instance.IsInParty = partyIds.Contains(unitId);
+                    var data = new UnitInstance.UnitInstanceData
+                    {
+                        Data = matchingUnit,
+                        Id = unitId,
+                        DisplayName = displayName,
+                        FriendshipXP = friendshipXP,
+                        Element = element,
+                        Job = matchingJob,
+                        ColorPalette = matchingColorPalette,
+                        Json = unitJson
+                    };
+                    instance.Initialize(data);
 
                     var skillsJson = unitJson.Value<JArray>("skills") ?? new JArray();
                     var skills = new List<UnitSkill>();
@@ -131,6 +131,17 @@ public class UnitInstanceService : ScriptableObject
         // Maintain order by ID
         units = units.OrderBy(u => u.Id).ToList();
 
+        // Set party status
+        if (localData.JsonFile.ContainsKey("party"))
+        {
+            var partyArray = localData.JsonFile["party"] as JArray ?? new JArray();
+            var partyIds = new HashSet<string>(partyArray.Select(p => p.ToString()));
+            foreach (var unit in units)
+            {
+                unit.IsInParty = partyIds.Contains(unit.Id);
+            }
+        }
+
         SaveData();
     }
 
@@ -143,7 +154,15 @@ public class UnitInstanceService : ScriptableObject
 
         var matchingColorPalette = GetColorPaletteByElement(newElement);
 
-        newUnitInstance.Initialize(newUnit, element: newElement, colorPalette: matchingColorPalette);
+        var displayName = GenerateDisplayName(newUnit.Name);
+        var data = new UnitInstance.UnitInstanceData
+        {
+            Data = newUnit,
+            DisplayName = displayName,
+            Element = newElement,
+            ColorPalette = matchingColorPalette
+        };
+        newUnitInstance.Initialize(data);
 
         var skills = new List<UnitSkill>();
 
@@ -157,10 +176,23 @@ public class UnitInstanceService : ScriptableObject
         return newUnitInstance;
     }
 
+
+
+    private string GenerateDisplayName(string baseName)
+    {
+        var titles = new[] { "Mysterious", "Party", "DJ", "Crazy", "Wild", "Cool", "Happy", "Sad", "Fun", "Silly" };
+        var names = new[] { "Sal", "Dan", "Cindy", "Bob", "Alice", "Tom", "Jerry", "Mickey", "Luna", "Rex", "Bella", "Max", "Lily", "Charlie", "Daisy" };
+        var title = titles[UnityEngine.Random.Range(0, titles.Length)];
+        var name = names[UnityEngine.Random.Range(0, names.Length)];
+        return $"{title} {name}";
+    }
+
     public UnitInstance CopyUnit(UnitInstance instance, bool saveData = true)
     {
         var copiedUnit = CreateInstance<UnitInstance>();
-        copiedUnit.Initialize(instance.Data, instance.Id, instance.FriendshipXP, instance.Element, instance.Job, instance.ColorPalette, json: instance.Json);
+        var data = instance.GetData();
+        data.Id = null; // Generate new Id for copy
+        copiedUnit.Initialize(data);
 
         var skills = new List<UnitSkill>();
 

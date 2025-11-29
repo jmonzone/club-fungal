@@ -17,6 +17,11 @@ public static class UnitInstanceListDrawer
         List<UnitInstance> toRemove = new List<UnitInstance>();
         foreach (var unit in units)
         {
+            if (unit == null)
+            {
+                EditorGUILayout.LabelField("Null unit in list", EditorStyles.boldLabel);
+                continue;
+            }
             EditorGUILayout.BeginHorizontal();
             Color originalBG = GUI.backgroundColor;
             GUI.backgroundColor = backgroundColorFunc != null ? backgroundColorFunc(unit) : Color.white;

@@ -12,15 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
   m_Name: Party Frog
   m_EditorClassIdentifier: 
-  id: 000000000000000000000001
-  displayName: Party Frog
-  data: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
-  friendshipLevel: 2
-  friendshipXP: 83
-  skills: []
+  instanceData:
+    Data: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
+    Id: 000000000000000000000001
+    DisplayName: Party Frog
+    FriendshipXP: 83
+    Element: 0
+    Job: {fileID: 0}
+    ColorPalette: {fileID: 0}
+  id: 
+  displayName: 
+  data: {fileID: 0}
+  friendshipXP: 0
   element: 0
   job: {fileID: 0}
   colorPalette: {fileID: 0}
+  skills: []
   friends:
   - {fileID: 11400000, guid: 72e0f639e631d41768805d21444be136, type: 2}
   interaction: {fileID: 11400000, guid: cd6893964a6274906b52bbbf6b56f4d8, type: 2}

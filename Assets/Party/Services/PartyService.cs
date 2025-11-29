@@ -13,18 +13,23 @@ public class PartyService : ScriptableObject
     [SerializeField] private UnitInstanceService unitInstanceService;
 
     [Header("Runtime")]
-    [SerializeField] private List<UnitInstance> partyMembers = new List<UnitInstance>();
+    [SerializeField] private List<UnitInstance> partyInstances = new List<UnitInstance>();
     [SerializeField] private List<UnitController> partyControllers = new List<UnitController>();
 
     public PlayerReference PlayerReference => playerReference;
-    public List<UnitController> PartyMembers => partyControllers;
+    public List<UnitInstance> PartyInstances => partyInstances;
+    public List<UnitController> PartyControllers => partyControllers;
     public event UnityAction<UnitController> OnUnitAddedToParty;
     public event UnityAction<UnitController> OnUnitRemovedFromParty;
+    public event UnityAction<UnitInstance> OnUnitInstanceAddedToParty;
+    public event UnityAction<UnitInstance> OnUnitInstanceRemovedFromParty;
 
     public void Initialize()
     {
         localData.Initialize();
-        partyMembers = new List<UnitInstance>();
+        Debug.Log("Loading party from local data.");
+        partyInstances = new List<UnitInstance>();
+        partyControllers = new List<UnitController>();
 
         // Load saved party
         if (localData.JsonFile.ContainsKey("party"))
@@ -38,32 +43,26 @@ public class PartyService : ScriptableObject
                     var unit = unitInstanceService.Units.Find(u => u.Id == id);
                     if (unit != null)
                     {
-                        partyMembers.Add(unit);
+                        Debug.Log($"Loaded party member: {unit.DisplayName} (ID: {unit.Id})");
+                        partyInstances.Add(unit);
                         unit.IsInParty = true;
                     }
                 }
             }
         }
 
-        if (partyMembers.Count == 0 && playerReference.Player != null)
+        if (partyInstances.Count == 0 && playerReference.PlayerInstance != null)
         {
-            partyMembers.Add(playerReference.Player.Instance);
-            playerReference.Player.Instance.IsInParty = true;
+            Debug.Log("No saved party found. Adding player to party by default.");
+            partyInstances.Add(playerReference.PlayerInstance);
+            playerReference.PlayerInstance.IsInParty = true;
             SaveParty();
         }
-
-        playerReference.OnPlayerSet += (player) =>
-        {
-            if (!partyMembers.Contains(player.Instance))
-            {
-                partyMembers.Add(player.Instance);
-                player.Instance.IsInParty = true;
-            }
-        };
     }
 
     public void AddToParty(UnitController unit)
     {
+        Debug.Log($"Adding unit to party: {unit.Instance.DisplayName} (ID: {unit.Instance.Id})");
         if (!partyControllers.Contains(unit))
         {
             partyControllers.Add(unit);
@@ -73,30 +72,20 @@ public class PartyService : ScriptableObject
                 followBehaviour.SetTarget(playerReference.Player.transform);
                 unit.SetBehaviour(followBehaviour);
             }
-            if (!partyMembers.Contains(unit.Instance))
+            if (!partyInstances.Contains(unit.Instance))
             {
-                partyMembers.Add(unit.Instance);
+                partyInstances.Add(unit.Instance);
                 unit.Instance.IsInParty = true;
+                OnUnitInstanceAddedToParty?.Invoke(unit.Instance);
             }
             OnUnitAddedToParty?.Invoke(unit);
             SaveParty();
         }
     }
 
-    public void RemoveFromParty(UnitController unit)
-    {
-        if (partyMembers.Contains(unit.Instance) && unit != playerReference.Player)
-        {
-            partyMembers.Remove(unit.Instance);
-            unit.Instance.IsInParty = false;
-            OnUnitRemovedFromParty?.Invoke(unit);
-            SaveParty();
-        }
-    }
-
     private void SaveParty()
     {
-        var partyIds = partyMembers.Where(u => u != null).Select(u => u.Id).ToList();
+        var partyIds = partyInstances.Where(u => u != null).Select(u => u.Id).ToList();
         localData.SaveData("party", new JArray(partyIds));
     }
 }

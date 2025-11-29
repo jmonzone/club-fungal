@@ -12,13 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
   m_Name: Fungal Tree
   m_EditorClassIdentifier: 
-  id: 000000000000000000000005
-  data: {fileID: 11400000, guid: 95347a15aaf7f4b40b23e8fdfbd3a26f, type: 2}
-  friendshipLevel: 0
-  friendshipXP: 0
+  instanceData:
+    Data: {fileID: 11400000, guid: 95347a15aaf7f4b40b23e8fdfbd3a26f, type: 2}
+    Id: 000000000000000000000005
+    DisplayName: Tree
+    FriendshipXP: 0
+    Element: 0
+    Job: {fileID: 0}
+    ColorPalette: {fileID: 0}
   skills: []
-  element: 0
-  job: {fileID: 0}
-  colorPalette: {fileID: 0}
   friends:
   - {fileID: 0}
+  interaction: {fileID: 0}

@@ -2287,6 +2287,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Party Widget Unit (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1188816280004517473, guid: 2d3799a85c2334c609ef47200b483977,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1241860589217945197, guid: 2d3799a85c2334c609ef47200b483977,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -4598,7 +4603,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PartyWidgetUI
   partyService: {fileID: 11400000, guid: bb09c959525894035a6335dd29940cec, type: 2}
-  unitContainer: {fileID: 180397760}
+  unitContainer: {fileID: 859213599}
   unitUIPrefab: {fileID: 6101863226273176682, guid: 2d3799a85c2334c609ef47200b483977,
     type: 3}
 --- !u!1 &189055204
@@ -20384,8 +20389,7 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 5ac5e86d1af72424bb4ae4010ea64ec3, type: 3}
   - {fileID: 2800000, guid: 504e8aa03c0f840f88064f0633c44e16, type: 3}
   - {fileID: 2800000, guid: 05d7ce1b932844741a80e76b553d5685, type: 3}
-  useOuterWalls: 0
-  selectRoomOnTransition: 0
+  settings: {fileID: 0}
   roomControllers: []
   isTransitioning: 0
 --- !u!4 &827787025
@@ -20741,7 +20745,7 @@ GameObject:
   - component: {fileID: 859213599}
   - component: {fileID: 859213600}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49655,8 +49659,8 @@ RectTransform:
   - {fileID: 180397760}
   m_Father: {fileID: 959773196}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.008547009, y: 0.003949447}
-  m_AnchorMax: {x: 0.6547009, y: 0.59557664}
+  m_AnchorMin: {x: 0.008547009, y: 0.044233806}
+  m_AnchorMax: {x: 0.991453, y: 0.94036335}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}

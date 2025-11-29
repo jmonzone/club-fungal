@@ -21,7 +21,7 @@ public class UnitInstanceServiceEditor : Editor
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
                 var asset = AssetDatabase.LoadAssetAtPath<T>(path);
-                if (asset != null)
+                if (asset != null && IsValidAsset(asset))
                 {
                     list.Add(asset);
                 }
@@ -29,6 +29,19 @@ public class UnitInstanceServiceEditor : Editor
             EditorUtility.SetDirty(target);
         }
         return list;
+    }
+
+    private bool IsValidAsset<T>(T asset) where T : Object
+    {
+        if (asset is UnitInstance unitInstance)
+        {
+            return unitInstance.Data != null && !string.IsNullOrEmpty(unitInstance.DisplayName);
+        }
+        if (asset is Unit unit)
+        {
+            return !string.IsNullOrEmpty(unit.Name);
+        }
+        return true;
     }
 
     private void DrawIconButton(string emoji, string text, System.Action action, GUIStyle style = null)
@@ -77,9 +90,17 @@ public class UnitInstanceServiceEditor : Editor
             }
             combined = combined.OrderBy(c => c.unit.Id).ToList();
 
+            var unitsToDraw = combined.Select(c => c.unit).ToList();
+            var ghostUnits = unitsToDraw.Where(u => u.Data == null || string.IsNullOrEmpty(u.DisplayName)).ToList();
+            if (ghostUnits.Any())
+            {
+                EditorGUILayout.HelpBox($"Ghost units detected ({ghostUnits.Count}): {string.Join(", ", ghostUnits.Select(u => $"ID:{u.Id ?? "null"}"))}", MessageType.Error);
+            }
+            unitsToDraw = unitsToDraw.Where(u => u.Data != null && !string.IsNullOrEmpty(u.DisplayName)).ToList();
+
             // Display units in a responsive layout
             UnitInstanceListDrawer.DrawList(
-                combined.Select(c => c.unit).ToList(),
+                unitsToDraw,
                 onToggleParty: (unit) =>
                 {
                     var localDataField = typeof(UnitInstanceService).GetField("localData", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -127,10 +148,6 @@ public class UnitInstanceServiceEditor : Editor
             EditorGUILayout.BeginVertical();
             EditorGUILayout.Space(10);
             DrawIconButton("🆕", "Generate A New Unit", () => { service.CreateUnit(unit => unit is FungalUnit); EditorUtility.SetDirty(service); }, leftAlignedButton);
-            EditorGUILayout.Space(5);
-            DrawIconButton("📂", "Open JSON File", () => { Process.Start(LocalData.GetSaveDataPath()); }, leftAlignedButton);
-            EditorGUILayout.Space(5);
-            DrawIconButton("🔄", "Reset To Default", () => { service.Reset(); EditorUtility.SetDirty(service); }, leftAlignedButton);
             EditorGUILayout.Space(5);
             DrawIconButton("🔄", "Update Collections", () => { AutoPopulateList<UnitInstance>("initialUnits", "t:UnitInstance", true); AutoPopulateList<Unit>("unitCollection", "t:Unit", true); }, leftAlignedButton);
             EditorGUILayout.Space(10);

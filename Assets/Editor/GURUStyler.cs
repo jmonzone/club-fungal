@@ -1,10 +1,12 @@
 using UnityEditor;
 using UnityEngine;
+using System.Diagnostics;
 
 public static class GURUStyler
 {
     private static GameService cachedGameService;
     private static ScriptableObject cachedUnitInstanceService;
+    private static ScriptableObject cachedUnitControllerService;
 
     private static void EnsureAssetsLoaded()
     {
@@ -25,6 +27,16 @@ public static class GURUStyler
             {
                 string unitPath = AssetDatabase.GUIDToAssetPath(unitGuids[0]);
                 cachedUnitInstanceService = AssetDatabase.LoadAssetAtPath<ScriptableObject>(unitPath);
+            }
+        }
+
+        if (cachedUnitControllerService == null)
+        {
+            string[] controllerGuids = AssetDatabase.FindAssets("t:UnitControllerService");
+            if (controllerGuids.Length > 0)
+            {
+                string controllerPath = AssetDatabase.GUIDToAssetPath(controllerGuids[0]);
+                cachedUnitControllerService = AssetDatabase.LoadAssetAtPath<ScriptableObject>(controllerPath);
             }
         }
     }
@@ -86,6 +98,30 @@ public static class GURUStyler
             {
                 AssetDatabase.OpenAsset(cachedUnitInstanceService);
             }
+        }
+
+        // UnitControllerService
+        if (cachedUnitControllerService != null && Selection.activeObject != cachedUnitControllerService)
+        {
+            if (GUILayout.Button("Open UnitControllerService Asset", linkStyle))
+            {
+                AssetDatabase.OpenAsset(cachedUnitControllerService);
+            }
+        }
+
+        // Reset JSON File
+        if (cachedGameService != null)
+        {
+            if (GUILayout.Button("Reset JSON File", linkStyle))
+            {
+                cachedGameService.ResetJsonFile();
+            }
+        }
+
+        // Open JSON File
+        if (GUILayout.Button("Open JSON File", linkStyle))
+        {
+            Process.Start(LocalData.GetSaveDataPath());
         }
 
         EditorGUILayout.EndVertical();

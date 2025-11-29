@@ -12,15 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
   m_Name: Crazy Jellyfish
   m_EditorClassIdentifier: 
-  id: 000000000000000000000002
-  displayName: Crazy Jellyfish
-  data: {fileID: 11400000, guid: 84acf7738ffbc4db09e660e7ce20b7a1, type: 2}
-  friendshipLevel: 1
+  instanceData:
+    Data: {fileID: 11400000, guid: 84acf7738ffbc4db09e660e7ce20b7a1, type: 2}
+    Id: 000000000000000000000002
+    DisplayName: Crazy Jellyfish
+    FriendshipXP: 0
+    Element: 0
+    Job: {fileID: 11400000, guid: 36c70f9e85b5d44f3bfe2ace33b2f7f6, type: 2}
+    ColorPalette: {fileID: 0}
+  id: 
+  displayName: 
+  data: {fileID: 0}
   friendshipXP: 0
-  skills: []
   element: 0
-  job: {fileID: 11400000, guid: 36c70f9e85b5d44f3bfe2ace33b2f7f6, type: 2}
+  job: {fileID: 0}
   colorPalette: {fileID: 0}
+  skills: []
   friends:
   - {fileID: 11400000, guid: 463ba2838266e4c609022c9ca93d4c8a, type: 2}
   interaction: {fileID: 0}

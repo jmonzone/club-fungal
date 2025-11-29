@@ -6,12 +6,12 @@ public class PartyWidgetUnitUI : MonoBehaviour
 {
     [SerializeField] private Image unitImage;
     [SerializeField] private TMP_Text unitNameText;
-    [SerializeField] private UnitController unitController;
+    [SerializeField] private UnitInstance unitInstance;
 
-    public void SetUnit(UnitController unit)
+    public void SetUnit(UnitInstance unit)
     {
-        unitController = unit;
-        unitImage.sprite = unit.Instance.Data.Sprite;
-        unitNameText.text = unit.Instance.DisplayName;
+        unitInstance = unit;
+        unitImage.sprite = unit.Data.Sprite;
+        unitNameText.text = unit.DisplayName;
     }
 }
