@@ -59,6 +59,17 @@ public class UnitInstanceServiceEditor : Editor
     {
         UnitInstanceService service = (UnitInstanceService)target;
 
+        // Check for null references
+        var localData = service.LocalData;
+        if (localData == null)
+        {
+            EditorGUILayout.HelpBox("LocalData is not assigned. Please assign it in the inspector.", MessageType.Error);
+        }
+        else
+        {
+            service.Initialize();
+        }
+
         // Auto populate initialUnits
         var initialUnits = AutoPopulateList<UnitInstance>("initialUnits", "t:UnitInstance");
 
@@ -101,31 +112,19 @@ public class UnitInstanceServiceEditor : Editor
             // Display units in a responsive layout
             UnitInstanceListDrawer.DrawList(
                 unitsToDraw,
+                partyService: service.PartyService,
                 onToggleParty: (unit) =>
                 {
-                    var localDataField = typeof(UnitInstanceService).GetField("localData", BindingFlags.NonPublic | BindingFlags.Instance);
-                    var localData = (LocalData)localDataField.GetValue(service);
-
-                    // Ensure localData is initialized
-                    if (localData.JsonFile == null) localData.Initialize();
-
-                    var partyArray = localData.JsonFile["party"] as JArray ?? new JArray();
-                    if (unit.IsInParty)
+                    if (service.PartyService.PartyInstances.Contains(unit))
                     {
                         // Remove from party
-                        var itemToRemove = partyArray.FirstOrDefault(t => t.ToString() == unit.Id);
-                        if (itemToRemove != null) partyArray.Remove(itemToRemove);
+                        service.PartyService.RemoveUnitInstanceFromParty(unit);
                     }
                     else
                     {
                         // Add to party
-                        if (!partyArray.Any(t => t.ToString() == unit.Id))
-                        {
-                            partyArray.Add(unit.Id);
-                        }
+                        service.PartyService.AddUnitInstanceToParty(unit);
                     }
-                    localData.JsonFile["party"] = partyArray;
-                    localData.SaveData("party", partyArray);
                     unit.IsInParty = !unit.IsInParty;
                 },
                 onRemove: (unit) =>

@@ -8,7 +8,11 @@ using UnityEngine.Events;
 public class UnitInstanceService : ScriptableObject
 {
     [Header("References")]
+    [SerializeField] private PartyService partyService;
     [SerializeField] private LocalData localData;
+
+    public LocalData LocalData => localData;
+    public PartyService PartyService => partyService;
 
     [Header("Collections")]
     [HideInInspector]
@@ -35,6 +39,11 @@ public class UnitInstanceService : ScriptableObject
 
     public void Initialize()
     {
+        if (localData == null)
+        {
+            Debug.LogError("LocalData is not assigned in UnitInstanceService");
+            return;
+        }
         localData.Initialize();
         units = new List<UnitInstance>();
 
@@ -346,6 +355,11 @@ public class UnitInstanceService : ScriptableObject
 
     public void Reset()
     {
+        if (localData == null)
+        {
+            Debug.LogError("LocalData is not assigned in UnitInstanceService");
+            return;
+        }
         units.Clear();
         localData.ResetData();
 
@@ -360,6 +374,11 @@ public class UnitInstanceService : ScriptableObject
 
     public void SaveData()
     {
+        if (localData == null)
+        {
+            Debug.LogError("LocalData is not assigned in UnitInstanceService");
+            return;
+        }
         if (localData.JsonFile == null) localData.Initialize();
 
         var unitsJson = new JArray();

@@ -7,6 +7,7 @@ public static class UnitInstanceListDrawer
 {
     public static void DrawList(
         List<UnitInstance> units,
+        PartyService partyService = null,
         Action<UnitInstance> onToggleParty = null,
         Action<UnitInstance> onRemove = null,
         Func<UnitInstance, bool> canRemoveFunc = null,
@@ -44,9 +45,19 @@ public static class UnitInstanceListDrawer
             EditorGUILayout.Space(-2); // Reduce space
             GUIStyle jobStyle = new GUIStyle(EditorStyles.miniLabel) { fontStyle = FontStyle.Italic, normal = { textColor = new Color(0.5f, 0.5f, 0.5f) } };
             EditorGUILayout.LabelField(unit.Job != null ? $"{unit.Job.Id.ToUpper()}" : "No Job", jobStyle);
-            if (showPartyStatus && unit.IsInParty)
+            if (showPartyStatus)
             {
-                EditorGUILayout.LabelField("🎉 In Party", jobStyle);
+                if (partyService != null)
+                {
+                    if (partyService.PartyInstances.Contains(unit))
+                    {
+                        EditorGUILayout.LabelField("🎉 In Party", jobStyle);
+                    }
+                }
+                else
+                {
+                    EditorGUILayout.HelpBox("PartyService not provided, cannot determine party status.", MessageType.Warning);
+                }
             }
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndVertical();
@@ -58,7 +69,7 @@ public static class UnitInstanceListDrawer
             {
                 PopupInspector.Show(unit);
             }
-            string buttonText = toggleButtonTextFunc != null ? toggleButtonTextFunc(unit) : (unit.IsInParty ? "🎉" : "P");
+            string buttonText = toggleButtonTextFunc != null ? toggleButtonTextFunc(unit) : (partyService != null ? (partyService.PartyInstances.Contains(unit) ? "🎉" : "P") : "?");
             if (onToggleParty != null && GUILayout.Button(buttonText, GUILayout.Width(30), GUILayout.Height(20)))
             {
                 onToggleParty(unit);

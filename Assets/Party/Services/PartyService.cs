@@ -83,9 +83,40 @@ public class PartyService : ScriptableObject
         }
     }
 
+    public void RemoveUnitInstanceFromParty(UnitInstance unit)
+    {
+        if (partyInstances.Contains(unit) && unit != playerReference.PlayerInstance)
+        {
+            partyInstances.Remove(unit);
+            unit.IsInParty = false;
+            OnUnitInstanceRemovedFromParty?.Invoke(unit);
+            SaveParty();
+        }
+    }
+
+    public void AddUnitInstanceToParty(UnitInstance unit)
+    {
+        if (!partyInstances.Contains(unit))
+        {
+            partyInstances.Add(unit);
+            unit.IsInParty = true;
+            OnUnitInstanceAddedToParty?.Invoke(unit);
+            SaveParty();
+        }
+    }
+
     private void SaveParty()
     {
+        if (!Application.isPlaying)
+        {
+            var widgets = FindObjectsByType<PartyWidgetUI>(FindObjectsSortMode.None);
+            foreach (var widget in widgets)
+            {
+                widget.UpdatePartyList();
+            }
+        }
         var partyIds = partyInstances.Where(u => u != null).Select(u => u.Id).ToList();
+        Debug.Log("Saving party: " + string.Join(", ", partyIds));
         localData.SaveData("party", new JArray(partyIds));
     }
 }
