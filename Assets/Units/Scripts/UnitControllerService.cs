@@ -22,10 +22,9 @@ public class UnitControllerService : ScriptableObject
 
     public void Initialize()
     {
-        if (unitControllers == null)
-        {
-            unitControllers = new List<UnitController>();
-        }
+        unitControllers = new List<UnitController>();
+        UnitController[] controllers = FindObjectsByType<UnitController>(FindObjectsSortMode.None);
+        unitControllers.AddRange(controllers);
     }
 
     public UnitController SpawnUnit(UnitInstance unit, Vector3 spawnPosition, Transform parent)

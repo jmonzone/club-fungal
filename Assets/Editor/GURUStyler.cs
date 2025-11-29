@@ -7,6 +7,7 @@ public static class GURUStyler
     private static GameService cachedGameService;
     private static ScriptableObject cachedUnitInstanceService;
     private static ScriptableObject cachedUnitControllerService;
+    private static ScriptableObject cachedPartyInstanceService;
 
     private static void EnsureAssetsLoaded()
     {

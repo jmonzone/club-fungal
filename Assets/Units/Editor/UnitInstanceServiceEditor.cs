@@ -112,18 +112,18 @@ public class UnitInstanceServiceEditor : Editor
             // Display units in a responsive layout
             UnitInstanceListDrawer.DrawList(
                 unitsToDraw,
-                partyService: service.PartyService,
+                partyInstanceService: service.PartyInstanceService,
                 onToggleParty: (unit) =>
                 {
-                    if (service.PartyService.PartyInstances.Any(p => p.Id == unit.Id))
+                    if (service.PartyInstanceService.PartyInstances.Any(p => p.Id == unit.Id))
                     {
                         // Remove from party
-                        service.PartyService.RemoveUnitInstanceFromParty(unit);
+                        service.PartyInstanceService.RemoveUnitInstanceFromParty(unit);
                     }
                     else
                     {
                         // Add to party
-                        service.PartyService.AddUnitInstanceToParty(unit);
+                        service.PartyInstanceService.AddUnitInstanceToParty(unit);
                     }
                     unit.IsInParty = !unit.IsInParty;
                 },

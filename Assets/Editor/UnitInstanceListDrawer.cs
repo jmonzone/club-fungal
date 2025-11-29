@@ -8,7 +8,7 @@ public static class UnitInstanceListDrawer
 {
     public static void DrawList(
         List<UnitInstance> units,
-        PartyService partyService = null,
+        PartyInstanceService partyInstanceService = null,
         Action<UnitInstance> onToggleParty = null,
         Action<UnitInstance> onRemove = null,
         Func<UnitInstance, bool> canRemoveFunc = null,
@@ -48,16 +48,20 @@ public static class UnitInstanceListDrawer
             EditorGUILayout.LabelField(unit.Job != null ? $"{unit.Job.Id.ToUpper()}" : "No Job", jobStyle);
             if (showPartyStatus)
             {
-                if (partyService != null)
+                if (partyInstanceService != null)
                 {
-                    if (partyService.PartyInstances.Any(p => p.Id == unit.Id))
+                    if (partyInstanceService.PartyInstances.Any(p => p.Id == unit.Id))
                     {
-                        EditorGUILayout.LabelField("🎉 In Party", jobStyle);
+                        GUI.color = Color.green;
+                    }
+                    else
+                    {
+                        GUI.color = Color.white;
                     }
                 }
                 else
                 {
-                    EditorGUILayout.HelpBox("PartyService not provided, cannot determine party status.", MessageType.Warning);
+                    EditorGUILayout.HelpBox("PartyInstanceService not provided, cannot determine party status.", MessageType.Warning);
                 }
             }
             EditorGUILayout.EndVertical();
@@ -70,7 +74,7 @@ public static class UnitInstanceListDrawer
             {
                 PopupInspector.Show(unit);
             }
-            string buttonText = toggleButtonTextFunc != null ? toggleButtonTextFunc(unit) : (partyService != null ? (partyService.PartyInstances.Any(p => p.Id == unit.Id) ? "🎉" : "P") : "?");
+            string buttonText = toggleButtonTextFunc != null ? toggleButtonTextFunc(unit) : (partyInstanceService != null ? (partyInstanceService.PartyInstances.Any(p => p.Id == unit.Id) ? "🎉" : "P") : "?");
             if (onToggleParty != null && GUILayout.Button(buttonText, GUILayout.Width(30), GUILayout.Height(20)))
             {
                 onToggleParty(unit);

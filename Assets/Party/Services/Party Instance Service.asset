@@ -10,12 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e6eebd3539ec549b893935b1787b4c1c, type: 3}
-  m_Name: PartyService
+  m_Name: Party Instance Service
   m_EditorClassIdentifier: Assembly-CSharp::PartyService
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   localData: {fileID: 11400000, guid: 81d22df7435974c419891ceb2bc9e4ee, type: 2}
   unitInstanceService: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2,
     type: 2}
   partyInstances:
-  - {fileID: 0}
-  partyControllers: []
+  - {fileID: 11400000, guid: c5fe3b2204b8a471f9ab1ed260b7d9b9, type: 2}

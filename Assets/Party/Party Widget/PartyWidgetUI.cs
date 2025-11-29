@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PartyWidgetUI : MonoBehaviour
 {
-    [SerializeField] private PartyService partyService;
+    [SerializeField] private PartyInstanceService partyInstanceService;
     [SerializeField] private Transform unitContainer;
     [SerializeField] private PartyWidgetUnitUI unitUIPrefab;
 
@@ -22,29 +22,15 @@ public class PartyWidgetUI : MonoBehaviour
 
     private void OnEnable()
     {
-        partyService.OnUnitAddedToParty += PartyService_OnUnitAddedToParty;
-        partyService.OnUnitRemovedFromParty += PartyService_OnUnitRemovedFromParty;
-        partyService.OnUnitInstanceAddedToParty += PartyService_OnUnitInstanceAddedToParty;
-        partyService.OnUnitInstanceRemovedFromParty += PartyService_OnUnitInstanceRemovedFromParty;
+        partyInstanceService.OnUnitInstanceAddedToParty += PartyService_OnUnitInstanceAddedToParty;
+        partyInstanceService.OnUnitInstanceRemovedFromParty += PartyService_OnUnitInstanceRemovedFromParty;
         UpdatePartyList();
     }
 
     private void OnDisable()
     {
-        partyService.OnUnitAddedToParty -= PartyService_OnUnitAddedToParty;
-        partyService.OnUnitRemovedFromParty -= PartyService_OnUnitRemovedFromParty;
-        partyService.OnUnitInstanceAddedToParty -= PartyService_OnUnitInstanceAddedToParty;
-        partyService.OnUnitInstanceRemovedFromParty -= PartyService_OnUnitInstanceRemovedFromParty;
-    }
-
-    private void PartyService_OnUnitAddedToParty(UnitController unit)
-    {
-        UpdatePartyList();
-    }
-
-    private void PartyService_OnUnitRemovedFromParty(UnitController unit)
-    {
-        UpdatePartyList();
+        partyInstanceService.OnUnitInstanceAddedToParty -= PartyService_OnUnitInstanceAddedToParty;
+        partyInstanceService.OnUnitInstanceRemovedFromParty -= PartyService_OnUnitInstanceRemovedFromParty;
     }
 
     private void PartyService_OnUnitInstanceAddedToParty(UnitInstance unit)
@@ -61,7 +47,7 @@ public class PartyWidgetUI : MonoBehaviour
     {
         unitUIInstances = new List<PartyWidgetUnitUI>(GetComponentsInChildren<PartyWidgetUnitUI>(includeInactive: true));
 
-        int memberCount = partyService.PartyInstances.Count;
+        int memberCount = partyInstanceService.PartyInstances.Count;
 
         // Ensure we have enough instances
         while (unitUIInstances.Count < memberCount)
@@ -75,7 +61,7 @@ public class PartyWidgetUI : MonoBehaviour
         {
             var unitUI = unitUIInstances[i];
             unitUI.gameObject.SetActive(true);
-            unitUI.SetUnit(partyService.PartyInstances[i]);
+            unitUI.SetUnit(partyInstanceService.PartyInstances[i]);
         }
 
         // Disable extra instances

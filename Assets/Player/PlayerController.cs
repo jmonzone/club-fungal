@@ -61,8 +61,6 @@ public class PlayerController : UnitController
             transform.position = hit.position;
         }
 
-        playerReference.SetPlayer(this);
-        playerReference.SetTargetPosition(transform.position);
     }
 
     private void UnitGlyphCollect_OnNoteHit(DJTrack track)

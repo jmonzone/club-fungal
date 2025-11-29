@@ -1,14 +1,14 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(PartyService))]
-public class PartyServiceEditor : Editor
+[CustomEditor(typeof(PartyInstanceService))]
+public class PartyInstanceServiceEditor : Editor
 {
     private int selectedUnitIndex = 0;
 
     public override void OnInspectorGUI()
     {
-        PartyService service = (PartyService)target;
+        PartyInstanceService service = (PartyInstanceService)target;
 
         // Draw the default inspector
         DrawDefaultInspector();

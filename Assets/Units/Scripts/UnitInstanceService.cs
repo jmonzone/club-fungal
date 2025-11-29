@@ -8,11 +8,11 @@ using UnityEngine.Events;
 public class UnitInstanceService : ScriptableObject
 {
     [Header("References")]
-    [SerializeField] private PartyService partyService;
+    [SerializeField] private PartyInstanceService partyInstanceService;
     [SerializeField] private LocalData localData;
 
     public LocalData LocalData => localData;
-    public PartyService PartyService => partyService;
+    public PartyInstanceService PartyInstanceService => partyInstanceService;
 
     [Header("Collections")]
     [HideInInspector]

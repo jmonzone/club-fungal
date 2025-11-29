@@ -8,7 +8,8 @@ public class DialogueInteraction : UnitInteraction
 {
     [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private UnitControllerService unitControllerService;
-    [SerializeField] private PartyService partyService;
+    [SerializeField] private PartyInstanceService partyInstanceService;
+    [SerializeField] private PartyControllerService partyControllerService;
 
     [HideInInspector]
     [SerializeReference] private List<InteractionAction> actions;
@@ -35,7 +36,7 @@ public class DialogueInteraction : UnitInteraction
     {
         if (currentActionIndex < actions.Count)
         {
-            actions[currentActionIndex].Execute(source, target, dialogueReference, unitControllerService, partyService, () =>
+            actions[currentActionIndex].Execute(source, target, dialogueReference, unitControllerService, partyInstanceService, partyControllerService, () =>
             {
                 currentActionIndex++;
                 ExecuteNext();
@@ -51,37 +52,40 @@ public class DialogueInteraction : UnitInteraction
 [Serializable]
 public abstract class InteractionAction
 {
-    public abstract void Execute(UnitController source, UnitController target, DialogueReference dialogueReference, UnitControllerService unitControllerService, PartyService partyService, UnityAction onComplete);
+    public abstract void Execute(UnitController source, UnitController target, DialogueReference dialogueReference, UnitControllerService unitControllerService, PartyInstanceService partyInstanceService, PartyControllerService partyControllerService, UnityAction onComplete);
 }
 
 [Serializable]
 public class DialogueAction : InteractionAction
 {
-    public enum DialogueSpeaker { Source, Target, Specific }
-
+    public enum DialogueSpeaker
+    {
+        Source,
+        Target,
+        Specific,
+    }
     [SerializeField] private DialogueSpeaker speaker;
-    [SerializeField] private UnitInstance unitInstance;
     [SerializeField][TextArea] private string text;
+    [SerializeField] private UnitInstance unitInstance;
 
     public DialogueSpeaker Speaker => speaker;
     public UnitInstance UnitInstance => unitInstance;
 
-    public override void Execute(UnitController source, UnitController target, DialogueReference dialogueReference, UnitControllerService unitControllerService, PartyService partyService, UnityAction onComplete)
+    public override void Execute(UnitController source, UnitController target, DialogueReference dialogueReference, UnitControllerService unitControllerService, PartyInstanceService partyInstanceService, PartyControllerService partyControllerService, UnityAction onComplete)
     {
         unitInstance = Speaker switch
         {
             DialogueSpeaker.Source => source.Instance,
             DialogueSpeaker.Target => target.Instance,
-            _ => unitInstance
+            _ => throw new ArgumentOutOfRangeException()
         };
 
-        UnitController speakerController = Speaker switch
+        var speakerController = Speaker switch
         {
             DialogueSpeaker.Source => source,
             DialogueSpeaker.Target => target,
-            _ => unitControllerService.GetController(unitInstance)
+            _ => throw new ArgumentOutOfRangeException()
         };
-
         var dialogue = new Dialogue(unitInstance, text, onComplete);
         dialogueReference.StartDialogue(speakerController, dialogue);
     }
@@ -90,9 +94,9 @@ public class DialogueAction : InteractionAction
 [Serializable]
 public class JoinPartyAction : InteractionAction
 {
-    public override void Execute(UnitController source, UnitController target, DialogueReference dialogueReference, UnitControllerService unitControllerService, PartyService partyService, UnityAction onComplete)
+    public override void Execute(UnitController source, UnitController target, DialogueReference dialogueReference, UnitControllerService unitControllerService, PartyInstanceService partyInstanceService, PartyControllerService partyControllerService, UnityAction onComplete)
     {
-        partyService.AddToParty(target);
+        partyControllerService.AddToParty(target);
         Debug.Log("Joined party!");
         onComplete();
     }

@@ -31,9 +31,10 @@ public class PlayerReference : ScriptableObject
     public event UnityAction OnTargetPositionChanged;
     public event UnityAction<bool> OnPOVCameraToggled;
 
-    public void SetPlayer(PlayerController player)
+    public void Initialize()
     {
-        this.player = player;
+        player = FindAnyObjectByType<PlayerController>();
+        SetTargetPosition(player.transform.position);
         activityUnit = player.GetComponent<ActivityUnit>();
     }
 

@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using Newtonsoft.Json.Linq;
 
-[CreateAssetMenu(fileName = "PartyService", menuName = "Club Fungal/Party/Party Service")]
-public class PartyService : ScriptableObject
+[CreateAssetMenu(fileName = "PartyInstanceService", menuName = "Club Fungal/Party/Party Instance Service")]
+public class PartyInstanceService : ScriptableObject
 {
     [Header("References")]
     [SerializeField] private PlayerReference playerReference;
@@ -14,13 +14,9 @@ public class PartyService : ScriptableObject
 
     [Header("Runtime")]
     [SerializeField] private List<UnitInstance> partyInstances = new List<UnitInstance>();
-    [SerializeField] private List<UnitController> partyControllers = new List<UnitController>();
 
     public PlayerReference PlayerReference => playerReference;
     public List<UnitInstance> PartyInstances => partyInstances;
-    public List<UnitController> PartyControllers => partyControllers;
-    public event UnityAction<UnitController> OnUnitAddedToParty;
-    public event UnityAction<UnitController> OnUnitRemovedFromParty;
     public event UnityAction<UnitInstance> OnUnitInstanceAddedToParty;
     public event UnityAction<UnitInstance> OnUnitInstanceRemovedFromParty;
 
@@ -29,7 +25,6 @@ public class PartyService : ScriptableObject
         localData.Initialize();
         Debug.Log("Loading party from local data.");
         partyInstances = new List<UnitInstance>();
-        partyControllers = new List<UnitController>();
 
         // Load saved party
         if (localData.JsonFile.ContainsKey("party"))
@@ -62,23 +57,11 @@ public class PartyService : ScriptableObject
 
     public void AddToParty(UnitController unit)
     {
-        Debug.Log($"Adding unit to party: {unit.Instance.DisplayName} (ID: {unit.Instance.Id})");
-        if (!partyControllers.Contains(unit))
+        if (!partyInstances.Any(p => p.Id == unit.Instance.Id))
         {
-            partyControllers.Add(unit);
-            var followBehaviour = unit.GetComponent<UnitFollow>();
-            if (followBehaviour != null)
-            {
-                followBehaviour.SetTarget(playerReference.Player.transform);
-                unit.SetBehaviour(followBehaviour);
-            }
-            if (!partyInstances.Any(p => p.Id == unit.Instance.Id))
-            {
-                partyInstances.Add(unit.Instance);
-                unit.Instance.IsInParty = true;
-                OnUnitInstanceAddedToParty?.Invoke(unit.Instance);
-            }
-            OnUnitAddedToParty?.Invoke(unit);
+            partyInstances.Add(unit.Instance);
+            unit.Instance.IsInParty = true;
+            OnUnitInstanceAddedToParty?.Invoke(unit.Instance);
             SaveParty();
         }
     }

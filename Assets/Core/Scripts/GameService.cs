@@ -11,9 +11,11 @@ public class GameService : ScriptableObject
     [SerializeField] private LocalData localData;
     [SerializeField] private BuildReference build;
     [SerializeField] private InventoryReference inventory;
+    [SerializeField] private PlayerReference playerReference;
     [SerializeField] private UnitInstanceService unitInstanceService;
     [SerializeField] private UnitControllerService unitControllerService;
-    [SerializeField] private PartyService partyService;
+    [SerializeField] private PartyInstanceService partyInstanceService;
+    [SerializeField] private PartyControllerService partyControllerService;
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private StoryReference partyLogReference;
     [SerializeField] private SporeReference sporeReference;
@@ -38,9 +40,10 @@ public class GameService : ScriptableObject
         localData.Initialize();
         inventory.Initialize();
         build.Initialize();
+        playerReference.Initialize();
         unitInstanceService.Initialize();
         unitControllerService.Initialize();
-        partyService.Initialize();
+        partyInstanceService.Initialize();
         partyReference.Initialize();
         partyLogReference.Initialize();
         sporeReference.Initialize();
