@@ -7,16 +7,20 @@ using UnityEngine.Events;
 public class LocalData : ScriptableObject
 {
     [SerializeField] private bool resetDataOnAwake;
-    [SerializeField] private string saveDataPath;
-
     public JObject JsonFile { get; private set; }
 
     public event UnityAction OnReset;
+    public static string GetSaveDataPath()
+    {
+        string path = $"{Application.persistentDataPath}/data.json";
+        return path;
+    }
 
     public void Initialize()
     {
-        saveDataPath = $"{Application.persistentDataPath}/data.json";
-        if (Application.isEditor) saveDataPath = $"{Application.persistentDataPath}/data-editor.json";
+        var saveDataPath = GetSaveDataPath();
+
+        Directory.CreateDirectory(Path.GetDirectoryName(saveDataPath));
 
         if (Application.isEditor && resetDataOnAwake) ResetData();
 
@@ -37,13 +41,17 @@ public class LocalData : ScriptableObject
 
     public void SaveData(string key, JToken value)
     {
+        var saveDataPath = GetSaveDataPath();
         JsonFile[key] = value;
+        Directory.CreateDirectory(Path.GetDirectoryName(saveDataPath));
         File.WriteAllText(saveDataPath, JsonFile.ToString());
     }
 
     public void ResetData()
     {
+        var saveDataPath = GetSaveDataPath();
         JsonFile = new JObject();
+        Directory.CreateDirectory(Path.GetDirectoryName(saveDataPath));
         File.WriteAllText(saveDataPath, JsonFile.ToString());
         OnReset?.Invoke();
     }

@@ -307,7 +307,7 @@ public class UnitInstanceService : ScriptableObject
         localData.ResetData();
 
         // Add initial units
-        foreach (var initialUnit in initialUnits)
+        foreach (var initialUnit in initialUnits.OrderBy(u => u.Id))
         {
             RegisterUnit(initialUnit, false);
         }

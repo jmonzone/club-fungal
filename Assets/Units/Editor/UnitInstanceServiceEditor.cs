@@ -150,7 +150,7 @@ public class UnitInstanceServiceEditor : Editor
             EditorGUILayout.Space(10);
             DrawIconButton("🆕", "Generate A New Unit", () => { service.CreateUnit(unit => unit is FungalUnit); EditorUtility.SetDirty(service); }, leftAlignedButton);
             EditorGUILayout.Space(5);
-            DrawIconButton("📂", "Open JSON File", () => { string path = $"{Application.persistentDataPath}/data-editor.json"; Process.Start(path); }, leftAlignedButton);
+            DrawIconButton("📂", "Open JSON File", () => { Process.Start(LocalData.GetSaveDataPath()); }, leftAlignedButton);
             EditorGUILayout.Space(5);
             DrawIconButton("🔄", "Reset To Default", () => { service.Reset(); EditorUtility.SetDirty(service); }, leftAlignedButton);
             EditorGUILayout.Space(5);
