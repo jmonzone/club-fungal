@@ -8,14 +8,13 @@ using UnityEngine;
 [CustomEditor(typeof(UnitInstanceService))]
 public class UnitInstanceServiceEditor : GURUServiceEditor
 {
-    private List<UnitInstance> cachedInitialUnits;
-    private List<Unit> cachedUnitCollection;
 
     private void OnEnable()
     {
         // Cache the populated lists on enable
-        cachedInitialUnits = AutoPopulateList<UnitInstance>("initialUnits", "t:UnitInstance");
-        cachedUnitCollection = AutoPopulateList<Unit>("unitCollection", "t:Unit");
+        AutoPopulateList<UnitInstance>("initialUnits", "t:UnitInstance");
+        AutoPopulateList<Unit>("unitCollection", "t:Unit");
+        AutoPopulateList<UnitInteraction>("interactionCollection", "t:UnitInteraction");
     }
     private List<T> AutoPopulateList<T>(string fieldName, string assetType, bool force = false) where T : Object
     {
@@ -93,40 +92,12 @@ public class UnitInstanceServiceEditor : GURUServiceEditor
     {
         UnitInstanceService service = (UnitInstanceService)target;
 
-        EditorGUILayout.Space();
-
-        // Display units
-        var combined = new List<(UnitInstance unit, bool isInitial)>();
-        var seenIds = new HashSet<string>();
-        foreach (var u in cachedInitialUnits)
-        {
-            combined.Add((u, true));
-            seenIds.Add(u.Id);
-        }
-        foreach (var u in service.Units)
-        {
-            if (!seenIds.Contains(u.Id))
-            {
-                combined.Add((u, false));
-                seenIds.Add(u.Id);
-            }
-        }
-        combined = combined.OrderBy(c => c.unit.Id).ToList();
-
-        var unitsToDraw = combined.Select(c => c.unit).ToList();
-        var ghostUnits = unitsToDraw.Where(u => u.Data == null || string.IsNullOrEmpty(u.DisplayName)).ToList();
-        if (ghostUnits.Any())
-        {
-            EditorGUILayout.HelpBox($"Ghost units detected ({ghostUnits.Count}): {string.Join(", ", ghostUnits.Select(u => $"ID:{u.Id ?? "null"}"))}", MessageType.Error);
-        }
-        unitsToDraw = unitsToDraw.Where(u => u.Data != null && !string.IsNullOrEmpty(u.DisplayName)).ToList();
-
         // Display units in a responsive layout
         List<UnitInstance> toRemove = new List<UnitInstance>();
         var controllerService = FindUnitControllerService();
-        UnitListDrawer.DrawList(unitsToDraw, unit =>
+        UnitListDrawer.DrawList(service.Units, unit =>
         {
-            var item = UnitListDrawer.CreateBaseDrawerItem(unit, service.PartyInstanceService, true, (u) => cachedInitialUnits.Contains(u) ? new Color(0.6f, 0.7f, 1.0f) : Color.white, true, (u) =>
+            var item = UnitListDrawer.CreateBaseDrawerItem(unit, service.PartyInstanceService, true, (u) => service.Units.Contains(u) ? new Color(0.6f, 0.7f, 1.0f) : Color.white, true, (u) =>
             {
                 if (service.PartyInstanceService.PartyInstances.Any(p => p.Id == u.Id))
                 {
@@ -138,7 +109,7 @@ public class UnitInstanceServiceEditor : GURUServiceEditor
                 }
             }, null);
             UnitListDrawer.AddViewButton(item, controllerService?.GetController(unit));
-            if (!cachedInitialUnits.Contains(unit))
+            if (!service.Units.Contains(unit))
             {
                 item.Buttons.Add(("X", () => toRemove.Add(unit), () => true));
             }
@@ -162,12 +133,6 @@ public class UnitInstanceServiceEditor : GURUServiceEditor
         EditorGUILayout.BeginVertical();
         EditorGUILayout.Space(10);
         DrawIconButton("🆕", "Generate A New Unit", () => { service.CreateUnit(unit => unit is FungalUnit); EditorUtility.SetDirty(service); }, leftAlignedButton);
-        EditorGUILayout.Space(5);
-        DrawIconButton("🔄", "Update Collections", () =>
-        {
-            cachedInitialUnits = AutoPopulateList<UnitInstance>("initialUnits", "t:UnitInstance", true);
-            cachedUnitCollection = AutoPopulateList<Unit>("unitCollection", "t:Unit", true);
-        }, leftAlignedButton);
         EditorGUILayout.Space(10);
         EditorGUILayout.EndVertical();
         EditorGUILayout.Space(10);

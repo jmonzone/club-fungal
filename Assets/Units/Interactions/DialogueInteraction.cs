@@ -18,7 +18,7 @@ public class DialogueInteraction : UnitInteraction
     private UnitController target;
     private int currentActionIndex = 0;
 
-    public override void StartInteraction(UnitController source, UnitController target)
+    public override void StartInteraction(UnitController source, UnitController target, UnityAction onComplete)
     {
         this.source = source;
         this.target = target;
@@ -29,22 +29,23 @@ public class DialogueInteraction : UnitInteraction
         dialogueReference.StartDialogueInteraction(new List<UnitController> { source, target });
 
         currentActionIndex = 0;
-        ExecuteNext();
+        ExecuteNext(onComplete);
     }
 
-    private void ExecuteNext()
+    private void ExecuteNext(UnityAction onComplete)
     {
         if (currentActionIndex < actions.Count)
         {
             actions[currentActionIndex].Execute(source, target, dialogueReference, unitControllerService, partyInstanceService, partyControllerService, () =>
             {
                 currentActionIndex++;
-                ExecuteNext();
+                ExecuteNext(onComplete);
             });
         }
         else
         {
             dialogueReference.CompleteDialogue();
+            onComplete?.Invoke();
         }
     }
 }

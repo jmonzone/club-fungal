@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Cinemachine;
 using System.Collections;
 using UnityEngine;
@@ -14,7 +15,7 @@ public class UnitController : MonoBehaviour, IInteractable
 
     public UnitDestination Destination => destination;
     public UnitDialogue Dialogue => dialogue;
-    public UnitInteraction CurrentInteraction => instance.Interaction;
+    public UnitInteractionInstance CurrentInteraction => instance.Interactions.FirstOrDefault();
 
     [Header("Runtime")]
     [SerializeField] private UnitInstance instance;

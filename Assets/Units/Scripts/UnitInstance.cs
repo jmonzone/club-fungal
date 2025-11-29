@@ -27,7 +27,7 @@ public class UnitInstance : ScriptableObject
     public Dictionary<Skill, UnitSkill> Skills = new Dictionary<Skill, UnitSkill>();
 
     [SerializeField] private List<UnitInstance> friends;
-    [SerializeField] private UnitInteraction interaction;
+    [SerializeField] private List<UnitInteractionInstance> interactions;
 
     public UnitInstanceData InstanceData => instanceData;
     public string Id => instanceData.Id;
@@ -42,7 +42,7 @@ public class UnitInstance : ScriptableObject
     public bool IsFriends => FriendshipLevel > 1;
 
     public List<UnitInstance> Friends => friends;
-    public UnitInteraction Interaction => interaction;
+    public List<UnitInteractionInstance> Interactions => interactions;
 
     public JObject Json => instanceData.Json;
 
@@ -75,6 +75,11 @@ public class UnitInstance : ScriptableObject
             Skills.Add(skill.Skill, skill);
             skill.OnXpChanged += value => OnXpChanged?.Invoke(value);
         }
+    }
+
+    public void InitializeInteractions(List<UnitInteractionInstance> interactions)
+    {
+        this.interactions = interactions;
     }
 
     public static string GenerateMongoLikeId()

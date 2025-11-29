@@ -21,6 +21,7 @@ public class UnitInstanceService : GURUService
     [SerializeField] private List<Job> jobCollection;
     [SerializeField] private List<Skill> skillCollection;
     [SerializeField] private List<ColorPalette> colorPalettes;
+    [SerializeField] private List<UnitInteraction> interactionCollection;
 
     [HideInInspector]
     [SerializeField] private List<UnitInstance> units;
@@ -75,7 +76,7 @@ public class UnitInstanceService : GURUService
 
                     var displayName = unitJson.Value<string>("displayName") ?? unitName;
 
-                    var instance = CreateInstance<UnitInstance>();
+                    var unitInstance = CreateInstance<UnitInstance>();
                     var data = new UnitInstanceData
                     {
                         Data = matchingUnit,
@@ -87,7 +88,7 @@ public class UnitInstanceService : GURUService
                         ColorPalette = matchingColorPalette,
                         Json = unitJson
                     };
-                    instance.Initialize(data);
+                    unitInstance.Initialize(data);
 
                     var skillsJson = unitJson.Value<JArray>("skills") ?? new JArray();
                     var skills = new List<UnitSkill>();
@@ -99,12 +100,51 @@ public class UnitInstanceService : GURUService
 
                         float xp = skillJson?.Value<float?>("xp") ?? 0f;
 
-                        skills.Add(new UnitSkill(instance, skill, xp));
+                        skills.Add(new UnitSkill(unitInstance, skill, xp));
                     }
 
-                    instance.InitializeSkills(skills);
+                    // Check for skills in JSON that are not in the collection
+                    var loadedSkillIds = skillsJson
+                        .Select(s => s?["id"]?.ToString())
+                        .Where(id => !string.IsNullOrEmpty(id))
+                        .ToList();
+                    var collectionSkillIds = skillCollection.Select(s => s.Id).ToList();
+                    var missingSkills = loadedSkillIds.Except(collectionSkillIds);
+                    foreach (var missing in missingSkills)
+                    {
+                        Debug.LogError($"Skill '{missing}' not found in skillCollection for unit '{unitName}'.");
+                    }
 
-                    RegisterUnit(instance, false);
+                    unitInstance.InitializeSkills(skills);
+
+                    var interactionsJson = unitJson.Value<JArray>("interactions") ?? new JArray();
+                    var interactionInstances = new List<UnitInteractionInstance>();
+                    foreach (var interactionToken in interactionsJson)
+                    {
+                        if (interactionToken is JObject interactionObj)
+                        {
+                            string id = interactionObj.Value<string>("id");
+                            bool isComplete = interactionObj.Value<bool?>("isComplete") ?? false;
+
+                            if (!string.IsNullOrEmpty(id))
+                            {
+                                var matching = interactionCollection.Find(i => i.ID == id);
+                                if (matching != null)
+                                {
+                                    var interactionInstance = new UnitInteractionInstance(matching, isComplete);
+                                    interactionInstance.OnInteractionComplete += () => SaveData();
+                                    interactionInstances.Add(interactionInstance);
+                                }
+                                else
+                                {
+                                    Debug.LogError($"Interaction '{id}' not found in interactionCollection for unit '{unitName}'.");
+                                }
+                            }
+                        }
+                    }
+                    unitInstance.InitializeInteractions(interactionInstances);
+
+                    RegisterUnit(unitInstance, false);
                 }
             }
         }
@@ -386,6 +426,13 @@ public class UnitInstanceService : GURUService
                 ["element"] = unit.Element.ToString().ToLower(),
                 ["job"] = unit.Job?.Id.ToString().ToLower() ?? "none",
                 ["friends"] = new JArray(unit.Friends.Where(f => f != null).Select(friend => friend.Id)),
+                ["interactions"] = new JArray(
+                    unit.Interactions.Select(i => new JObject
+                    {
+                        ["id"] = i.Interaction.ID,
+                        ["isComplete"] = i.IsComplete
+                    })
+                ),
             };
 
             var skillsJson = new JArray();

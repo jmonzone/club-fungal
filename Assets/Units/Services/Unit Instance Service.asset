@@ -44,10 +44,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 28fd44a00cafe4888abe1427813e8334, type: 2}
   - {fileID: 11400000, guid: 3489c52b81a94463aaa5e67d4ebd81b4, type: 2}
   - {fileID: 11400000, guid: ce39a3a65f2424e0092d5fca616737ee, type: 2}
+  interactionCollection:
+  - {fileID: 11400000, guid: cd6893964a6274906b52bbbf6b56f4d8, type: 2}
   units:
-  - {fileID: 11400000, guid: c5fe3b2204b8a471f9ab1ed260b7d9b9, type: 2}
-  - {fileID: 11400000, guid: 463ba2838266e4c609022c9ca93d4c8a, type: 2}
-  - {fileID: 11400000, guid: 72e0f639e631d41768805d21444be136, type: 2}
-  - {fileID: 11400000, guid: 68aeec7fa1b32483689b83c8fed18ae7, type: 2}
-  - {fileID: 11400000, guid: 22b52f9c2c3764d2faba1ba896a71851, type: 2}
-  - {fileID: 11400000, guid: 9ec731d5476604d08a81d3c2cc5ac210, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "GreetingInteraction", menuName = "Club Fungal/Interactions/Greeting Interaction")]
 public class GreetingInteraction : UnitInteraction
 {
     [SerializeField] private DialogueReference dialogueReference;
-    public override void StartInteraction(UnitController source, UnitController target)
+    public override void StartInteraction(UnitController source, UnitController target, UnityAction onComplete)
     {
         var units = new List<UnitController>
             {
