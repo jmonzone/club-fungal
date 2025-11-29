@@ -18,24 +18,22 @@ public class PartyControllerService : GURUService
     public event UnityAction<UnitController> OnUnitAddedToParty;
     public event UnityAction<UnitController> OnUnitRemovedFromParty;
 
-    public void Initialize()
+    protected override void OnInitialize()
     {
         Debug.Log("Initializing PartyControllerService...");
-        unitControllerService.Initialize();
-        partyInstanceService.Initialize();
         partyControllers.Clear();
-        if (unitControllerService != null && partyInstanceService != null)
+
+        Debug.Log("Populating party controllers from existing unit controllers and party instances.");
+        foreach (var controller in unitControllerService.UnitControllers)
         {
-            Debug.Log("Populating party controllers from existing unit controllers and party instances.");
-            foreach (var controller in unitControllerService.UnitControllers)
+            controller.OnNavMeshAgentReady += () =>
             {
-                Debug.Log($"Checking unit controller {controller.Instance.DisplayName} for party membership.");
-                if (controller != null && controller.Instance != null && partyInstanceService.PartyInstances.Any(p => p.Id == controller.Instance.Id))
+                if (partyInstanceService.PartyInstances.Any(p => p.Id == controller.Instance.Id))
                 {
-                    Debug.Log($"Adding existing party member {controller.Instance.DisplayName} to party controllers.");
+                    Debug.Log($"Adding existing party member controller: {controller.Instance.DisplayName} (ID: {controller.Instance.Id})");
                     AddToParty(controller);
                 }
-            }
+            };
         }
     }
 

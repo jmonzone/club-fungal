@@ -94,10 +94,27 @@ public static class GURUStyler
         if (cachedServices.ContainsKey(typeof(GameService)) && cachedServices[typeof(GameService)] != null)
         {
             buttons.Add(new ButtonInfo { label = "Reset JSON File", action = () => { if (cachedServices[typeof(GameService)] is GameService gs) gs.ResetJsonFile(); }, condition = () => true });
+            buttons.Add(new ButtonInfo { label = "Initialize Systems", action = () => { if (cachedServices[typeof(GameService)] is GameService gs) gs.InitializeSystems(); }, condition = () => true });
         }
 
         // Add open JSON file button
         buttons.Add(new ButtonInfo { label = "Open JSON File", action = () => Process.Start(LocalData.GetSaveDataPath()), condition = () => true });
+
+        // Add button to open editor script of target if it's a GURUService
+        if (target != null && target is GURUService)
+        {
+            string editorTypeName = target.GetType().Name + "Editor";
+            string[] guids = AssetDatabase.FindAssets("t:MonoScript " + editorTypeName);
+            if (guids.Length > 0)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guids[0]);
+                MonoScript script = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
+                if (script != null)
+                {
+                    buttons.Add(new ButtonInfo { label = $"Open {editorTypeName}", action = () => AssetDatabase.OpenAsset(script), condition = () => true });
+                }
+            }
+        }
 
         foreach (var b in buttons)
         {
@@ -109,6 +126,8 @@ public static class GURUStyler
                 }
             }
         }
+
+
 
         EditorGUILayout.EndVertical();
 

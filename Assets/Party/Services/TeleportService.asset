@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 539a35bcbebb3481a9e8370280ca0e4b, type: 3}
   m_Name: TeleportService
   m_EditorClassIdentifier: Assembly-CSharp::TeleportService
-  partyService: {fileID: 11400000, guid: bb09c959525894035a6335dd29940cec, type: 2}
-  playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
+  partyControllerService: {fileID: 11400000, guid: e9cb4948b4ecc4139a051939aec61d2b,
+    type: 2}

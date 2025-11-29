@@ -17,14 +17,17 @@ public class UnitControllerService : GURUService
     [SerializeField] private List<UnitController> unitControllers;
 
     public List<UnitController> UnitControllers => unitControllers;
+    public UnitInstanceService UnitInstanceService => unitInstanceService;
 
     public event UnityAction<UnitController> OnUnitSummoned;
 
-    public void Initialize()
+    protected override void OnInitialize()
     {
+        Debug.Log("Initializing UnitControllerService...");
         unitControllers = new List<UnitController>();
         UnitController[] controllers = FindObjectsByType<UnitController>(FindObjectsSortMode.None);
         unitControllers.AddRange(controllers);
+        Debug.Log($"Found and initialized {unitControllers.Count} unit controllers in the scene.");
     }
 
     public UnitController SpawnUnit(UnitInstance unit, Vector3 spawnPosition, Transform parent)

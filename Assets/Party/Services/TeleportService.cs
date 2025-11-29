@@ -7,8 +7,6 @@ public class TeleportService : ScriptableObject
 
     public void TeleportParty(Vector3 position, Transform parent)
     {
-        if (partyControllerService == null) return;
-
         // Teleport all party members
         foreach (var member in partyControllerService.PartyControllers)
         {

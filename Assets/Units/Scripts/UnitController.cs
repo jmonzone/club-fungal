@@ -39,6 +39,7 @@ public class UnitController : MonoBehaviour, IInteractable
     [SerializeField] private CinemachineVirtualCamera dialogueCamera;
 
     public event UnityAction OnInitialized;
+    public event UnityAction OnNavMeshAgentReady;
     public event UnityAction OnBehaviourChanged;
 
     protected virtual void Awake()
@@ -71,6 +72,7 @@ public class UnitController : MonoBehaviour, IInteractable
     {
         yield return null;
         if (!currentBehaviour) ApplyDefaultBehaviour();
+        OnNavMeshAgentReady?.Invoke();
     }
 
     protected virtual void OnEnable()
@@ -124,7 +126,6 @@ public class UnitController : MonoBehaviour, IInteractable
     {
         this.instance = instance;
         name = "Unit - " + instance.Data.Name;
-
         OnInitialized?.Invoke();
     }
 

@@ -20,7 +20,7 @@ public class PartyInstanceService : GURUService
     public event UnityAction<UnitInstance> OnUnitInstanceAddedToParty;
     public event UnityAction<UnitInstance> OnUnitInstanceRemovedFromParty;
 
-    public void Initialize()
+    protected override void OnInitialize()
     {
         localData.Initialize();
         Debug.Log("Loading party from local data.");
@@ -40,7 +40,6 @@ public class PartyInstanceService : GURUService
                     {
                         Debug.Log($"Loaded party member: {unit.DisplayName} (ID: {unit.Id})");
                         partyInstances.Add(unit);
-                        unit.IsInParty = true;
                     }
                 }
             }
@@ -50,7 +49,6 @@ public class PartyInstanceService : GURUService
         {
             Debug.Log("No saved party found. Adding player to party by default.");
             partyInstances.Add(playerReference.PlayerInstance);
-            playerReference.PlayerInstance.IsInParty = true;
             SaveParty();
         }
     }
@@ -60,7 +58,6 @@ public class PartyInstanceService : GURUService
         if (!partyInstances.Any(p => p.Id == unit.Instance.Id))
         {
             partyInstances.Add(unit.Instance);
-            unit.Instance.IsInParty = true;
             OnUnitInstanceAddedToParty?.Invoke(unit.Instance);
             SaveParty();
         }
@@ -72,7 +69,6 @@ public class PartyInstanceService : GURUService
         if (toRemove != null && toRemove != playerReference.PlayerInstance)
         {
             partyInstances.Remove(toRemove);
-            toRemove.IsInParty = false;
             OnUnitInstanceRemovedFromParty?.Invoke(toRemove);
             SaveParty();
         }
@@ -83,7 +79,6 @@ public class PartyInstanceService : GURUService
         if (!partyInstances.Any(p => p.Id == unit.Id))
         {
             partyInstances.Add(unit);
-            unit.IsInParty = true;
             OnUnitInstanceAddedToParty?.Invoke(unit);
             SaveParty();
         }

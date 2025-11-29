@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "GameService", menuName = "Club Fungal/Game Service")]
 public class GameService : GURUService
@@ -12,10 +13,7 @@ public class GameService : GURUService
     [SerializeField] private BuildReference build;
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private PlayerReference playerReference;
-    [SerializeField] private UnitInstanceService unitInstanceService;
-    [SerializeField] private UnitControllerService unitControllerService;
-    [SerializeField] private PartyInstanceService partyInstanceService;
-    [SerializeField] private PartyControllerService partyControllerService;
+    [SerializeField] private List<GURUService> services;
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private StoryReference partyLogReference;
     [SerializeField] private SporeReference sporeReference;
@@ -23,7 +21,7 @@ public class GameService : GURUService
     [SerializeField] private DJTableReference djReference;
 
 
-    public void Initialize()
+    protected override void OnInitialize()
     {
         localData.OnReset += InitializeSystems;
         InitializeSystems();
@@ -37,13 +35,15 @@ public class GameService : GURUService
 
     public void InitializeSystems()
     {
+        Debug.Log("Initializing Game Systems...");
         localData.Initialize();
         inventory.Initialize();
         build.Initialize();
         playerReference.Initialize();
-        unitInstanceService.Initialize();
-        unitControllerService.Initialize();
-        partyInstanceService.Initialize();
+        foreach (var service in services)
+        {
+            service.Initialize();
+        }
         partyReference.Initialize();
         partyLogReference.Initialize();
         sporeReference.Initialize();

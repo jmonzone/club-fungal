@@ -1,21 +1,26 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(GameService))]
-public class GameServiceEditor : Editor
+[CustomEditor(typeof(GameService), true)]
+public class GameServiceEditor : GURUServiceEditor
 {
     public override void OnInspectorGUI()
     {
-        DrawDefaultInspector();
+        base.OnInspectorGUI();
+    }
 
-        GURUStyler.DrawGuruSection(() =>
+    protected override void DrawContent()
+    {
+        GameService gameService = (GameService)target;
+
+        if (GUILayout.Button("Reset JSON File"))
         {
-            GameService gameService = (GameService)target;
+            gameService.ResetJsonFile();
+        }
+    }
 
-            if (GUILayout.Button("Reset JSON File"))
-            {
-                gameService.ResetJsonFile();
-            }
-        }, "Use this button to reset the JSON data and re-initialize all game systems.");
+    protected override string GetHelpText()
+    {
+        return "Use this button to reset the JSON data and re-initialize all game systems.";
     }
 }

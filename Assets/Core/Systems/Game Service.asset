@@ -18,14 +18,11 @@ MonoBehaviour:
   build: {fileID: 11400000, guid: 2526ce71d791f49acb54c441f1370a16, type: 2}
   inventory: {fileID: 11400000, guid: e9c2fc38b99d8404f8495af08b4889fc, type: 2}
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
-  unitInstanceService: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2,
-    type: 2}
-  unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
-    type: 2}
-  partyInstanceService: {fileID: 11400000, guid: bb09c959525894035a6335dd29940cec,
-    type: 2}
-  partyControllerService: {fileID: 11400000, guid: e9cb4948b4ecc4139a051939aec61d2b,
-    type: 2}
+  services:
+  - {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2, type: 2}
+  - {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa, type: 2}
+  - {fileID: 11400000, guid: bb09c959525894035a6335dd29940cec, type: 2}
+  - {fileID: 11400000, guid: e9cb4948b4ecc4139a051939aec61d2b, type: 2}
   partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
   partyLogReference: {fileID: 11400000, guid: ccd6553192cde4616980b916ffb4faa7, type: 2}
   sporeReference: {fileID: 11400000, guid: aada144c7ab1b4304a84a13d3ddc010c, type: 2}

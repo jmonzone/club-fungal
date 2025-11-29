@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(PartyInstanceService))]
-public class PartyInstanceServiceEditor : Editor
+[CustomEditor(typeof(PartyInstanceService), true)]
+public class PartyInstanceServiceEditor : GURUServiceEditor
 {
     private int selectedUnitIndex = 0;
 
@@ -10,40 +10,25 @@ public class PartyInstanceServiceEditor : Editor
     {
         PartyInstanceService service = (PartyInstanceService)target;
 
-        // Draw the default inspector
-        DrawDefaultInspector();
+        base.OnInspectorGUI();
+    }
 
-        EditorGUILayout.Space();
+    protected override void DrawContent()
+    {
+        PartyInstanceService service = (PartyInstanceService)target;
 
-        // Display party
-        GURUStyler.DrawGuruSection(() =>
+        EditorGUILayout.LabelField("Party Instances:", EditorStyles.boldLabel);
+
+        UnitListDrawer.DrawList(service.PartyInstances, unit =>
         {
-            EditorGUILayout.LabelField("Party Instances:", EditorStyles.boldLabel);
+            var item = UnitListDrawer.CreateBaseDrawerItem(unit, service, false, null, true, null, null);
+            item.Buttons.Add(("X", () => { service.RemoveUnitInstanceFromParty(unit); EditorUtility.SetDirty(service); }, () => true));
+            return item;
+        });
+    }
 
-            if (service.PartyInstances.Count == 0)
-            {
-                EditorGUILayout.HelpBox("No units in party.", MessageType.Info);
-            }
-            else
-            {
-                UnitInstanceListDrawer.DrawList(
-                    service.PartyInstances,
-                    service,
-                    onRemove: (unit) =>
-                    {
-                        service.RemoveUnitInstanceFromParty(unit);
-                        EditorUtility.SetDirty(service);
-                    },
-                    canRemoveFunc: (unit) => true, // Allow removing any
-                    showPartyStatus: false // Already in party
-                );
-            }
-
-            // Add a button to reinitialize party from JSON
-            if (GUILayout.Button("Reinitialize Party from JSON"))
-            {
-                service.Initialize();
-            }
-        }, "Manage the current party instances.", service);
+    protected override string GetHelpText()
+    {
+        return "Manage the current party instances.";
     }
 }

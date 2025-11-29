@@ -1,28 +1,29 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(UnitControllerService))]
-public class UnitControllerServiceEditor : Editor
+[CustomEditor(typeof(UnitControllerService), true)]
+public class UnitControllerServiceEditor : GURUServiceEditor
 {
-    public override void OnInspectorGUI()
+    protected override void DrawContent()
     {
-        DrawDefaultInspector();
         UnitControllerService service = (UnitControllerService)target;
-        service.Initialize();
 
-        GURUStyler.DrawGuruSection(() =>
+        EditorGUILayout.LabelField("Unit Controllers in Scene:", EditorStyles.boldLabel);
+
+        UnitListDrawer.DrawList(service.UnitControllers, controller =>
         {
-
-            EditorGUILayout.LabelField("Unit Controllers in Scene:", EditorStyles.boldLabel);
-
-            if (service.UnitControllers.Count == 0)
+            var item = UnitListDrawer.CreateBaseDrawerItem(controller.Instance, service.UnitInstanceService.PartyInstanceService, true, null, false, null, null);
+            if (controller.Instance == null)
             {
-                EditorGUILayout.HelpBox("No Unit Controllers found in the scene.", MessageType.Info);
+                item.DisplayName = controller.gameObject.name;
             }
-            else
-            {
-                ControllerListDrawer.DrawList(service.UnitControllers.ToArray());
-            }
-        }, "This section displays all Unit Controllers currently present in the scene, including inactive ones.");
+            item.Buttons.Add(("👁", () => { Selection.activeObject = controller.gameObject; EditorGUIUtility.PingObject(controller.gameObject); }, () => true));
+            return item;
+        });
+    }
+
+    protected override string GetHelpText()
+    {
+        return "This section displays all Unit Controllers currently present in the scene, including inactive ones.";
     }
 }

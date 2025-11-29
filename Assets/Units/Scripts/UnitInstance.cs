@@ -42,6 +42,8 @@ public class UnitInstance : ScriptableObject
     public float FriendshipXP => instanceData.FriendshipXP;
     public bool IsFriends => FriendshipLevel > 1;
 
+    public bool IsInParty { get; set; }
+
     // Scale existing friend chance based on friendship level
     float minChance = 0.1f;   // minimum chance to pick existing friend at level 0
     float maxChance = 0.5f;   // maximum chance at max level
@@ -49,7 +51,6 @@ public class UnitInstance : ScriptableObject
 
     public List<UnitInstance> Friends => friends;
     public UnitInteraction Interaction => interaction;
-    public bool IsInParty { get; set; }
 
     public JObject Json => instanceData.Json;
 

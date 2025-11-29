@@ -1,6 +1,11 @@
 using UnityEngine;
 
-public class GURUService : ScriptableObject
+public abstract class GURUService : ScriptableObject
 {
-    // Base class for GURU services
+    internal void Initialize()
+    {
+        OnInitialize();
+    }
+
+    protected abstract void OnInitialize();
 }

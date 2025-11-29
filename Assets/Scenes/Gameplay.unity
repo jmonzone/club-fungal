@@ -2290,7 +2290,7 @@ PrefabInstance:
     - target: {fileID: 1188816280004517473, guid: 2d3799a85c2334c609ef47200b483977,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1241860589217945197, guid: 2d3799a85c2334c609ef47200b483977,
         type: 3}
@@ -20783,7 +20783,7 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 5ac5e86d1af72424bb4ae4010ea64ec3, type: 3}
   - {fileID: 2800000, guid: 504e8aa03c0f840f88064f0633c44e16, type: 3}
   - {fileID: 2800000, guid: 05d7ce1b932844741a80e76b553d5685, type: 3}
-  settings: {fileID: 0}
+  settings: {fileID: 11400000, guid: cdab220aaaf114188a0e6a88946dd403, type: 2}
   roomControllers: []
   isTransitioning: 0
 --- !u!4 &827787025
@@ -31266,7 +31266,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1170789628}
-  - component: {fileID: 1170789629}
   - component: {fileID: 1170789630}
   m_Layer: 0
   m_Name: Party Manager
@@ -31296,20 +31295,6 @@ Transform:
   - {fileID: 102165638}
   m_Father: {fileID: 958196309}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1170789629
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1170789626}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 422a226767551414ea63b8346b94cf4a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  partyControllerService: {fileID: 11400000, guid: e9cb4948b4ecc4139a051939aec61d2b,
-    type: 2}
 --- !u!114 &1170789630
 MonoBehaviour:
   m_ObjectHideFlags: 0

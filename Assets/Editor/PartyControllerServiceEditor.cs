@@ -1,8 +1,8 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(PartyControllerService))]
-public class PartyControllerServiceEditor : Editor
+[CustomEditor(typeof(PartyControllerService), true)]
+public class PartyControllerServiceEditor : GURUServiceEditor
 {
     private SerializedProperty partyControllersProp;
 
@@ -11,38 +11,23 @@ public class PartyControllerServiceEditor : Editor
         partyControllersProp = serializedObject.FindProperty("partyControllers");
     }
 
-    public override void OnInspectorGUI()
+    protected override void DrawContent()
     {
-        serializedObject.Update();
-        DrawDefaultInspector();
-
         PartyControllerService service = (PartyControllerService)target;
-        service.Initialize();
-        GURUStyler.DrawGuruSection(() =>
+        UnitListDrawer.DrawList(service.PartyControllers, controller =>
         {
-            if (GUILayout.Button("Clear Party Controllers"))
+            var item = UnitListDrawer.CreateBaseDrawerItem(controller.Instance, null, true, null, false, null, null);
+            if (controller.Instance == null)
             {
-                Undo.RecordObject(service, "Clear Party Controllers");
-                partyControllersProp.ClearArray();
-                serializedObject.ApplyModifiedProperties();
+                item.DisplayName = controller.gameObject.name;
             }
+            item.Buttons.Add(("👁", () => { Selection.activeObject = controller.gameObject; EditorGUIUtility.PingObject(controller.gameObject); }, () => true));
+            return item;
+        });
+    }
 
-            if (GUILayout.Button("Log Party Controllers Count"))
-            {
-                Debug.Log($"Party Controllers Count: {service.PartyControllers.Count}");
-            }
-
-            EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Party Controllers:", EditorStyles.boldLabel);
-
-            if (service.PartyControllers.Count == 0)
-            {
-                EditorGUILayout.HelpBox("No party controllers.", MessageType.Info);
-            }
-            else
-            {
-                ControllerListDrawer.DrawList(service.PartyControllers.ToArray());
-            }
-        }, target: service);
+    protected override string GetHelpText()
+    {
+        return "This section displays all Party Controllers currently present in the scene, including inactive ones.";
     }
 }

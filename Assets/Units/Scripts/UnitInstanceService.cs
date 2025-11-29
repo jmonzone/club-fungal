@@ -15,7 +15,6 @@ public class UnitInstanceService : GURUService
     public PartyInstanceService PartyInstanceService => partyInstanceService;
 
     [Header("Collections")]
-    [HideInInspector]
     [SerializeField] private List<UnitInstance> initialUnits;
     [SerializeField] private Unit playerUnit;
     [SerializeField] private List<Unit> unitCollection;
@@ -37,18 +36,19 @@ public class UnitInstanceService : GURUService
         return colorPalettes.Find(p => p?.Element == element);
     }
 
-    public void Initialize()
+    protected override void OnInitialize()
     {
         if (localData == null)
         {
             Debug.LogError("LocalData is not assigned in UnitInstanceService");
             return;
         }
-        localData.Initialize();
         units = new List<UnitInstance>();
 
+        Debug.Log("Loading units from local data.");
         if (localData.JsonFile.ContainsKey(UNIT_KEY))
         {
+            Debug.Log("Loading units from local data.");
             foreach (var unit in localData.JsonFile[UNIT_KEY] as JArray)
             {
                 if (unit is JObject unitJson)
@@ -110,6 +110,7 @@ public class UnitInstanceService : GURUService
         }
 
         // Ensure all initial units are in the collection
+        Debug.Log($"Ensuring all initial units are registered. Initial units count: {initialUnits.Count}");
         foreach (var initialUnit in initialUnits)
         {
             if (!units.Any(u => u.Id == initialUnit.Id))
@@ -117,6 +118,7 @@ public class UnitInstanceService : GURUService
                 RegisterUnit(initialUnit, false);
             }
         }
+
 
         foreach (var unit in units)
         {
@@ -139,17 +141,6 @@ public class UnitInstanceService : GURUService
 
         // Maintain order by ID
         units = units.OrderBy(u => u.Id).ToList();
-
-        // Set party status
-        if (localData.JsonFile.ContainsKey("party"))
-        {
-            var partyArray = localData.JsonFile["party"] as JArray ?? new JArray();
-            var partyIds = new HashSet<string>(partyArray.Select(p => p.ToString()));
-            foreach (var unit in units)
-            {
-                unit.IsInParty = partyIds.Contains(unit.Id);
-            }
-        }
 
         SaveData();
     }
