@@ -17,6 +17,10 @@ public class UnitControllerServiceEditor : GURUServiceEditor
             {
                 item.DisplayName = controller.gameObject.name;
             }
+            if (controller.Instance != null)
+            {
+                item.Buttons.Add(("View Instance Data", () => PopupInspector.Show(controller.Instance), () => true));
+            }
             UnitListDrawer.AddViewButton(item, controller);
             return item;
         });
