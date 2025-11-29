@@ -36,7 +36,7 @@ public class UnitController : MonoBehaviour, IInteractable
 
     public Transform RenderRoot => renderRoot;
 
-    private CinemachineVirtualCamera virtualCamera;
+    [SerializeField] private CinemachineVirtualCamera dialogueCamera;
 
     public event UnityAction OnInitialized;
     public event UnityAction OnBehaviourChanged;
@@ -50,8 +50,6 @@ public class UnitController : MonoBehaviour, IInteractable
         {
             behaviour.OnBehaviourRequest += () => ApplyBehaviour(behaviour);
         }
-
-        virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
 
         destination = GetComponent<UnitDestination>();
         dialogue = GetComponent<UnitDialogue>();
@@ -168,12 +166,12 @@ public class UnitController : MonoBehaviour, IInteractable
 
     public void Focus()
     {
-        if (virtualCamera) virtualCamera.Priority = 11;
+        if (dialogueCamera) dialogueCamera.Priority = 11;
     }
 
     public void Unfocus()
     {
-        if (virtualCamera) virtualCamera.Priority = 0;
+        if (dialogueCamera) dialogueCamera.Priority = 0;
     }
 
     public static void ArrangeUnitsInRadius(Vector3 origin, List<UnitController> units)

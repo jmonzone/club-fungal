@@ -36,7 +36,7 @@ public class DialogueActionsUI : DialoguePageUI
 
         photoButton.onClick.AddListener(dialogue.StartPhoto);
         giveButton.onClick.AddListener(dialogue.StartGive);
-        followButton.onClick.AddListener(dialogue.StartFollow);
+        // followButton.onClick.AddListener(dialogue.StartFollow);
         actionButton.onClick.AddListener(UseAction);
     }
 
@@ -66,7 +66,7 @@ public class DialogueActionsUI : DialoguePageUI
         var allUnits = new List<UnitController>
         {
             playerReference.Player,
-            dialogue.Unit
+            // dialogue.Unit
         };
 
         InvokeClose();

@@ -16,7 +16,6 @@ public class DialogueChatUI : DialoguePageUI
         continueButton.onClick.AddListener(() =>
         {
             dialogue.Dialogue.Continue();
-            StartCoroutine(Show());
         });
     }
 

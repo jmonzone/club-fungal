@@ -24,6 +24,8 @@ public class DialogueInteraction : UnitInteraction
         source.Dialogue.StartDialogue(target);
         target.Dialogue.StartDialogue(source);
 
+        dialogueReference.StartDialogueInteraction(new List<UnitController> { source, target });
+
         currentActionIndex = 0;
         ExecuteNext();
     }
@@ -38,13 +40,10 @@ public class DialogueInteraction : UnitInteraction
                 ExecuteNext();
             });
         }
-    }
-
-    public void ContinueInteraction()
-    {
-        // Called by dialogue UI continue button to advance to next action
-        currentActionIndex++;
-        ExecuteNext();
+        else
+        {
+            dialogueReference.CompleteDialogue();
+        }
     }
 }
 
@@ -68,27 +67,22 @@ public class DialogueAction : InteractionAction
 
     public override void Execute(UnitController source, UnitController target, DialogueReference dialogueReference, UnitControllerService unitControllerService, UnityAction onComplete)
     {
-        var unitInstance = Speaker switch
+        unitInstance = Speaker switch
         {
             DialogueSpeaker.Source => source.Instance,
             DialogueSpeaker.Target => target.Instance,
-            _ => UnitInstance
+            _ => unitInstance
         };
 
-        var dialogue = new Dialogue(unitInstance, text, onComplete);
-        dialogueReference.StartDialogue(dialogue);
-
-        // For dialogue, completion is handled by ContinueInteraction when user presses continue
-        // Do not call onComplete here
-
-        // Focus on the speaker
         UnitController speakerController = Speaker switch
         {
             DialogueSpeaker.Source => source,
             DialogueSpeaker.Target => target,
-            _ => unitControllerService.GetController(UnitInstance)
+            _ => unitControllerService.GetController(unitInstance)
         };
-        speakerController?.Focus();
+
+        var dialogue = new Dialogue(unitInstance, text, onComplete);
+        dialogueReference.StartDialogue(speakerController, dialogue);
     }
 }
 

@@ -8,7 +8,6 @@ public class PartyReference : ScriptableObject
     [Header("References")]
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference partyListView;
-    [SerializeField] private ViewReference partyHUD;
     [SerializeField] private ViewReference debriefView;
     [SerializeField] private ViewReference gameplayView;
     [SerializeField] private DialogueReference dialogueReference;
@@ -44,7 +43,6 @@ public class PartyReference : ScriptableObject
         currentParty = null;
         isActive = false;
         guests = new List<UnitController>();
-        dialogueReference.OnDialogueResponse += DialogueReference_OnChatResponded;
         dialogueReference.OnDialogueComplete += DialogueReference_OnDialogueComplete;
         photoReference.OnPhotoTaken += PhotoReference_OnPhotoTaken;
         inventoryReference.OnSporeCollected += InventoryReference_OnSporeCollected;
@@ -52,7 +50,7 @@ public class PartyReference : ScriptableObject
 
     private void DialogueReference_OnChatResponded(Response response)
     {
-        IncrementScore((int)response.XP, dialogueReference.Unit.transform.position);
+        // IncrementScore((int)response.XP, dialogueReference.Unit.transform.position);
     }
 
     private void InventoryReference_OnSporeCollected(SporeController spore)
@@ -68,7 +66,7 @@ public class PartyReference : ScriptableObject
 
     private void DialogueReference_OnDialogueComplete()
     {
-        IncrementScore(15, dialogueReference.Unit.transform.position);
+        // IncrementScore(15, dialogueReference.Unit.transform.position);
     }
 
     public void IncrementScore(int value, Vector3 source)

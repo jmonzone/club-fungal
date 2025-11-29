@@ -17,26 +17,27 @@ public class DialogueReference : ScriptableObject
     [SerializeField] private List<UnitController> units;
 
     [SerializeField] private Dialogue dialogue;
-    [SerializeField] private float relationship;
 
     public bool IsActive => isActive;
     public UnitController Unit => currentUnit;
     public Dialogue Dialogue => dialogue;
-    public float Relationship => relationship;
 
     public event UnityAction OnIsActiveChanged;
-    public event UnityAction OnInteractionStart;
     public event UnityAction OnDialogueStart;
-    public event UnityAction<Response> OnDialogueResponse;
-    public event UnityAction OnGiveComplete;
     public event UnityAction OnDialogueComplete;
 
-    private UnityAction onComplete;
+    public void StartDialogueInteraction(List<UnitController> units)
+    {
+        this.units = units;
+    }
 
-
-    public void StartDialogue(Dialogue dialogue)
+    public void StartDialogue(UnitController unit, Dialogue dialogue)
     {
         this.dialogue = dialogue;
+
+        if (currentUnit) currentUnit.Unfocus();
+        currentUnit = unit;
+        currentUnit.Focus();
 
         isActive = true;
         OnIsActiveChanged?.Invoke();
@@ -72,9 +73,6 @@ public class DialogueReference : ScriptableObject
         dialogue = null;
         isActive = false;
         OnIsActiveChanged?.Invoke();
-
-        onComplete?.Invoke();
-        onComplete = null;
     }
 
     public void StartPhoto()
@@ -94,16 +92,7 @@ public class DialogueReference : ScriptableObject
     {
         inventory.OnItemSelected -= Inventory_OnItemSelected;
         // dialogue = currentUnit.Dialogue.Dialogue[0];
-        OnGiveComplete?.Invoke();
+        // OnGiveComplete?.Invoke();
         navigation.GoBack();
-    }
-
-    public void StartFollow()
-    {
-        if (Unit is FungalController fungal)
-        {
-            fungal.Follow(playerReference.Player.GetComponent<UnitFollow>());
-            CompleteDialogue();
-        }
     }
 }

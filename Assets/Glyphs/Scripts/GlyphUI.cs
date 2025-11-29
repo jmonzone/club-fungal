@@ -82,7 +82,7 @@ public class GlyphUI : MonoBehaviour
     {
         var glyphObj = Instantiate(glyphPrefab, isPaletteGlyph ? glyphPalette : glyphDropZone.transform);
         glyphObj.GetComponent<RectTransform>().position = position;
-        glyphObj.Initialize(glyph, isPaletteGlyph, words );
+        glyphObj.Initialize(glyph, isPaletteGlyph, words);
 
         glyphObj.OnGlyphFused += OnGlyphsFused;
 
@@ -264,7 +264,7 @@ public class GlyphUI : MonoBehaviour
 
     public void HideGlyphUI()
     {
-        foreach(var glyph in glyphControllers)
+        foreach (var glyph in glyphControllers)
         {
             if (!glyph.IsPalleteGlyph)
             {

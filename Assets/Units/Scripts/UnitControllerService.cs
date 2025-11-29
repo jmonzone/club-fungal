@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEditor;
 
 [CreateAssetMenu(fileName = "UnitControllerService", menuName = "Club Fungal/Units/Unit Controller Service")]
 public class UnitControllerService : ScriptableObject
@@ -28,7 +29,9 @@ public class UnitControllerService : ScriptableObject
     public UnitController SpawnUnit(UnitInstance unit, Vector3 spawnPosition, Transform parent)
     {
         Debug.Log($"Spawning unit {unit.Data.Name} at position {spawnPosition}");
-        var unitController = Instantiate(unitPrefab, spawnPosition, Quaternion.identity, parent);
+        var unitController = PrefabUtility.InstantiatePrefab(unitPrefab, parent) as UnitController;
+        unitController.transform.position = spawnPosition;
+        unitController.transform.rotation = Quaternion.identity;
         unitController.Initialize(unit);
         Debug.Log($"Initialized unit controller for {unit.Data.Name} spawned at {unitController.transform.position}");
 

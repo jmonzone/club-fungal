@@ -43,30 +43,13 @@ public class DialogueUI : MonoBehaviour
 
     private void OnEnable()
     {
-        dialogue.OnInteractionStart += StartInteraction;
         dialogue.OnDialogueStart += StartDialogue;
-        dialogue.OnGiveComplete += StartDialogue;
     }
 
     private void OnDisable()
     {
-        dialogue.OnInteractionStart -= StartInteraction;
         dialogue.OnDialogueStart -= StartDialogue;
-        dialogue.OnGiveComplete -= StartDialogue;
     }
-
-    private void StartInteraction()
-    {
-        if (dialogue.Unit is TreeController)
-        {
-            ShowPage(DialoguePage.GLYPH);
-        }
-        else
-        {
-            ShowPage(DialoguePage.ACTION);
-        }
-    }
-
     private void StartDialogue()
     {
         ShowPage(DialoguePage.CHAT);

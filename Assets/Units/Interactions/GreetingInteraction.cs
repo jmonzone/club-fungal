@@ -21,7 +21,7 @@ public class GreetingInteraction : UnitInteraction
         var origin = GetMidpoint(source);
 
         UnitController.ArrangeUnitsInRadius(origin, units);
-        dialogueReference.StartDialogue(source.Dialogue.GreetingDialogue.Dialogue);
+        // dialogueReference.StartDialogue(source.Dialogue.GreetingDialogue.Dialogue);
     }
 
     private Vector3 GetMidpoint(UnitController unit)
