@@ -6,6 +6,7 @@ public class RoomManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private TransitionReference transitionReference;
+    [SerializeField] private TeleportService teleportService;
     [SerializeField] private RoomController roomControllerPrefab;
     [SerializeField] private List<Texture> wallTextureCollections;
 
@@ -80,7 +81,7 @@ public class RoomManager : MonoBehaviour
             // Check if the door already has an otherDoor assigned
             var teleportDirection = (otherRoom.transform.position - door.OtherDoor.transform.position).normalized;
             var teleportPosition = door.OtherDoor.transform.position + teleportDirection * 2f;
-            playerReference.TeleportPlayer(teleportPosition, otherRoom.UnitParent);
+            teleportService.TeleportParty(teleportPosition, otherRoom.UnitParent);
 
             Debug.Log($"Teleported player to {teleportPosition} door.OtherDoor.Room.transform.position {door.OtherDoor.Room.transform.position} door.OtherDoor.transform.position {door.OtherDoor.transform.position} teleportDirection {teleportDirection} ");
             if (useOuterWalls) door.Room.SetAsOuterRoom();

@@ -25,6 +25,7 @@ public class PlayerReference : ScriptableObject
     public Vector3 TargetPosition => targetPosition;
     public IInteractable TargetInteractable => targetInteractable;
 
+    public event UnityAction<PlayerController> OnPlayerSet;
     public event UnityAction OnTargetInteractableChanged;
     public event UnityAction OnTargetPositionChanged;
     public event UnityAction<bool> OnPOVCameraToggled;
@@ -33,14 +34,7 @@ public class PlayerReference : ScriptableObject
     {
         this.player = player;
         activityUnit = player.GetComponent<ActivityUnit>();
-    }
-
-    public void TeleportPlayer(Vector3 position, Transform parent)
-    {
-        // Debug.Log($"Teleporting player to position: {position}");
-        player.transform.parent = parent;
-        player.Destination.TeleportToPosition(position);
-        player.SetLookPosition(position);
+        OnPlayerSet?.Invoke(player);
     }
 
     public void SetTargetPosition(Vector3 targetPosition)

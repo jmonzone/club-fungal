@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Party Frog
   m_EditorClassIdentifier: 
   id: 000000000000000000000001
+  displayName: Party Frog
   data: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
   friendshipLevel: 2
   friendshipXP: 83

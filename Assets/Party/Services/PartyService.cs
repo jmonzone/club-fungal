@@ -17,7 +17,11 @@ public class PartyService : ScriptableObject
 
     public void Initialize()
     {
-        partyMembers = new List<UnitController> { playerReference.Player };
+        partyMembers = new List<UnitController>();
+        playerReference.OnPlayerSet += (player) =>
+        {
+            partyMembers.Add(player);
+        };
     }
 
     public void AddToParty(UnitController unit)

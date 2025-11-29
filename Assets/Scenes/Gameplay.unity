@@ -2380,7 +2380,7 @@ PrefabInstance:
     - target: {fileID: 3694079932248567921, guid: 2d3799a85c2334c609ef47200b483977,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 3694079932248567921, guid: 2d3799a85c2334c609ef47200b483977,
         type: 3}
@@ -20375,6 +20375,7 @@ MonoBehaviour:
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   transitionReference: {fileID: 11400000, guid: dd377966ffea040bf9f56a4c1a51faed,
     type: 2}
+  teleportService: {fileID: 11400000, guid: e99fdf6e0984a4ded94fce701db1f5e8, type: 2}
   roomControllerPrefab: {fileID: 7063167596283546541, guid: 39a86af59e75d41dfaeeca6d7af1a972,
     type: 3}
   wallTextureCollections:
@@ -20787,7 +20788,7 @@ MonoBehaviour:
   m_Spacing: 50
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 1
+  m_ChildControlWidth: 0
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
@@ -53141,7 +53142,7 @@ PrefabInstance:
     - target: {fileID: 3694079932248567921, guid: 2d3799a85c2334c609ef47200b483977,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 3694079932248567921, guid: 2d3799a85c2334c609ef47200b483977,
         type: 3}

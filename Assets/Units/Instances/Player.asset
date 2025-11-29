@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Player
   m_EditorClassIdentifier: 
   id: 000000000000000000000000
-  displayName: Display Name
+  displayName: Player
   data: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
   friendshipLevel: 0
   friendshipXP: 0

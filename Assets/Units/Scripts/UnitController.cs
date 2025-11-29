@@ -134,6 +134,13 @@ public class UnitController : MonoBehaviour, IInteractable
         targetLookPosition = targetPosition;
     }
 
+    public void Teleport(Vector3 position, Transform parent)
+    {
+        transform.parent = parent;
+        Destination.TeleportToPosition(position);
+        SetLookPosition(position);
+    }
+
     public void SetLookTarget(Transform target)
     {
         this.target = target;
