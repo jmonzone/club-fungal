@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "UnitInstanceService", menuName = "Club Fungal/Units/Unit Instance Service")]
-public class UnitInstanceService : ScriptableObject
+public class UnitInstanceService : GURUService
 {
     [Header("References")]
     [SerializeField] private PartyInstanceService partyInstanceService;

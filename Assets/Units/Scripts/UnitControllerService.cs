@@ -7,7 +7,7 @@ using UnityEditor;
 #endif
 
 [CreateAssetMenu(fileName = "UnitControllerService", menuName = "Club Fungal/Units/Unit Controller Service")]
-public class UnitControllerService : ScriptableObject
+public class UnitControllerService : GURUService
 {
     [Header("References")]
     [SerializeField] private UnitInstanceService unitInstanceService;

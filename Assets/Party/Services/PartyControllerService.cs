@@ -4,7 +4,7 @@ using UnityEngine.Events;
 using System.Linq;
 
 [CreateAssetMenu(fileName = "PartyControllerService", menuName = "Club Fungal/Party/Party Controller Service")]
-public class PartyControllerService : ScriptableObject
+public class PartyControllerService : GURUService
 {
     [Header("References")]
     [SerializeField] private UnitControllerService unitControllerService;

@@ -1,43 +1,39 @@
 using UnityEditor;
 using UnityEngine;
+using System;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 public static class GURUStyler
 {
-    private static GameService cachedGameService;
-    private static ScriptableObject cachedUnitInstanceService;
-    private static ScriptableObject cachedUnitControllerService;
-    private static ScriptableObject cachedPartyInstanceService;
+    private static readonly Type[] serviceTypes = { typeof(GameService), typeof(UnitInstanceService), typeof(UnitControllerService), typeof(PartyInstanceService), typeof(PartyControllerService) };
+    private static Dictionary<Type, GURUService> cachedServices = new Dictionary<Type, GURUService>();
+
+    private class ButtonInfo
+    {
+        public string label;
+        public Action action;
+        public Func<bool> condition;
+    }
+
+    private static T LoadAsset<T>(string typeName) where T : UnityEngine.Object
+    {
+        string[] guids = AssetDatabase.FindAssets("t:" + typeName);
+        if (guids.Length > 0)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guids[0]);
+            return AssetDatabase.LoadAssetAtPath<T>(path);
+        }
+        return null;
+    }
 
     private static void EnsureAssetsLoaded()
     {
-        if (cachedGameService == null)
+        foreach (var type in serviceTypes)
         {
-            string[] guids = AssetDatabase.FindAssets("t:GameService");
-            if (guids.Length > 0)
+            if (!cachedServices.ContainsKey(type) || cachedServices[type] == null)
             {
-                string path = AssetDatabase.GUIDToAssetPath(guids[0]);
-                cachedGameService = AssetDatabase.LoadAssetAtPath<GameService>(path);
-            }
-        }
-
-        if (cachedUnitInstanceService == null)
-        {
-            string[] unitGuids = AssetDatabase.FindAssets("t:UnitInstanceService");
-            if (unitGuids.Length > 0)
-            {
-                string unitPath = AssetDatabase.GUIDToAssetPath(unitGuids[0]);
-                cachedUnitInstanceService = AssetDatabase.LoadAssetAtPath<ScriptableObject>(unitPath);
-            }
-        }
-
-        if (cachedUnitControllerService == null)
-        {
-            string[] controllerGuids = AssetDatabase.FindAssets("t:UnitControllerService");
-            if (controllerGuids.Length > 0)
-            {
-                string controllerPath = AssetDatabase.GUIDToAssetPath(controllerGuids[0]);
-                cachedUnitControllerService = AssetDatabase.LoadAssetAtPath<ScriptableObject>(controllerPath);
+                cachedServices[type] = LoadAsset<GURUService>(type.Name);
             }
         }
     }
@@ -83,46 +79,35 @@ public static class GURUStyler
             alignment = TextAnchor.MiddleCenter
         };
 
-        // GameService
-        if (cachedGameService != null && Selection.activeObject != cachedGameService)
+        var buttons = new List<ButtonInfo>();
+
+        // Add buttons for each service
+        foreach (var kvp in cachedServices)
         {
-            if (GUILayout.Button("Open GameService Asset", linkStyle))
-            {
-                AssetDatabase.OpenAsset(cachedGameService);
-            }
+            string label = $"Open {kvp.Key.Name} Asset";
+            Action action = () => AssetDatabase.OpenAsset(kvp.Value);
+            Func<bool> condition = () => kvp.Value != null && Selection.activeObject != kvp.Value;
+            buttons.Add(new ButtonInfo { label = label, action = action, condition = condition });
         }
 
-        // UnitInstanceService
-        if (cachedUnitInstanceService != null && Selection.activeObject != cachedUnitInstanceService)
+        // Add reset button for GameService
+        if (cachedServices.ContainsKey(typeof(GameService)) && cachedServices[typeof(GameService)] != null)
         {
-            if (GUILayout.Button("Open UnitInstanceService Asset", linkStyle))
-            {
-                AssetDatabase.OpenAsset(cachedUnitInstanceService);
-            }
+            buttons.Add(new ButtonInfo { label = "Reset JSON File", action = () => { if (cachedServices[typeof(GameService)] is GameService gs) gs.ResetJsonFile(); }, condition = () => true });
         }
 
-        // UnitControllerService
-        if (cachedUnitControllerService != null && Selection.activeObject != cachedUnitControllerService)
-        {
-            if (GUILayout.Button("Open UnitControllerService Asset", linkStyle))
-            {
-                AssetDatabase.OpenAsset(cachedUnitControllerService);
-            }
-        }
+        // Add open JSON file button
+        buttons.Add(new ButtonInfo { label = "Open JSON File", action = () => Process.Start(LocalData.GetSaveDataPath()), condition = () => true });
 
-        // Reset JSON File
-        if (cachedGameService != null)
+        foreach (var b in buttons)
         {
-            if (GUILayout.Button("Reset JSON File", linkStyle))
+            if (b.condition())
             {
-                cachedGameService.ResetJsonFile();
+                if (GUILayout.Button(b.label, linkStyle))
+                {
+                    b.action();
+                }
             }
-        }
-
-        // Open JSON File
-        if (GUILayout.Button("Open JSON File", linkStyle))
-        {
-            Process.Start(LocalData.GetSaveDataPath());
         }
 
         EditorGUILayout.EndVertical();

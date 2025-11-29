@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using Newtonsoft.Json.Linq;
 
 [CreateAssetMenu(fileName = "PartyInstanceService", menuName = "Club Fungal/Party/Party Instance Service")]
-public class PartyInstanceService : ScriptableObject
+public class PartyInstanceService : GURUService
 {
     [Header("References")]
     [SerializeField] private PlayerReference playerReference;

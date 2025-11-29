@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "GameService", menuName = "Club Fungal/Game Service")]
-public class GameService : ScriptableObject
+public class GameService : GURUService
 {
     [Header("Room Settings")]
     public bool useOuterWalls = false;
