@@ -15,16 +15,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private FadeCanvasGroup screenFade;
 
     [SerializeField] private DisplayName displayName;
-    [SerializeField] private BuildReference build;
-    [SerializeField] private InventoryReference inventory;
-    [SerializeField] private UnitInstanceService unitInstanceService;
-    [SerializeField] private UnitControllerService unitControllerService;
-    [SerializeField] private PartyService partyService;
-    [SerializeField] private PartyReference partyReference;
-    [SerializeField] private StoryReference partyLogReference;
-    [SerializeField] private SporeReference sporeReference;
-    [SerializeField] private GlyphCollection glyphCollection;
-    [SerializeField] private DJTableReference djReference;
+    [SerializeField] private GameService gameService;
 
     [SerializeField] private Volume volume;
 
@@ -43,9 +34,8 @@ public class GameManager : MonoBehaviour
             // order of initialization matters here, ability cast as of now
             // needs to be initialized before localdata.inventory does
             // or else there is unexpeted behaviour
-            localData.Initialize();
 
-            InitializeSystems();
+            gameService.Initialize();
 
             uiNavigation.Initialize();
 
@@ -54,31 +44,12 @@ public class GameManager : MonoBehaviour
 
             DontDestroyOnLoad(Instance);
 
-            localData.OnReset += () =>
-            {
-                InitializeSystems();
-            };
-
             sceneNavigation.OnSceneNavigationRequest += () =>
             {
                 uiNavigation.Reset();
                 StartCoroutine(sceneNavigation.NavigateToSceneRoutine(screenFade));
             };
         }
-    }
-
-    private void InitializeSystems()
-    {
-        inventory.Initialize();
-        build.Initialize();
-        unitInstanceService.Initialize();
-        unitControllerService.Initialize();
-        partyService.Initialize();
-        partyReference.Initialize();
-        partyLogReference.Initialize();
-        sporeReference.Initialize();
-        glyphCollection.Initialize();
-        djReference.Initialize();
     }
 
     private IEnumerator Start()

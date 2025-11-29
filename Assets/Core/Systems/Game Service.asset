@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf2ff67a9f7164d37b1fd65a531169de, type: 3}
+  m_Name: Game Service
+  m_EditorClassIdentifier: Assembly-CSharp::GameSettings
+  useOuterWalls: 0
+  selectRoomOnTransition: 0
+  localData: {fileID: 11400000, guid: 81d22df7435974c419891ceb2bc9e4ee, type: 2}
+  build: {fileID: 11400000, guid: 2526ce71d791f49acb54c441f1370a16, type: 2}
+  inventory: {fileID: 11400000, guid: e9c2fc38b99d8404f8495af08b4889fc, type: 2}
+  unitInstanceService: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2,
+    type: 2}
+  unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
+    type: 2}
+  partyService: {fileID: 11400000, guid: bb09c959525894035a6335dd29940cec, type: 2}
+  partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
+  partyLogReference: {fileID: 11400000, guid: ccd6553192cde4616980b916ffb4faa7, type: 2}
+  sporeReference: {fileID: 11400000, guid: aada144c7ab1b4304a84a13d3ddc010c, type: 2}
+  glyphCollection: {fileID: 11400000, guid: 8ff2f86eb4f5142c8aa3e3c918fb7d61, type: 2}
+  djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}

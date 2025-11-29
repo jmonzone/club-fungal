@@ -44,6 +44,7 @@ public class UnitInstance : ScriptableObject
 
     public List<UnitInstance> Friends => friends;
     public UnitInteraction Interaction => interaction;
+    public bool IsInParty { get; set; }
 
     public JObject Json => json;
 

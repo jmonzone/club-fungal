@@ -38,6 +38,16 @@ public class UnitInstanceService : ScriptableObject
         localData.Initialize();
         units = new List<UnitInstance>();
 
+        List<string> partyIds = new List<string>();
+        if (localData.JsonFile.ContainsKey("party"))
+        {
+            var partyArray = localData.JsonFile["party"] as JArray;
+            if (partyArray != null)
+            {
+                partyIds = partyArray.Select(t => t.ToString()).ToList();
+            }
+        }
+
         if (localData.JsonFile.ContainsKey(UNIT_KEY))
         {
             foreach (var unit in localData.JsonFile[UNIT_KEY] as JArray)
@@ -68,6 +78,7 @@ public class UnitInstanceService : ScriptableObject
 
                     var instance = CreateInstance<UnitInstance>();
                     instance.Initialize(matchingUnit, unitId, friendshipXP, element, matchingJob, matchingColorPalette, unitJson);
+                    instance.IsInParty = partyIds.Contains(unitId);
 
                     var skillsJson = unitJson.Value<JArray>("skills") ?? new JArray();
                     var skills = new List<UnitSkill>();

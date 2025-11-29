@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using Newtonsoft.Json.Linq;
 
 [CustomEditor(typeof(UnitInstanceService))]
 public class UnitInstanceServiceEditor : Editor
@@ -77,67 +78,44 @@ public class UnitInstanceServiceEditor : Editor
             combined = combined.OrderBy(c => c.unit.Id).ToList();
 
             // Display units in a responsive layout
-            List<UnitInstance> toRemove = new List<UnitInstance>();
-            foreach (var (unit, isInitial) in combined)
-            {
-                EditorGUILayout.BeginHorizontal();
-                Color originalBG = GUI.backgroundColor;
-                GUI.backgroundColor = isInitial ? new Color(0.6f, 0.7f, 1.0f) : Color.white;
-                Color originalColor = GUI.color;
-                GUI.color = Color.white;
-                EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-                // Draw icon
-                if (unit.Data != null && unit.Data.Sprite != null)
+            UnitInstanceListDrawer.DrawList(
+                combined.Select(c => c.unit).ToList(),
+                onToggleParty: (unit) =>
                 {
-                    GUIContent content = new GUIContent(unit.Data.Sprite.texture);
-                    GUILayout.Label(content, GUILayout.Width(32), GUILayout.Height(32));
-                }
-                else
-                {
-                    GUILayout.Label("No Icon", GUILayout.Width(32), GUILayout.Height(32));
-                }
-                // Vertical for name and job
-                EditorGUILayout.BeginVertical();
-                EditorGUILayout.LabelField(unit.DisplayName);
-                EditorGUILayout.Space(-2); // Reduce space
-                GUIStyle jobStyle = new GUIStyle(EditorStyles.miniLabel) { fontStyle = FontStyle.Italic, normal = { textColor = new Color(0.5f, 0.5f, 0.5f) } };
-                EditorGUILayout.LabelField(unit.Job != null ? $"{unit.Job.Id.ToUpper()}" : "No Job", jobStyle);
-                EditorGUILayout.EndVertical();
-                EditorGUILayout.EndVertical();
-                GUI.backgroundColor = originalBG;
-                GUI.color = originalColor;
-                // Buttons next to the box
-                EditorGUILayout.BeginVertical(GUILayout.Width(30));
-                if (GUILayout.Button("...", GUILayout.Width(30), GUILayout.Height(20)))
-                {
-                    PopupInspector.Show(unit);
-                }
-                if (!isInitial)
-                {
-                    Color buttonColor = GUI.color;
-                    GUI.color = Color.red;
-                    if (GUILayout.Button("X", GUILayout.Width(30), GUILayout.Height(20)))
-                    {
-                        toRemove.Add(unit);
-                    }
-                    GUI.color = buttonColor;
-                }
-                EditorGUILayout.EndVertical();
-                EditorGUILayout.EndHorizontal();
-                // Space between cards
-                EditorGUILayout.Space(5);
-            }
+                    var localDataField = typeof(UnitInstanceService).GetField("localData", BindingFlags.NonPublic | BindingFlags.Instance);
+                    var localData = (LocalData)localDataField.GetValue(service);
 
-            // Remove after iteration
-            foreach (var unit in toRemove)
-            {
-                service.Units.Remove(unit);
-                service.SaveData();
-            }
-            if (toRemove.Count > 0)
-            {
-                EditorUtility.SetDirty(service);
-            }
+                    // Ensure localData is initialized
+                    if (localData.JsonFile == null) localData.Initialize();
+
+                    var partyArray = localData.JsonFile["party"] as JArray ?? new JArray();
+                    if (unit.IsInParty)
+                    {
+                        // Remove from party
+                        var itemToRemove = partyArray.FirstOrDefault(t => t.ToString() == unit.Id);
+                        if (itemToRemove != null) partyArray.Remove(itemToRemove);
+                    }
+                    else
+                    {
+                        // Add to party
+                        if (!partyArray.Any(t => t.ToString() == unit.Id))
+                        {
+                            partyArray.Add(unit.Id);
+                        }
+                    }
+                    localData.JsonFile["party"] = partyArray;
+                    localData.SaveData("party", partyArray);
+                    unit.IsInParty = !unit.IsInParty;
+                },
+                onRemove: (unit) =>
+                {
+                    service.Units.Remove(unit);
+                    service.SaveData();
+                    EditorUtility.SetDirty(service);
+                },
+                canRemoveFunc: (unit) => !initialUnits.Contains(unit),
+                backgroundColorFunc: (unit) => initialUnits.Contains(unit) ? new Color(0.6f, 0.7f, 1.0f) : Color.white
+            );
 
             EditorGUILayout.Space();
 
@@ -159,6 +137,6 @@ public class UnitInstanceServiceEditor : Editor
             EditorGUILayout.EndVertical();
             EditorGUILayout.Space(10);
             EditorGUILayout.EndHorizontal();
-        }, "Manage and inspect all units in the service. Initial units can be edited, runtime units can be removed.");
+        }, "Manage and inspect all units in the service. Initial units can be edited, runtime units can be removed.", service);
     }
 }

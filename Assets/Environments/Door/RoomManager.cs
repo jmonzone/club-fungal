@@ -9,7 +9,7 @@ public class RoomManager : MonoBehaviour
     [SerializeField] private TeleportService teleportService;
     [SerializeField] private RoomController roomControllerPrefab;
     [SerializeField] private List<Texture> wallTextureCollections;
-    [SerializeField] private GameSettings settings;
+    [SerializeField] private GameService settings;
 
     [Header("Runtime")]
     [SerializeField] private List<RoomController> roomControllers;
