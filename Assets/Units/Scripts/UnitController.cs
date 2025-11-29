@@ -15,7 +15,7 @@ public class UnitController : MonoBehaviour, IInteractable
 
     public UnitDestination Destination => destination;
     public UnitDialogue Dialogue => dialogue;
-    public UnitInteractionInstance CurrentInteraction => instance.Interactions.FirstOrDefault();
+    public UnitInteractionInstance CurrentInteraction => instance.Interactions.FirstOrDefault(i => !i.IsComplete);
 
     [Header("Runtime")]
     [SerializeField] private UnitInstance instance;
@@ -166,6 +166,11 @@ public class UnitController : MonoBehaviour, IInteractable
 
     void IInteractable.Select(UnitController source)
     {
+        if (CurrentInteraction == null)
+        {
+            Debug.LogError("No available interaction for unit " + name);
+            return;
+        }
         CurrentInteraction.StartInteraction(source, this);
     }
 
