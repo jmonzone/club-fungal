@@ -15,13 +15,16 @@ public class GURUServiceEditor : Editor
         return null;
     }
 
-    public override void OnInspectorGUI()
+    void OnEnable()
     {
-        GURUService service = (GURUService)target;
-
         // Reinitialize systems
         GameService gs = LoadAsset<GameService>("GameService");
         if (gs != null) gs.InitializeSystems();
+    }
+
+    public override void OnInspectorGUI()
+    {
+        GURUService service = (GURUService)target;
 
         DrawDefaultInspector();
 
