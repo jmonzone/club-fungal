@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
-  m_Name: Gift Jellyfish
+  m_Name: Crazy Jellyfish
   m_EditorClassIdentifier: 
   id: 000000000000000000000002
+  displayName: Crazy Jellyfish
   data: {fileID: 11400000, guid: 84acf7738ffbc4db09e660e7ce20b7a1, type: 2}
   friendshipLevel: 1
   friendshipXP: 0
@@ -22,9 +23,4 @@ MonoBehaviour:
   colorPalette: {fileID: 0}
   friends:
   - {fileID: 11400000, guid: 463ba2838266e4c609022c9ca93d4c8a, type: 2}
-  introDialogue:
-    text: 
-    responses: []
-    type: 0
-    action: 0
-    element: 
+  interaction: {fileID: 0}

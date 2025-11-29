@@ -87,9 +87,7 @@ public class RoomController : MonoBehaviour
 
     public void SetAsInnerRoom()
     {
-#if UNITY_EDITOR
-        UnityEditor.Selection.activeGameObject = gameObject;
-#endif
+
         ceilingObject.SetActive(false);
         foreach (var wall in walls)
         {

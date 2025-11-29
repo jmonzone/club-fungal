@@ -9,9 +9,7 @@ public class RoomManager : MonoBehaviour
     [SerializeField] private TeleportService teleportService;
     [SerializeField] private RoomController roomControllerPrefab;
     [SerializeField] private List<Texture> wallTextureCollections;
-
-    [Header("Settings")]
-    [SerializeField] private bool useOuterWalls = false;
+    [SerializeField] private GameSettings settings;
 
     [Header("Runtime")]
     [SerializeField] private List<RoomController> roomControllers;
@@ -84,8 +82,15 @@ public class RoomManager : MonoBehaviour
             teleportService.TeleportParty(teleportPosition, otherRoom.UnitParent);
 
             Debug.Log($"Teleported player to {teleportPosition} door.OtherDoor.Room.transform.position {door.OtherDoor.Room.transform.position} door.OtherDoor.transform.position {door.OtherDoor.transform.position} teleportDirection {teleportDirection} ");
-            if (useOuterWalls) door.Room.SetAsOuterRoom();
+            if (settings.useOuterWalls) door.Room.SetAsOuterRoom();
             otherRoom.SetAsInnerRoom();
+
+            if (settings.selectRoomOnTransition)
+            {
+#if UNITY_EDITOR
+                UnityEditor.Selection.activeGameObject = gameObject;
+#endif
+            }
 
             // Activate a random new door in addition to the opposite door, only if no room exists at the target position
             if (otherRoom.Doors.Count < otherRoom.MaxDoors)
