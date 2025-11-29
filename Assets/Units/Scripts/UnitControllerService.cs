@@ -28,6 +28,19 @@ public class UnitControllerService : GURUService
         UnitController[] controllers = FindObjectsByType<UnitController>(FindObjectsSortMode.None);
         unitControllers.AddRange(controllers);
         Debug.Log($"Found and initialized {unitControllers.Count} unit controllers in the scene.");
+
+        // Update existing UnitControllers with loaded instances if they have matching IDs
+        foreach (var controller in unitControllers)
+        {
+            if (controller.Instance != null && !string.IsNullOrEmpty(controller.Instance.Id))
+            {
+                var matching = unitInstanceService.Units.Find(u => u.Id == controller.Instance.Id);
+                if (matching != null)
+                {
+                    controller.Initialize(matching);
+                }
+            }
+        }
     }
 
     public UnitController SpawnUnit(UnitInstance unit, Vector3 spawnPosition, Transform parent)

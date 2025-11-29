@@ -23,7 +23,6 @@ public class UnitInstanceService : GURUService
     [SerializeField] private List<ColorPalette> colorPalettes;
     [SerializeField] private List<UnitInteraction> interactionCollection;
 
-    [HideInInspector]
     [SerializeField] private List<UnitInstance> units;
 
     public List<UnitInstance> Units => units;

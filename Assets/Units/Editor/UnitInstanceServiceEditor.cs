@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
@@ -11,6 +10,7 @@ public class UnitInstanceServiceEditor : GURUServiceEditor
 
     private void OnEnable()
     {
+        UnityEngine.Debug.Log("UnitInstanceServiceEditor OnEnable - Auto-populating lists if empty");
         // Cache the populated lists on enable
         AutoPopulateList<UnitInstance>("initialUnits", "t:UnitInstance");
         AutoPopulateList<Unit>("unitCollection", "t:Unit");
@@ -20,21 +20,19 @@ public class UnitInstanceServiceEditor : GURUServiceEditor
     {
         var field = typeof(UnitInstanceService).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
         var list = (List<T>)field.GetValue(target);
-        if (list.Count == 0 || force)
+        list.Clear();
+        var guids = AssetDatabase.FindAssets(assetType);
+        foreach (var guid in guids)
         {
-            list.Clear();
-            var guids = AssetDatabase.FindAssets(assetType);
-            foreach (var guid in guids)
+            Debug.Log($"Found asset GUID: {guid} for type {typeof(T).Name}");
+            var path = AssetDatabase.GUIDToAssetPath(guid);
+            var asset = AssetDatabase.LoadAssetAtPath<T>(path);
+            if (asset != null && IsValidAsset(asset))
             {
-                var path = AssetDatabase.GUIDToAssetPath(guid);
-                var asset = AssetDatabase.LoadAssetAtPath<T>(path);
-                if (asset != null && IsValidAsset(asset))
-                {
-                    list.Add(asset);
-                }
+                list.Add(asset);
             }
-            EditorUtility.SetDirty(target);
         }
+        EditorUtility.SetDirty(target);
         return list;
     }
 
