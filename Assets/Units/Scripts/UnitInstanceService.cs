@@ -76,7 +76,7 @@ public class UnitInstanceService : GURUService
                     var displayName = unitJson.Value<string>("displayName") ?? unitName;
 
                     var instance = CreateInstance<UnitInstance>();
-                    var data = new UnitInstance.UnitInstanceData
+                    var data = new UnitInstanceData
                     {
                         Data = matchingUnit,
                         Id = unitId,
@@ -155,7 +155,7 @@ public class UnitInstanceService : GURUService
         var matchingColorPalette = GetColorPaletteByElement(newElement);
 
         var displayName = GenerateDisplayName(newUnit.Name);
-        var data = new UnitInstance.UnitInstanceData
+        var data = new UnitInstanceData
         {
             Data = newUnit,
             DisplayName = displayName,
@@ -190,7 +190,7 @@ public class UnitInstanceService : GURUService
     public UnitInstance CopyUnit(UnitInstance instance, bool saveData = true)
     {
         var copiedUnit = CreateInstance<UnitInstance>();
-        var data = instance.GetData();
+        var data = instance.InstanceData;
         data.Id = null; // Generate new Id for copy
         copiedUnit.Initialize(data);
 

@@ -136,7 +136,6 @@ public class UnitInstanceServiceEditor : GURUServiceEditor
                 {
                     service.PartyInstanceService.AddUnitInstanceToParty(u);
                 }
-                u.IsInParty = !u.IsInParty;
             }, null);
             UnitListDrawer.AddViewButton(item, controllerService?.GetController(unit));
             if (!cachedInitialUnits.Contains(unit))

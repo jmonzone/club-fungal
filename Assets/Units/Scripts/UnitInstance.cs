@@ -4,6 +4,19 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
+[Serializable]
+public struct UnitInstanceData
+{
+    public Unit Data;
+    public string Id;
+    public string DisplayName;
+    public float FriendshipXP;
+    public Element Element;
+    public Job Job;
+    public ColorPalette ColorPalette;
+    public JObject Json;
+}
+
 [CreateAssetMenu(fileName = "UnitInstance", menuName = "Club Fungal/Units/Unit Instance")]
 public class UnitInstance : ScriptableObject
 {
@@ -16,19 +29,7 @@ public class UnitInstance : ScriptableObject
     [SerializeField] private List<UnitInstance> friends;
     [SerializeField] private UnitInteraction interaction;
 
-    [Serializable]
-    public struct UnitInstanceData
-    {
-        public Unit Data;
-        public string Id;
-        public string DisplayName;
-        public float FriendshipXP;
-        public Element Element;
-        public Job Job;
-        public ColorPalette ColorPalette;
-        public JObject Json;
-    }
-
+    public UnitInstanceData InstanceData => instanceData;
     public string Id => instanceData.Id;
     public string DisplayName => instanceData.DisplayName;
     public Unit Data => instanceData.Data;
@@ -36,18 +37,9 @@ public class UnitInstance : ScriptableObject
     public Job Job => instanceData.Job;
     public ColorPalette ColorPalette => instanceData.ColorPalette;
 
-    public UnitSkill GetSkill(Skill skill) => Skills[skill];
-
     public int FriendshipLevel => UnitSkill.GetLevelFromXP(instanceData.FriendshipXP);
     public float FriendshipXP => instanceData.FriendshipXP;
     public bool IsFriends => FriendshipLevel > 1;
-
-    public bool IsInParty { get; set; }
-
-    // Scale existing friend chance based on friendship level
-    float minChance = 0.1f;   // minimum chance to pick existing friend at level 0
-    float maxChance = 0.5f;   // maximum chance at max level
-    public float IntroduceNewFriendRate => Mathf.Lerp(minChance, maxChance, FriendshipLevel / (float)3);
 
     public List<UnitInstance> Friends => friends;
     public UnitInteraction Interaction => interaction;
@@ -74,22 +66,6 @@ public class UnitInstance : ScriptableObject
         friends = new List<UnitInstance>();
     }
 
-    public void Initialize(Unit data, string id = null, string displayName = null, float friendshipXP = 0, Element element = Element.NONE, Job job = null, ColorPalette colorPalette = null, JObject json = null)
-    {
-        var initData = new UnitInstanceData
-        {
-            Data = data,
-            Id = id,
-            DisplayName = displayName,
-            FriendshipXP = friendshipXP,
-            Element = element,
-            Job = job,
-            ColorPalette = colorPalette,
-            Json = json
-        };
-        Initialize(initData);
-    }
-
     public void InitializeSkills(List<UnitSkill> skills)
     {
         this.skills = skills;
@@ -99,11 +75,6 @@ public class UnitInstance : ScriptableObject
             Skills.Add(skill.Skill, skill);
             skill.OnXpChanged += value => OnXpChanged?.Invoke(value);
         }
-    }
-
-    public UnitInstanceData GetData()
-    {
-        return instanceData;
     }
 
     public static string GenerateMongoLikeId()
