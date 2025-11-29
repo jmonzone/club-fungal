@@ -12,8 +12,8 @@ public class UnitInstanceService : ScriptableObject
 
     [Header("Collections")]
     [SerializeField] private List<UnitInstance> initialUnits;
-    [SerializeField] private UnitSpecies playerUnit;
-    [SerializeField] private List<UnitSpecies> unitCollection;
+    [SerializeField] private Unit playerUnit;
+    [SerializeField] private List<Unit> unitCollection;
     [SerializeField] private List<Job> jobCollection;
     [SerializeField] private List<Skill> skillCollection;
     [SerializeField] private List<ColorPalette> colorPalettes;
@@ -34,7 +34,6 @@ public class UnitInstanceService : ScriptableObject
 
     public void Initialize()
     {
-        localData.Initialize();
         units = new List<UnitInstance>();
 
         if (localData.JsonFile.ContainsKey(UNIT_KEY))
@@ -120,28 +119,10 @@ public class UnitInstanceService : ScriptableObject
             }
         }
 
-        // Ensure all units in unitCollection have at least one instance
-        foreach (var unit in unitCollection.Where(u => u != playerUnit))
-        {
-            if (!units.Any(u => u.Data == unit))
-            {
-                var instance = CreateInstance<UnitInstance>();
-                instance.Initialize(unit, element: Element.NONE);
-
-                var skills = new List<UnitSkill>();
-                foreach (var skill in skillCollection)
-                {
-                    skills.Add(new UnitSkill(instance, skill, 0));
-                }
-                instance.InitializeSkills(skills);
-                RegisterUnit(instance, false);
-            }
-        }
-
         SaveData();
     }
 
-    public delegate bool UnitQuery(UnitSpecies unit);
+    public delegate bool UnitQuery(Unit unit);
 
     public UnitInstance CreateUnit(UnitQuery query = null)
     {
@@ -180,7 +161,7 @@ public class UnitInstanceService : ScriptableObject
         return RegisterUnit(copiedUnit, saveData);
     }
 
-    public (UnitSpecies unit, Element element) GenerateNewUnit(UnitQuery predicate)
+    public (Unit unit, Element element) GenerateNewUnit(UnitQuery predicate)
     {
         // Skip the player's own unit
         var availableUnits = unitCollection
@@ -209,7 +190,7 @@ public class UnitInstanceService : ScriptableObject
         }
 
         // Step 2: all units have been seen → pick a unit that still has unseen elements
-        var availablePairs = new List<(UnitSpecies, Element)>();
+        var availablePairs = new List<(Unit, Element)>();
         foreach (var u in availableUnits)
         {
             if (TryPickUnseenElementForUnit(u, out Element e))
@@ -227,7 +208,7 @@ public class UnitInstanceService : ScriptableObject
         return (fallbackUnit, fallbackElement);
     }
 
-    private bool TryPickUnseenElementForUnit(UnitSpecies unit, out Element element)
+    private bool TryPickUnseenElementForUnit(Unit unit, out Element element)
     {
         var usedElements = Units
             .Where(ui => ui.Data == unit)
