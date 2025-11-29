@@ -115,7 +115,7 @@ public class UnitInstanceServiceEditor : Editor
                 partyService: service.PartyService,
                 onToggleParty: (unit) =>
                 {
-                    if (service.PartyService.PartyInstances.Contains(unit))
+                    if (service.PartyService.PartyInstances.Any(p => p.Id == unit.Id))
                     {
                         // Remove from party
                         service.PartyService.RemoveUnitInstanceFromParty(unit);

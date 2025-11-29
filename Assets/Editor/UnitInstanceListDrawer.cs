@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 public static class UnitInstanceListDrawer
 {
@@ -49,7 +50,7 @@ public static class UnitInstanceListDrawer
             {
                 if (partyService != null)
                 {
-                    if (partyService.PartyInstances.Contains(unit))
+                    if (partyService.PartyInstances.Any(p => p.Id == unit.Id))
                     {
                         EditorGUILayout.LabelField("🎉 In Party", jobStyle);
                     }
@@ -69,7 +70,7 @@ public static class UnitInstanceListDrawer
             {
                 PopupInspector.Show(unit);
             }
-            string buttonText = toggleButtonTextFunc != null ? toggleButtonTextFunc(unit) : (partyService != null ? (partyService.PartyInstances.Contains(unit) ? "🎉" : "P") : "?");
+            string buttonText = toggleButtonTextFunc != null ? toggleButtonTextFunc(unit) : (partyService != null ? (partyService.PartyInstances.Any(p => p.Id == unit.Id) ? "🎉" : "P") : "?");
             if (onToggleParty != null && GUILayout.Button(buttonText, GUILayout.Width(30), GUILayout.Height(20)))
             {
                 onToggleParty(unit);

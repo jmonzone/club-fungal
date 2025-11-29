@@ -72,7 +72,7 @@ public class PartyService : ScriptableObject
                 followBehaviour.SetTarget(playerReference.Player.transform);
                 unit.SetBehaviour(followBehaviour);
             }
-            if (!partyInstances.Contains(unit.Instance))
+            if (!partyInstances.Any(p => p.Id == unit.Instance.Id))
             {
                 partyInstances.Add(unit.Instance);
                 unit.Instance.IsInParty = true;
@@ -85,18 +85,19 @@ public class PartyService : ScriptableObject
 
     public void RemoveUnitInstanceFromParty(UnitInstance unit)
     {
-        if (partyInstances.Contains(unit) && unit != playerReference.PlayerInstance)
+        var toRemove = partyInstances.FirstOrDefault(p => p.Id == unit.Id);
+        if (toRemove != null && toRemove != playerReference.PlayerInstance)
         {
-            partyInstances.Remove(unit);
-            unit.IsInParty = false;
-            OnUnitInstanceRemovedFromParty?.Invoke(unit);
+            partyInstances.Remove(toRemove);
+            toRemove.IsInParty = false;
+            OnUnitInstanceRemovedFromParty?.Invoke(toRemove);
             SaveParty();
         }
     }
 
     public void AddUnitInstanceToParty(UnitInstance unit)
     {
-        if (!partyInstances.Contains(unit))
+        if (!partyInstances.Any(p => p.Id == unit.Id))
         {
             partyInstances.Add(unit);
             unit.IsInParty = true;
