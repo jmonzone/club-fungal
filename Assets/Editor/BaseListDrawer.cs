@@ -9,6 +9,7 @@ public abstract class UnitListDrawer
     public static void DrawList<T>(IEnumerable<T> items, Func<T, DrawerItem> toDrawerItem)
     {
         var drawerItems = items.Select(toDrawerItem).ToList();
+        drawerItems.Sort((a, b) => string.Compare(a.Id, b.Id));
         DrawListInternal(drawerItems);
     }
 
@@ -85,6 +86,7 @@ public abstract class UnitListDrawer
     {
         var item = new DrawerItem
         {
+            Id = unitInstance?.Id ?? "",
             Icon = unitInstance?.Data?.Sprite?.texture,
             DisplayName = unitInstance?.DisplayName ?? "No Instance",
             Job = unitInstance?.Job?.Id.ToUpper() ?? "No Job",
@@ -123,66 +125,12 @@ public abstract class UnitListDrawer
         }
         menu.ShowAsContext();
     }
-
-    public virtual void DrawUnitInstances(List<UnitInstance> units, PartyInstanceService partyInstanceService = null, Action<UnitInstance> onToggleParty = null, Action<UnitInstance> onRemove = null, Func<UnitInstance, bool> canRemoveFunc = null, Func<UnitInstance, string> toggleButtonTextFunc = null, Func<UnitInstance, Color> backgroundColorFunc = null, bool showPartyStatus = true)
-    {
-        if (showPartyStatus && partyInstanceService == null)
-        {
-            EditorGUILayout.HelpBox("Party Instance Service is not assigned. Party status will not be shown.", MessageType.Warning);
-        }
-        if (units.Count == 0)
-        {
-            EditorGUILayout.HelpBox("No unit instances found.", MessageType.Info);
-            return;
-        }
-        List<UnitInstance> toRemove = new List<UnitInstance>();
-        DrawList(units, unit =>
-        {
-            var item = CreateBaseDrawerItem(unit, partyInstanceService, showPartyStatus, backgroundColorFunc, true, onToggleParty, toggleButtonTextFunc);
-            if (canRemoveFunc?.Invoke(unit) ?? true)
-            {
-                item.Buttons.Add(("X", () => toRemove.Add(unit), () => true));
-            }
-            return item;
-        });
-        // Remove after iteration
-        foreach (var unit in toRemove)
-        {
-            onRemove?.Invoke(unit);
-        }
-    }
-
-    public virtual void DrawUnitControllers(UnitController[] controllers, PartyInstanceService partyInstanceService = null, Action<UnitController> onToggleParty = null, Action<UnitController> onRemove = null, Func<UnitController, bool> canRemoveFunc = null, Func<UnitController, string> toggleButtonTextFunc = null, Func<UnitController, Color> backgroundColorFunc = null, bool showPartyStatus = true)
-    {
-        if (showPartyStatus && partyInstanceService == null)
-        {
-            EditorGUILayout.HelpBox("Party Instance Service is not assigned. Party status will not be shown.", MessageType.Warning);
-        }
-        if (controllers.Length == 0)
-        {
-            EditorGUILayout.HelpBox("No unit controllers found.", MessageType.Info);
-            return;
-        }
-        DrawList(controllers, controller =>
-        {
-            var item = CreateBaseDrawerItem(controller.Instance, partyInstanceService, showPartyStatus, backgroundColorFunc != null ? (Func<UnitInstance, Color>)(u => backgroundColorFunc(controller)) : null, false, onToggleParty != null ? (Action<UnitInstance>)(u => onToggleParty(controller)) : null, toggleButtonTextFunc != null ? (Func<UnitInstance, string>)(u => toggleButtonTextFunc(controller)) : null);
-            if (controller.Instance == null)
-            {
-                item.DisplayName = controller.gameObject.name;
-            }
-            if (canRemoveFunc?.Invoke(controller) ?? false)
-            {
-                item.Buttons.Add(("X", () => onRemove?.Invoke(controller), () => true));
-            }
-            AddViewButton(item, controller);
-            return item;
-        });
-    }
 }
 
 public class DrawerItem
 {
     public Texture2D Icon;
+    public string Id;
     public string DisplayName;
     public string Job;
     public bool IsInParty;
