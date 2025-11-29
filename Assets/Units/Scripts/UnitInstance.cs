@@ -51,15 +51,16 @@ public class UnitInstance : ScriptableObject
 
     private void OnValidate()
     {
-        if (string.IsNullOrEmpty(displayName))
+        if (string.IsNullOrEmpty(displayName) && data != null)
         {
-            displayName = name;
+            displayName = data.Name;
         }
     }
 
     public void Initialize(Unit data, string id = null, float friendshipXP = 0, Element element = Element.NONE, Job job = null, ColorPalette colorPalette = null, JObject json = null)
     {
         this.id = string.IsNullOrEmpty(id) ? GenerateMongoLikeId() : id;
+        this.displayName = GenerateDisplayName(data.Name);
         this.data = data;
         this.json = json;
 
@@ -69,6 +70,8 @@ public class UnitInstance : ScriptableObject
         this.element = element;
         this.job = job;
         this.colorPalette = colorPalette;
+
+        this.displayName = string.IsNullOrEmpty(displayName) ? data.Name : displayName;
 
         friends = new List<UnitInstance>();
     }
@@ -109,4 +112,14 @@ public class UnitInstance : ScriptableObject
         // Convert to 24-character hex string
         return BitConverter.ToString(bytes).Replace("-", "").ToLower();
     }
+
+    private string GenerateDisplayName(string baseName)
+    {
+        var titles = new[] { "Mysterious", "Party", "DJ", "Crazy", "Wild", "Cool", "Happy", "Sad", "Fun", "Silly" };
+        var names = new[] { "Sal", "Dan", "Cindy", "Bob", "Alice", "Tom", "Jerry", "Mickey", "Luna", "Rex", "Bella", "Max", "Lily", "Charlie", "Daisy" };
+        var title = titles[UnityEngine.Random.Range(0, titles.Length)];
+        var name = names[UnityEngine.Random.Range(0, names.Length)];
+        return $"{title} {name}";
+    }
+
 }

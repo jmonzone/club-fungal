@@ -64,6 +64,8 @@ public class UnitInstanceService : ScriptableObject
 
                     float friendshipXP = unitJson.Value<float?>("friendshipXP") ?? 0f;
 
+                    var displayName = unitJson.Value<string>("displayName") ?? unitName;
+
                     var instance = CreateInstance<UnitInstance>();
                     instance.Initialize(matchingUnit, unitId, friendshipXP, element, matchingJob, matchingColorPalette, unitJson);
 
@@ -147,7 +149,7 @@ public class UnitInstanceService : ScriptableObject
     public UnitInstance CopyUnit(UnitInstance instance, bool saveData = true)
     {
         var copiedUnit = CreateInstance<UnitInstance>();
-        copiedUnit.Initialize(instance.Data, instance.Id, instance.FriendshipXP, instance.Element, instance.Job, instance.ColorPalette);
+        copiedUnit.Initialize(instance.Data, instance.Id, instance.FriendshipXP, instance.Element, instance.Job, instance.ColorPalette, json: instance.Json);
 
         var skills = new List<UnitSkill>();
 
@@ -325,6 +327,7 @@ public class UnitInstanceService : ScriptableObject
             {
                 ["id"] = unit.Id,
                 ["name"] = unit.Data.Name,
+                ["displayName"] = unit.DisplayName,
                 ["friendshipLevel"] = unit.FriendshipLevel,
                 ["friendshipXP"] = unit.FriendshipXP,
                 ["element"] = unit.Element.ToString().ToLower(),

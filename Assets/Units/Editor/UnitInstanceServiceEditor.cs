@@ -30,6 +30,17 @@ public class UnitInstanceServiceEditor : Editor
         return list;
     }
 
+    private void DrawIconButton(string emoji, string text, System.Action action, GUIStyle style = null)
+    {
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label(emoji, GUILayout.Width(20));
+        if (GUILayout.Button(text, style ?? GUI.skin.button))
+        {
+            action();
+        }
+        EditorGUILayout.EndHorizontal();
+    }
+
     public override void OnInspectorGUI()
     {
         UnitInstanceService service = (UnitInstanceService)target;
@@ -87,8 +98,7 @@ public class UnitInstanceServiceEditor : Editor
                 }
                 // Vertical for name and job
                 EditorGUILayout.BeginVertical();
-                string displayName = (unit.Data != null ? unit.Data.Name : "Unknown");
-                EditorGUILayout.LabelField(displayName);
+                EditorGUILayout.LabelField(unit.DisplayName);
                 EditorGUILayout.Space(-2); // Reduce space
                 GUIStyle jobStyle = new GUIStyle(EditorStyles.miniLabel) { fontStyle = FontStyle.Italic, normal = { textColor = new Color(0.5f, 0.5f, 0.5f) } };
                 EditorGUILayout.LabelField(unit.Job != null ? $"{unit.Job.Id.ToUpper()}" : "No Job", jobStyle);
@@ -132,31 +142,23 @@ public class UnitInstanceServiceEditor : Editor
             EditorGUILayout.Space();
 
             // Buttons at the bottom
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button(new GUIContent("Reset", EditorGUIUtility.IconContent("Refresh").image), GUILayout.Width(60)))
-            {
-                service.Reset();
-                EditorUtility.SetDirty(service);
-            }
-            if (GUILayout.Button(new GUIContent("Generate", EditorGUIUtility.IconContent("Toolbar Plus").image), GUILayout.Width(80)))
-            {
-                service.CreateUnit(unit => unit is FungalUnit);
-                EditorUtility.SetDirty(service);
-            }
-            if (GUILayout.Button(new GUIContent("Open", EditorGUIUtility.IconContent("FolderOpened").image), GUILayout.Width(60)))
-            {
-                string path = $"{Application.persistentDataPath}/data-editor.json";
-                Process.Start(path);
-            }
+            GUIStyle leftAlignedButton = new GUIStyle(GUI.skin.button);
+            leftAlignedButton.alignment = TextAnchor.MiddleLeft;
+            EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
+            EditorGUILayout.Space(10);
+            EditorGUILayout.BeginVertical();
+            EditorGUILayout.Space(10);
+            DrawIconButton("🆕", "Generate A New Unit", () => { service.CreateUnit(unit => unit is FungalUnit); EditorUtility.SetDirty(service); }, leftAlignedButton);
+            EditorGUILayout.Space(5);
+            DrawIconButton("📂", "Open JSON File", () => { string path = $"{Application.persistentDataPath}/data-editor.json"; Process.Start(path); }, leftAlignedButton);
+            EditorGUILayout.Space(5);
+            DrawIconButton("🔄", "Reset To Default", () => { service.Reset(); EditorUtility.SetDirty(service); }, leftAlignedButton);
+            EditorGUILayout.Space(5);
+            DrawIconButton("🔄", "Update Collections", () => { AutoPopulateList<UnitInstance>("initialUnits", "t:UnitInstance", true); AutoPopulateList<Unit>("unitCollection", "t:Unit", true); }, leftAlignedButton);
+            EditorGUILayout.Space(10);
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.Space(10);
             EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.Space();
-
-            if (GUILayout.Button("Update Collections"))
-            {
-                AutoPopulateList<UnitInstance>("initialUnits", "t:UnitInstance", true);
-                AutoPopulateList<Unit>("unitCollection", "t:Unit", true);
-            }
         }, "Manage and inspect all units in the service. Initial units can be edited, runtime units can be removed.");
     }
 }
