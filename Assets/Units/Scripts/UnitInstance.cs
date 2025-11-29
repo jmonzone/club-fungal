@@ -9,7 +9,7 @@ public class UnitInstance : ScriptableObject
 {
     [SerializeField] private string id;
     [SerializeField] private string displayName;
-    [SerializeField] private Unit data;
+    [SerializeField] private UnitSpecies data;
 
     [SerializeField] private int friendshipLevel;
     [SerializeField] private float friendshipXP;
@@ -26,7 +26,7 @@ public class UnitInstance : ScriptableObject
     [SerializeField] private UnitInteraction interaction;
     public string Id => id;
     public string DisplayName => displayName;
-    public Unit Data => data;
+    public UnitSpecies Data => data;
     public Element Element => element;
     public Job Job => job;
     public ColorPalette ColorPalette => colorPalette;
@@ -57,7 +57,7 @@ public class UnitInstance : ScriptableObject
         }
     }
 
-    public void Initialize(Unit data, string id = null, float friendshipXP = 0, Element element = Element.NONE, Job job = null, ColorPalette colorPalette = null, JObject json = null)
+    public void Initialize(UnitSpecies data, string id = null, float friendshipXP = 0, Element element = Element.NONE, Job job = null, ColorPalette colorPalette = null, JObject json = null)
     {
         this.id = string.IsNullOrEmpty(id) ? GenerateMongoLikeId() : id;
         this.data = data;
