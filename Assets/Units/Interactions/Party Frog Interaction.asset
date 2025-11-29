@@ -15,6 +15,7 @@ MonoBehaviour:
   dialogueReference: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
   unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
     type: 2}
+  partyService: {fileID: 0}
   actions:
   - rid: 7976657348012277839
   - rid: 7976657348012277840
@@ -26,13 +27,13 @@ MonoBehaviour:
       type: {class: DialogueAction, ns: , asm: Assembly-CSharp}
       data:
         speaker: 0
-        unitInstance: {fileID: 0}
+        unitInstance: {fileID: 11400000, guid: c5fe3b2204b8a471f9ab1ed260b7d9b9, type: 2}
         text: Hey how are you
     - rid: 7976657348012277840
       type: {class: DialogueAction, ns: , asm: Assembly-CSharp}
       data:
         speaker: 1
-        unitInstance: {fileID: 0}
+        unitInstance: {fileID: 11400000, guid: 463ba2838266e4c609022c9ca93d4c8a, type: 2}
         text: Can I come with you?
     - rid: 7976657348012277841
       type: {class: JoinPartyAction, ns: , asm: Assembly-CSharp}

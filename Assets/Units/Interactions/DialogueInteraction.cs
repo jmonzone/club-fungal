@@ -8,6 +8,7 @@ public class DialogueInteraction : UnitInteraction
 {
     [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private UnitControllerService unitControllerService;
+    [SerializeField] private PartyService partyService;
 
     [HideInInspector]
     [SerializeReference] private List<InteractionAction> actions;
@@ -34,7 +35,7 @@ public class DialogueInteraction : UnitInteraction
     {
         if (currentActionIndex < actions.Count)
         {
-            actions[currentActionIndex].Execute(source, target, dialogueReference, unitControllerService, () =>
+            actions[currentActionIndex].Execute(source, target, dialogueReference, unitControllerService, partyService, () =>
             {
                 currentActionIndex++;
                 ExecuteNext();
@@ -50,7 +51,7 @@ public class DialogueInteraction : UnitInteraction
 [Serializable]
 public abstract class InteractionAction
 {
-    public abstract void Execute(UnitController source, UnitController target, DialogueReference dialogueReference, UnitControllerService unitControllerService, UnityAction onComplete);
+    public abstract void Execute(UnitController source, UnitController target, DialogueReference dialogueReference, UnitControllerService unitControllerService, PartyService partyService, UnityAction onComplete);
 }
 
 [Serializable]
@@ -65,7 +66,7 @@ public class DialogueAction : InteractionAction
     public DialogueSpeaker Speaker => speaker;
     public UnitInstance UnitInstance => unitInstance;
 
-    public override void Execute(UnitController source, UnitController target, DialogueReference dialogueReference, UnitControllerService unitControllerService, UnityAction onComplete)
+    public override void Execute(UnitController source, UnitController target, DialogueReference dialogueReference, UnitControllerService unitControllerService, PartyService partyService, UnityAction onComplete)
     {
         unitInstance = Speaker switch
         {
@@ -89,10 +90,10 @@ public class DialogueAction : InteractionAction
 [Serializable]
 public class JoinPartyAction : InteractionAction
 {
-    public override void Execute(UnitController source, UnitController target, DialogueReference dialogueReference, UnitControllerService unitControllerService, UnityAction onComplete)
+    public override void Execute(UnitController source, UnitController target, DialogueReference dialogueReference, UnitControllerService unitControllerService, PartyService partyService, UnityAction onComplete)
     {
-        // TODO: implement join party logic
-        Debug.Log("Joining party!");
+        partyService.AddToParty(target);
+        Debug.Log("Joined party!");
         onComplete();
     }
 }
