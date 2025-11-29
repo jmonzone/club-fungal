@@ -52,6 +52,17 @@ public class UnitInstanceServiceEditor : GURUServiceEditor
         return true;
     }
 
+    private UnitControllerService FindUnitControllerService()
+    {
+        var guids = AssetDatabase.FindAssets("t:UnitControllerService");
+        if (guids.Length > 0)
+        {
+            var path = AssetDatabase.GUIDToAssetPath(guids[0]);
+            return AssetDatabase.LoadAssetAtPath<UnitControllerService>(path);
+        }
+        return null;
+    }
+
     private void DrawIconButton(string emoji, string text, System.Action action, GUIStyle style = null)
     {
         EditorGUILayout.BeginHorizontal();
@@ -112,6 +123,7 @@ public class UnitInstanceServiceEditor : GURUServiceEditor
 
         // Display units in a responsive layout
         List<UnitInstance> toRemove = new List<UnitInstance>();
+        var controllerService = FindUnitControllerService();
         UnitListDrawer.DrawList(unitsToDraw, unit =>
         {
             var item = UnitListDrawer.CreateBaseDrawerItem(unit, service.PartyInstanceService, true, (u) => cachedInitialUnits.Contains(u) ? new Color(0.6f, 0.7f, 1.0f) : Color.white, true, (u) =>
@@ -126,6 +138,7 @@ public class UnitInstanceServiceEditor : GURUServiceEditor
                 }
                 u.IsInParty = !u.IsInParty;
             }, null);
+            UnitListDrawer.AddViewButton(item, controllerService?.GetController(unit));
             if (!cachedInitialUnits.Contains(unit))
             {
                 item.Buttons.Add(("X", () => toRemove.Add(unit), () => true));

@@ -17,7 +17,7 @@ public class UnitControllerServiceEditor : GURUServiceEditor
             {
                 item.DisplayName = controller.gameObject.name;
             }
-            item.Buttons.Add(("👁", () => { Selection.activeObject = controller.gameObject; EditorGUIUtility.PingObject(controller.gameObject); }, () => true));
+            UnitListDrawer.AddViewButton(item, controller);
             return item;
         });
     }

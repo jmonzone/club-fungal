@@ -22,6 +22,10 @@ public abstract class UnitListDrawer
             Color originalColor = GUI.color;
             GUI.color = Color.white;
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            // Top: icon and info horizontal
+            EditorGUILayout.BeginHorizontal();
+            // Left side: icon
+            EditorGUILayout.BeginVertical();
             // Draw icon
             if (item.Icon != null)
             {
@@ -32,7 +36,8 @@ public abstract class UnitListDrawer
             {
                 GUILayout.Label("No Icon", GUILayout.Width(32), GUILayout.Height(32));
             }
-            // Vertical for name and job
+            EditorGUILayout.EndVertical();
+            // Right side: name and job
             EditorGUILayout.BeginVertical();
             EditorGUILayout.LabelField(item.DisplayName);
             EditorGUILayout.Space(-2);
@@ -45,28 +50,32 @@ public abstract class UnitListDrawer
                 GUI.color = Color.white;
             }
             EditorGUILayout.EndVertical();
+            EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();
-            GUI.backgroundColor = originalBG;
-            GUI.color = originalColor;
-            // Buttons next to the box
-            EditorGUILayout.BeginVertical(GUILayout.Width(30));
-            foreach (var (text, action, condition) in item.Buttons)
+            EditorGUILayout.BeginVertical();
+            // ... button
+            if (GUILayout.Button("...", GUILayout.Width(20), GUILayout.Height(20)))
             {
-                if (condition())
+                ShowMenu(item);
+            }
+            // X button outside the help box, below
+            if (item.Buttons.Any(b => b.text == "X"))
+            {
+                var removeButton = item.Buttons.First(b => b.text == "X");
+                if (removeButton.condition())
                 {
-                    Color buttonColor = GUI.color;
-                    if (text == "X")
+                    Color originalBG2 = GUI.backgroundColor;
+                    GUI.backgroundColor = Color.red;
+                    if (GUILayout.Button("X", GUILayout.Width(20), GUILayout.Height(20)))
                     {
-                        GUI.color = Color.red;
+                        removeButton.action();
                     }
-                    if (GUILayout.Button(text, GUILayout.Width(30), GUILayout.Height(20)))
-                    {
-                        action();
-                    }
-                    GUI.color = buttonColor;
+                    GUI.backgroundColor = originalBG2;
                 }
             }
             EditorGUILayout.EndVertical();
+            GUI.backgroundColor = originalBG;
+            GUI.color = originalColor;
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.Space(5);
         }
@@ -84,14 +93,35 @@ public abstract class UnitListDrawer
         };
         if (addPopupButton && unitInstance != null)
         {
-            item.Buttons.Add(("...", () => PopupInspector.Show(unitInstance), () => true));
+            item.Buttons.Add(("View Data", () => PopupInspector.Show(unitInstance), () => true));
         }
         if (onToggleParty != null && unitInstance != null)
         {
-            string buttonText = toggleButtonTextFunc?.Invoke(unitInstance) ?? (item.IsInParty ? "🎉" : "P");
+            string buttonText = toggleButtonTextFunc?.Invoke(unitInstance) ?? (item.IsInParty ? "Remove from Party" : "Add to Party");
             item.Buttons.Add((buttonText, () => onToggleParty(unitInstance), () => true));
         }
         return item;
+    }
+
+    public static void AddViewButton(DrawerItem item, UnitController controller)
+    {
+        if (controller != null)
+        {
+            item.Buttons.Add(("View GameObject", () => { Selection.activeObject = controller.gameObject; EditorGUIUtility.PingObject(controller.gameObject); }, () => true));
+        }
+    }
+
+    private static void ShowMenu(DrawerItem item)
+    {
+        GenericMenu menu = new GenericMenu();
+        foreach (var (text, action, condition) in item.Buttons.Where(b => b.text != "X"))
+        {
+            if (condition())
+            {
+                menu.AddItem(new GUIContent(text), false, () => action());
+            }
+        }
+        menu.ShowAsContext();
     }
 
     public virtual void DrawUnitInstances(List<UnitInstance> units, PartyInstanceService partyInstanceService = null, Action<UnitInstance> onToggleParty = null, Action<UnitInstance> onRemove = null, Func<UnitInstance, bool> canRemoveFunc = null, Func<UnitInstance, string> toggleButtonTextFunc = null, Func<UnitInstance, Color> backgroundColorFunc = null, bool showPartyStatus = true)
@@ -144,7 +174,7 @@ public abstract class UnitListDrawer
             {
                 item.Buttons.Add(("X", () => onRemove?.Invoke(controller), () => true));
             }
-            item.Buttons.Add(("👁", () => { Selection.activeObject = controller.gameObject; EditorGUIUtility.PingObject(controller.gameObject); }, () => true));
+            AddViewButton(item, controller);
             return item;
         });
     }
