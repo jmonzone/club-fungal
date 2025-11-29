@@ -8,6 +8,7 @@ using UnityEngine.Events;
 public class UnitInstance : ScriptableObject
 {
     [SerializeField] private string id;
+    [SerializeField] private string displayName;
     [SerializeField] private Unit data;
 
     [SerializeField] private int friendshipLevel;
@@ -24,6 +25,7 @@ public class UnitInstance : ScriptableObject
     [SerializeField] private List<UnitInstance> friends;
     [SerializeField] private UnitInteraction interaction;
     public string Id => id;
+    public string DisplayName => displayName;
     public Unit Data => data;
     public Element Element => element;
     public Job Job => job;
@@ -46,6 +48,14 @@ public class UnitInstance : ScriptableObject
     public JObject Json => json;
 
     public event UnityAction<float> OnXpChanged;
+
+    private void OnValidate()
+    {
+        if (string.IsNullOrEmpty(displayName))
+        {
+            displayName = name;
+        }
+    }
 
     public void Initialize(Unit data, string id = null, float friendshipXP = 0, Element element = Element.NONE, Job job = null, ColorPalette colorPalette = null, JObject json = null)
     {

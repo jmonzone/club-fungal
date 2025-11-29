@@ -15,7 +15,7 @@ MonoBehaviour:
   dialogueReference: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
   unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
     type: 2}
-  partyService: {fileID: 0}
+  partyService: {fileID: 11400000, guid: bb09c959525894035a6335dd29940cec, type: 2}
   actions:
   - rid: 7976657348012277839
   - rid: 7976657348012277840

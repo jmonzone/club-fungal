@@ -11,6 +11,7 @@ public class PartyService : ScriptableObject
     [Header("Runtime")]
     [SerializeField] private List<UnitController> partyMembers = new List<UnitController>();
 
+    public List<UnitController> PartyMembers => partyMembers;
     public event UnityAction<UnitController> OnUnitAddedToParty;
     public event UnityAction<UnitController> OnUnitRemovedFromParty;
 
@@ -31,6 +32,15 @@ public class PartyService : ScriptableObject
                 unit.SetBehaviour(followBehaviour);
             }
             OnUnitAddedToParty?.Invoke(unit);
+        }
+    }
+
+    public void RemoveFromParty(UnitController unit)
+    {
+        if (partyMembers.Contains(unit) && unit != playerReference.Player)
+        {
+            partyMembers.Remove(unit);
+            OnUnitRemovedFromParty?.Invoke(unit);
         }
     }
 }
