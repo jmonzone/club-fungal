@@ -89,7 +89,7 @@ public class UnitColorPalette : UnitBehaviour
                 Color origColor = tex.GetPixel(px, py);
 
                 // Get mapping for this column
-                int mapIndex = Controller.Instance.Data.ColumnMapping[bx];
+                int mapIndex = (Controller.Instance.Data as FungalUnit).ColumnMapping[bx];
 
                 // -1 = keep original
                 Color newColor = origColor;
@@ -135,7 +135,7 @@ public class UnitColorPalette : UnitBehaviour
                 int py = by * blockSize;
 
                 // Get mapping for this column
-                int columnMap = Controller.Instance.Data.ColumnMapping[bx];
+                int columnMap = (Controller.Instance.Data as FungalUnit).ColumnMapping[bx];
                 if (columnMap != mapIndex) continue;
 
                 // Recolor 2x2 block
@@ -186,7 +186,7 @@ public class UnitColorPalette : UnitBehaviour
         {
             for (int bx = 0; bx < blocksX; bx++)
             {
-                int index = Controller.Instance.Data.ColumnMapping[bx];
+                int index = (Controller.Instance.Data as FungalUnit).ColumnMapping[bx];
 
                 if (index == mapIndex)
                 {

@@ -11,6 +11,7 @@ public class UnitInstanceService : ScriptableObject
     [SerializeField] private LocalData localData;
 
     [Header("Collections")]
+    [HideInInspector]
     [SerializeField] private List<UnitInstance> initialUnits;
     [SerializeField] private Unit playerUnit;
     [SerializeField] private List<Unit> unitCollection;
@@ -18,7 +19,7 @@ public class UnitInstanceService : ScriptableObject
     [SerializeField] private List<Skill> skillCollection;
     [SerializeField] private List<ColorPalette> colorPalettes;
 
-    [Header("Runtime")]
+    [HideInInspector]
     [SerializeField] private List<UnitInstance> units;
 
     public List<UnitInstance> Units => units;
@@ -34,6 +35,7 @@ public class UnitInstanceService : ScriptableObject
 
     public void Initialize()
     {
+        localData.Initialize();
         units = new List<UnitInstance>();
 
         if (localData.JsonFile.ContainsKey(UNIT_KEY))
@@ -85,6 +87,15 @@ public class UnitInstanceService : ScriptableObject
             }
         }
 
+        // Ensure all initial units are in the collection
+        foreach (var initialUnit in initialUnits)
+        {
+            if (!units.Any(u => u.Id == initialUnit.Id))
+            {
+                RegisterUnit(initialUnit, false);
+            }
+        }
+
         foreach (var unit in units)
         {
             // Get the friends array from the unit's JObject
@@ -104,20 +115,8 @@ public class UnitInstanceService : ScriptableObject
             }
         }
 
-        if (units.Count == 0)
-        {
-            foreach (var unit in initialUnits)
-            {
-                CopyUnit(unit, false);
-            }
-
-            foreach (var unit in initialUnits)
-            {
-                var matchingUnit = units.Find(x => x.Id == unit.Id);
-                matchingUnit.Friends.AddRange(unit.Friends.Select(friend => units.Find(x => x.Id == friend.Id)));
-                CopyUnit(unit, false);
-            }
-        }
+        // Maintain order by ID
+        units = units.OrderBy(u => u.Id).ToList();
 
         SaveData();
     }
@@ -300,8 +299,24 @@ public class UnitInstanceService : ScriptableObject
         return unit;
     }
 
+    public void Reset()
+    {
+        units.Clear();
+        localData.ResetData();
+
+        // Add initial units
+        foreach (var initialUnit in initialUnits)
+        {
+            RegisterUnit(initialUnit, false);
+        }
+
+        SaveData();
+    }
+
     public void SaveData()
     {
+        if (localData.JsonFile == null) localData.Initialize();
+
         var unitsJson = new JArray();
 
         foreach (var unit in units)
@@ -314,7 +329,7 @@ public class UnitInstanceService : ScriptableObject
                 ["friendshipXP"] = unit.FriendshipXP,
                 ["element"] = unit.Element.ToString().ToLower(),
                 ["job"] = unit.Job?.Id.ToString().ToLower() ?? "none",
-                ["friends"] = new JArray(unit.Friends.Select(friend => friend.Id)),
+                ["friends"] = new JArray(unit.Friends.Where(f => f != null).Select(friend => friend.Id)),
             };
 
             var skillsJson = new JArray();

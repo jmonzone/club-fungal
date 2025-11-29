@@ -1,14 +1,44 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(UnitInstanceService))]
 public class UnitInstanceServiceEditor : Editor
 {
+    private List<T> AutoPopulateList<T>(string fieldName, string assetType, bool force = false) where T : Object
+    {
+        var field = typeof(UnitInstanceService).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
+        var list = (List<T>)field.GetValue(target);
+        if (list.Count == 0 || force)
+        {
+            list.Clear();
+            var guids = AssetDatabase.FindAssets(assetType);
+            foreach (var guid in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                var asset = AssetDatabase.LoadAssetAtPath<T>(path);
+                if (asset != null)
+                {
+                    list.Add(asset);
+                }
+            }
+            EditorUtility.SetDirty(target);
+        }
+        return list;
+    }
+
     public override void OnInspectorGUI()
     {
         UnitInstanceService service = (UnitInstanceService)target;
+
+        // Auto populate initialUnits
+        var initialUnits = AutoPopulateList<UnitInstance>("initialUnits", "t:UnitInstance");
+
+        // Auto populate unitCollection
+        var unitCollection = AutoPopulateList<Unit>("unitCollection", "t:Unit");
 
         // Draw the default inspector
         DrawDefaultInspector();
@@ -16,57 +46,117 @@ public class UnitInstanceServiceEditor : Editor
         EditorGUILayout.Space();
 
         // Display units
-        EditorGUILayout.LabelField("Units", EditorStyles.boldLabel);
-        List<UnitInstance> toRemove = new List<UnitInstance>();
-        foreach (var unit in service.Units)
+        GURUStyler.DrawGuruSection(() =>
         {
+            var combined = new List<(UnitInstance unit, bool isInitial)>();
+            var seenIds = new HashSet<string>();
+            foreach (var u in initialUnits)
+            {
+                combined.Add((u, true));
+                seenIds.Add(u.Id);
+            }
+            foreach (var u in service.Units)
+            {
+                if (!seenIds.Contains(u.Id))
+                {
+                    combined.Add((u, false));
+                    seenIds.Add(u.Id);
+                }
+            }
+            combined = combined.OrderBy(c => c.unit.Id).ToList();
+
+            // Display units in a responsive layout
+            List<UnitInstance> toRemove = new List<UnitInstance>();
+            foreach (var (unit, isInitial) in combined)
+            {
+                EditorGUILayout.BeginHorizontal();
+                Color originalBG = GUI.backgroundColor;
+                GUI.backgroundColor = isInitial ? new Color(0.6f, 0.7f, 1.0f) : Color.white;
+                Color originalColor = GUI.color;
+                GUI.color = Color.white;
+                EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+                // Draw icon
+                if (unit.Data != null && unit.Data.Sprite != null)
+                {
+                    GUIContent content = new GUIContent(unit.Data.Sprite.texture);
+                    GUILayout.Label(content, GUILayout.Width(32), GUILayout.Height(32));
+                }
+                else
+                {
+                    GUILayout.Label("No Icon", GUILayout.Width(32), GUILayout.Height(32));
+                }
+                // Vertical for name and job
+                EditorGUILayout.BeginVertical();
+                string displayName = (unit.Data != null ? unit.Data.Name : "Unknown");
+                EditorGUILayout.LabelField(displayName);
+                EditorGUILayout.Space(-2); // Reduce space
+                GUIStyle jobStyle = new GUIStyle(EditorStyles.miniLabel) { fontStyle = FontStyle.Italic, normal = { textColor = new Color(0.5f, 0.5f, 0.5f) } };
+                EditorGUILayout.LabelField(unit.Job != null ? $"{unit.Job.Id.ToUpper()}" : "No Job", jobStyle);
+                EditorGUILayout.EndVertical();
+                EditorGUILayout.EndVertical();
+                GUI.backgroundColor = originalBG;
+                GUI.color = originalColor;
+                // Buttons next to the box
+                EditorGUILayout.BeginVertical(GUILayout.Width(30));
+                if (GUILayout.Button("...", GUILayout.Width(30), GUILayout.Height(20)))
+                {
+                    PopupInspector.Show(unit);
+                }
+                if (!isInitial)
+                {
+                    Color buttonColor = GUI.color;
+                    GUI.color = Color.red;
+                    if (GUILayout.Button("X", GUILayout.Width(30), GUILayout.Height(20)))
+                    {
+                        toRemove.Add(unit);
+                    }
+                    GUI.color = buttonColor;
+                }
+                EditorGUILayout.EndVertical();
+                EditorGUILayout.EndHorizontal();
+                // Space between cards
+                EditorGUILayout.Space(5);
+            }
+
+            // Remove after iteration
+            foreach (var unit in toRemove)
+            {
+                service.Units.Remove(unit);
+                service.SaveData();
+            }
+            if (toRemove.Count > 0)
+            {
+                EditorUtility.SetDirty(service);
+            }
+
+            EditorGUILayout.Space();
+
+            // Buttons at the bottom
             EditorGUILayout.BeginHorizontal();
-            // Draw icon
-            if (unit.Data != null && unit.Data.Sprite != null)
+            if (GUILayout.Button(new GUIContent("Reset", EditorGUIUtility.IconContent("Refresh").image), GUILayout.Width(60)))
             {
-                GUIContent content = new GUIContent(unit.Data.Sprite.texture);
-                GUILayout.Label(content, GUILayout.Width(32), GUILayout.Height(32));
+                service.Reset();
+                EditorUtility.SetDirty(service);
             }
-            else
+            if (GUILayout.Button(new GUIContent("Generate", EditorGUIUtility.IconContent("Toolbar Plus").image), GUILayout.Width(80)))
             {
-                GUILayout.Label("No Icon", GUILayout.Width(32), GUILayout.Height(32));
+                service.CreateUnit(unit => unit is FungalUnit);
+                EditorUtility.SetDirty(service);
             }
-            // Name
-            EditorGUILayout.LabelField(unit.Data != null ? unit.Data.Name : "Unknown", GUILayout.ExpandWidth(true));
-            // Remove button
-            if (GUILayout.Button("Remove", GUILayout.Width(60)))
+            if (GUILayout.Button(new GUIContent("Open", EditorGUIUtility.IconContent("FolderOpened").image), GUILayout.Width(60)))
             {
-                toRemove.Add(unit);
+                string path = $"{Application.persistentDataPath}/data-editor.json";
+                Process.Start(path);
             }
             EditorGUILayout.EndHorizontal();
-        }
-        // Remove after iteration
-        foreach (var unit in toRemove)
-        {
-            service.Units.Remove(unit);
-            service.SaveData();
-        }
-        if (toRemove.Count > 0)
-        {
-            EditorUtility.SetDirty(service);
-        }
 
-        EditorGUILayout.Space();
+            EditorGUILayout.Space();
 
-        // Button to initialize from local data
-        if (GUILayout.Button("Initialize from Local Data"))
-        {
-            service.Initialize();
-            EditorUtility.SetDirty(service);
-        }
-
-        EditorGUILayout.Space();
-
-        // Button to open JSON file
-        if (GUILayout.Button("Open JSON File"))
-        {
-            string path = $"{Application.persistentDataPath}/data-editor.json";
-            Process.Start(path);
-        }
+            if (GUILayout.Button("Update Collections"))
+            {
+                AutoPopulateList<UnitInstance>("initialUnits", "t:UnitInstance", true);
+                AutoPopulateList<Unit>("unitCollection", "t:Unit", true);
+            }
+        }, "Manage and inspect all units in the service. Initial units can be edited, runtime units can be removed.");
     }
 }
