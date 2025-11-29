@@ -6,14 +6,14 @@ using System.Linq;
 
 public abstract class UnitListDrawer
 {
-    public static void DrawList<T>(IEnumerable<T> items, Func<T, DrawerItem> toDrawerItem)
+    public static void DrawList<T>(IEnumerable<T> items, Func<T, UnitDrawerItem> toDrawerItem)
     {
         var drawerItems = items.Select(toDrawerItem).ToList();
         drawerItems.Sort((a, b) => string.Compare(a.Id, b.Id));
         DrawListInternal(drawerItems);
     }
 
-    private static void DrawListInternal(List<DrawerItem> items)
+    private static void DrawListInternal(List<UnitDrawerItem> items)
     {
         foreach (var item in items)
         {
@@ -82,9 +82,9 @@ public abstract class UnitListDrawer
         }
     }
 
-    public static DrawerItem CreateBaseDrawerItem(UnitInstance unitInstance, PartyInstanceService partyInstanceService, bool showPartyStatus, Func<UnitInstance, Color> backgroundColorFunc = null, bool addPopupButton = false, Action<UnitInstance> onToggleParty = null, Func<UnitInstance, string> toggleButtonTextFunc = null)
+    public static UnitDrawerItem CreateBaseDrawerItem(UnitInstance unitInstance, PartyInstanceService partyInstanceService, bool showPartyStatus, Func<UnitInstance, Color> backgroundColorFunc = null, bool addPopupButton = false, Action<UnitInstance> onToggleParty = null, Func<UnitInstance, string> toggleButtonTextFunc = null)
     {
-        var item = new DrawerItem
+        var item = new UnitDrawerItem
         {
             Id = unitInstance?.Id ?? "",
             Icon = unitInstance?.Data?.Sprite?.texture,
@@ -105,7 +105,7 @@ public abstract class UnitListDrawer
         return item;
     }
 
-    public static void AddViewButton(DrawerItem item, UnitController controller)
+    public static void AddViewButton(UnitDrawerItem item, UnitController controller)
     {
         if (controller != null)
         {
@@ -113,7 +113,7 @@ public abstract class UnitListDrawer
         }
     }
 
-    private static void ShowMenu(DrawerItem item)
+    private static void ShowMenu(UnitDrawerItem item)
     {
         GenericMenu menu = new GenericMenu();
         foreach (var (text, action, condition) in item.Buttons.Where(b => b.text != "X"))
@@ -127,7 +127,7 @@ public abstract class UnitListDrawer
     }
 }
 
-public class DrawerItem
+public class UnitDrawerItem
 {
     public Texture2D Icon;
     public string Id;
