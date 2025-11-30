@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DialogueCameraController : MonoBehaviour
 {
-    [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private PlayerService playerReference;
     [SerializeField] private float sideDistance = 2f;   // distance to side
     [SerializeField] private float forwardBias = 0.5f; // how much toward front (0 = pure 90°, 1 = fully forward)
     [SerializeField] private float heightOffset = 1.2f;

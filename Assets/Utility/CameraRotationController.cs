@@ -175,7 +175,7 @@ public class CameraRotationController : MonoBehaviour
         }
     }
 
-    [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private PlayerService playerReference;
     [SerializeField] private float t;
     // ZoomCamera adjusts the target distance (dolly). We'll also update targetFov.
     void ZoomCamera(float delta)

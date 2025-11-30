@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class DialogueActionsUI : DialoguePageUI
 {
-    [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private PlayerService playerReference;
 
     [SerializeField] private FadeCanvasGroup actionButtons;
     [SerializeField] private TypewriterEffect dialogueTypewriter;

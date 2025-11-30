@@ -1,11 +1,15 @@
 using UnityEditor;
 using UnityEngine;
 
+[CustomEditor(typeof(GURUService), true)]
 public class GURUEditor : Editor
 {
+    protected virtual string Description => "No description provided.";
+
     protected void OnEnable()
     {
         OnEditorEnable();
+        GURUInitializer.InitializeSystems();
     }
 
     protected virtual void OnEditorEnable() { }
@@ -25,8 +29,5 @@ public class GURUEditor : Editor
 
     protected virtual void DrawContent()
     {
-        Debug.Log("Drawing GURU Service Editor Content");
     }
-
-    protected virtual string Description => "No description provided.";
 }

@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 public class PartyInstanceService : GURUService
 {
     [Header("References")]
-    [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private PlayerService playerReference;
     [SerializeField] private LocalData localData;
     [SerializeField] private UnitInstanceService unitInstanceService;
 
@@ -46,8 +46,10 @@ public class PartyInstanceService : GURUService
         {
             Debug.Log("No saved party found. Adding player to party by default.");
             partyInstances.Add(playerReference.PlayerInstance);
-            SaveParty();
         }
+
+        SaveParty();
+
     }
 
     public void AddToParty(UnitController unit)

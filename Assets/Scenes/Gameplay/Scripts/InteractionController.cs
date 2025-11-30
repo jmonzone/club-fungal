@@ -16,7 +16,7 @@ public interface IInteractable : ITarget
 public class InteractionController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private PlayerService playerReference;
     [SerializeField] private DialogueReference dialogue;
     [SerializeField] private LayerMask interactableMask;
     [SerializeField] private LayerMask groundMask;

@@ -14,9 +14,14 @@ public class GURUInitializer
         // Debug.Log("GURUServiceInitializer detected play mode state change: " + state);
         if (state == PlayModeStateChange.EnteredEditMode)
         {
-            var gs = LoadAsset<GameService>("GameService");
-            if (gs != null) gs.InitializeSystems();
+            InitializeSystems();
         }
+    }
+
+    public static void InitializeSystems()
+    {
+        var gs = LoadAsset<GameService>("GameService");
+        if (gs != null) gs.InitializeSystems();
     }
 
     private static T LoadAsset<T>(string typeName) where T : UnityEngine.Object

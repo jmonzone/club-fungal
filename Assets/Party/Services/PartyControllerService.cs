@@ -9,7 +9,7 @@ public class PartyControllerService : GURUService
     [Header("References")]
     [SerializeField] private UnitControllerService unitControllerService;
     [SerializeField] private PartyInstanceService partyInstanceService;
-    [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private PlayerService playerReference;
 
     [Header("Runtime")]
     [SerializeField] private List<UnitController> partyControllers = new List<UnitController>();

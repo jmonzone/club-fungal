@@ -14,7 +14,7 @@ public class DJNoteManager : MonoBehaviour
     [SerializeField] private DJTableReference djReference;
     [SerializeField] private DJNoteController notePrefab;
     [SerializeField] private int poolSize = 20;
-    [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private PlayerService playerReference;
     [SerializeField] private UnitControllerService unitControllerService;
     [SerializeField] private BuildReference buildReference;
     [SerializeField] private List<PlantSporeEmitter> plants;

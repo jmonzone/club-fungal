@@ -7,7 +7,7 @@ public interface IJoystickSelectable
 
 public class PlayerJoystick : MonoBehaviour
 {
-    [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private PlayerService playerReference;
     [SerializeField] private VirtualJoystick virtualJoystick;
     [SerializeField] private InteractionController interaction;
 

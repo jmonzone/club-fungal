@@ -5,7 +5,7 @@ using UnityEngine.Events;
 public class DialogueReference : ScriptableObject
 {
     [Header("References")]
-    [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private PlayerService playerReference;
     [SerializeField] private PhotoReference photoReference;
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private Navigation navigation;

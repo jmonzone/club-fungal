@@ -7,7 +7,7 @@ using System.Collections;
 public class PlayerController : UnitController
 {
     [Header("Player References")]
-    [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private PlayerService playerReference;
     [SerializeField] private InventoryReference inventoryReference;
     [SerializeField] private CinemachineVirtualCamera povCamera;
 
@@ -60,8 +60,6 @@ public class PlayerController : UnitController
             navMeshAgent.Warp(hit.position);
             transform.position = hit.position;
         }
-
-        playerReference.SetPlayerController(this);
     }
 
     protected override IEnumerator Start()

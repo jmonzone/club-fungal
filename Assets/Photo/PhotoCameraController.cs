@@ -6,7 +6,7 @@ public class PhotoCameraController : MonoBehaviour
     [SerializeField] private PhotoReference photoReference;
     [SerializeField] private CinemachineVirtualCamera photoVirtualCamera;
     [SerializeField] private PartyReference partyReference;
-    [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private PlayerService playerReference;
     [SerializeField] private float zOffset;
     [SerializeField] private float yOffset;
 

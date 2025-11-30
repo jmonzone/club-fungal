@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-[CreateAssetMenu(fileName = "PlayerReference", menuName = "Club Fungal/Player/Player Reference")]
-public class PlayerReference : ScriptableObject
+[CreateAssetMenu(fileName = "PlayerService", menuName = "Club Fungal/Player/Player Service")]
+public class PlayerService : GURUService
 {
     [Header("Settings")]
     [SerializeField] private float speed = 2f;
@@ -32,12 +32,28 @@ public class PlayerReference : ScriptableObject
     public event UnityAction<bool> OnPOVCameraToggled;
     public event UnityAction OnPlayerInitialized;
 
-    public void SetPlayerController(PlayerController player)
+    override protected void OnInitialize()
     {
-        this.player = player;
-        playerInstance = player.Instance;
-        activityUnit = player.GetComponent<ActivityUnit>();
-        OnPlayerInitialized?.Invoke();
+        FindPlayerController();
+    }
+
+    override public void OnSceneLoaded()
+    {
+        base.OnSceneLoaded();
+        FindPlayerController();
+    }
+
+    private void FindPlayerController()
+    {
+        Debug.Log("Searching for PlayerController in scene...");
+        var player = FindObjectOfType<PlayerController>();
+        if (player != null)
+        {
+            this.player = player;
+            playerInstance = player.Instance;
+            activityUnit = player.GetComponent<ActivityUnit>();
+            OnPlayerInitialized?.Invoke();
+        }
     }
 
     public void SetTargetPosition(Vector3 targetPosition)

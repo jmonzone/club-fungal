@@ -1,9 +1,6 @@
 using UnityEditor;
-using UnityEngine;
-using System.Collections.Generic;
-using System.Linq;
 
-[CustomEditor(typeof(UnitController), true)]
+[CustomEditor(typeof(UnitController), true, isFallback = true)]
 public class UnitControllerEditor : RepositionableEditor
 {
     protected override void DrawContent()

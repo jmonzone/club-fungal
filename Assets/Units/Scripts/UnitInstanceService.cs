@@ -3,8 +3,6 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
-
-[CreateAssetMenu(fileName = "UnitInstanceService", menuName = "Club Fungal/Units/Unit Instance Service")]
 public class UnitInstanceService : GURUService
 {
     [Header("References")]

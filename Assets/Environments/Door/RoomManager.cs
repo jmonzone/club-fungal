@@ -4,7 +4,7 @@ using UnityEngine;
 public class RoomManager : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private PlayerService playerReference;
     [SerializeField] private TransitionReference transitionReference;
     [SerializeField] private TeleportService teleportService;
     [SerializeField] private RoomController roomControllerPrefab;

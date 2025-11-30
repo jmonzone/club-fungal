@@ -13,7 +13,7 @@ public class StoryWorkTogether : MonoBehaviour
     [SerializeField] private SceneNavigation sceneNavigation;
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private FriendManager unitManager;
-    [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private PlayerService playerReference;
     [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private List<Dialogue> workTogetherDialogue;
     [SerializeField] private List<Dialogue> buildCompleteDialogue;

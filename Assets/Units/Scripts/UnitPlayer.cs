@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class UnitPlayer : UnitBehaviour
 {
-    [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private PlayerService playerReference;
 
     private Coroutine interactRoutine;
 

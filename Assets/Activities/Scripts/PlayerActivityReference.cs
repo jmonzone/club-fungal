@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class PlayerActivityReference : ScriptableObject
 {
     [Header("References")]
-    [SerializeField] private PlayerReference playerReference;
+    [SerializeField] private PlayerService playerReference;
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference levelUpView;
 
