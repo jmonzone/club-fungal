@@ -5,27 +5,27 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [Serializable]
-public class UnitInteractionInstance
+public class UnitMoment
 {
     [SerializeField] private UnitInteraction interaction;
     [SerializeField] private bool isComplete;
 
     public UnitInteraction Interaction => interaction;
     public bool IsComplete => isComplete;
-    public event UnityAction OnInteractionComplete;
+    public event UnityAction OnMomentComplete;
 
-    public UnitInteractionInstance(UnitInteraction interaction, bool isComplete)
+    public UnitMoment(UnitInteraction interaction, bool isComplete)
     {
         this.interaction = interaction;
         this.isComplete = isComplete;
     }
 
-    public void StartInteraction(UnitController source, UnitController target)
+    public void StartMoment(UnitController source, UnitController target)
     {
         interaction.StartInteraction(source, target, () =>
         {
             isComplete = true;
-            OnInteractionComplete?.Invoke();
+            OnMomentComplete?.Invoke();
         });
     }
 }
@@ -35,7 +35,7 @@ public abstract class UnitInteraction : ScriptableObject
     [SerializeField] private string id;
     public string ID => id;
 
-    public virtual void StartInteraction(UnitController source, UnitController target, UnityAction onComplete)
+    public virtual void StartInteraction(UnitController source, UnitController target, UnityAction onComplete = null)
     {
     }
 }

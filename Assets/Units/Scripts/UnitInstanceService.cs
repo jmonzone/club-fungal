@@ -113,14 +113,14 @@ public class UnitInstanceService : GURUService
 
                     unitInstance.InitializeSkills(skills);
 
-                    var interactionsJson = unitJson.Value<JArray>("interactions") ?? new JArray();
-                    var interactionInstances = new List<UnitInteractionInstance>();
-                    foreach (var interactionToken in interactionsJson)
+                    var momentsJson = unitJson.Value<JArray>("interactions") ?? new JArray();
+                    var moments = new List<UnitMoment>();
+                    foreach (var momentToken in momentsJson)
                     {
-                        if (interactionToken is JObject interactionObj)
+                        if (momentToken is JObject momentObj)
                         {
-                            string id = interactionObj.Value<string>("id");
-                            bool isComplete = interactionObj.Value<bool?>("isComplete") ?? false;
+                            string id = momentObj.Value<string>("id");
+                            bool isComplete = momentObj.Value<bool?>("isComplete") ?? false;
 
                             if (!string.IsNullOrEmpty(id))
                             {
@@ -128,9 +128,9 @@ public class UnitInstanceService : GURUService
                                 if (matching != null)
                                 {
                                     // Debug.Log($"Loading interaction '{id}' for unit '{unitName}'.");
-                                    var interactionInstance = new UnitInteractionInstance(matching, isComplete);
-                                    interactionInstance.OnInteractionComplete += () => SaveData();
-                                    interactionInstances.Add(interactionInstance);
+                                    var moment = new UnitMoment(matching, isComplete);
+                                    moment.OnMomentComplete += () => SaveData();
+                                    moments.Add(moment);
                                 }
                                 else
                                 {
@@ -139,7 +139,7 @@ public class UnitInstanceService : GURUService
                             }
                         }
                     }
-                    unitInstance.InitializeInteractions(interactionInstances);
+                    unitInstance.InitializeMoments(moments);
 
                     RegisterUnit(unitInstance, false);
                 }
@@ -424,7 +424,7 @@ public class UnitInstanceService : GURUService
             unitJson["job"] = unit.Job?.Id.ToString().ToLower() ?? "none";
             unitJson["friends"] = new JArray(unit.Friends.Where(f => f != null && f.Id != null).Select(friend => friend.Id));
             unitJson["interactions"] = new JArray(
-                unit.Interactions.Where(i => i.Interaction != null).Select(i => new JObject
+                unit.Moments.Where(i => i.Interaction != null).Select(i => new JObject
                 {
                     ["id"] = i.Interaction.ID,
                     ["isComplete"] = i.IsComplete

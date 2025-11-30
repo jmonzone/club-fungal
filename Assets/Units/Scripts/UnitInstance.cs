@@ -27,7 +27,7 @@ public class UnitInstance : ScriptableObject
     public Dictionary<Skill, UnitSkill> Skills = new Dictionary<Skill, UnitSkill>();
 
     [SerializeField] private List<UnitInstance> friends;
-    [SerializeField] private List<UnitInteractionInstance> interactions;
+    [SerializeField] private List<UnitMoment> moments;
 
     public UnitInstanceData InstanceData => instanceData;
     public string Id => instanceData.Id;
@@ -42,7 +42,7 @@ public class UnitInstance : ScriptableObject
     public bool IsFriends => FriendshipLevel > 1;
 
     public List<UnitInstance> Friends => friends;
-    public List<UnitInteractionInstance> Interactions => interactions;
+    public List<UnitMoment> Moments => moments;
 
     public JObject Json => instanceData.Json;
 
@@ -64,7 +64,7 @@ public class UnitInstance : ScriptableObject
         if (string.IsNullOrEmpty(initData.Id)) initData.Id = GenerateMongoLikeId();
         instanceData = initData;
         friends = new List<UnitInstance>();
-        interactions = new List<UnitInteractionInstance>();
+        moments = new List<UnitMoment>();
     }
 
     public void InitializeSkills(List<UnitSkill> skills)
@@ -78,9 +78,9 @@ public class UnitInstance : ScriptableObject
         }
     }
 
-    public void InitializeInteractions(List<UnitInteractionInstance> interactions)
+    public void InitializeMoments(List<UnitMoment> moments)
     {
-        this.interactions = interactions;
+        this.moments = moments;
     }
 
     public static string GenerateMongoLikeId()

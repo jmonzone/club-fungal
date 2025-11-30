@@ -22,23 +22,12 @@ MonoBehaviour:
     type: 2}
   actions:
   - rid: 7976657348012277839
-  - rid: 7976657348012277840
-  - rid: 7976657348012277841
   references:
     version: 2
     RefIds:
     - rid: 7976657348012277839
       type: {class: DialogueAction, ns: , asm: Assembly-CSharp}
       data:
-        speaker: 0
-        text: Hey how are you
-        unitInstance: {fileID: 11400000, guid: c5fe3b2204b8a471f9ab1ed260b7d9b9, type: 2}
-    - rid: 7976657348012277840
-      type: {class: DialogueAction, ns: , asm: Assembly-CSharp}
-      data:
         speaker: 1
-        text: Can I come with you?
-        unitInstance: {fileID: 11400000, guid: 463ba2838266e4c609022c9ca93d4c8a, type: 2}
-    - rid: 7976657348012277841
-      type: {class: JoinPartyAction, ns: , asm: Assembly-CSharp}
-      data: 
+        text: We got this right?
+        unitInstance: {fileID: 0}

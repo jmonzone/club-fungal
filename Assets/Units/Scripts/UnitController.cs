@@ -9,14 +9,13 @@ public class UnitController : MonoBehaviour, IInteractable
 {
     [Header("Unit References")]
     [SerializeField] protected Transform renderRoot;
-    [SerializeField] private UnitBehaviour defaultBehaviour;
     [SerializeField] private UnitDestination destination;
     [SerializeField] private UnitDialogue dialogue;
+    [SerializeField] private UnitBehaviour defaultBehaviour;
+    [SerializeField] private UnitInteraction defaultInteraction;
 
     public UnitDestination Destination => destination;
     public UnitDialogue Dialogue => dialogue;
-    public UnitInteractionInstance CurrentInteraction => instance.Interactions.FirstOrDefault(i => !i.IsComplete);
-
     [Header("Runtime")]
     [SerializeField] private UnitInstance instance;
     [SerializeField] private UnitBehaviour currentBehaviour;
@@ -166,12 +165,9 @@ public class UnitController : MonoBehaviour, IInteractable
 
     void IInteractable.Select(UnitController source)
     {
-        if (CurrentInteraction == null)
-        {
-            Debug.LogError("No available interaction for unit " + name);
-            return;
-        }
-        CurrentInteraction.StartInteraction(source, this);
+        var availableMoment = Instance.Moments.Find(m => !m.IsComplete);
+        if (availableMoment != null) availableMoment.StartMoment(source, this);
+        else defaultInteraction.StartInteraction(source, this);
     }
 
     public virtual void OnProximityChanged(bool value)

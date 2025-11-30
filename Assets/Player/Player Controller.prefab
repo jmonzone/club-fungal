@@ -166,9 +166,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderRoot: {fileID: 1647962025224334118}
-  defaultBehaviour: {fileID: 0}
   destination: {fileID: 0}
   dialogue: {fileID: 0}
+  defaultBehaviour: {fileID: 0}
+  defaultInteraction: {fileID: 11400000, guid: cd6893964a6274906b52bbbf6b56f4d8, type: 2}
   instance: {fileID: 11400000, guid: c5fe3b2204b8a471f9ab1ed260b7d9b9, type: 2}
   currentBehaviour: {fileID: 0}
   targetLookPosition: {x: 0, y: 0, z: 0}
