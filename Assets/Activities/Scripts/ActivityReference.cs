@@ -9,8 +9,6 @@ public class ActivityReference : ScriptableObject
 {
     [Header("References")]
     [SerializeField] private ViewReference activityView;
-    [SerializeField] private DialogueReference dialogueReference;
-    [SerializeField] private UnitControllerService unitControllerService;
     [SerializeField] private Skill primarySkill;
     [SerializeField] private ActivityController activityControllerPrefab;
 

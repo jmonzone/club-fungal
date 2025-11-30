@@ -12,7 +12,6 @@ public class GameService : GURUService
     [SerializeField] private LocalData localData;
     [SerializeField] private BuildReference build;
     [SerializeField] private InventoryReference inventory;
-    [SerializeField] private PlayerReference playerReference;
     [SerializeField] private List<GURUService> services;
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private StoryReference partyLogReference;
@@ -39,7 +38,6 @@ public class GameService : GURUService
         localData.Initialize();
         inventory.Initialize();
         build.Initialize();
-        playerReference.Initialize();
         foreach (var service in services)
         {
             service.Initialize();

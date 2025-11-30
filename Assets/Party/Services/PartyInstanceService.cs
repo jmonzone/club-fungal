@@ -11,14 +11,10 @@ public class PartyInstanceService : GURUService
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private LocalData localData;
     [SerializeField] private UnitInstanceService unitInstanceService;
-    [SerializeField] private PartyControllerService partyControllerService;
 
     [Header("Runtime")]
     [SerializeField] private List<UnitInstance> partyInstances = new List<UnitInstance>();
 
-    public PlayerReference PlayerReference => playerReference;
-    public UnitInstanceService UnitInstanceService => unitInstanceService;
-    public PartyControllerService PartyControllerService => partyControllerService;
     public List<UnitInstance> PartyInstances => partyInstances;
     public event UnityAction<UnitInstance> OnUnitInstanceAddedToParty;
     public event UnityAction<UnitInstance> OnUnitInstanceRemovedFromParty;

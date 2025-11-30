@@ -31,15 +31,11 @@ public class PlayerReference : ScriptableObject
     public event UnityAction OnTargetPositionChanged;
     public event UnityAction<bool> OnPOVCameraToggled;
 
-    public void Initialize()
+    public void SetPlayerController(PlayerController player)
     {
-        player = FindAnyObjectByType<PlayerController>();
+        this.player = player;
+        playerInstance = player.Instance;
         activityUnit = player.GetComponent<ActivityUnit>();
-
-        player.OnNavMeshAgentReady += () =>
-        {
-            SetTargetPosition(player.transform.position);
-        };
     }
 
     public void SetTargetPosition(Vector3 targetPosition)

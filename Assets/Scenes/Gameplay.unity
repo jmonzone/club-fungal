@@ -26861,10 +26861,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DanceMoveInstance
   data: {fileID: 11400000, guid: 6396f1cfb6fe1496cbf571c96b16abb5, type: 2}
-  skill: {unit: {fileID: 351975937}, skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
-      type: 2}, level: 1, xp: 0, moves:
-    - {fileID: 1003772654}
-}
   upgradeLevel: 0
 --- !u!1 &1011249585
 GameObject:
@@ -32770,23 +32766,6 @@ CanvasRenderer:
   m_GameObject: {fileID: 1212447271}
   m_CullTransparentMesh: 1
 --- !u!114 &1215885488
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DanceMoveInstance
-  data: {fileID: 11400000, guid: 6396f1cfb6fe1496cbf571c96b16abb5, type: 2}
-  skill: {unit: {fileID: 351975937}, skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
-      type: 2}, level: 1, xp: 0, moves:
-    - {fileID: 1215885488}
-}
-  upgradeLevel: 0
 --- !u!224 &1216626212 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8622161559934049745, guid: 20d941abf95134e3f8bcdbf1ff2ac0b9,
@@ -42517,10 +42496,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DanceMoveInstance
   data: {fileID: 11400000, guid: 6396f1cfb6fe1496cbf571c96b16abb5, type: 2}
-  skill: {unit: {fileID: 351975937}, skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
-      type: 2}, level: 1, xp: 0, moves:
-    - {fileID: 1638564090}
-}
   upgradeLevel: 0
 --- !u!1 &1652946787
 GameObject:

@@ -94,7 +94,7 @@ public abstract class UnitListDrawer
             Icon = unitInstance?.Data?.Sprite?.texture,
             DisplayName = unitInstance?.DisplayName ?? "No Instance",
             Job = unitInstance?.Job?.Id.ToUpper() ?? "No Job",
-            IsInParty = partyInstanceService.PartyInstances.Any(p => p.Id == unitInstance.Id)
+            IsInParty = partyInstanceService?.PartyInstances?.Any(p => p.Id == unitInstance.Id) ?? false
         };
 
         var initialUnit = unitInstanceService.InitialUnits.Find(instance => instance.Id == unitInstance.Id);

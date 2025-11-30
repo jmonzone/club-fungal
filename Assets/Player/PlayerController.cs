@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
 
 public class PlayerController : UnitController
 {
@@ -60,6 +61,13 @@ public class PlayerController : UnitController
             transform.position = hit.position;
         }
 
+        playerReference.SetPlayerController(this);
+    }
+
+    protected override IEnumerator Start()
+    {
+        yield return base.Start();
+        playerReference.SetTargetPosition(transform.position);
     }
 
     private void UnitGlyphCollect_OnNoteHit(DJTrack track)
