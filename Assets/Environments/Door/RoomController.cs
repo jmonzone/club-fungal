@@ -15,6 +15,7 @@ public class RoomController : MonoBehaviour
     [SerializeField] private Renderer floor;
     [SerializeField] private Transform activityAnchor;
     [SerializeField] private Transform unitParent;
+    [SerializeField] private Transform buildParent;
 
     [Header("Settings")]
     [SerializeField] private int maxDoors = 2;
@@ -28,6 +29,7 @@ public class RoomController : MonoBehaviour
     public List<UnitController> Units => transform.GetComponentsInChildren<UnitController>(includeInactive: true).ToList();
     public Renderer Floor => floor;
     public Transform UnitParent => unitParent;
+    public Transform BuildParent => buildParent;
 
     public event UnityAction<DoorController> OnDoorSelected;
 
