@@ -36,6 +36,8 @@ public class DialogueInteractionEditor : Editor
 
         DrawDefaultInspector();
 
+        EditorGUILayout.Space(20);
+
         interactionSequence.DoLayoutList();
 
         EditorGUILayout.BeginHorizontal();
