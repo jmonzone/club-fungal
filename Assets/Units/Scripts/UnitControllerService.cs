@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -31,12 +30,9 @@ public class UnitControllerService : GURUService
 
     private void InitializeControllers()
     {
-        Debug.Log("Initializing UnitControllerService...");
-
         unitControllers = new List<UnitController>();
         UnitController[] controllers = FindObjectsByType<UnitController>(FindObjectsSortMode.None);
         unitControllers.AddRange(controllers);
-        Debug.Log($"Found and initialized {unitControllers.Count} unit controllers in the scene.");
 
         // Update existing UnitControllers with loaded instances if they have matching IDs
         foreach (var controller in unitControllers)
@@ -54,7 +50,6 @@ public class UnitControllerService : GURUService
 
     public UnitController SpawnUnit(UnitInstance unit, Vector3 spawnPosition, Transform parent)
     {
-        Debug.Log($"Spawning unit {unit.Data.Name} at position {spawnPosition}");
 #if UNITY_EDITOR
         var unitController = PrefabUtility.InstantiatePrefab(unitPrefab, parent) as UnitController;
 #else
@@ -63,7 +58,6 @@ public class UnitControllerService : GURUService
         unitController.transform.position = spawnPosition;
         unitController.transform.rotation = Quaternion.identity;
         unitController.Initialize(unit);
-        Debug.Log($"Initialized unit controller for {unit.Data.Name} spawned at {unitController.transform.position}");
 
         unitControllers.Add(unitController);
 
