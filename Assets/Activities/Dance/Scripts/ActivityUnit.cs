@@ -17,6 +17,8 @@ public class ActivityUnit : MonoBehaviour
 
     public UnitController Controller => controller;
 
+    public ActivityReference Activity => activity;
+
     public Vector3 ActivityPosition => activityPosition;
     public Quaternion LookRotation => Quaternion.LookRotation(controller.LookPosition - transform.position);
     public bool IsPlayer => controller is PlayerController;

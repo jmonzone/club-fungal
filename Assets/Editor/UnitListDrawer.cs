@@ -120,6 +120,8 @@ public abstract class UnitListDrawer
 
             var behaviour = isSelected ? (controller?.CurrentBehaviour?.GetType().Name ?? "None") : null;
             var interaction = isSelected ? (controller?.CurrentInteraction?.name ?? "None") : null;
+            var activityUnit = controller?.GetComponent<ActivityUnit>();
+            var activity = activityUnit?.Activity;
 
             // Create action lists
             var menuItems = new List<UnitDrawerItemAction>
@@ -136,11 +138,11 @@ public abstract class UnitListDrawer
             };
 
             // Draw the unit
-            DrawUnit(icon, displayName, job, isInParty, behaviour, interaction, backgroundColor, shortcuts, menuItems, jobStyle, controller);
+            DrawUnit(icon, displayName, job, isInParty, behaviour, interaction, activity, backgroundColor, shortcuts, menuItems, jobStyle, controller);
         }
     }
 
-    private static void DrawUnit(Texture icon, string displayName, string job, bool isInParty, string behaviour, string interaction, Color backgroundColor, List<UnitDrawerItemAction> shortcuts, List<UnitDrawerItemAction> menuItems, GUIStyle jobStyle, UnitController controller)
+    private static void DrawUnit(Texture icon, string displayName, string job, bool isInParty, string behaviour, string interaction, ActivityReference activity, Color backgroundColor, List<UnitDrawerItemAction> shortcuts, List<UnitDrawerItemAction> menuItems, GUIStyle jobStyle, UnitController controller)
     {
         EditorGUILayout.BeginHorizontal();
         Color originalBG = GUI.backgroundColor;
@@ -184,6 +186,12 @@ public abstract class UnitListDrawer
         {
             GUI.color = Color.yellow;
             EditorGUILayout.ObjectField("Interaction", controller?.CurrentInteraction, typeof(UnitInteraction), false);
+            GUI.color = Color.white;
+        }
+        if (activity != null)
+        {
+            GUI.color = Color.magenta;
+            EditorGUILayout.ObjectField("Activity", activity, typeof(ActivityReference), false);
             GUI.color = Color.white;
         }
         EditorGUILayout.EndVertical();

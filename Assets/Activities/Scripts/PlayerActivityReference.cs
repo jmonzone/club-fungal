@@ -12,8 +12,6 @@ public class PlayerActivityReference : ScriptableObject
 
     [Header("Runtime")]
     [SerializeField] private ActivityReference activity;
-
-    public ActivityReference Activity => activity;
     public List<ActivityUnit> Units => activity.Units;
 
     public event UnityAction<ActivityUnit> OnUnitEnter;

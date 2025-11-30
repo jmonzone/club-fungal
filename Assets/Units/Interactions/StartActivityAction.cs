@@ -13,11 +13,9 @@ public class StartActivityAction : InteractionAction
     public override void Execute(UnitController source, UnitController target, DialogueReference dialogueReference, UnitControllerService unitControllerService, PartyInstanceService partyInstanceService, PartyControllerService partyControllerService, UnityAction onComplete)
     {
         var origin = target.transform.position;
-        var units = partyControllerService.PartyControllers;
         var activity = UnityEngine.Object.Instantiate(activityReference);
         activity.StartActivity(origin, new List<UnitController> { target });
 
         playerActivityReference.EnterActivity(activity);
-        onComplete?.Invoke();
     }
 }
