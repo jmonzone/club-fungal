@@ -75,7 +75,7 @@ public class DanceActivityController : ActivityController<DanceActivityUnit>
         yield return new WaitUntil(() => CurrentUnit.Controller.Destination.IsAtDestination);
         yield return new WaitForSeconds(djReference.BeatDuration * 2);
 
-        var moves = CurrentUnit.Instance.Skills[Activity.PrimarySkill].Moves;
+        var moves = (CurrentUnit.Instance.Skills[Activity.PrimarySkill] as DanceSkillInstance)?.Moves;
         var randomMove = moves[Random.Range(0, moves.Count)];
         CurrentUnit.UseDanceMove(randomMove, () => SelectNextUnit());
     }

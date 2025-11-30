@@ -40,7 +40,7 @@ public class DanceMoveUpgrade
 public class DanceMoveInstance : ScriptableObject
 {
     [SerializeField] private DanceMove data;
-    [SerializeField] private UnitSkill skill;
+    [SerializeField] private SkillInstance skill;
     [SerializeField] private int upgradeLevel = 0;
 
     public DanceMove Data => data;
@@ -51,7 +51,7 @@ public class DanceMoveInstance : ScriptableObject
 
     public event UnityAction OnUpgrade;
 
-    public void Initialize(DanceMove data, UnitSkill skill)
+    public void Initialize(DanceMove data, SkillInstance skill)
     {
         this.data = data;
         this.skill = skill;

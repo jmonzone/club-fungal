@@ -22,9 +22,9 @@ public class UnitInstance : ScriptableObject
 {
     [SerializeField] private UnitInstanceData instanceData;
 
-    [SerializeField] private List<UnitSkill> skills;
+    [SerializeField] private List<SkillInstance> skills;
 
-    public Dictionary<Skill, UnitSkill> Skills = new Dictionary<Skill, UnitSkill>();
+    public Dictionary<Skill, SkillInstance> Skills = new Dictionary<Skill, SkillInstance>();
 
     [SerializeField] private List<UnitInstance> friends;
     [SerializeField] private List<UnitMoment> moments;
@@ -37,7 +37,7 @@ public class UnitInstance : ScriptableObject
     public Job Job => instanceData.Job;
     public ColorPalette ColorPalette => instanceData.ColorPalette;
 
-    public int FriendshipLevel => UnitSkill.GetLevelFromXP(instanceData.FriendshipXP);
+    public int FriendshipLevel => SkillInstance.GetLevelFromXP(instanceData.FriendshipXP);
     public float FriendshipXP => instanceData.FriendshipXP;
     public bool IsFriends => FriendshipLevel > 1;
 
@@ -67,10 +67,10 @@ public class UnitInstance : ScriptableObject
         moments = new List<UnitMoment>();
     }
 
-    public void InitializeSkills(List<UnitSkill> skills)
+    public void InitializeSkills(List<SkillInstance> skills)
     {
         this.skills = skills;
-        Skills = new Dictionary<Skill, UnitSkill>();
+        Skills = new Dictionary<Skill, SkillInstance>();
         foreach (var skill in this.skills)
         {
             Skills.Add(skill.Skill, skill);

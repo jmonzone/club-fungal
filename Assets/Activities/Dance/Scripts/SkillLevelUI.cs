@@ -37,11 +37,11 @@ public class SkillLevelUI : MonoBehaviour
 
     public void Increase(float value, Vector3 screenPos, UnityAction<bool> onComplete)
     {
-        var currentLevel = UnitSkill.GetLevelFromXP(displayedXP);
+        var currentLevel = SkillInstance.GetLevelFromXP(displayedXP);
 
         valueBarParticleManager.BurstFromWorld((int)value, screenPos, () =>
         {
-            var newLevel = UnitSkill.GetLevelFromXP(displayedXP);
+            var newLevel = SkillInstance.GetLevelFromXP(displayedXP);
             if (currentLevel != newLevel)
             {
                 if (levelUpRoutine != null) StopCoroutine(levelUpRoutine);
@@ -61,9 +61,9 @@ public class SkillLevelUI : MonoBehaviour
     private void SetDisplayedXP(float xp)
     {
         displayedXP = xp;
-        currentLevel = UnitSkill.GetLevelFromXP(displayedXP); ;
-        var minXP = UnitSkill.GetXPFromLevel(currentLevel);
-        var maxXP = UnitSkill.GetXPFromLevel(currentLevel + 1);
+        currentLevel = SkillInstance.GetLevelFromXP(displayedXP); ;
+        var minXP = SkillInstance.GetXPFromLevel(currentLevel);
+        var maxXP = SkillInstance.GetXPFromLevel(currentLevel + 1);
 
         if (fillImage) fillImage.fillAmount = Mathf.Lerp(0, 1, (displayedXP - minXP) / (maxXP - minXP));
         levelText.text = $"Level {currentLevel}";

@@ -11,55 +11,35 @@ public interface IMilestone
 }
 
 [Serializable]
-public class UnitSkill
+public class SkillInstance
 {
-    [SerializeField] private UnitInstance unit;
-    [SerializeField] private Skill skill;
-    [SerializeField] private int level;
-    [SerializeField] private float xp;
-    [SerializeField] private List<DanceMoveInstance> moves;
+    [SerializeField] protected UnitInstance unit;
+    [SerializeField] protected Skill skill;
+    [SerializeField] protected int level;
+    [SerializeField] protected float xp;
 
     public string Label => skill.Id;
     public Skill Skill => skill;
     public int Level => level;
     public float XP => xp;
-    public List<DanceMoveInstance> Moves => moves;
     public List<IMilestone> Milestones { get; private set; }
-
-    public float MinXP => GetXPFromLevel(Level);
-    public float MaxXP => GetXPFromLevel(Level + 1);
-    public float XPUntilNextLevel => MaxXP - XP;
 
     public event UnityAction<float> OnXpChanged;
     public event UnityAction<UnitInstance> OnLevelUp;
-    public event UnityAction<UnitInstance, DanceMoveInstance, bool> OnMilestoneReached;
 
-    public UnitSkill(UnitInstance unit, Skill skill, float xp)
+    public SkillInstance(UnitInstance unit, Skill skill, float xp)
     {
         this.unit = unit;
         this.skill = skill;
         this.xp = xp;
         level = GetLevelFromXP(xp);
 
-
-        moves = new List<DanceMoveInstance>();
-
-        if (!unit.Data)
-        {
-            Debug.LogWarning($"UnitSkill: missing unit data {unit.Id}");
-            return;
-        }
-
-        // Debug.Log($"Initializing skill {skill.Id} for unit {unit.Data.Name} at level {level} with {xp} XP");
-        foreach (var move in unit.Data.Moves)
-        {
-            if (level >= move.LevelRequirement)
-            {
-                RegisterMove(move);
-            }
-        }
+        InitializeSkillSpecifics();
     }
 
+    protected virtual void InitializeSkillSpecifics() { }
+
+    protected virtual void OnLevelUpSkillSpecifics() { }
     public void IncreaseSkillXP(float value)
     {
         //Debug.Log("increasing skill xp");
@@ -74,27 +54,9 @@ public class UnitSkill
         if (previousLevel != level)
         {
             Milestones = new List<IMilestone>();
-
-            foreach (var move in unit.Data.Moves)
-            {
-                if (move.LevelRequirement == level)
-                {
-                    RegisterMove(move);
-                    Milestones.Add(move);
-                }
-            }
-
+            OnLevelUpSkillSpecifics();
             OnLevelUp?.Invoke(unit);
         }
-    }
-
-    private void RegisterMove(DanceMove move)
-    {
-        var moveInstance = ScriptableObject.CreateInstance<DanceMoveInstance>();
-        moveInstance.Initialize(move, this);
-        moveInstance.OnUpgrade += () => OnMilestoneReached?.Invoke(unit, moveInstance, true);
-        moves.Add(moveInstance);
-        OnMilestoneReached?.Invoke(unit, moveInstance, false);
     }
 
     public static int GetLevelFromXP(float xp)

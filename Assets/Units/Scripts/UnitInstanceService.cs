@@ -87,7 +87,7 @@ public class UnitInstanceService : GURUService
                     unitInstance.name = $"JSON_{displayName}";
 
                     var skillsJson = unitJson.Value<JArray>("skills") ?? new JArray();
-                    var skills = new List<UnitSkill>();
+                    var skills = new List<SkillInstance>();
 
                     foreach (var skill in skillCollection)
                     {
@@ -96,7 +96,16 @@ public class UnitInstanceService : GURUService
 
                         float xp = skillJson?.Value<float?>("xp") ?? 0f;
 
-                        skills.Add(new UnitSkill(unitInstance, skill, xp));
+                        SkillInstance skillInstance;
+                        if (skill.Id.ToLower() == "dance")
+                        {
+                            skillInstance = new DanceSkillInstance(unitInstance, skill, xp);
+                        }
+                        else
+                        {
+                            skillInstance = new SkillInstance(unitInstance, skill, xp);
+                        }
+                        skills.Add(skillInstance);
                     }
 
                     // Check for skills in JSON that are not in the collection
@@ -201,11 +210,20 @@ public class UnitInstanceService : GURUService
         };
         newUnitInstance.Initialize(data);
 
-        var skills = new List<UnitSkill>();
+        var skills = new List<SkillInstance>();
 
         foreach (var skill in skillCollection)
         {
-            skills.Add(new UnitSkill(newUnitInstance, skill, 0));
+            SkillInstance skillInstance;
+            if (skill.Id.ToLower() == "dance")
+            {
+                skillInstance = new DanceSkillInstance(newUnitInstance, skill, 0);
+            }
+            else
+            {
+                skillInstance = new SkillInstance(newUnitInstance, skill, 0);
+            }
+            skills.Add(skillInstance);
         }
 
         newUnitInstance.InitializeSkills(skills);
@@ -231,11 +249,20 @@ public class UnitInstanceService : GURUService
         data.Id = null; // Generate new Id for copy
         copiedUnit.Initialize(data);
 
-        var skills = new List<UnitSkill>();
+        var skills = new List<SkillInstance>();
 
         foreach (var skill in skillCollection)
         {
-            skills.Add(new UnitSkill(copiedUnit, skill, 0));
+            SkillInstance skillInstance;
+            if (skill.Id.ToLower() == "dance")
+            {
+                skillInstance = new DanceSkillInstance(copiedUnit, skill, 0);
+            }
+            else
+            {
+                skillInstance = new SkillInstance(copiedUnit, skill, 0);
+            }
+            skills.Add(skillInstance);
         }
 
         copiedUnit.InitializeSkills(skills);

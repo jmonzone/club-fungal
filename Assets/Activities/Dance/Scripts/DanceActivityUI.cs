@@ -63,7 +63,7 @@ public class DanceActivityUI : ActivityUI<DanceActivityUnit, DanceActivityContro
 
             if (Controller.CurrentUnit.IsPlayer)
             {
-                var moves = Controller.CurrentUnit.Instance.Skills[Activity.PrimarySkill].Moves;
+                var moves = (Controller.CurrentUnit.Instance.Skills[Activity.PrimarySkill] as DanceSkillInstance)?.Moves;
                 StartCoroutine(danceMoveUIManager.Show(Controller.CurrentUnit, moves, () =>
                 {
                     danceMoveUIManager.ToggleInteractable(false);

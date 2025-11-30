@@ -26,7 +26,7 @@ public class ActivityUnit : MonoBehaviour
     public string Name => controller.Instance.Data.Name;
     public Sprite Sprite => controller.Instance.Data.Sprite;
     public Color Color => controller.Color;
-    public UnitSkill Skill => controller.Instance.Skills[activity.PrimarySkill];
+    public SkillInstance Skill => controller.Instance.Skills[activity.PrimarySkill];
 
     public event UnityAction<OnXpIncreasedEventArgs> OnXPIncreased;
 
