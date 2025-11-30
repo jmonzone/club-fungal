@@ -25,7 +25,9 @@ public class UnitInstanceService : GURUService
 
     [SerializeField] private List<UnitInstance> units;
 
-    public List<UnitInstance> Units => units;
+    public List<UnitInstance> InitialUnits => initialUnits;
+
+    public List<UnitInstance> Instances => units;
 
     private const string UNIT_KEY = "units";
 
@@ -262,7 +264,7 @@ public class UnitInstanceService : GURUService
 
         // Step 1: pick a unit the instance hasn't seen yet
         var unseenUnits = availableUnits
-            .Where(u => !Units.Any(ui => ui.Data == u))
+            .Where(u => !Instances.Any(ui => ui.Data == u))
             .ToList();
 
         if (unseenUnits.Count > 0)
@@ -293,7 +295,7 @@ public class UnitInstanceService : GURUService
 
     private bool TryPickUnseenElementForUnit(Unit unit, out Element element)
     {
-        var usedElements = Units
+        var usedElements = Instances
             .Where(ui => ui.Data == unit)
             .Select(ui => ui.Element)
             .ToHashSet();
@@ -415,24 +417,23 @@ public class UnitInstanceService : GURUService
 
         foreach (var unit in units)
         {
-            var unitJson = new JObject
-            {
-                ["id"] = unit.Id,
-                ["name"] = unit.Data.Name,
-                ["displayName"] = unit.DisplayName,
-                ["friendshipLevel"] = unit.FriendshipLevel,
-                ["friendshipXP"] = unit.FriendshipXP,
-                ["element"] = unit.Element.ToString().ToLower(),
-                ["job"] = unit.Job?.Id.ToString().ToLower() ?? "none",
-                ["friends"] = new JArray(unit.Friends.Where(f => f != null).Select(friend => friend.Id)),
-                ["interactions"] = new JArray(
-                    unit.Interactions.Select(i => new JObject
-                    {
-                        ["id"] = i.Interaction.ID,
-                        ["isComplete"] = i.IsComplete
-                    })
-                ),
-            };
+            Debug.Log($"Saving unit {unit.Id}, Data: {unit.Data}, DisplayName: {unit.DisplayName}");
+            var unitJson = new JObject();
+            unitJson["id"] = unit.Id;
+            unitJson["name"] = unit.Data.Name;
+            unitJson["displayName"] = unit.DisplayName;
+            unitJson["friendshipLevel"] = unit.FriendshipLevel;
+            unitJson["friendshipXP"] = unit.FriendshipXP;
+            unitJson["element"] = unit.Element.ToString().ToLower();
+            unitJson["job"] = unit.Job?.Id.ToString().ToLower() ?? "none";
+            unitJson["friends"] = new JArray(unit.Friends.Where(f => f != null && f.Id != null).Select(friend => friend.Id));
+            unitJson["interactions"] = new JArray(
+                unit.Interactions.Where(i => i.Interaction != null).Select(i => new JObject
+                {
+                    ["id"] = i.Interaction.ID,
+                    ["isComplete"] = i.IsComplete
+                })
+            );
 
             var skillsJson = new JArray();
 

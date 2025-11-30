@@ -14,6 +14,9 @@ public class PartyControllerService : GURUService
     [Header("Runtime")]
     [SerializeField] private List<UnitController> partyControllers = new List<UnitController>();
 
+    public UnitControllerService UnitControllerService => unitControllerService;
+    public PartyInstanceService PartyInstanceService => partyInstanceService;
+    public PlayerReference PlayerReference => playerReference;
     public List<UnitController> PartyControllers => partyControllers;
     public event UnityAction<UnitController> OnUnitAddedToParty;
     public event UnityAction<UnitController> OnUnitRemovedFromParty;
@@ -24,7 +27,7 @@ public class PartyControllerService : GURUService
         partyControllers.Clear();
 
         // Debug.Log("Populating party controllers from existing unit controllers and party instances.");
-        foreach (var controller in unitControllerService.UnitControllers)
+        foreach (var controller in unitControllerService.Controllers)
         {
             controller.OnNavMeshAgentReady += () =>
             {

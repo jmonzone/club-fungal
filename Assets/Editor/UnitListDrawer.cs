@@ -6,9 +6,9 @@ using System.Linq;
 
 public abstract class UnitListDrawer
 {
-    public static void DrawList<T>(IEnumerable<T> items, Func<T, UnitDrawerItem> toDrawerItem)
+    public static void DrawList(IEnumerable<UnitInstance> items)
     {
-        var drawerItems = items.Select(toDrawerItem).ToList();
+        var drawerItems = items.Select(CreateBaseDrawerItem).ToList();
         drawerItems.Sort((a, b) => string.Compare(a.Id, b.Id));
         DrawListInternal(drawerItems);
     }
@@ -82,37 +82,48 @@ public abstract class UnitListDrawer
         }
     }
 
-    public static UnitDrawerItem CreateBaseDrawerItem(UnitInstance unitInstance, PartyInstanceService partyInstanceService, bool showPartyStatus, Func<UnitInstance, Color> backgroundColorFunc = null, bool addPopupButton = false, Action<UnitInstance> onToggleParty = null, Func<UnitInstance, string> toggleButtonTextFunc = null)
+    public static UnitDrawerItem CreateBaseDrawerItem(UnitInstance unitInstance)
     {
+        var unitInstanceService = Resources.FindObjectsOfTypeAll<UnitInstanceService>().FirstOrDefault();
+        var partyInstanceService = Resources.FindObjectsOfTypeAll<PartyInstanceService>().FirstOrDefault();
+        var unitControllerService = Resources.FindObjectsOfTypeAll<UnitControllerService>().FirstOrDefault();
+
         var item = new UnitDrawerItem
         {
             Id = unitInstance?.Id ?? "",
             Icon = unitInstance?.Data?.Sprite?.texture,
             DisplayName = unitInstance?.DisplayName ?? "No Instance",
             Job = unitInstance?.Job?.Id.ToUpper() ?? "No Job",
-            IsInParty = showPartyStatus && partyInstanceService != null && unitInstance != null && partyInstanceService.PartyInstances.Any(p => p.Id == unitInstance.Id),
-            BackgroundColor = backgroundColorFunc != null && unitInstance != null ? backgroundColorFunc(unitInstance) : Color.white,
+            IsInParty = partyInstanceService.PartyInstances.Any(p => p.Id == unitInstance.Id)
         };
-        if (addPopupButton && unitInstance != null)
-        {
-            item.Buttons.Add(("View Data", () => PopupInspector.Show(unitInstance), () => true));
-        }
-        if (onToggleParty != null && unitInstance != null)
-        {
-            string buttonText = toggleButtonTextFunc?.Invoke(unitInstance) ?? (item.IsInParty ? "Remove from Party" : "Add to Party");
-            item.Buttons.Add((buttonText, () => onToggleParty(unitInstance), () => true));
-        }
-        return item;
-    }
 
-    public static void AddViewButton(UnitDrawerItem item, UnitController controller)
-    {
+        var initialUnit = unitInstanceService.InitialUnits.Find(instance => instance.Id == unitInstance.Id);
+        item.BackgroundColor = initialUnit != null ? new Color(0.5f, 0.6f, 1f) : Color.white;
+
+        if (initialUnit)
+        {
+            item.Buttons.Add(("View Asset", () => { Selection.activeObject = unitInstance; EditorGUIUtility.PingObject(unitInstance); }, () => true));
+        }
+
+        item.Buttons.Add(("View Instance", () => PopupInspector.Show(unitInstance), () => true));
+
+        var controller = unitControllerService.Controllers.Find(c => c.Instance != null && c.Instance.Id == unitInstance.Id);
         if (controller != null)
         {
             item.Buttons.Add(("View GameObject", () => { Selection.activeObject = controller.gameObject; EditorGUIUtility.PingObject(controller.gameObject); }, () => true));
         }
-    }
 
+
+        string buttonText = (item.IsInParty ? "Remove from Party" : "Add to Party");
+        item.Buttons.Add((buttonText, (Action)(() =>
+        {
+            if (item.IsInParty)
+                partyInstanceService.RemoveUnitInstanceFromParty(unitInstance);
+            else
+                partyInstanceService.AddUnitInstanceToParty(unitInstance);
+        }), (Func<bool>)(() => true)));
+        return item;
+    }
     private static void ShowMenu(UnitDrawerItem item)
     {
         GenericMenu menu = new GenericMenu();

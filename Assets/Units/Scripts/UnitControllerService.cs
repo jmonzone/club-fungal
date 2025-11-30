@@ -16,7 +16,7 @@ public class UnitControllerService : GURUService
     [Header("Runtime")]
     [SerializeField] private List<UnitController> unitControllers;
 
-    public List<UnitController> UnitControllers => unitControllers;
+    public List<UnitController> Controllers => unitControllers;
     public UnitInstanceService UnitInstanceService => unitInstanceService;
 
     public event UnityAction<UnitController> OnUnitSummoned;
@@ -34,7 +34,7 @@ public class UnitControllerService : GURUService
         {
             if (controller.Instance != null && !string.IsNullOrEmpty(controller.Instance.Id))
             {
-                var matching = unitInstanceService.Units.Find(u => u.Id == controller.Instance.Id);
+                var matching = unitInstanceService.Instances.Find(u => u.Id == controller.Instance.Id);
                 if (matching != null)
                 {
                     controller.Initialize(matching);

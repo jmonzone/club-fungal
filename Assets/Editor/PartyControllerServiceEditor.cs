@@ -1,30 +1,16 @@
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(PartyControllerService), true)]
 public class PartyControllerServiceEditor : GURUServiceEditor
 {
-    private SerializedProperty partyControllersProp;
-
-    private void OnEnable()
-    {
-        partyControllersProp = serializedObject.FindProperty("partyControllers");
-    }
 
     protected override void DrawContent()
     {
         Debug.Log("Drawing PartyControllerServiceEditor content.");
         PartyControllerService service = (PartyControllerService)target;
-        UnitListDrawer.DrawList(service.PartyControllers, controller =>
-        {
-            var item = UnitListDrawer.CreateBaseDrawerItem(controller.Instance, null, true, null, false, null, null);
-            if (controller.Instance == null)
-            {
-                item.DisplayName = controller.gameObject.name;
-            }
-            item.Buttons.Add(("👁", () => { Selection.activeObject = controller.gameObject; EditorGUIUtility.PingObject(controller.gameObject); }, () => true));
-            return item;
-        });
+        UnitListDrawer.DrawList(service.PartyControllers.Select(controller => controller.Instance));
     }
 
     protected override string GetHelpText()

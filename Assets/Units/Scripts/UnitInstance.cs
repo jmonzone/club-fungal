@@ -64,6 +64,7 @@ public class UnitInstance : ScriptableObject
         if (string.IsNullOrEmpty(initData.Id)) initData.Id = GenerateMongoLikeId();
         instanceData = initData;
         friends = new List<UnitInstance>();
+        interactions = new List<UnitInteractionInstance>();
     }
 
     public void InitializeSkills(List<UnitSkill> skills)

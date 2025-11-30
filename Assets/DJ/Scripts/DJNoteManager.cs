@@ -81,7 +81,7 @@ public class DJNoteManager : MonoBehaviour
     {
         var targets = track.PartyMode switch
         {
-            _ => unitControllerService.UnitControllers
+            _ => unitControllerService.Controllers
                 .Select(unit => unit.GetComponent<INoteTarget>())
                 .Concat(new List<INoteTarget> { playerReference.Player.GetComponent<INoteTarget>() }),
             //_ => plants.Cast<INoteTarget>()

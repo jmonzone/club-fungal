@@ -17,14 +17,7 @@ public class PartyInstanceServiceEditor : GURUServiceEditor
     {
         PartyInstanceService service = (PartyInstanceService)target;
 
-        EditorGUILayout.LabelField("Party Instances:", EditorStyles.boldLabel);
-
-        UnitListDrawer.DrawList(service.PartyInstances, unit =>
-        {
-            var item = UnitListDrawer.CreateBaseDrawerItem(unit, service, false, null, true, null, null);
-            item.Buttons.Add(("X", () => { service.RemoveUnitInstanceFromParty(unit); EditorUtility.SetDirty(service); }, () => true));
-            return item;
-        });
+        UnitListDrawer.DrawList(service.PartyInstances);
     }
 
     protected override string GetHelpText()

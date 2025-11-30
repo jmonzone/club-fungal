@@ -11,18 +11,20 @@ public class PartyInstanceService : GURUService
     [SerializeField] private PlayerReference playerReference;
     [SerializeField] private LocalData localData;
     [SerializeField] private UnitInstanceService unitInstanceService;
+    [SerializeField] private PartyControllerService partyControllerService;
 
     [Header("Runtime")]
     [SerializeField] private List<UnitInstance> partyInstances = new List<UnitInstance>();
 
     public PlayerReference PlayerReference => playerReference;
+    public UnitInstanceService UnitInstanceService => unitInstanceService;
+    public PartyControllerService PartyControllerService => partyControllerService;
     public List<UnitInstance> PartyInstances => partyInstances;
     public event UnityAction<UnitInstance> OnUnitInstanceAddedToParty;
     public event UnityAction<UnitInstance> OnUnitInstanceRemovedFromParty;
 
     protected override void OnInitialize()
     {
-        localData.Initialize();
         Debug.Log("Loading party from local data.");
         partyInstances = new List<UnitInstance>();
 
@@ -35,7 +37,7 @@ public class PartyInstanceService : GURUService
                 var partyIds = partyArray.Select(t => t.ToString()).ToList();
                 foreach (var id in partyIds)
                 {
-                    var unit = unitInstanceService.Units.Find(u => u.Id == id);
+                    var unit = unitInstanceService.Instances.Find(u => u.Id == id);
                     if (unit != null)
                     {
                         // Debug.Log($"Loaded party member: {unit.DisplayName} (ID: {unit.Id})");

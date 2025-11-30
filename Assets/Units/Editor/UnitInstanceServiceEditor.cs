@@ -50,17 +50,6 @@ public class UnitInstanceServiceEditor : GURUServiceEditor
         return true;
     }
 
-    private UnitControllerService FindUnitControllerService()
-    {
-        var guids = AssetDatabase.FindAssets("t:UnitControllerService");
-        if (guids.Length > 0)
-        {
-            var path = AssetDatabase.GUIDToAssetPath(guids[0]);
-            return AssetDatabase.LoadAssetAtPath<UnitControllerService>(path);
-        }
-        return null;
-    }
-
     private void DrawIconButton(string emoji, string text, System.Action action, GUIStyle style = null)
     {
         EditorGUILayout.BeginHorizontal();
@@ -91,51 +80,9 @@ public class UnitInstanceServiceEditor : GURUServiceEditor
     {
         UnitInstanceService service = (UnitInstanceService)target;
 
-        // Display units in a responsive layout
-        List<UnitInstance> toRemove = new List<UnitInstance>();
-        var controllerService = FindUnitControllerService();
-        UnitListDrawer.DrawList(service.Units, unit =>
-        {
-            var item = UnitListDrawer.CreateBaseDrawerItem(unit, service.PartyInstanceService, true, (u) => service.Units.Contains(u) ? new Color(0.6f, 0.7f, 1.0f) : Color.white, true, (u) =>
-            {
-                if (service.PartyInstanceService.PartyInstances.Any(p => p.Id == u.Id))
-                {
-                    service.PartyInstanceService.RemoveUnitInstanceFromParty(u);
-                }
-                else
-                {
-                    service.PartyInstanceService.AddUnitInstanceToParty(u);
-                }
-            }, null);
-            UnitListDrawer.AddViewButton(item, controllerService?.GetController(unit));
-            if (!service.Units.Contains(unit))
-            {
-                item.Buttons.Add(("X", () => toRemove.Add(unit), () => true));
-            }
-            return item;
-        });
-        // Remove after iteration
-        foreach (var unit in toRemove)
-        {
-            service.Units.Remove(unit);
-            service.SaveData();
-            EditorUtility.SetDirty(service);
-        }
-
-        EditorGUILayout.Space();
-
-        // Buttons at the bottom
-        GUIStyle leftAlignedButton = new GUIStyle(GUI.skin.button);
-        leftAlignedButton.alignment = TextAnchor.MiddleLeft;
-        EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
+        UnitListDrawer.DrawList(service.Instances);
         EditorGUILayout.Space(10);
-        EditorGUILayout.BeginVertical();
-        EditorGUILayout.Space(10);
-        DrawIconButton("🆕", "Generate A New Unit", () => { service.CreateUnit(unit => unit is FungalUnit); EditorUtility.SetDirty(service); }, leftAlignedButton);
-        EditorGUILayout.Space(10);
-        EditorGUILayout.EndVertical();
-        EditorGUILayout.Space(10);
-        EditorGUILayout.EndHorizontal();
+        DrawIconButton("🆕", "Generate A New Unit", () => { service.CreateUnit(unit => unit is FungalUnit); EditorUtility.SetDirty(service); });
     }
 
     protected override string GetHelpText()

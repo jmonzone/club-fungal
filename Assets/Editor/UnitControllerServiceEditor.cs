@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 
 [CustomEditor(typeof(UnitControllerService), true)]
 public class UnitControllerServiceEditor : GURUServiceEditor
@@ -10,20 +11,7 @@ public class UnitControllerServiceEditor : GURUServiceEditor
 
         EditorGUILayout.LabelField("Unit Controllers in Scene:", EditorStyles.boldLabel);
 
-        UnitListDrawer.DrawList(service.UnitControllers, controller =>
-        {
-            var item = UnitListDrawer.CreateBaseDrawerItem(controller.Instance, service.UnitInstanceService.PartyInstanceService, true, null, false, null, null);
-            if (controller.Instance == null)
-            {
-                item.DisplayName = controller.gameObject.name;
-            }
-            if (controller.Instance != null)
-            {
-                item.Buttons.Add(("View Instance Data", () => PopupInspector.Show(controller.Instance), () => true));
-            }
-            UnitListDrawer.AddViewButton(item, controller);
-            return item;
-        });
+        UnitListDrawer.DrawList(service.Controllers.Select(controller => controller.Instance));
     }
 
     protected override string GetHelpText()

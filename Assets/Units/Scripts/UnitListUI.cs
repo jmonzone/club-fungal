@@ -36,7 +36,7 @@ public class UnitListUI : MonoBehaviour
     private void UpdateView()
     {
         // filter only hired units
-        var hiredUnits = unitInstanceService.Units.Where(u => u.IsFriends).ToList();
+        var hiredUnits = unitInstanceService.Instances.Where(u => u.IsFriends).ToList();
 
         // ensure we have enough views
         while (unitViewList.Count < hiredUnits.Count)

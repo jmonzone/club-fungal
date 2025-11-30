@@ -75,7 +75,7 @@ public class PartyPageUI : MonoBehaviour
         }
 
         i = 0;
-        foreach (var unit in unitInstanceService.Units.Skip(1))
+        foreach (var unit in unitInstanceService.Instances.Skip(1))
         {
             partyInvites[i].SetUnit(unit, true);
             i++;
