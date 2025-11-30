@@ -24,7 +24,7 @@ public class UnitControllerEditor : RepositionableEditor
 
         if (controller.CurrentInteraction != null)
         {
-            EditorGUILayout.LabelField("Current Interaction", controller.CurrentInteraction.GetType().Name);
+            EditorGUILayout.ObjectField("Current Interaction", controller.CurrentInteraction, typeof(UnitInteraction), false);
         }
         else
         {
@@ -40,7 +40,7 @@ public class UnitControllerEditor : RepositionableEditor
 
         if (controller.Instance.OriginalInstance != null)
         {
-            if (GUILayout.Button("Add to Original") && selectedInteraction != null)
+            if (GUILayout.Button("Add Moment to Original Asset") && selectedInteraction != null)
             {
                 var moment = new UnitMoment(selectedInteraction, false);
                 controller.Instance.OriginalInstance.Moments.Add(moment);
