@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(PartyInstanceService), true)]
-public class PartyInstanceServiceEditor : GURUServiceEditor
+public class PartyInstanceServiceEditor : GURUEditor
 {
     private int selectedUnitIndex = 0;
 
@@ -20,8 +20,6 @@ public class PartyInstanceServiceEditor : GURUServiceEditor
         UnitListDrawer.DrawList(service.PartyInstances);
     }
 
-    protected override string GetHelpText()
-    {
-        return "Manage the current party instances.";
-    }
+    protected override string Description => "Manage all Party Instances available in the game.";
+
 }

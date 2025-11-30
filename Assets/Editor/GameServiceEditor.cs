@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(GameService), true)]
-public class GameServiceEditor : GURUServiceEditor
+public class GameServiceEditor : GURUEditor
 {
     public override void OnInspectorGUI()
     {
@@ -19,8 +19,5 @@ public class GameServiceEditor : GURUServiceEditor
         }
     }
 
-    protected override string GetHelpText()
-    {
-        return "Use this button to reset the JSON data and re-initialize all game systems.";
-    }
+    protected override string Description => "Manage the core Game Service settings and operations.";
 }

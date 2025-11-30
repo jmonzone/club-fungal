@@ -12,7 +12,6 @@ public class BuildReference : ScriptableObject
     [SerializeField] private LocalData localData;
     [SerializeField] private InventoryReference inventory;
     [SerializeField] private Item initialItem;
-    [SerializeField] private List<BuildInstance> initialBuilds;
 
     [SerializeField] private Navigation navigation;
     [SerializeField] private ViewReference buildListView;
@@ -110,11 +109,6 @@ public class BuildReference : ScriptableObject
             }
             else
             {
-                foreach (var build in initialBuilds)
-                {
-                    buildInstances.Add(build);
-                    culturePoints += build.Item.CulturePoints;
-                }
             }
         }
         catch (Exception e)

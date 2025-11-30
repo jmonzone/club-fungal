@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(UnitInstanceService))]
-public class UnitInstanceServiceEditor : GURUServiceEditor
+public class UnitInstanceServiceEditor : GURUEditor
 {
 
     protected override void OnEditorEnable()
@@ -85,8 +85,6 @@ public class UnitInstanceServiceEditor : GURUServiceEditor
         DrawIconButton("🆕", "Generate A New Unit", () => { service.CreateUnit(unit => unit is FungalUnit); EditorUtility.SetDirty(service); });
     }
 
-    protected override string GetHelpText()
-    {
-        return "Manage and inspect all units in the service. Initial units can be edited, runtime units can be removed.";
-    }
+    protected override string Description =>
+        "Manage all Unit Instances available in the game. You can also generate new units using the button below.";
 }

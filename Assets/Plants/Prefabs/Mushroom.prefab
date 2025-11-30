@@ -50,6 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 0}
   overlapHalfExtents: {x: 0.5, y: 0.5, z: 0.5}
+  isValidPlacement: 0
 --- !u!114 &7653803590705474910
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,9 +68,8 @@ MonoBehaviour:
   spawnPoint: {fileID: 4661330487296328533}
   dJTableReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
   scaleTransform: {fileID: 8110878824461284166}
-  emissionRate: 3
+  emissionStep: 8
   launchHeight: 2
-  landingRadius: 2
   bounceScale: 1.2
   bounceDuration: 0.3
 --- !u!208 &4219176299035986033
@@ -146,6 +146,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -167,6 +172,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -227,6 +233,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 23318464693688554, guid: c72f3f8a9daab2442b7dd148c087d333,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e235b1804ceee49e983cf4ccf4edf56e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

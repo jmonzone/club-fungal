@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(PartyControllerService), true)]
-public class PartyControllerServiceEditor : GURUServiceEditor
+public class PartyControllerServiceEditor : GURUEditor
 {
 
     protected override void DrawContent()
@@ -13,8 +13,6 @@ public class PartyControllerServiceEditor : GURUServiceEditor
         UnitListDrawer.DrawList(service.PartyControllers.Select(controller => controller.Instance));
     }
 
-    protected override string GetHelpText()
-    {
-        return "This section displays all Party Controllers currently present in the scene, including inactive ones.";
-    }
+    protected override string Description =>
+        "This section displays all Party Controllers currently present in the scene, including inactive ones.";
 }

@@ -2,9 +2,9 @@ using UnityEditor;
 using UnityEngine;
 
 [InitializeOnLoad]
-public class GURUServiceInitializer
+public class GURUInitializer
 {
-    static GURUServiceInitializer()
+    static GURUInitializer()
     {
         EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
     }
@@ -28,43 +28,5 @@ public class GURUServiceInitializer
             return AssetDatabase.LoadAssetAtPath<T>(path);
         }
         return null;
-    }
-}
-
-[CustomEditor(typeof(GURUService), true)]
-public class GURUServiceEditor : Editor
-{
-
-    protected void OnEnable()
-    {
-        OnEditorEnable();
-    }
-
-    protected virtual void OnEditorEnable() { }
-
-    protected void OnDisable()
-    {
-        OnEditorDisable();
-    }
-
-    protected virtual void OnEditorDisable() { }
-
-    public override void OnInspectorGUI()
-    {
-        GURUService service = (GURUService)target;
-
-        DrawDefaultInspector();
-
-        GURUStyler.DrawGuruSection(() => DrawContent(), GetHelpText(), service);
-    }
-
-    protected virtual void DrawContent()
-    {
-        Debug.Log("Drawing GURU Service Editor Content");
-    }
-
-    protected virtual string GetHelpText()
-    {
-        return "";
     }
 }
