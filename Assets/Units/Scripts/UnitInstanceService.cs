@@ -246,8 +246,6 @@ public class UnitInstanceService : GURUService
         return newUnitInstance;
     }
 
-
-
     private string GenerateDisplayName(string baseName)
     {
         var titles = new[] { "Mysterious", "Party", "DJ", "Crazy", "Wild", "Cool", "Happy", "Sad", "Fun", "Silly" };

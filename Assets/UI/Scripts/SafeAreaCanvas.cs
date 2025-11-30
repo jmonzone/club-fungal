@@ -9,28 +9,40 @@ public class SafeAreaCanvas : MonoBehaviour
     [SerializeField] private float uniformPaddingPixels = 0;
 
     private Rect lastSafeArea;
+    private bool needsApply = false;
 
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         canvas = GetComponentInParent<Canvas>();
-        ApplySafeArea();
+        needsApply = true;
         lastSafeArea = Screen.safeArea;
     }
 
     private void OnValidate()
     {
-        ApplySafeArea();
+        needsApply = true;
     }
 
 #if UNITY_EDITOR
     private void Update()
     {
+        if (needsApply)
+        {
+            ApplySafeArea();
+            needsApply = false;
+        }
+
         if (Screen.safeArea != lastSafeArea)
         {
             ApplySafeArea();
             lastSafeArea = Screen.safeArea;
         }
+    }
+#else
+    private void Start()
+    {
+        ApplySafeArea();
     }
 #endif
 

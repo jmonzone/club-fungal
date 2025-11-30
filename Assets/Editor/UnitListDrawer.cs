@@ -4,147 +4,226 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
+public abstract class UnitDrawerItemAction
+{
+    public string text;
+    public string emoji;
+    public Action action;
+    public Func<bool> condition;
+    public Color? backgroundColor;
+}
+
+public class ViewAssetAction : UnitDrawerItemAction
+{
+    public ViewAssetAction(UnitInstance unitInstance, bool isInitial)
+    {
+        text = "View Asset";
+        emoji = "📁";
+        action = () => { Selection.activeObject = unitInstance; EditorGUIUtility.PingObject(unitInstance); };
+        condition = () => isInitial;
+    }
+}
+
+public class ViewInstanceAction : UnitDrawerItemAction
+{
+    public ViewInstanceAction(UnitInstance unitInstance)
+    {
+        text = "View Instance";
+        emoji = "👁️";
+        action = () => PopupInspector.Show(unitInstance);
+        condition = () => true;
+    }
+}
+
+public class ViewGameObjectAction : UnitDrawerItemAction
+{
+    public ViewGameObjectAction(UnitController controller)
+    {
+        text = "View GameObject";
+        emoji = "👁️";
+        action = () =>
+        {
+            Selection.objects = new UnityEngine.Object[] { controller.gameObject };
+            EditorGUIUtility.PingObject(controller.gameObject);
+            var sceneView = SceneView.lastActiveSceneView;
+            sceneView.pivot = controller.transform.position;
+            sceneView.size = 10f;
+            sceneView.Repaint();
+        };
+        condition = () => controller != null;
+    }
+}
+
+public class DeleteInstanceAction : UnitDrawerItemAction
+{
+    public DeleteInstanceAction(UnitInstance unitInstance, UnitController controller, bool isInitial)
+    {
+        text = "Delete Instance";
+        emoji = "❌";
+        action = () => UnityEngine.Object.DestroyImmediate(unitInstance);
+        condition = () => controller != null && !isInitial;
+        backgroundColor = Color.red;
+    }
+}
+
+public class TogglePartyAction : UnitDrawerItemAction
+{
+    public TogglePartyAction(bool isInParty, PartyInstanceService service, UnitInstance unitInstance)
+    {
+        text = isInParty ? "Remove from Party" : "Add to Party";
+        emoji = "🎉";
+        action = () =>
+        {
+            if (isInParty)
+                service.RemoveUnitInstanceFromParty(unitInstance);
+            else
+                service.AddUnitInstanceToParty(unitInstance);
+        };
+        condition = () => true;
+    }
+}
+
 public abstract class UnitListDrawer
 {
-    public static void DrawList(IEnumerable<UnitInstance> items)
+    public static void DrawList(IEnumerable<UnitInstance> instances)
     {
-        var drawerItems = items.Select(CreateBaseDrawerItem).ToList();
-        drawerItems.Sort((a, b) => string.Compare(a.Id, b.Id));
-        DrawListInternal(drawerItems);
-    }
+        instances = instances.OrderBy(i => i.Id);
 
-    private static void DrawListInternal(List<UnitDrawerItem> items)
-    {
-        foreach (var item in items)
-        {
-            EditorGUILayout.BeginHorizontal();
-            Color originalBG = GUI.backgroundColor;
-            GUI.backgroundColor = item.BackgroundColor;
-            Color originalColor = GUI.color;
-            GUI.color = Color.white;
-            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            // Top: icon and info horizontal
-            EditorGUILayout.BeginHorizontal();
-            // Left side: icon
-            EditorGUILayout.BeginVertical();
-            // Draw icon
-            if (item.Icon != null)
-            {
-                GUIContent content = new GUIContent(item.Icon);
-                GUILayout.Label(content, GUILayout.Width(32), GUILayout.Height(32));
-            }
-            else
-            {
-                GUILayout.Label("No Icon", GUILayout.Width(32), GUILayout.Height(32));
-            }
-            EditorGUILayout.EndVertical();
-            // Right side: name and job
-            EditorGUILayout.BeginVertical();
-            EditorGUILayout.LabelField(item.DisplayName);
-            EditorGUILayout.Space(-2);
-            GUIStyle jobStyle = new GUIStyle(EditorStyles.miniLabel) { fontStyle = FontStyle.Italic, normal = { textColor = new Color(0.5f, 0.5f, 0.5f) } };
-            EditorGUILayout.LabelField(item.Job, jobStyle);
-            if (item.IsInParty)
-            {
-                GUI.color = Color.green;
-                EditorGUILayout.LabelField("🎉 In Party", jobStyle);
-                GUI.color = Color.white;
-            }
-            EditorGUILayout.EndVertical();
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.EndVertical();
-            EditorGUILayout.BeginVertical();
-            // ... button
-            if (GUILayout.Button("...", GUILayout.Width(20), GUILayout.Height(20)))
-            {
-                ShowMenu(item);
-            }
-            // X button outside the help box, below
-            if (item.Buttons.Any(b => b.text == "X"))
-            {
-                var removeButton = item.Buttons.First(b => b.text == "X");
-                if (removeButton.condition())
-                {
-                    Color originalBG2 = GUI.backgroundColor;
-                    GUI.backgroundColor = Color.red;
-                    if (GUILayout.Button("X", GUILayout.Width(20), GUILayout.Height(20)))
-                    {
-                        removeButton.action();
-                    }
-                    GUI.backgroundColor = originalBG2;
-                }
-            }
-            EditorGUILayout.EndVertical();
-            GUI.backgroundColor = originalBG;
-            GUI.color = originalColor;
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.Space(5);
-        }
-    }
-
-    public static UnitDrawerItem CreateBaseDrawerItem(UnitInstance unitInstance)
-    {
+        // Load services once outside the loop for efficiency
         var unitInstanceService = Resources.FindObjectsOfTypeAll<UnitInstanceService>().FirstOrDefault();
         var partyInstanceService = Resources.FindObjectsOfTypeAll<PartyInstanceService>().FirstOrDefault();
         var unitControllerService = Resources.FindObjectsOfTypeAll<UnitControllerService>().FirstOrDefault();
 
-        var item = new UnitDrawerItem
+        // Predefine styles outside the loop
+        GUIStyle jobStyle = new GUIStyle(EditorStyles.miniLabel) { fontStyle = FontStyle.Italic, normal = { textColor = new Color(0.5f, 0.5f, 0.5f) } };
+
+        foreach (var unitInstance in instances)
         {
-            Id = unitInstance?.Id ?? "",
-            Icon = unitInstance?.Data?.Sprite?.texture,
-            DisplayName = unitInstance?.DisplayName ?? "No Instance",
-            Job = unitInstance?.Job?.Id.ToUpper() ?? "No Job",
-            IsInParty = partyInstanceService?.PartyInstances?.Any(p => p.Id == unitInstance.Id) ?? false
-        };
+            // Compute instance-specific data
+            var icon = unitInstance?.Data?.Sprite?.texture;
+            var displayName = unitInstance?.DisplayName ?? "No Instance";
+            var job = unitInstance?.Job?.Id.ToUpper() ?? "No Job";
+            var isInParty = partyInstanceService?.PartyInstances?.Any(p => p.Id == unitInstance.Id) ?? false;
 
-        var initialUnit = unitInstanceService.InitialUnits.Find(instance => instance.Id == unitInstance.Id);
-        item.BackgroundColor = initialUnit != null ? new Color(0.5f, 0.6f, 1f) : Color.white;
+            var initialUnit = unitInstanceService?.InitialUnits.Find(instance => instance.Id == unitInstance.Id);
+            var controller = unitControllerService?.Controllers.Find(c => c.Instance != null && c.Instance.Id == unitInstance.Id);
 
-        if (initialUnit)
-        {
-            item.Buttons.Add(("View Asset", () => { Selection.activeObject = unitInstance; EditorGUIUtility.PingObject(unitInstance); }, () => true));
-        }
+            bool isSelected = controller != null && Selection.activeGameObject == controller.gameObject;
+            bool isInitial = initialUnit != null;
 
-        item.Buttons.Add(("View Instance", () => PopupInspector.Show(unitInstance), () => true));
-
-        var controller = unitControllerService.Controllers.Find(c => c.Instance != null && c.Instance.Id == unitInstance.Id);
-        if (controller != null)
-        {
-            item.Buttons.Add(("View GameObject", () => { Selection.activeObject = controller.gameObject; EditorGUIUtility.PingObject(controller.gameObject); }, () => true));
-        }
-
-
-        string buttonText = (item.IsInParty ? "Remove from Party" : "Add to Party");
-        item.Buttons.Add((buttonText, (Action)(() =>
-        {
-            if (item.IsInParty)
-                partyInstanceService.RemoveUnitInstanceFromParty(unitInstance);
-            else
-                partyInstanceService.AddUnitInstanceToParty(unitInstance);
-        }), (Func<bool>)(() => true)));
-        return item;
-    }
-    private static void ShowMenu(UnitDrawerItem item)
-    {
-        GenericMenu menu = new GenericMenu();
-        foreach (var (text, action, condition) in item.Buttons.Where(b => b.text != "X"))
-        {
-            if (condition())
+            var backgroundColor = (isSelected, isInitial) switch
             {
-                menu.AddItem(new GUIContent(text), false, () => action());
+                (isSelected: true, _) => Color.cyan,
+                (isSelected: false, isInitial: true) => new Color(0.5f, 0.6f, 1f),
+                _ => Color.white
+            };
+
+            var behaviour = isSelected ? (controller?.CurrentBehaviour?.GetType().Name ?? "None") : null;
+            var interaction = isSelected ? (controller?.CurrentInteraction?.name ?? "None") : null;
+
+            // Create action lists
+            var menuItems = new List<UnitDrawerItemAction>
+            {
+                new ViewAssetAction(unitInstance, initialUnit != null),
+                new ViewInstanceAction(unitInstance),
+                new TogglePartyAction(isInParty, partyInstanceService, unitInstance)
+            };
+
+            var shortcuts = new List<UnitDrawerItemAction>
+            {
+                new ViewGameObjectAction(controller),
+                new DeleteInstanceAction(unitInstance, controller, initialUnit != null)
+            };
+
+            // Draw the unit
+            DrawUnit(icon, displayName, job, isInParty, behaviour, interaction, backgroundColor, shortcuts, menuItems, jobStyle, controller);
+        }
+    }
+
+    private static void DrawUnit(Texture icon, string displayName, string job, bool isInParty, string behaviour, string interaction, Color backgroundColor, List<UnitDrawerItemAction> shortcuts, List<UnitDrawerItemAction> menuItems, GUIStyle jobStyle, UnitController controller)
+    {
+        EditorGUILayout.BeginHorizontal();
+        Color originalBG = GUI.backgroundColor;
+        GUI.backgroundColor = backgroundColor;
+        Color originalColor = GUI.color;
+        GUI.color = Color.white;
+        EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+        // Top: icon and info horizontal
+        EditorGUILayout.BeginHorizontal();
+        // Left side: icon
+        EditorGUILayout.BeginVertical();
+        // Draw icon
+        if (icon != null)
+        {
+            GUIContent content = new GUIContent(icon);
+            GUILayout.Label(content, GUILayout.Width(32), GUILayout.Height(32));
+        }
+        else
+        {
+            GUILayout.Label("No Icon", GUILayout.Width(32), GUILayout.Height(32));
+        }
+        EditorGUILayout.EndVertical();
+        // Right side: name and job
+        EditorGUILayout.BeginVertical();
+        EditorGUILayout.LabelField(displayName);
+        EditorGUILayout.Space(-2);
+        EditorGUILayout.LabelField(job, jobStyle);
+        if (isInParty)
+        {
+            GUI.color = Color.green;
+            EditorGUILayout.LabelField("🎉 In Party", jobStyle);
+            GUI.color = Color.white;
+        }
+        if (!string.IsNullOrEmpty(behaviour))
+        {
+            GUI.color = Color.yellow;
+            EditorGUILayout.LabelField("Behaviour: " + behaviour, jobStyle);
+            GUI.color = Color.white;
+        }
+        if (!string.IsNullOrEmpty(interaction))
+        {
+            GUI.color = Color.yellow;
+            EditorGUILayout.ObjectField("Interaction", controller?.CurrentInteraction, typeof(UnitInteraction), false);
+            GUI.color = Color.white;
+        }
+        EditorGUILayout.EndVertical();
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndVertical();
+        EditorGUILayout.BeginVertical();
+
+        // Shortcuts
+        foreach (var actionItem in shortcuts)
+        {
+            if (actionItem.condition())
+            {
+                Color originalBGShortcut = GUI.backgroundColor;
+                GUI.backgroundColor = actionItem.backgroundColor ?? originalBGShortcut;
+                if (GUILayout.Button(new GUIContent(actionItem.emoji, actionItem.text), GUILayout.Width(20), GUILayout.Height(20)))
+                {
+                    actionItem.action();
+                }
+                GUI.backgroundColor = originalBGShortcut;
             }
         }
-        menu.ShowAsContext();
+
+        // ... button
+        if (GUILayout.Button("...", GUILayout.Width(20), GUILayout.Height(20)))
+        {
+            GenericMenu menu = new GenericMenu();
+            foreach (var actionItem in menuItems)
+            {
+                if (actionItem.condition())
+                {
+                    menu.AddItem(new GUIContent(actionItem.text), false, () => actionItem.action());
+                }
+            }
+            menu.ShowAsContext();
+        }
+        EditorGUILayout.EndVertical();
+        GUI.backgroundColor = originalBG;
+        GUI.color = originalColor;
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.Space(5);
     }
 }
 
-public class UnitDrawerItem
-{
-    public Texture2D Icon;
-    public string Id;
-    public string DisplayName;
-    public string Job;
-    public bool IsInParty;
-    public Color BackgroundColor = Color.white;
-    public List<(string text, Action action, Func<bool> condition)> Buttons = new List<(string, Action, Func<bool>)>();
-}

@@ -6,6 +6,13 @@ using System.Collections.Generic;
 
 public static class GURUStyler
 {
+    public static readonly Color GuruColor = new Color(0.65f, 0.25f, 0.7f, 0.4f);
+    public static GUIStyle LogoStyle => new GUIStyle(EditorStyles.boldLabel)
+    {
+        alignment = TextAnchor.MiddleCenter,
+        fontSize = 14,
+    };
+
     private static readonly Type[] serviceTypes = { typeof(GameService), typeof(UnitInstanceService), typeof(UnitControllerService), typeof(PartyInstanceService), typeof(PartyControllerService) };
     private static Dictionary<Type, GURUService> cachedServices = new Dictionary<Type, GURUService>();
 
@@ -41,7 +48,7 @@ public static class GURUStyler
     public static void DrawGuruSection(System.Action contentDrawer, string helpText = "", UnityEngine.Object target = null, string componentName = null)
     {
         EditorGUILayout.Space(10);
-        GUI.backgroundColor = new Color(0.65f, 0.25f, 0.7f, 0.4f);
+        GUI.backgroundColor = GuruColor;
         GUIStyle paddedHelpBox = new GUIStyle(EditorStyles.helpBox)
         {
             padding = new RectOffset(15, 15, 15, 15)
@@ -49,13 +56,9 @@ public static class GURUStyler
         EditorGUILayout.BeginVertical(paddedHelpBox);
         GUI.backgroundColor = Color.white;
 
-        GUIStyle logoStyle = new GUIStyle(EditorStyles.boldLabel)
-        {
-            alignment = TextAnchor.MiddleCenter,
-            fontSize = 14,
-        };
+        GUIStyle logoStyle = LogoStyle;
         string resolvedName = componentName ?? (target != null ? target.GetType().Name : null);
-        string headerText = resolvedName != null ? $"GURU - {resolvedName}" : "GURU";
+        string headerText = componentName == "GURU" ? "GURU" : (resolvedName != null ? $"GURU - {resolvedName}" : "GURU");
         EditorGUILayout.LabelField(headerText, logoStyle);
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         if (!string.IsNullOrEmpty(helpText))
@@ -67,12 +70,9 @@ public static class GURUStyler
         contentDrawer();
 
         // Separator before buttons
-        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-
         // Ensure assets are loaded
         EnsureAssetsLoaded();
 
-        EditorGUILayout.Space(10);
         EditorGUILayout.BeginVertical();
         GUIStyle linkStyle = new GUIStyle(EditorStyles.linkLabel)
         {
@@ -82,23 +82,23 @@ public static class GURUStyler
         var buttons = new List<ButtonInfo>();
 
         // Add buttons for each service
-        foreach (var kvp in cachedServices)
-        {
-            string label = $"Open {kvp.Key.Name} Asset";
-            Action action = () => AssetDatabase.OpenAsset(kvp.Value);
-            Func<bool> condition = () => kvp.Value != null && Selection.activeObject != kvp.Value;
-            buttons.Add(new ButtonInfo { label = label, action = action, condition = condition });
-        }
+        // foreach (var kvp in cachedServices)
+        // {
+        //     string label = $"Open {kvp.Key.Name} Asset";
+        //     Action action = () => AssetDatabase.OpenAsset(kvp.Value);
+        //     Func<bool> condition = () => kvp.Value != null && Selection.activeObject != kvp.Value;
+        //     buttons.Add(new ButtonInfo { label = label, action = action, condition = condition });
+        // }
 
         // Add reset button for GameService
-        if (cachedServices.ContainsKey(typeof(GameService)) && cachedServices[typeof(GameService)] != null)
-        {
-            buttons.Add(new ButtonInfo { label = "Reset JSON File", action = () => { if (cachedServices[typeof(GameService)] is GameService gs) gs.ResetJsonFile(); }, condition = () => true });
-            buttons.Add(new ButtonInfo { label = "Initialize Systems", action = () => { if (cachedServices[typeof(GameService)] is GameService gs) gs.InitializeSystems(); }, condition = () => true });
-        }
+        // if (cachedServices.ContainsKey(typeof(GameService)) && cachedServices[typeof(GameService)] != null)
+        // {
+        //     buttons.Add(new ButtonInfo { label = "Reset JSON File", action = () => { if (cachedServices[typeof(GameService)] is GameService gs) gs.ResetJsonFile(); }, condition = () => true });
+        //     buttons.Add(new ButtonInfo { label = "Initialize Systems", action = () => { if (cachedServices[typeof(GameService)] is GameService gs) gs.InitializeSystems(); }, condition = () => true });
+        // }
 
-        // Add open JSON file button
-        buttons.Add(new ButtonInfo { label = "Open JSON File", action = () => Process.Start(LocalData.GetSaveDataPath()), condition = () => true });
+        // // Add open JSON file button
+        // buttons.Add(new ButtonInfo { label = "Open JSON File", action = () => Process.Start(LocalData.GetSaveDataPath()), condition = () => true });
 
         // Add button to open editor script of target if it's a GURUService
         if (target != null && target is GURUService)

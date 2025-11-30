@@ -13,9 +13,14 @@ public class UnitFollow : UnitBehaviour
 
     public List<UnitFollow> Followers => followers;
 
-    private NavMeshAgent navMeshAgent;
+    [SerializeField] private NavMeshAgent navMeshAgent;
 
     public event UnityAction OnDestinationReached;
+
+    private void OnValidate()
+    {
+        navMeshAgent = GetComponent<NavMeshAgent>();
+    }
 
     protected override void Awake()
     {
@@ -36,7 +41,7 @@ public class UnitFollow : UnitBehaviour
     {
         followers.Add(unit);
     }
-    
+
     public void StopFollowing()
     {
         leader = null;

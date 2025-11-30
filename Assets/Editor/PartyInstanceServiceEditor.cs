@@ -4,7 +4,7 @@ using UnityEditor;
 [CustomEditor(typeof(PartyInstanceService), true)]
 public class PartyInstanceServiceEditor : GURUEditor
 {
-    private int selectedUnitIndex = 0;
+    protected override string Description => "Manage all Party Instances available in the game.";
 
     public override void OnInspectorGUI()
     {
@@ -19,7 +19,4 @@ public class PartyInstanceServiceEditor : GURUEditor
 
         UnitListDrawer.DrawList(service.PartyInstances);
     }
-
-    protected override string Description => "Manage all Party Instances available in the game.";
-
 }
