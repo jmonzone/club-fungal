@@ -45,7 +45,7 @@ public class PlayerService : GURUService
 
     private void FindPlayerController()
     {
-        Debug.Log("Searching for PlayerController in scene...");
+        // Debug.Log("Searching for PlayerController in scene...");
         var player = FindObjectOfType<PlayerController>();
         if (player != null)
         {

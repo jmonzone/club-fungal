@@ -94,7 +94,7 @@ public class PartyInstanceService : GURUService
             }
         }
         var partyIds = partyInstances.Where(u => u != null).Select(u => u.Id).ToList();
-        Debug.Log("Saving party: " + string.Join(", ", partyIds));
+        // Debug.Log("Saving party: " + string.Join(", ", partyIds));
         localData.SaveData("party", new JArray(partyIds));
     }
 }

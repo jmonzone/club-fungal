@@ -18,12 +18,21 @@ public class PartyControllerService : GURUService
 
     protected override void OnInitialize()
     {
-        InitializeControllers();
-        playerReference.OnPlayerInitialized += OnPlayerInitialized;
+        partyControllers.Clear();
+
+        foreach (var controller in unitControllerService.Controllers)
+        {
+            if (partyInstanceService.PartyInstances.Any(p => p.Id == controller.Instance.Id))
+            {
+                AddToParty(controller);
+            }
+        }
     }
 
-    private void OnPlayerInitialized()
+    public override void OnSceneLoaded()
     {
+        base.OnSceneLoaded();
+
         foreach (var controller in unitControllerService.Controllers)
         {
             if (partyInstanceService.PartyInstances.Any(p => p.Id == controller.Instance.Id))
@@ -34,20 +43,8 @@ public class PartyControllerService : GURUService
                 };
             }
         }
-
-        playerReference.OnPlayerInitialized -= OnPlayerInitialized;
     }
 
-    public override void OnSceneLoaded()
-    {
-        base.OnSceneLoaded();
-        InitializeControllers();
-    }
-
-    private void InitializeControllers()
-    {
-        partyControllers.Clear();
-    }
 
     public void AddToParty(UnitController unit)
     {

@@ -4,11 +4,24 @@ using UnityEngine;
 [CustomEditor(typeof(SnapshotService))]
 public class SnapshotServiceEditor : GURUEditor
 {
+    private AssetSelectorComponent<SnapshotInstance> snapshotSelector;
+
     protected override string Description =>
         "Snapshot Service: Save and load unit positions.";
     protected override void DrawContent()
     {
         SnapshotService service = (SnapshotService)target;
+
+        if (snapshotSelector == null)
+        {
+            snapshotSelector = new AssetSelectorComponent<SnapshotInstance>("Load Snapshot from Asset", (asset) =>
+            {
+                if (asset != null)
+                {
+                    service.LoadSnapshotFromAsset(asset);
+                }
+            });
+        }
 
         if (GUILayout.Button("Save Snapshot to JSON"))
         {
@@ -43,5 +56,7 @@ public class SnapshotServiceEditor : GURUEditor
                 AssetDatabase.Refresh();
             }
         }
+
+        snapshotSelector.DrawGUI();
     }
 }

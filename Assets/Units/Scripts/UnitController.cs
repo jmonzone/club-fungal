@@ -41,6 +41,11 @@ public class UnitController : MonoBehaviour, IInteractable
     public event UnityAction OnNavMeshAgentReady;
     public event UnityAction OnBehaviourChanged;
 
+    private void OnValidate()
+    {
+        destination = GetComponent<UnitDestination>();
+    }
+
     protected virtual void Awake()
     {
         targetLookPosition = transform.position;
@@ -138,7 +143,7 @@ public class UnitController : MonoBehaviour, IInteractable
     public void Teleport(Vector3 position, Transform parent)
     {
         transform.parent = parent;
-        Destination.TeleportToPosition(position);
+        Destination?.TeleportToPosition(position);
         SetLookPosition(position);
     }
 

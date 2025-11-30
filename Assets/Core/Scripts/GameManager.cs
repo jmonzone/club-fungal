@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator Start()
     {
+        gameService.NotifySceneLoaded();
         screenFade.gameObject.SetActive(true);
         yield return new WaitForSeconds(2f);
         yield return screenFade.FadeOut();

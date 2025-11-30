@@ -17,12 +17,13 @@ public class SnapshotService : GURUService
     protected override void OnInitialize()
     {
         Application.quitting += SaveSnapshot;
-        SceneManager.sceneUnloaded += OnSceneUnloaded;
+        LoadSnapshot();
     }
 
-    private void OnSceneUnloaded(Scene scene)
+    public override void OnSceneLoaded()
     {
-        SaveSnapshot();
+        base.OnSceneLoaded();
+        LoadSnapshot();
     }
 
     public void SaveSnapshot()
@@ -51,6 +52,19 @@ public class SnapshotService : GURUService
         localData.SaveData(SNAPSHOT_KEY, snapshotJson);
     }
 
+    public void LoadSnapshotFromAsset(SnapshotInstance instance)
+    {
+        Debug.Log("Loading snapshot from asset.");
+        foreach (var snap in instance.snapshots)
+        {
+            var targetController = unitControllerService.Controllers.Find(controller => controller.Instance.Id == snap.id);
+            if (targetController != null)
+            {
+                targetController.transform.position = snap.position;
+            }
+        }
+    }
+
     public Dictionary<string, Vector3> LoadSnapshot()
     {
         Debug.Log("Loading snapshot of unit positions.");
@@ -76,7 +90,8 @@ public class SnapshotService : GURUService
                         float y = posObj.Value<float>("y");
                         float z = posObj.Value<float>("z");
                         positions[id] = new Vector3(x, y, z);
-                        targetController.transform.position = positions[targetController.Instance.Id];
+                        targetController.Teleport(positions[targetController.Instance.Id], targetController.transform.parent);
+
                     }
                 }
             }

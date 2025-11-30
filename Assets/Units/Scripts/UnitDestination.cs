@@ -18,11 +18,20 @@ public class UnitDestination : MonoBehaviour
 
     public event UnityAction OnTargetSelected;
 
+    private void OnValidate()
+    {
+        Initialize();
+    }
+
     protected void Awake()
+    {
+        Initialize();
+    }
+
+    private void Initialize()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
         navMeshAgent.updateRotation = false;
-
     }
 
     public void SetDestination(Vector3 destination)
@@ -48,18 +57,13 @@ public class UnitDestination : MonoBehaviour
 
     public void TeleportToPosition(Vector3 position)
     {
-        // Debug.Log($"Teleporting unit to position: {position}");
-        if (navMeshAgent != null)
-        {
-            // Debug.Log("Disabling navmesh agent for teleport");
-            target = null;
-            navMeshAgent.enabled = false;
-            navMeshAgent.Warp(position);
-            transform.position = position;
-            destination = position;
-            isAtDestination = true;
-            navMeshAgent.enabled = true;
-        }
+        target = null;
+        navMeshAgent.enabled = false;
+        navMeshAgent.Warp(position);
+        transform.position = position;
+        destination = position;
+        isAtDestination = true;
+        navMeshAgent.enabled = true;
     }
 
     private void Update()

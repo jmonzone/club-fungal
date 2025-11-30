@@ -7,9 +7,11 @@ public class TeleportService : ScriptableObject
 
     public void TeleportParty(Vector3 position, Transform parent)
     {
+        // Debug.Log($"Teleporting party to position {position} with parent {parent}.");
         // Teleport all party members
         foreach (var member in partyControllerService.PartyControllers)
         {
+            // Debug.Log($"Teleporting member {member.Instance}.");
             member.Teleport(position, parent);
         }
     }
