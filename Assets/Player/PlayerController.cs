@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
@@ -71,8 +70,6 @@ public class PlayerController : UnitController
     protected override void OnEnable()
     {
         base.OnEnable();
-        playerReference.OnTargetPositionChanged += PlayerReference_OnTargetPositionChanged;
-        playerReference.OnTargetInteractableChanged += PlayerReference_OnTargetInteractableChanged;
         playerReference.OnPOVCameraToggled += PlayerReference_OnPOVCameraToggled;
     }
 
@@ -84,37 +81,6 @@ public class PlayerController : UnitController
     protected override void OnDisable()
     {
         base.OnDisable();
-        playerReference.OnTargetPositionChanged -= PlayerReference_OnTargetPositionChanged;
-        playerReference.OnTargetInteractableChanged -= PlayerReference_OnTargetInteractableChanged;
         playerReference.OnPOVCameraToggled -= PlayerReference_OnPOVCameraToggled;
-    }
-
-    private void PlayerReference_OnTargetInteractableChanged()
-    {
-        if (playerReference.TargetInteractable != null)
-        {
-            if (interactRoutine != null) StopCoroutine(interactRoutine);
-            interactRoutine = StartCoroutine(InteractRoutine());
-        }
-    }
-
-    private Coroutine interactRoutine;
-    private IEnumerator InteractRoutine()
-    {
-        // Debug.Log("Starting interact routine");
-        Destination.SetTarget(playerReference.TargetInteractable.Transform);
-        yield return new WaitUntil(() => Destination.IsAtDestination);
-        playerReference.TargetInteractable.Select(this);
-        ApplyDefaultBehaviour();
-    }
-
-    private void PlayerReference_OnTargetPositionChanged()
-    {
-        if (playerReference.TargetInteractable == null)
-        {
-            // Debug.Log("Setting player target position");
-            SetLookPosition(playerReference.TargetPosition);
-            Destination.SetDestination(playerReference.TargetPosition);
-        }
     }
 }
