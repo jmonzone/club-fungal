@@ -79,7 +79,9 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget
 
     void IInteractable.Select(UnitController source)
     {
-        EmitSpore();
+        UnitSpore sporeBehaviour = source.GetComponent<UnitSpore>();
+        sporeBehaviour.SetEmitter(this);
+        source.SetBehaviour(sporeBehaviour);
     }
 
     public void EmitSpore()

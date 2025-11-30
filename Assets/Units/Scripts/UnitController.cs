@@ -147,12 +147,6 @@ public class UnitController : MonoBehaviour, IInteractable
         this.target = target;
     }
 
-    public void SetDefaultBehaviour(UnitBehaviour behaviour)
-    {
-        defaultBehaviour = behaviour;
-        ApplyDefaultBehaviour();
-    }
-
     public void ApplyDefaultBehaviour()
     {
         ApplyBehaviour(defaultBehaviour);

@@ -71,6 +71,8 @@ public class PlayerController : UnitController
     {
         base.OnEnable();
         playerReference.OnPOVCameraToggled += PlayerReference_OnPOVCameraToggled;
+        playerReference.OnTargetPositionChanged += ApplyDefaultBehaviour;
+        playerReference.OnTargetInteractableChanged += ApplyDefaultBehaviour;
     }
 
     private void PlayerReference_OnPOVCameraToggled(bool value)
@@ -82,5 +84,7 @@ public class PlayerController : UnitController
     {
         base.OnDisable();
         playerReference.OnPOVCameraToggled -= PlayerReference_OnPOVCameraToggled;
+        playerReference.OnTargetPositionChanged -= ApplyDefaultBehaviour;
+        playerReference.OnTargetInteractableChanged -= ApplyDefaultBehaviour;
     }
 }

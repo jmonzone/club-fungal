@@ -35,7 +35,6 @@ public class UnitPlayer : UnitBehaviour
         Controller.Destination.SetTarget(playerReference.TargetInteractable.Transform);
         yield return new WaitUntil(() => Controller.Destination.IsAtDestination);
         playerReference.TargetInteractable.Select(Controller);
-        Controller.ApplyDefaultBehaviour();
     }
 
     private void PlayerReference_OnTargetPositionChanged()
