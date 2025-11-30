@@ -69,7 +69,7 @@ public class ActivityLevelUI : MonoBehaviour
             skillLevelUIViews[i].SetUnit(unit);
             skillLevelUIViews[i].gameObject.SetActive(true);
 
-            UnitLevelViewMap.Add(unit, skillLevelUIViews[i]);
+            // UnitLevelViewMap.Add(unit, skillLevelUIViews[i]);
             i++;
         }
 
