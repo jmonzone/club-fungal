@@ -31,7 +31,6 @@ public class SnapshotService : GURUService
     {
         if (unitControllerService.Controllers.Count == 0) return;
 
-        Debug.Log($"Saving snapshot of unit positions controllers. Total controllers: {unitControllerService.Controllers.Count}");
         var snapshotJson = new JArray();
 
         foreach (var unit in unitControllerService.Controllers)
@@ -70,7 +69,6 @@ public class SnapshotService : GURUService
 
     public Dictionary<string, Vector3> LoadSnapshot()
     {
-        Debug.Log("Loading snapshot of unit positions.");
         var positions = new Dictionary<string, Vector3>();
 
         if (localData.JsonFile.ContainsKey(SNAPSHOT_KEY))

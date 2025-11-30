@@ -3,13 +3,16 @@ using UnityEngine;
 public abstract class GURUService : ScriptableObject
 {
     /// <summary>
-    /// Initializes the service.
+    /// Called at app start, at reset, or when entering edit mode in the editor.
     /// </summary>
-    internal void Initialize()
+    public void Initialize()
     {
         OnInitialize();
     }
 
+    /// <summary>
+    /// Callded at app start, 
+    /// </summary>
     protected abstract void OnInitialize();
 
     /// <summary>

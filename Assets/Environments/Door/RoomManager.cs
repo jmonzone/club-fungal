@@ -82,7 +82,6 @@ public class RoomManager : MonoBehaviour
             var teleportPosition = door.OtherDoor.transform.position + teleportDirection * 2f;
             teleportService.TeleportParty(teleportPosition, otherRoom.UnitParent);
 
-            Debug.Log($"Teleported player to {teleportPosition} door.OtherDoor.Room.transform.position {door.OtherDoor.Room.transform.position} door.OtherDoor.transform.position {door.OtherDoor.transform.position} teleportDirection {teleportDirection} ");
             if (settings.useOuterWalls) door.Room.SetAsOuterRoom();
             otherRoom.SetAsInnerRoom();
 

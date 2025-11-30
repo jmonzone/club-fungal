@@ -38,10 +38,12 @@ public class GameService : GURUService
         localData.Initialize();
         inventory.Initialize();
         build.Initialize();
+
         foreach (var service in services)
         {
             service.Initialize();
         }
+
         partyReference.Initialize();
         partyLogReference.Initialize();
         sporeReference.Initialize();

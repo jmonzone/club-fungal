@@ -39,8 +39,6 @@ public class LocalData : ScriptableObject
     public void SaveData(string key, JToken value)
     {
         Initialize();
-
-        Debug.Log($"SaveData called with key: {key}, value: {value}, json is null: {json == null}");
         var saveDataPath = GetSaveDataPath();
         json[key] = value;
         Directory.CreateDirectory(Path.GetDirectoryName(saveDataPath));
