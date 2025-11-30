@@ -14,6 +14,7 @@ public class GURUWindow : EditorWindow
     private UnitInstanceService unitInstanceService;
     private bool selectUnitOnMeshClick = true;
     private Editor currentEditor;
+    private GameObject previousSelectedUnit;
 
     void OnEnable()
     {
@@ -81,6 +82,18 @@ public class GURUWindow : EditorWindow
 
         if (Selection.activeObject is DialogueInteraction dialogue)
         {
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("← Back", GUILayout.Width(60)))
+            {
+                Debug.Log("Back button clicked");
+                if (previousSelectedUnit != null)
+                {
+                    Debug.Log("Switching back to previous unit");
+                    Selection.activeGameObject = previousSelectedUnit;
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+
             if (currentEditor == null || currentEditor.target != dialogue)
             {
                 if (currentEditor != null) DestroyImmediate(currentEditor);
@@ -90,6 +103,13 @@ public class GURUWindow : EditorWindow
         }
         else
         {
+            GameObject currentSelected = Selection.activeGameObject;
+
+            if (currentSelected != null && currentSelected.GetComponent<UnitController>() != null)
+            {
+                previousSelectedUnit = currentSelected;
+            }
+
             if (currentEditor != null)
             {
                 DestroyImmediate(currentEditor);
