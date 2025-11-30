@@ -28,6 +28,22 @@ public class UnitController : MonoBehaviour, IInteractable
 
     public bool IsDefaultBehaviour => currentBehaviour == defaultBehaviour;
 
+    public UnitMoment CurrentMoment
+    {
+        get
+        {
+            return Instance.Moments.Find(m => !m.IsComplete);
+        }
+    }
+
+    public UnitInteraction CurrentInteraction
+    {
+        get
+        {
+            return CurrentMoment?.Interaction ?? defaultInteraction;
+        }
+    }
+
 
     public virtual Color Color { get; set; }
 
@@ -164,8 +180,8 @@ public class UnitController : MonoBehaviour, IInteractable
 
     void IInteractable.Select(UnitController source)
     {
-        var availableMoment = Instance.Moments.Find(m => !m.IsComplete);
-        if (availableMoment != null) availableMoment.StartMoment(source, this);
+        var moment = CurrentMoment;
+        if (moment != null) moment.StartMoment(source, this);
         else defaultInteraction.StartInteraction(source, this);
     }
 
