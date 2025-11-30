@@ -20,17 +20,17 @@ public class PartyControllerService : GURUService
 
     protected override void OnInitialize()
     {
-        Debug.Log("Initializing PartyControllerService...");
+        // Debug.Log("Initializing PartyControllerService...");
         partyControllers.Clear();
 
-        Debug.Log("Populating party controllers from existing unit controllers and party instances.");
+        // Debug.Log("Populating party controllers from existing unit controllers and party instances.");
         foreach (var controller in unitControllerService.UnitControllers)
         {
             controller.OnNavMeshAgentReady += () =>
             {
                 if (partyInstanceService.PartyInstances.Any(p => p.Id == controller.Instance.Id))
                 {
-                    Debug.Log($"Adding existing party member controller: {controller.Instance.DisplayName} (ID: {controller.Instance.Id})");
+                    // Debug.Log($"Adding existing party member controller: {controller.Instance.DisplayName} (ID: {controller.Instance.Id})");
                     AddToParty(controller);
                 }
             };
@@ -39,7 +39,7 @@ public class PartyControllerService : GURUService
 
     public void AddToParty(UnitController unit)
     {
-        Debug.Log($"Adding unit {unit.Instance.DisplayName} to party controllers.");
+        // Debug.Log($"Adding unit {unit.Instance.DisplayName} to party controllers.");
         if (!partyControllers.Contains(unit))
         {
             // Ensure the instance is in the party

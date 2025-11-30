@@ -38,7 +38,7 @@ public class PartyInstanceService : GURUService
                     var unit = unitInstanceService.Units.Find(u => u.Id == id);
                     if (unit != null)
                     {
-                        Debug.Log($"Loaded party member: {unit.DisplayName} (ID: {unit.Id})");
+                        // Debug.Log($"Loaded party member: {unit.DisplayName} (ID: {unit.Id})");
                         partyInstances.Add(unit);
                     }
                 }

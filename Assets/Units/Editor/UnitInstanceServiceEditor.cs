@@ -8,14 +8,15 @@ using UnityEngine;
 public class UnitInstanceServiceEditor : GURUServiceEditor
 {
 
-    private void OnEnable()
+    protected override void OnEditorEnable()
     {
-        UnityEngine.Debug.Log("UnitInstanceServiceEditor OnEnable - Auto-populating lists if empty");
+        // UnityEngine.Debug.Log("UnitInstanceServiceEditor OnEnable - Auto-populating lists if empty");
         // Cache the populated lists on enable
         AutoPopulateList<UnitInstance>("initialUnits", "t:UnitInstance");
         AutoPopulateList<Unit>("unitCollection", "t:Unit");
         AutoPopulateList<UnitInteraction>("interactionCollection", "t:UnitInteraction");
     }
+
     private List<T> AutoPopulateList<T>(string fieldName, string assetType, bool force = false) where T : Object
     {
         var field = typeof(UnitInstanceService).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
@@ -24,7 +25,7 @@ public class UnitInstanceServiceEditor : GURUServiceEditor
         var guids = AssetDatabase.FindAssets(assetType);
         foreach (var guid in guids)
         {
-            Debug.Log($"Found asset GUID: {guid} for type {typeof(T).Name}");
+            // Debug.Log($"Found asset GUID: {guid} for type {typeof(T).Name}");
             var path = AssetDatabase.GUIDToAssetPath(guid);
             var asset = AssetDatabase.LoadAssetAtPath<T>(path);
             if (asset != null && IsValidAsset(asset))

@@ -64,7 +64,7 @@ public class GlyphCollection : ScriptableObject
             }
         }
 
-        Debug.Log($"Total fusions generated: {fusions.Count}");
+        // Debug.Log($"Total fusions generated: {fusions.Count}");
     }
 
     /// <summary>

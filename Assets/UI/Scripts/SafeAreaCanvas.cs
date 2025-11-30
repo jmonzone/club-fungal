@@ -56,7 +56,7 @@ public class SafeAreaCanvas : MonoBehaviour
             Mathf.Min(safeArea.yMax, canvasRect.yMax)
         );
 
-        Debug.Log($"Safe Area: {safeArea}, Canvas Rect: {canvasRect}");
+        // Debug.Log($"Safe Area: {safeArea}, Canvas Rect: {canvasRect}");
 
         Vector2 anchorMin = new Vector2(
             (safeArea.xMin - canvasRect.xMin) / canvasRect.width,

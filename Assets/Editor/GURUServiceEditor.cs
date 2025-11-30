@@ -15,11 +15,34 @@ public class GURUServiceEditor : Editor
         return null;
     }
 
-    void OnEnable()
+    protected void OnEnable()
     {
-        // Reinitialize systems
+        // Debug.Log("GURUServiceEditor OnEnable");
+        EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
         GameService gs = LoadAsset<GameService>("GameService");
         if (gs != null) gs.InitializeSystems();
+        OnEditorEnable();
+    }
+
+    protected virtual void OnEditorEnable() { }
+
+    protected void OnDisable()
+    {
+        EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+        OnEditorDisable();
+    }
+
+    protected virtual void OnEditorDisable() { }
+
+    private void OnPlayModeStateChanged(PlayModeStateChange state)
+    {
+        Debug.Log($"Play mode state changed: {state}");
+        if (state == PlayModeStateChange.ExitingPlayMode)
+        {
+            Debug.Log("Exiting play mode - Initializing GameService systems from GURUServiceEditor");
+            GameService gs = LoadAsset<GameService>("GameService");
+            if (gs != null) gs.InitializeSystems();
+        }
     }
 
     public override void OnInspectorGUI()
