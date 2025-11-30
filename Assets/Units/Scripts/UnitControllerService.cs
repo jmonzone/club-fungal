@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 #if UNITY_EDITOR
@@ -34,16 +35,32 @@ public class UnitControllerService : GURUService
         UnitController[] controllers = FindObjectsByType<UnitController>(FindObjectsSortMode.None);
         unitControllers.AddRange(controllers);
 
-        // Update existing UnitControllers with loaded instances if they have matching IDs
+        var instancesById = unitInstanceService.Instances.ToDictionary(instance => instance.Id);
+
+        InitializeExistingControllers(instancesById);
+        SpawnMissingControllers(instancesById);
+    }
+
+    private void InitializeExistingControllers(Dictionary<string, UnitInstance> instancesById)
+    {
         foreach (var controller in unitControllers)
         {
-            if (controller.Instance != null && !string.IsNullOrEmpty(controller.Instance.Id))
+            if (instancesById.TryGetValue(controller.Instance.Id, out var matchingInstance))
             {
-                var matching = unitInstanceService.Instances.Find(u => u.Id == controller.Instance.Id);
-                if (matching != null)
-                {
-                    controller.Initialize(matching);
-                }
+                controller.Initialize(matchingInstance);
+            }
+        }
+    }
+
+    private void SpawnMissingControllers(Dictionary<string, UnitInstance> instancesById)
+    {
+        var controllerInstanceIds = new HashSet<string>(unitControllers.Select(c => c.Instance.Id));
+
+        foreach (var instance in unitInstanceService.Instances)
+        {
+            if (!controllerInstanceIds.Contains(instance.Id))
+            {
+                SpawnUnit(instance, Vector3.zero, null);
             }
         }
     }
