@@ -134,7 +134,9 @@ public abstract class UnitListDrawer
 {
     public static void DrawList(IEnumerable<UnitInstance> instances)
     {
-        instances = instances.OrderBy(i => i.Id);
+        instances = instances
+        .Where(instance => instance != null)
+        .OrderBy(i => i.Id);
 
         // Load services once outside the loop for efficiency
         var unitInstanceService = Resources.FindObjectsOfTypeAll<UnitInstanceService>().FirstOrDefault();

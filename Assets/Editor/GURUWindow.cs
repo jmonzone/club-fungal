@@ -102,6 +102,21 @@ public class GURUWindow : EditorWindow
             }
             currentEditor.OnInspectorGUI();
         }
+        else if (Selection.activeObject is ActivityReference activity)
+        {
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("← Back", GUILayout.Width(60)))
+            {
+                if (previousSelectedUnit != null)
+                {
+                    Selection.activeGameObject = previousSelectedUnit;
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.LabelField(activity.name, EditorStyles.boldLabel);
+            UnitListDrawer.DrawList(activity.Units.Select(unit => unit?.Controller?.Instance));
+        }
         else
         {
             GameObject currentSelected = Selection.activeGameObject;
