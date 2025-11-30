@@ -4,7 +4,9 @@ using Cinemachine;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEditor;
 
+[ExecuteInEditMode]
 public class UnitController : MonoBehaviour, IInteractable
 {
     [Header("Unit References")]
@@ -42,9 +44,12 @@ public class UnitController : MonoBehaviour, IInteractable
     public event UnityAction OnNavMeshAgentReady;
     public event UnityAction OnBehaviourChanged;
 
+    private Vector3 lastEditorPosition;
+
     protected virtual void Awake()
     {
         targetLookPosition = transform.position;
+        lastEditorPosition = transform.position;
 
         var allBehaviours = GetComponents<UnitBehaviour>();
         foreach (var behaviour in allBehaviours)
@@ -100,6 +105,12 @@ public class UnitController : MonoBehaviour, IInteractable
                 targetRotation,
                 Time.deltaTime * 5f // rotation speed factor
             );
+        }
+
+        if (Application.isEditor && Vector3.Distance(transform.position, lastEditorPosition) > 0.01f)
+        {
+            RepositionToAppropriateRoom();
+            lastEditorPosition = transform.position;
         }
     }
 
@@ -205,6 +216,25 @@ public class UnitController : MonoBehaviour, IInteractable
             // Update unit
             units[i].Destination.SetDestination(destination);
             units[i].SetLookPosition(origin); // face the center
+        }
+    }
+
+    private void RepositionToAppropriateRoom()
+    {
+        var rooms = FindObjectsByType<RoomController>(FindObjectsSortMode.None);
+        RoomController newRoom = null;
+        foreach (var room in rooms)
+        {
+            if (room.Floor != null && room.Floor.bounds.Contains(transform.position))
+            {
+                newRoom = room;
+                break;
+            }
+        }
+        if (newRoom != null && transform.parent != newRoom.UnitParent)
+        {
+            transform.SetParent(newRoom.UnitParent);
+            EditorGUIUtility.PingObject(gameObject);
         }
     }
 }
