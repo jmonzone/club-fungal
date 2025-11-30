@@ -9,15 +9,11 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     [Header("Services")]
-    [SerializeField] private LocalData localData;
     [SerializeField] private Navigation uiNavigation;
     [SerializeField] private SceneNavigation sceneNavigation;
     [SerializeField] private FadeCanvasGroup screenFade;
-
-    [SerializeField] private DisplayName displayName;
     [SerializeField] private GameService gameService;
 
-    [SerializeField] private Volume volume;
 
     private void Awake()
     {
@@ -30,25 +26,22 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
 
-
-            // order of initialization matters here, ability cast as of now
-            // needs to be initialized before localdata.inventory does
-            // or else there is unexpeted behaviour
-
             gameService.Initialize();
 
             uiNavigation.Initialize();
-
-            displayName.Initialize();
-
-
-            DontDestroyOnLoad(Instance);
 
             sceneNavigation.OnSceneNavigationRequest += () =>
             {
                 uiNavigation.Reset();
                 StartCoroutine(sceneNavigation.NavigateToSceneRoutine(screenFade));
             };
+
+            sceneNavigation.OnSceneLoaded += () =>
+            {
+                gameService.NotifySceneLoaded();
+            };
+
+            DontDestroyOnLoad(Instance);
         }
     }
 
@@ -58,10 +51,5 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
         yield return screenFade.FadeOut();
         sceneNavigation.Initialize();
-    }
-
-    private void Update()
-    {
-        //multiplayer.DoUpdate();
     }
 }

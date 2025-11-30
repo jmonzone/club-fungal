@@ -48,4 +48,12 @@ public class GameService : GURUService
         glyphCollection.Initialize();
         djReference.Initialize();
     }
+
+    public void NotifySceneLoaded()
+    {
+        foreach (var service in services)
+        {
+            service.OnSceneLoaded();
+        }
+    }
 }

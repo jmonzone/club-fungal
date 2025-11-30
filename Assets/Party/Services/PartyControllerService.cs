@@ -14,29 +14,29 @@ public class PartyControllerService : GURUService
     [Header("Runtime")]
     [SerializeField] private List<UnitController> partyControllers = new List<UnitController>();
 
-    public UnitControllerService UnitControllerService => unitControllerService;
-    public PartyInstanceService PartyInstanceService => partyInstanceService;
-    public PlayerReference PlayerReference => playerReference;
     public List<UnitController> PartyControllers => partyControllers;
-    public event UnityAction<UnitController> OnUnitAddedToParty;
-    public event UnityAction<UnitController> OnUnitRemovedFromParty;
 
     protected override void OnInitialize()
     {
-        // Debug.Log("Initializing PartyControllerService...");
+        InitializeControllers();
+    }
+
+    public override void OnSceneLoaded()
+    {
+        base.OnSceneLoaded();
+        InitializeControllers();
+    }
+
+    private void InitializeControllers()
+    {
         partyControllers.Clear();
 
-        // Debug.Log("Populating party controllers from existing unit controllers and party instances.");
         foreach (var controller in unitControllerService.Controllers)
         {
-            controller.OnNavMeshAgentReady += () =>
+            if (partyInstanceService.PartyInstances.Any(p => p.Id == controller.Instance.Id))
             {
-                if (partyInstanceService.PartyInstances.Any(p => p.Id == controller.Instance.Id))
-                {
-                    // Debug.Log($"Adding existing party member controller: {controller.Instance.DisplayName} (ID: {controller.Instance.Id})");
-                    AddToParty(controller);
-                }
-            };
+                AddToParty(controller);
+            }
         }
     }
 
@@ -61,7 +61,6 @@ public class PartyControllerService : GURUService
                     unit.SetBehaviour(followBehaviour);
                 }
             }
-            OnUnitAddedToParty?.Invoke(unit);
         }
     }
 
@@ -76,7 +75,6 @@ public class PartyControllerService : GURUService
             {
                 followBehaviour.StopFollowing();
             }
-            OnUnitRemovedFromParty?.Invoke(unit);
         }
     }
 

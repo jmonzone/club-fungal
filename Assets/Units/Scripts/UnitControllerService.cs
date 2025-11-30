@@ -17,13 +17,22 @@ public class UnitControllerService : GURUService
     [SerializeField] private List<UnitController> unitControllers;
 
     public List<UnitController> Controllers => unitControllers;
-    public UnitInstanceService UnitInstanceService => unitInstanceService;
-
     public event UnityAction<UnitController> OnUnitSummoned;
 
     protected override void OnInitialize()
     {
+        InitializeControllers();
+    }
+
+    public override void OnSceneLoaded()
+    {
+        InitializeControllers();
+    }
+
+    private void InitializeControllers()
+    {
         Debug.Log("Initializing UnitControllerService...");
+
         unitControllers = new List<UnitController>();
         UnitController[] controllers = FindObjectsByType<UnitController>(FindObjectsSortMode.None);
         unitControllers.AddRange(controllers);
@@ -75,18 +84,5 @@ public class UnitControllerService : GURUService
         var unit = unitInstanceService.CreateUnit(unitQuery);
         var unitController = SpawnUnit(unit, position, null);
         onSpawned?.Invoke(unitController);
-    }
-
-    public void RemoveController(UnitController controller)
-    {
-        if (unitControllers.Contains(controller))
-        {
-            unitControllers.Remove(controller);
-        }
-    }
-
-    public UnitController GetController(UnitInstance instance)
-    {
-        return unitControllers.Find(c => c.Instance == instance);
     }
 }

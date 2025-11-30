@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 
+[Obsolete("DisplayName is deprecated, please use PlayerProfile instead.", false)]
 [CreateAssetMenu]
 public class DisplayName : ScriptableObject
 {
