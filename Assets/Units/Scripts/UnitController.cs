@@ -178,6 +178,12 @@ public class UnitController : MonoBehaviour, IInteractable
         ApplyBehaviour(behaviour);
     }
 
+    public void AddMoment(UnitInteraction interaction)
+    {
+        var moment = new UnitMoment(interaction, false);
+        Instance.Moments.Add(moment);
+    }
+
     void IInteractable.Select(UnitController source)
     {
         var moment = CurrentMoment;

@@ -47,6 +47,7 @@ public class UnitControllerService : GURUService
         {
             if (instancesById.TryGetValue(controller.Instance.Id, out var matchingInstance))
             {
+                // Debug.Log($"Initializing UnitController for instance ID: {matchingInstance.Id}");
                 controller.Initialize(matchingInstance);
             }
         }

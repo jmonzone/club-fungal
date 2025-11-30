@@ -186,6 +186,23 @@ public class UnitInstanceService : GURUService
         // Maintain order by ID
         units = units.OrderBy(u => u.Id).ToList();
 
+        // Update units with new moments from original assets
+        foreach (var unit in units)
+        {
+            if (unit.OriginalInstance != null)
+            {
+                foreach (var originalMoment in unit.OriginalInstance.Moments)
+                {
+                    if (!unit.Moments.Any(m => m.Interaction == originalMoment.Interaction))
+                    {
+                        var newMoment = new UnitMoment(originalMoment.Interaction, false);
+                        newMoment.OnMomentComplete += () => SaveData();
+                        unit.Moments.Add(newMoment);
+                    }
+                }
+            }
+        }
+
         SaveData();
     }
 
@@ -380,6 +397,20 @@ public class UnitInstanceService : GURUService
         if (existing != null)
         {
             return existing; // Return the already-registered instance
+        }
+
+        // Set original instance reference
+        if (initialUnits.Contains(unit))
+        {
+            unit.SetOriginalInstance(unit);
+        }
+        else
+        {
+            var original = initialUnits.FirstOrDefault(i => i.Data == unit.Data);
+            if (original != null)
+            {
+                unit.SetOriginalInstance(original);
+            }
         }
 
         float sum = 0f;

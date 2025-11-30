@@ -20,6 +20,7 @@ public struct UnitInstanceData
 [CreateAssetMenu(fileName = "UnitInstance", menuName = "Club Fungal/Units/Unit Instance")]
 public class UnitInstance : ScriptableObject
 {
+    [SerializeField] private UnitInstance originalInstance;
     [SerializeField] private UnitInstanceData instanceData;
 
     [SerializeField] private List<SkillInstance> skills;
@@ -46,7 +47,14 @@ public class UnitInstance : ScriptableObject
 
     public JObject Json => instanceData.Json;
 
+    public UnitInstance OriginalInstance => originalInstance;
+
     public event UnityAction<float> OnXpChanged;
+
+    public void SetOriginalInstance(UnitInstance original)
+    {
+        originalInstance = original;
+    }
 
     private void OnValidate()
     {
