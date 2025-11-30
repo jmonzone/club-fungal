@@ -248,47 +248,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1266285}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7505184
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
-  m_Name: JSON_Party Frog
-  m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
-  instanceData:
-    Data: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
-    Id: 000000000000000000000001
-    DisplayName: Party Frog
-    FriendshipXP: 83
-    Element: 0
-    Job: {fileID: 0}
-    ColorPalette: {fileID: 0}
-  skills:
-  - unit: {fileID: 7505184}
-    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
-    level: 1
-    xp: 0
-    moves: []
-  - unit: {fileID: 7505184}
-    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
-    level: 1
-    xp: 0
-    moves: []
-  - unit: {fileID: 7505184}
-    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
-    level: 1
-    xp: 0
-    moves: []
-  friends:
-  - {fileID: 703990834}
-  moments:
-  - interaction: {fileID: 11400000, guid: 0740db2fd21f44859941442e25af726b, type: 2}
-    isComplete: 0
 --- !u!1001 &9733356
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4594,27 +4553,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 164128648}
   m_CullTransparentMesh: 1
---- !u!114 &165108770
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DanceMoveInstance
-  data: {fileID: 11400000, guid: 6396f1cfb6fe1496cbf571c96b16abb5, type: 2}
-  skill:
-    unit: {fileID: 1672642778}
-    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
-    level: 1
-    xp: 0
-    moves:
-    - {fileID: 165108770}
-  upgradeLevel: 0
 --- !u!1 &180397759
 GameObject:
   m_ObjectHideFlags: 0
@@ -11868,7 +11806,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1491651580}
-  - {fileID: 5914955188251810066}
   - {fileID: 715425637996801681}
   - {fileID: 620061743}
   m_Father: {fileID: 958196309}
@@ -16317,27 +16254,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 557518446}
   m_CullTransparentMesh: 1
---- !u!114 &561137405
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DanceMoveInstance
-  data: {fileID: 11400000, guid: f0ed1fec6c84e4a6c8a22b7331c71ef8, type: 2}
-  skill:
-    unit: {fileID: 703990834}
-    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
-    level: 1
-    xp: 0
-    moves:
-    - {fileID: 561137405}
-  upgradeLevel: 0
 --- !u!1001 &564085101
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18754,48 +18670,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 702505797}
   m_CullTransparentMesh: 1
---- !u!114 &703990834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
-  m_Name: JSON_Crazy Jellyfish
-  m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
-  instanceData:
-    Data: {fileID: 11400000, guid: 84acf7738ffbc4db09e660e7ce20b7a1, type: 2}
-    Id: 000000000000000000000002
-    DisplayName: Crazy Jellyfish
-    FriendshipXP: 0
-    Element: 0
-    Job: {fileID: 11400000, guid: 36c70f9e85b5d44f3bfe2ace33b2f7f6, type: 2}
-    ColorPalette: {fileID: 0}
-  skills:
-  - unit: {fileID: 703990834}
-    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
-    level: 1
-    xp: 0
-    moves:
-    - {fileID: 561137405}
-  - unit: {fileID: 703990834}
-    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
-    level: 1
-    xp: 0
-    moves:
-    - {fileID: 893226751}
-  - unit: {fileID: 703990834}
-    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
-    level: 1
-    xp: 0
-    moves:
-    - {fileID: 764334947}
-  friends:
-  - {fileID: 7505184}
-  moments: []
 --- !u!1001 &705436363
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19903,27 +19777,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 760044968}
   m_CullTransparentMesh: 1
---- !u!114 &764334947
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DanceMoveInstance
-  data: {fileID: 11400000, guid: f0ed1fec6c84e4a6c8a22b7331c71ef8, type: 2}
-  skill:
-    unit: {fileID: 703990834}
-    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
-    level: 1
-    xp: 0
-    moves:
-    - {fileID: 764334947}
-  upgradeLevel: 0
 --- !u!1 &776074608
 GameObject:
   m_ObjectHideFlags: 0
@@ -21845,27 +21698,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 892462118}
   m_CullTransparentMesh: 1
---- !u!114 &893226751
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DanceMoveInstance
-  data: {fileID: 11400000, guid: f0ed1fec6c84e4a6c8a22b7331c71ef8, type: 2}
-  skill:
-    unit: {fileID: 703990834}
-    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
-    level: 1
-    xp: 0
-    moves:
-    - {fileID: 893226751}
-  upgradeLevel: 0
 --- !u!1 &893917556
 GameObject:
   m_ObjectHideFlags: 0
@@ -22817,44 +22649,6 @@ Transform:
   - {fileID: 2774847354702678950}
   m_Father: {fileID: 104050921}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!114 &947673469
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
-  m_Name: JSON_Tree
-  m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
-  instanceData:
-    Data: {fileID: 11400000, guid: 95347a15aaf7f4b40b23e8fdfbd3a26f, type: 2}
-    Id: 000000000000000000000005
-    DisplayName: Tree
-    FriendshipXP: 0
-    Element: 0
-    Job: {fileID: 0}
-    ColorPalette: {fileID: 0}
-  skills:
-  - unit: {fileID: 947673469}
-    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
-    level: 1
-    xp: 0
-    moves: []
-  - unit: {fileID: 947673469}
-    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
-    level: 1
-    xp: 0
-    moves: []
-  - unit: {fileID: 947673469}
-    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
-    level: 1
-    xp: 0
-    moves: []
-  friends: []
-  moments: []
 --- !u!1 &957262301
 GameObject:
   m_ObjectHideFlags: 0
@@ -26606,27 +26400,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 983026817}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &983670821
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DanceMoveInstance
-  data: {fileID: 11400000, guid: 6396f1cfb6fe1496cbf571c96b16abb5, type: 2}
-  skill:
-    unit: {fileID: 1672642778}
-    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
-    level: 1
-    xp: 0
-    moves:
-    - {fileID: 983670821}
-  upgradeLevel: 0
 --- !u!1 &988367332
 GameObject:
   m_ObjectHideFlags: 0
@@ -26861,7 +26634,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DanceMoveInstance
   data: {fileID: 11400000, guid: 6396f1cfb6fe1496cbf571c96b16abb5, type: 2}
-  upgradeLevel: 0
+  skill: {unit: {fileID: 0}, skill: {fileID: 0}, level: 0, xp: 0, moves: []
+}
 --- !u!1 &1011249585
 GameObject:
   m_ObjectHideFlags: 0
@@ -32766,6 +32540,17 @@ CanvasRenderer:
   m_GameObject: {fileID: 1212447271}
   m_CullTransparentMesh: 1
 --- !u!114 &1215885488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1216626212 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8622161559934049745, guid: 20d941abf95134e3f8bcdbf1ff2ac0b9,
@@ -36823,27 +36608,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1400991912}
   m_CullTransparentMesh: 1
---- !u!114 &1404718036
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DanceMoveInstance
-  data: {fileID: 11400000, guid: 6396f1cfb6fe1496cbf571c96b16abb5, type: 2}
-  skill:
-    unit: {fileID: 1672642778}
-    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
-    level: 1
-    xp: 0
-    moves:
-    - {fileID: 1404718036}
-  upgradeLevel: 0
 --- !u!1 &1406648660
 GameObject:
   m_ObjectHideFlags: 0
@@ -42496,7 +42260,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DanceMoveInstance
   data: {fileID: 11400000, guid: 6396f1cfb6fe1496cbf571c96b16abb5, type: 2}
-  upgradeLevel: 0
+  skill: {unit: {fileID: 0}, skill: {fileID: 0}, level: 0, xp: 0, moves: []
+}
 --- !u!1 &1652946787
 GameObject:
   m_ObjectHideFlags: 0
@@ -43286,47 +43051,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1671037140}
   m_CullTransparentMesh: 1
---- !u!114 &1672642778
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
-  m_Name: JSON_Player
-  m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
-  instanceData:
-    Data: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
-    Id: 000000000000000000000000
-    DisplayName: Player
-    FriendshipXP: 0
-    Element: 0
-    Job: {fileID: 0}
-    ColorPalette: {fileID: 0}
-  skills:
-  - unit: {fileID: 1672642778}
-    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
-    level: 1
-    xp: 0
-    moves:
-    - {fileID: 1404718036}
-  - unit: {fileID: 1672642778}
-    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
-    level: 1
-    xp: 0
-    moves:
-    - {fileID: 165108770}
-  - unit: {fileID: 1672642778}
-    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
-    level: 1
-    xp: 0
-    moves:
-    - {fileID: 983670821}
-  friends: []
-  moments: []
 --- !u!1 &1679758330
 GameObject:
   m_ObjectHideFlags: 0
@@ -53798,7 +53522,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
   m_RenderShadows: 1
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
@@ -53810,7 +53534,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 1
+  m_RenderPostProcessing: 0
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -57150,12 +56874,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5914955188251810066 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8632648271408065176, guid: 39ee5be8268a84f1597e99d0420397bb,
-    type: 3}
-  m_PrefabInstance: {fileID: 8021920789288142819}
-  m_PrefabAsset: {fileID: 0}
 --- !u!20 &5923498429439317270
 Camera:
   m_ObjectHideFlags: 0
@@ -57809,99 +57527,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1001 &8021920789288142819
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 342261303}
-    m_Modifications:
-    - target: {fileID: 920437137059619520, guid: 39ee5be8268a84f1597e99d0420397bb,
-        type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 5923498429439317270}
-    - target: {fileID: 1224265986181877961, guid: 39ee5be8268a84f1597e99d0420397bb,
-        type: 3}
-      propertyPath: unitManager
-      value: 
-      objectReference: {fileID: 2087691131}
-    - target: {fileID: 2133484496385643780, guid: 39ee5be8268a84f1597e99d0420397bb,
-        type: 3}
-      propertyPath: m_Name
-      value: Dance Activity
-      objectReference: {fileID: 0}
-    - target: {fileID: 2133484496385643780, guid: 39ee5be8268a84f1597e99d0420397bb,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4050794547405489306, guid: 39ee5be8268a84f1597e99d0420397bb,
-        type: 3}
-      propertyPath: unitManager
-      value: 
-      objectReference: {fileID: 2087691131}
-    - target: {fileID: 5875982483830907057, guid: 39ee5be8268a84f1597e99d0420397bb,
-        type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 5923498429439317270}
-    - target: {fileID: 8632648271408065176, guid: 39ee5be8268a84f1597e99d0420397bb,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -1.352847
-      objectReference: {fileID: 0}
-    - target: {fileID: 8632648271408065176, guid: 39ee5be8268a84f1597e99d0420397bb,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8632648271408065176, guid: 39ee5be8268a84f1597e99d0420397bb,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -1.638304
-      objectReference: {fileID: 0}
-    - target: {fileID: 8632648271408065176, guid: 39ee5be8268a84f1597e99d0420397bb,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8632648271408065176, guid: 39ee5be8268a84f1597e99d0420397bb,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8632648271408065176, guid: 39ee5be8268a84f1597e99d0420397bb,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8632648271408065176, guid: 39ee5be8268a84f1597e99d0420397bb,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8632648271408065176, guid: 39ee5be8268a84f1597e99d0420397bb,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8632648271408065176, guid: 39ee5be8268a84f1597e99d0420397bb,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8632648271408065176, guid: 39ee5be8268a84f1597e99d0420397bb,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 39ee5be8268a84f1597e99d0420397bb, type: 3}
 --- !u!224 &8261800411094001935
 RectTransform:
   m_ObjectHideFlags: 0

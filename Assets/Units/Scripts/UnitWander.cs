@@ -11,9 +11,6 @@ public class UnitWander : UnitBehaviour
     [SerializeField] private float minIdleTime = 1f;
     [SerializeField] private float maxIdleTime = 4f;
 
-    [Header("Runtime")]
-    [SerializeField] private bool isIdle;
-
     private NavMeshAgent navMeshAgent;
 
     protected override void Awake()
@@ -64,10 +61,8 @@ public class UnitWander : UnitBehaviour
         while (true)
         {
             var idleTargetTime = Random.Range(minIdleTime, maxIdleTime);
-            isIdle = true;
             navMeshAgent.isStopped = true;
             yield return new WaitForSeconds(idleTargetTime);
-            isIdle = false;
             navMeshAgent.isStopped = false;
 
             var targetPosition = GetReachableRandomDestination(transform.position, wanderRadius, NavMesh.AllAreas);

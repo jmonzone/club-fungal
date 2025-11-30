@@ -4,7 +4,6 @@ using UnityEngine.Events;
 public abstract class UnitBehaviour : MonoBehaviour
 {
     [SerializeField] private bool isActive;
-    [SerializeField] private bool isPaused;
 
     public UnitController Controller { get; private set; }
     public UnitInstance Instance => Controller.Instance;
@@ -50,12 +49,10 @@ public abstract class UnitBehaviour : MonoBehaviour
 
     public virtual void PauseBehaviour()
     {
-        isPaused = true;
     }
 
     public virtual void UnpauseBehaviour()
     {
-        isPaused = false;
     }
 
     protected void InvokeOnBehaviourRequest()
