@@ -7,7 +7,8 @@ using UnityEngine.Events;
 public class LocalData : ScriptableObject
 {
     [SerializeField] private bool resetDataOnAwake;
-    public JObject JsonFile { get; private set; }
+    [SerializeField] private JObject json;
+    public JObject JsonFile => json;
 
     public event UnityAction OnReset;
     public static string GetSaveDataPath()
@@ -20,33 +21,36 @@ public class LocalData : ScriptableObject
     {
         var saveDataPath = GetSaveDataPath();
 
-        if (!File.Exists(saveDataPath)) JsonFile = new JObject();
+        if (!File.Exists(saveDataPath)) json = new JObject();
         else
         {
             try
             {
                 var configFile = File.ReadAllText(saveDataPath);
-                JsonFile = JObject.Parse(configFile);
+                json = JObject.Parse(configFile);
             }
             catch
             {
-                JsonFile = new JObject();
+                json = new JObject();
             }
         }
     }
 
     public void SaveData(string key, JToken value)
     {
+        Initialize();
+
+        Debug.Log($"SaveData called with key: {key}, value: {value}, json is null: {json == null}");
         var saveDataPath = GetSaveDataPath();
-        JsonFile[key] = value;
+        json[key] = value;
         Directory.CreateDirectory(Path.GetDirectoryName(saveDataPath));
-        File.WriteAllText(saveDataPath, JsonFile.ToString());
+        File.WriteAllText(saveDataPath, json.ToString());
     }
 
     public void ResetData()
     {
         var saveDataPath = GetSaveDataPath();
-        JsonFile = new JObject();
+        json = new JObject();
         Directory.CreateDirectory(Path.GetDirectoryName(saveDataPath));
         File.WriteAllText(saveDataPath, JsonFile.ToString());
         OnReset?.Invoke();
