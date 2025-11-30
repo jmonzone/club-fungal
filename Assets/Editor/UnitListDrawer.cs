@@ -83,6 +83,53 @@ public class TogglePartyAction : UnitDrawerItemAction
     }
 }
 
+public abstract class UnitDrawerDisplayItem
+{
+    public Func<bool> condition;
+    public Color color;
+    public Action drawAction;
+}
+
+public class InPartyDisplay : UnitDrawerDisplayItem
+{
+    public InPartyDisplay(bool isInParty, GUIStyle jobStyle)
+    {
+        condition = () => isInParty;
+        color = Color.green;
+        drawAction = () => EditorGUILayout.LabelField("🎉 In Party", jobStyle);
+    }
+}
+
+public class BehaviourDisplay : UnitDrawerDisplayItem
+{
+    public BehaviourDisplay(string behaviour, GUIStyle jobStyle)
+    {
+        condition = () => !string.IsNullOrEmpty(behaviour);
+        color = Color.yellow;
+        drawAction = () => EditorGUILayout.LabelField("Behaviour: " + behaviour, jobStyle);
+    }
+}
+
+public class InteractionDisplay : UnitDrawerDisplayItem
+{
+    public InteractionDisplay(string interaction, UnitController controller, GUIStyle jobStyle)
+    {
+        condition = () => !string.IsNullOrEmpty(interaction);
+        color = Color.yellow;
+        drawAction = () => EditorGUILayout.ObjectField("Interaction", controller?.CurrentInteraction, typeof(UnitInteraction), false);
+    }
+}
+
+public class ActivityDisplay : UnitDrawerDisplayItem
+{
+    public ActivityDisplay(ActivityReference activity, GUIStyle jobStyle)
+    {
+        condition = () => activity != null;
+        color = Color.magenta;
+        drawAction = () => EditorGUILayout.ObjectField("Activity", activity, typeof(ActivityReference), false);
+    }
+}
+
 public abstract class UnitListDrawer
 {
     public static void DrawList(IEnumerable<UnitInstance> instances)
@@ -137,12 +184,20 @@ public abstract class UnitListDrawer
                 new DeleteInstanceAction(unitInstance, controller, initialUnit != null)
             };
 
+            var displayItems = new List<UnitDrawerDisplayItem>
+            {
+                new InPartyDisplay(isInParty, jobStyle),
+                new BehaviourDisplay(behaviour, jobStyle),
+                new InteractionDisplay(interaction, controller, jobStyle),
+                new ActivityDisplay(activity, jobStyle)
+            };
+
             // Draw the unit
-            DrawUnit(icon, displayName, job, isInParty, behaviour, interaction, activity, backgroundColor, shortcuts, menuItems, jobStyle, controller);
+            DrawUnit(icon, displayName, job, backgroundColor, shortcuts, menuItems, jobStyle, controller, displayItems);
         }
     }
 
-    private static void DrawUnit(Texture icon, string displayName, string job, bool isInParty, string behaviour, string interaction, ActivityReference activity, Color backgroundColor, List<UnitDrawerItemAction> shortcuts, List<UnitDrawerItemAction> menuItems, GUIStyle jobStyle, UnitController controller)
+    private static void DrawUnit(Texture icon, string displayName, string job, Color backgroundColor, List<UnitDrawerItemAction> shortcuts, List<UnitDrawerItemAction> menuItems, GUIStyle jobStyle, UnitController controller, List<UnitDrawerDisplayItem> displayItems)
     {
         EditorGUILayout.BeginHorizontal();
         Color originalBG = GUI.backgroundColor;
@@ -170,29 +225,15 @@ public abstract class UnitListDrawer
         EditorGUILayout.LabelField(displayName);
         EditorGUILayout.Space(-2);
         EditorGUILayout.LabelField(job, jobStyle);
-        if (isInParty)
+
+        foreach (var displayItem in displayItems)
         {
-            GUI.color = Color.green;
-            EditorGUILayout.LabelField("🎉 In Party", jobStyle);
-            GUI.color = Color.white;
-        }
-        if (!string.IsNullOrEmpty(behaviour))
-        {
-            GUI.color = Color.yellow;
-            EditorGUILayout.LabelField("Behaviour: " + behaviour, jobStyle);
-            GUI.color = Color.white;
-        }
-        if (!string.IsNullOrEmpty(interaction))
-        {
-            GUI.color = Color.yellow;
-            EditorGUILayout.ObjectField("Interaction", controller?.CurrentInteraction, typeof(UnitInteraction), false);
-            GUI.color = Color.white;
-        }
-        if (activity != null)
-        {
-            GUI.color = Color.magenta;
-            EditorGUILayout.ObjectField("Activity", activity, typeof(ActivityReference), false);
-            GUI.color = Color.white;
+            if (displayItem.condition())
+            {
+                GUI.color = displayItem.color;
+                displayItem.drawAction();
+                GUI.color = Color.white;
+            }
         }
         EditorGUILayout.EndVertical();
         EditorGUILayout.EndHorizontal();
