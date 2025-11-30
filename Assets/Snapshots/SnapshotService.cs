@@ -9,6 +9,7 @@ public class SnapshotService : GURUService
 {
     [SerializeField] private UnitControllerService unitControllerService;
     [SerializeField] private LocalData localData;
+    [SerializeField] private SnapshotInstance defaultSnapshotInstance;
 
     public UnitControllerService UnitControllerService => unitControllerService;
 
@@ -28,7 +29,7 @@ public class SnapshotService : GURUService
 
     public void SaveSnapshot()
     {
-        Debug.Log("Saving snapshot of unit positions.");
+        Debug.Log($"Saving snapshot of unit positions controllers. Total controllers: {unitControllerService.Controllers.Count}");
         var snapshotJson = new JArray();
 
         foreach (var unit in unitControllerService.Controllers)
@@ -91,10 +92,25 @@ public class SnapshotService : GURUService
                         float z = posObj.Value<float>("z");
                         positions[id] = new Vector3(x, y, z);
                         targetController.Teleport(positions[targetController.Instance.Id], targetController.transform.parent);
-
                     }
                 }
             }
+        }
+
+        if (positions.Count == 0 && defaultSnapshotInstance != null)
+        {
+            Debug.Log("No snapshot found in JSON, loading default snapshot.");
+            foreach (var snap in defaultSnapshotInstance.snapshots)
+            {
+                var targetController = unitControllerService.Controllers.Find(controller => controller.Instance.Id == snap.id);
+                if (targetController != null)
+                {
+                    targetController.Teleport(snap.position, targetController.transform.parent);
+                    positions[snap.id] = snap.position;
+                }
+            }
+
+            SaveSnapshot();
         }
 
         return positions;

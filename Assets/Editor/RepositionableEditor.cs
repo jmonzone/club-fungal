@@ -26,7 +26,7 @@ public class RepositionableEditor : GURUEditor
         }
     }
 
-    protected virtual void OnEnable()
+    protected new void OnEnable()
     {
         Component controller = (Component)target;
         if (!lastPositions.ContainsKey(controller))
@@ -35,8 +35,11 @@ public class RepositionableEditor : GURUEditor
         }
     }
 
-    protected virtual void OnDisable()
+    protected new void OnDisable()
     {
+        var snapshotService = GURUStyler.LoadAsset<SnapshotService>("SnapshotService");
+        snapshotService.SaveSnapshot();
+
         Component controller = (Component)target;
         lastPositions.Remove(controller);
     }

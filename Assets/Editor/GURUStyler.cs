@@ -16,7 +16,7 @@ public static class GURUStyler
         public Func<bool> condition;
     }
 
-    private static T LoadAsset<T>(string typeName) where T : UnityEngine.Object
+    public static T LoadAsset<T>(string typeName) where T : UnityEngine.Object
     {
         string[] guids = AssetDatabase.FindAssets("t:" + typeName);
         if (guids.Length > 0)
