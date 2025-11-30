@@ -141,7 +141,7 @@ public class UnitInstanceService : GURUService
                                 }
                                 else
                                 {
-                                    Debug.LogError($"Interaction '{id}' not found in interactionCollection for unit '{unitName}'.");
+                                    Debug.LogError($"Interaction '{id}' not found in interactionCollection for unit '{unitName}'. This is because it has not been added to the UnitInstanceService, opening the asset automatically loads the interaciton to the collection. Do so and try again");
                                 }
                             }
                         }
