@@ -1,17 +1,17 @@
 using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 [CustomEditor(typeof(RoomController))]
-public class RoomControllerEditor : Editor
+public class RoomControllerEditor : GURUEditor
 {
     private TextureSelectorComponent wallTextureSelector;
     private MaterialSelectorComponent wallMaterialSelector;
     private MaterialSelectorComponent floorMaterialSelector;
     private UnitSelectorComponent unitSelector;
-    private bool showUnits = true;
 
-    private void OnEnable()
+    private new void OnEnable()
     {
         RoomController roomController = (RoomController)target;
 
@@ -53,10 +53,8 @@ public class RoomControllerEditor : Editor
         });
     }
 
-    public override void OnInspectorGUI()
+    protected override void DrawContent()
     {
-        DrawDefaultInspector();
-
         RoomController roomController = (RoomController)target;
 
         // Initialize selectors with current materials
@@ -64,142 +62,56 @@ public class RoomControllerEditor : Editor
         wallMaterialSelector.Initialize(roomController.Walls[0].Renderer.sharedMaterial);
         floorMaterialSelector.Initialize(roomController.Floor.sharedMaterial);
 
-        GURUStyler.DrawGuruSection(() =>
+        wallTextureSelector.DrawGUI();
+        wallMaterialSelector.DrawGUI();
+        floorMaterialSelector.DrawGUI();
+
+        EditorGUILayout.Space(15);
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        EditorGUILayout.Space(5);
+
+        UnitListDrawer.DrawList(roomController.Units.Select(u => u.Instance));
+
+        EditorGUILayout.Space(15);
+
+        // Door Status Display
+        EditorGUILayout.LabelField("Active Doors", EditorStyles.boldLabel);
+        DrawDoorStatusGrid(roomController);
+
+        EditorGUILayout.Space(15);
+
+        // Duplicate room section
+        EditorGUILayout.LabelField("Duplicate Room", EditorStyles.boldLabel);
+
+        GUI.backgroundColor = new Color(0.8f, 0.6f, 0.9f, 1f);
+
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("↖ NW", GUILayout.Height(30)))
         {
-            wallTextureSelector.DrawGUI();
-            wallMaterialSelector.DrawGUI();
-            floorMaterialSelector.DrawGUI();
-
-            EditorGUILayout.Space(15);
-            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-            EditorGUILayout.Space(5);
-
-            DrawUnitsSection(roomController);
-
-            EditorGUILayout.Space(15);
-
-            // Door Status Display
-            EditorGUILayout.LabelField("Active Doors", EditorStyles.boldLabel);
-            DrawDoorStatusGrid(roomController);
-
-            EditorGUILayout.Space(15);
-
-            // Duplicate room section
-            EditorGUILayout.LabelField("Duplicate Room", EditorStyles.boldLabel);
-
-            GUI.backgroundColor = new Color(0.8f, 0.6f, 0.9f, 1f);
-
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("↖ NW", GUILayout.Height(30)))
-            {
-                DuplicateRoom(roomController, Direction.NorthWest);
-            }
-            if (GUILayout.Button("↗ NE", GUILayout.Height(30)))
-            {
-                DuplicateRoom(roomController, Direction.NorthEast);
-            }
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("↙ SW", GUILayout.Height(30)))
-            {
-                DuplicateRoom(roomController, Direction.SouthWest);
-            }
-            if (GUILayout.Button("↘ SE", GUILayout.Height(30)))
-            {
-                DuplicateRoom(roomController, Direction.SouthEast);
-            }
-            EditorGUILayout.EndHorizontal();
-
-            GUI.backgroundColor = Color.white;
-        }, "These fields apply changes to all walls of the room at once");
-    }
-
-    private void DrawUnitsSection(RoomController roomController)
-    {
-        // Header with foldout
-        GUIStyle foldoutStyle = new GUIStyle(EditorStyles.foldout)
-        {
-            fontStyle = FontStyle.Bold
-        };
-        showUnits = EditorGUILayout.Foldout(showUnits, $"Units ({roomController.Units.Count})", true, foldoutStyle);
-
-        if (showUnits)
-        {
-            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            EditorGUILayout.Space(5);
-
-            // Display existing units
-            if (roomController.Units.Count > 0)
-            {
-                for (int i = 0; i < roomController.Units.Count; i++)
-                {
-                    var unitController = roomController.Units[i];
-                    if (unitController == null) continue;
-
-                    EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
-
-                    // Unit name and instance info
-                    string unitName = unitController.Instance != null
-                        ? unitController.Instance.Data.Name
-                        : "Unknown Unit";
-                    EditorGUILayout.LabelField($"{i + 1}. {unitName}", EditorStyles.boldLabel);
-
-                    // Select button
-                    if (GUILayout.Button("Select", GUILayout.Width(60)))
-                    {
-                        Selection.activeGameObject = unitController.gameObject;
-                        EditorGUIUtility.PingObject(unitController.gameObject);
-                    }
-
-                    // Remove button
-                    GUI.backgroundColor = new Color(1f, 0.5f, 0.5f, 1f);
-                    if (GUILayout.Button("✕", GUILayout.Width(30)))
-                    {
-                        if (EditorUtility.DisplayDialog("Remove Unit",
-                            $"Are you sure you want to remove {unitName}?",
-                            "Remove", "Cancel"))
-                        {
-                            Undo.RecordObject(roomController, "Remove Unit from Room");
-                            DestroyImmediate(unitController.gameObject);
-                            EditorUtility.SetDirty(roomController);
-                        }
-                    }
-                    GUI.backgroundColor = Color.white;
-
-                    EditorGUILayout.EndHorizontal();
-
-                    // Show unit instance details
-                    if (unitController.Instance != null)
-                    {
-                        EditorGUI.indentLevel++;
-                        EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-
-                        EditorGUI.BeginDisabledGroup(true);
-                        EditorGUILayout.ObjectField("Instance", unitController.Instance, typeof(UnitInstance), false);
-                        EditorGUI.EndDisabledGroup();
-
-                        EditorGUILayout.EndVertical();
-                        EditorGUI.indentLevel--;
-                    }
-
-                    EditorGUILayout.Space(5);
-                }
-            }
-            else
-            {
-                EditorGUILayout.HelpBox("No units in this room", MessageType.Info);
-                EditorGUILayout.Space(5);
-            }
-
-            // Add new unit section
-            EditorGUILayout.Space(5);
-            EditorGUILayout.LabelField("Add New Unit", EditorStyles.boldLabel);
-            unitSelector.DrawGUI();
-
-            EditorGUILayout.EndVertical();
+            DuplicateRoom(roomController, Direction.NorthWest);
         }
+        if (GUILayout.Button("↗ NE", GUILayout.Height(30)))
+        {
+            DuplicateRoom(roomController, Direction.NorthEast);
+        }
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("↙ SW", GUILayout.Height(30)))
+        {
+            DuplicateRoom(roomController, Direction.SouthWest);
+        }
+        if (GUILayout.Button("↘ SE", GUILayout.Height(30)))
+        {
+            DuplicateRoom(roomController, Direction.SouthEast);
+        }
+        EditorGUILayout.EndHorizontal();
+
+        GUI.backgroundColor = Color.white;
     }
+
+    protected override string Description =>
+        "Room editor with material selection, unit management, door status, and duplication tools.";
 
     private void DuplicateRoom(RoomController original, Direction direction)
     {
@@ -233,11 +145,11 @@ public class RoomControllerEditor : Editor
 
         // Activate the door on the original room in the specified direction
         DoorController originalDoor = original.Walls[direction.WallIndex].DoorController;
-        original.ActivateDoor(originalDoor);
+        originalDoor.gameObject.SetActive(true);
 
         // Activate the opposite door on the duplicated room
         DoorController duplicatedDoor = duplicatedRoom.Walls[direction.Opposite.WallIndex].DoorController;
-        duplicatedRoom.ActivateDoor(duplicatedDoor);
+        duplicatedDoor.gameObject.SetActive(true);
 
         // Register undo
         Undo.RegisterCreatedObjectUndo(duplicatedObject, $"Duplicate Room {direction}");
