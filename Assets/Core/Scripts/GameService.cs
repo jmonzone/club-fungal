@@ -35,7 +35,7 @@ public class GameService : GURUService
 
     public void InitializeSystems()
     {
-        Debug.Log("Initializing Game Systems...");
+        // Debug.Log("Initializing Game Systems...");
         localData.Initialize();
         inventory.Initialize();
         build.Initialize();

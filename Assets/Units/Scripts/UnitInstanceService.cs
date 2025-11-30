@@ -40,17 +40,10 @@ public class UnitInstanceService : GURUService
 
     protected override void OnInitialize()
     {
-        if (localData == null)
-        {
-            Debug.LogError("LocalData is not assigned in UnitInstanceService");
-            return;
-        }
         units = new List<UnitInstance>();
 
-        Debug.Log("Loading units from local data.");
         if (localData.JsonFile.ContainsKey(UNIT_KEY))
         {
-            Debug.Log("Loading units from local data.");
             foreach (var unit in localData.JsonFile[UNIT_KEY] as JArray)
             {
                 if (unit is JObject unitJson)
@@ -90,6 +83,8 @@ public class UnitInstanceService : GURUService
                         Json = unitJson
                     };
                     unitInstance.Initialize(data);
+
+                    unitInstance.name = $"JSON_{displayName}";
 
                     var skillsJson = unitJson.Value<JArray>("skills") ?? new JArray();
                     var skills = new List<UnitSkill>();
@@ -132,6 +127,7 @@ public class UnitInstanceService : GURUService
                                 var matching = interactionCollection.Find(i => i.ID == id);
                                 if (matching != null)
                                 {
+                                    // Debug.Log($"Loading interaction '{id}' for unit '{unitName}'.");
                                     var interactionInstance = new UnitInteractionInstance(matching, isComplete);
                                     interactionInstance.OnInteractionComplete += () => SaveData();
                                     interactionInstances.Add(interactionInstance);
@@ -151,7 +147,7 @@ public class UnitInstanceService : GURUService
         }
 
         // Ensure all initial units are in the collection
-        Debug.Log($"Ensuring all initial units are registered. Initial units count: {initialUnits.Count}");
+        // Debug.Log($"Ensuring all initial units are registered. Initial units count: {initialUnits.Count}");
         foreach (var initialUnit in initialUnits)
         {
             if (!units.Any(u => u.Id == initialUnit.Id))
@@ -417,7 +413,7 @@ public class UnitInstanceService : GURUService
 
         foreach (var unit in units)
         {
-            Debug.Log($"Saving unit {unit.Id}, Data: {unit.Data}, DisplayName: {unit.DisplayName}");
+            // Debug.Log($"Saving unit {unit.Id}, Data: {unit.Data}, DisplayName: {unit.DisplayName}");
             var unitJson = new JObject();
             unitJson["id"] = unit.Id;
             unitJson["name"] = unit.Data.Name;

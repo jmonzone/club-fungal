@@ -32,14 +32,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 95347a15aaf7f4b40b23e8fdfbd3a26f, type: 2}
   jobCollection:
   - {fileID: 11400000, guid: 36c70f9e85b5d44f3bfe2ace33b2f7f6, type: 2}
-  - {fileID: 11400000, guid: 79968776cf7f5435a80d546dad47a1e9, type: 2}
   - {fileID: 11400000, guid: e0ccc44be171f4a238e11d7e110c89cc, type: 2}
+  - {fileID: 11400000, guid: 79968776cf7f5435a80d546dad47a1e9, type: 2}
   skillCollection:
   - {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
-  - {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
   - {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+  - {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
   colorPalettes:
-  - {fileID: 0}
   - {fileID: 11400000, guid: 3c13432d94b8348578ddb25afa96c0a9, type: 2}
   - {fileID: 11400000, guid: 28fd44a00cafe4888abe1427813e8334, type: 2}
   - {fileID: 11400000, guid: 3489c52b81a94463aaa5e67d4ebd81b4, type: 2}
@@ -48,9 +47,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cd6893964a6274906b52bbbf6b56f4d8, type: 2}
   - {fileID: 11400000, guid: 0740db2fd21f44859941442e25af726b, type: 2}
   units:
-  - {fileID: 11400000, guid: c5fe3b2204b8a471f9ab1ed260b7d9b9, type: 2}
-  - {fileID: 11400000, guid: 463ba2838266e4c609022c9ca93d4c8a, type: 2}
-  - {fileID: 11400000, guid: 72e0f639e631d41768805d21444be136, type: 2}
-  - {fileID: 11400000, guid: 68aeec7fa1b32483689b83c8fed18ae7, type: 2}
-  - {fileID: 11400000, guid: 22b52f9c2c3764d2faba1ba896a71851, type: 2}
-  - {fileID: 11400000, guid: 9ec731d5476604d08a81d3c2cc5ac210, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

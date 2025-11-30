@@ -1,9 +1,24 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(GURUService), true)]
-public class GURUServiceEditor : Editor
+[InitializeOnLoad]
+public class GURUServiceInitializer
 {
+    static GURUServiceInitializer()
+    {
+        EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+    }
+
+    private static void OnPlayModeStateChanged(PlayModeStateChange state)
+    {
+        Debug.Log("GURUServiceInitializer detected play mode state change: " + state);
+        if (state == PlayModeStateChange.EnteredEditMode)
+        {
+            var gs = LoadAsset<GameService>("GameService");
+            if (gs != null) gs.InitializeSystems();
+        }
+    }
+
     private static T LoadAsset<T>(string typeName) where T : UnityEngine.Object
     {
         string[] guids = AssetDatabase.FindAssets("t:" + typeName);
@@ -14,13 +29,14 @@ public class GURUServiceEditor : Editor
         }
         return null;
     }
+}
+
+[CustomEditor(typeof(GURUService), true)]
+public class GURUServiceEditor : Editor
+{
 
     protected void OnEnable()
     {
-        // Debug.Log("GURUServiceEditor OnEnable");
-        EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-        GameService gs = LoadAsset<GameService>("GameService");
-        if (gs != null) gs.InitializeSystems();
         OnEditorEnable();
     }
 
@@ -28,22 +44,10 @@ public class GURUServiceEditor : Editor
 
     protected void OnDisable()
     {
-        EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
         OnEditorDisable();
     }
 
     protected virtual void OnEditorDisable() { }
-
-    private void OnPlayModeStateChanged(PlayModeStateChange state)
-    {
-        Debug.Log($"Play mode state changed: {state}");
-        if (state == PlayModeStateChange.ExitingPlayMode)
-        {
-            Debug.Log("Exiting play mode - Initializing GameService systems from GURUServiceEditor");
-            GameService gs = LoadAsset<GameService>("GameService");
-            if (gs != null) gs.InitializeSystems();
-        }
-    }
 
     public override void OnInspectorGUI()
     {
