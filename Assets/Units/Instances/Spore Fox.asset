@@ -25,5 +25,5 @@ MonoBehaviour:
   friends:
   - {fileID: 11400000, guid: 463ba2838266e4c609022c9ca93d4c8a, type: 2}
   moments:
-  - interaction: {fileID: 11400000, guid: 0740db2fd21f44859941442e25af726b, type: 2}
+  - interaction: {fileID: 11400000, guid: 5aa5b33e58c2149b9ae9267050d6e3ac, type: 2}
     isComplete: 0

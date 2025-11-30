@@ -1555,6 +1555,45 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 1500}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &52782469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
+  m_Name: JSON_Spore Fox
+  m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
+  originalInstance: {fileID: 11400000, guid: 68aeec7fa1b32483689b83c8fed18ae7, type: 2}
+  instanceData:
+    Data: {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
+    Id: 000000000000000000000003
+    DisplayName: Spore Fox
+    FriendshipXP: 0
+    Element: 0
+    Job: {fileID: 11400000, guid: e0ccc44be171f4a238e11d7e110c89cc, type: 2}
+    ColorPalette: {fileID: 0}
+  skills:
+  - unit: {fileID: 52782469}
+    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+    level: 1
+    xp: 0
+  - unit: {fileID: 52782469}
+    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+    level: 1
+    xp: 0
+  - unit: {fileID: 52782469}
+    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+    level: 1
+    xp: 0
+  friends:
+  - {fileID: 603539024}
+  moments:
+  - interaction: {fileID: 11400000, guid: 5aa5b33e58c2149b9ae9267050d6e3ac, type: 2}
+    isComplete: 1
 --- !u!1 &54132136
 GameObject:
   m_ObjectHideFlags: 0
@@ -17023,6 +17062,45 @@ Transform:
   - {fileID: 1383509305}
   m_Father: {fileID: 76107529}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &547957869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
+  m_Name: JSON_Party Frog
+  m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
+  originalInstance: {fileID: 11400000, guid: 463ba2838266e4c609022c9ca93d4c8a, type: 2}
+  instanceData:
+    Data: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
+    Id: 000000000000000000000001
+    DisplayName: Party Frog
+    FriendshipXP: 83
+    Element: 0
+    Job: {fileID: 0}
+    ColorPalette: {fileID: 0}
+  skills:
+  - unit: {fileID: 547957869}
+    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+    level: 1
+    xp: 0
+  - unit: {fileID: 547957869}
+    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+    level: 1
+    xp: 0
+  - unit: {fileID: 547957869}
+    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+    level: 1
+    xp: 0
+  friends:
+  - {fileID: 1964252671}
+  moments:
+  - interaction: {fileID: 11400000, guid: 0740db2fd21f44859941442e25af726b, type: 2}
+    isComplete: 0
 --- !u!1001 &551356238
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18059,6 +18137,45 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 602170447}
   m_CullTransparentMesh: 1
+--- !u!114 &603539024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
+  m_Name: JSON_Party Frog
+  m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
+  originalInstance: {fileID: 11400000, guid: 463ba2838266e4c609022c9ca93d4c8a, type: 2}
+  instanceData:
+    Data: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
+    Id: 000000000000000000000001
+    DisplayName: Party Frog
+    FriendshipXP: 83
+    Element: 0
+    Job: {fileID: 0}
+    ColorPalette: {fileID: 0}
+  skills:
+  - unit: {fileID: 603539024}
+    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+    level: 1
+    xp: 0
+  - unit: {fileID: 603539024}
+    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+    level: 1
+    xp: 0
+  - unit: {fileID: 603539024}
+    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+    level: 1
+    xp: 0
+  friends:
+  - {fileID: 1166151002}
+  moments:
+  - interaction: {fileID: 11400000, guid: 0740db2fd21f44859941442e25af726b, type: 2}
+    isComplete: 0
 --- !u!1 &611486127
 GameObject:
   m_ObjectHideFlags: 0
@@ -21154,42 +21271,6 @@ Transform:
   - {fileID: 505571024}
   m_Father: {fileID: 2039405196}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &768605696
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
-  m_Name: JSON_Player
-  m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
-  originalInstance: {fileID: 11400000, guid: c5fe3b2204b8a471f9ab1ed260b7d9b9, type: 2}
-  instanceData:
-    Data: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
-    Id: 000000000000000000000000
-    DisplayName: Player
-    FriendshipXP: 0
-    Element: 0
-    Job: {fileID: 0}
-    ColorPalette: {fileID: 0}
-  skills:
-  - unit: {fileID: 768605696}
-    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
-    level: 1
-    xp: 0
-  - unit: {fileID: 768605696}
-    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
-    level: 1
-    xp: 0
-  - unit: {fileID: 768605696}
-    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
-    level: 1
-    xp: 0
-  friends: []
-  moments: []
 --- !u!1 &776074608
 GameObject:
   m_ObjectHideFlags: 0
@@ -24096,17 +24177,17 @@ PrefabInstance:
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -11.735143
+      value: -14.19
       objectReference: {fileID: 0}
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.025000002
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.7500005
+      value: 2.06
       objectReference: {fileID: 0}
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
@@ -24391,43 +24472,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 4604848032273459661}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &935346077
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
-  m_Name: JSON_Tarot Owl
-  m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
-  originalInstance: {fileID: 11400000, guid: 22b52f9c2c3764d2faba1ba896a71851, type: 2}
-  instanceData:
-    Data: {fileID: 11400000, guid: a0789f36ed7f54fe7bb95cee622eeb16, type: 2}
-    Id: 000000000000000000000004
-    DisplayName: Tarot Owl
-    FriendshipXP: 0
-    Element: 0
-    Job: {fileID: 0}
-    ColorPalette: {fileID: 0}
-  skills:
-  - unit: {fileID: 935346077}
-    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
-    level: 1
-    xp: 0
-  - unit: {fileID: 935346077}
-    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
-    level: 1
-    xp: 0
-  - unit: {fileID: 935346077}
-    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
-    level: 1
-    xp: 0
-  friends:
-  - {fileID: 1113973899}
-  moments: []
 --- !u!1 &938708551
 GameObject:
   m_ObjectHideFlags: 0
@@ -28289,6 +28333,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1375822412}
+    - targetCorrespondingSourceObject: {fileID: 4883318988852174974, guid: 39a86af59e75d41dfaeeca6d7af1a972,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1609408244}
+    - targetCorrespondingSourceObject: {fileID: 4883318988852174974, guid: 39a86af59e75d41dfaeeca6d7af1a972,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1882211478}
     - targetCorrespondingSourceObject: {fileID: 8382634017736889950, guid: 39a86af59e75d41dfaeeca6d7af1a972,
         type: 3}
       insertIndex: -1
@@ -32120,45 +32172,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &1113973899
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
-  m_Name: JSON_Party Frog
-  m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
-  originalInstance: {fileID: 11400000, guid: 463ba2838266e4c609022c9ca93d4c8a, type: 2}
-  instanceData:
-    Data: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
-    Id: 000000000000000000000001
-    DisplayName: Party Frog
-    FriendshipXP: 83
-    Element: 0
-    Job: {fileID: 0}
-    ColorPalette: {fileID: 0}
-  skills:
-  - unit: {fileID: 1113973899}
-    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
-    level: 1
-    xp: 0
-  - unit: {fileID: 1113973899}
-    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
-    level: 1
-    xp: 0
-  - unit: {fileID: 1113973899}
-    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
-    level: 1
-    xp: 0
-  friends:
-  - {fileID: 1697505990}
-  moments:
-  - interaction: {fileID: 11400000, guid: 0740db2fd21f44859941442e25af726b, type: 2}
-    isComplete: 0
 --- !u!1 &1116546692
 GameObject:
   m_ObjectHideFlags: 0
@@ -33240,6 +33253,43 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1155981937}
   m_CullTransparentMesh: 1
+--- !u!114 &1166151002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
+  m_Name: JSON_Crazy Jellyfish
+  m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
+  originalInstance: {fileID: 11400000, guid: 72e0f639e631d41768805d21444be136, type: 2}
+  instanceData:
+    Data: {fileID: 11400000, guid: 84acf7738ffbc4db09e660e7ce20b7a1, type: 2}
+    Id: 000000000000000000000002
+    DisplayName: Crazy Jellyfish
+    FriendshipXP: 0
+    Element: 0
+    Job: {fileID: 11400000, guid: 36c70f9e85b5d44f3bfe2ace33b2f7f6, type: 2}
+    ColorPalette: {fileID: 0}
+  skills:
+  - unit: {fileID: 1166151002}
+    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+    level: 1
+    xp: 0
+  - unit: {fileID: 1166151002}
+    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+    level: 1
+    xp: 0
+  - unit: {fileID: 1166151002}
+    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+    level: 1
+    xp: 0
+  friends:
+  - {fileID: 603539024}
+  moments: []
 --- !u!1 &1170351486
 GameObject:
   m_ObjectHideFlags: 0
@@ -34420,6 +34470,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1200451634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
+  m_Name: JSON_Tree
+  m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
+  originalInstance: {fileID: 11400000, guid: 9ec731d5476604d08a81d3c2cc5ac210, type: 2}
+  instanceData:
+    Data: {fileID: 11400000, guid: 95347a15aaf7f4b40b23e8fdfbd3a26f, type: 2}
+    Id: 000000000000000000000005
+    DisplayName: Tree
+    FriendshipXP: 0
+    Element: 0
+    Job: {fileID: 0}
+    ColorPalette: {fileID: 0}
+  skills:
+  - unit: {fileID: 1200451634}
+    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+    level: 1
+    xp: 0
+  - unit: {fileID: 1200451634}
+    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+    level: 1
+    xp: 0
+  - unit: {fileID: 1200451634}
+    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+    level: 1
+    xp: 0
+  friends: []
+  moments: []
 --- !u!1 &1200595916
 GameObject:
   m_ObjectHideFlags: 0
@@ -35146,6 +35232,45 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1221968489}
   m_CullTransparentMesh: 1
+--- !u!114 &1225468122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
+  m_Name: JSON_Spore Fox
+  m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
+  originalInstance: {fileID: 11400000, guid: 68aeec7fa1b32483689b83c8fed18ae7, type: 2}
+  instanceData:
+    Data: {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
+    Id: 000000000000000000000003
+    DisplayName: Spore Fox
+    FriendshipXP: 0
+    Element: 0
+    Job: {fileID: 11400000, guid: e0ccc44be171f4a238e11d7e110c89cc, type: 2}
+    ColorPalette: {fileID: 0}
+  skills:
+  - unit: {fileID: 1225468122}
+    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+    level: 1
+    xp: 0
+  - unit: {fileID: 1225468122}
+    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+    level: 1
+    xp: 0
+  - unit: {fileID: 1225468122}
+    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+    level: 1
+    xp: 0
+  friends:
+  - {fileID: 547957869}
+  moments:
+  - interaction: {fileID: 11400000, guid: 5aa5b33e58c2149b9ae9267050d6e3ac, type: 2}
+    isComplete: 0
 --- !u!1 &1229974331
 GameObject:
   m_ObjectHideFlags: 0
@@ -37019,14 +37144,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2127907194}
-    - targetCorrespondingSourceObject: {fileID: 4883318988852174974, guid: 39a86af59e75d41dfaeeca6d7af1a972,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1882211478}
-    - targetCorrespondingSourceObject: {fileID: 4883318988852174974, guid: 39a86af59e75d41dfaeeca6d7af1a972,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1609408244}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 39a86af59e75d41dfaeeca6d7af1a972, type: 3}
 --- !u!4 &1293838137 stripped
@@ -39715,42 +39832,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1414956280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
-  m_Name: JSON_Tree
-  m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
-  originalInstance: {fileID: 11400000, guid: 9ec731d5476604d08a81d3c2cc5ac210, type: 2}
-  instanceData:
-    Data: {fileID: 11400000, guid: 95347a15aaf7f4b40b23e8fdfbd3a26f, type: 2}
-    Id: 000000000000000000000005
-    DisplayName: Tree
-    FriendshipXP: 0
-    Element: 0
-    Job: {fileID: 0}
-    ColorPalette: {fileID: 0}
-  skills:
-  - unit: {fileID: 1414956280}
-    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
-    level: 1
-    xp: 0
-  - unit: {fileID: 1414956280}
-    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
-    level: 1
-    xp: 0
-  - unit: {fileID: 1414956280}
-    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
-    level: 1
-    xp: 0
-  friends: []
-  moments: []
 --- !u!1001 &1421854874
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -41193,6 +41274,43 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1472965812}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1473306081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
+  m_Name: JSON_Tarot Owl
+  m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
+  originalInstance: {fileID: 11400000, guid: 22b52f9c2c3764d2faba1ba896a71851, type: 2}
+  instanceData:
+    Data: {fileID: 11400000, guid: a0789f36ed7f54fe7bb95cee622eeb16, type: 2}
+    Id: 000000000000000000000004
+    DisplayName: Tarot Owl
+    FriendshipXP: 0
+    Element: 0
+    Job: {fileID: 0}
+    ColorPalette: {fileID: 0}
+  skills:
+  - unit: {fileID: 1473306081}
+    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+    level: 1
+    xp: 0
+  - unit: {fileID: 1473306081}
+    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+    level: 1
+    xp: 0
+  - unit: {fileID: 1473306081}
+    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+    level: 1
+    xp: 0
+  friends:
+  - {fileID: 547957869}
+  moments: []
 --- !u!1 &1474393450
 GameObject:
   m_ObjectHideFlags: 0
@@ -44413,7 +44531,7 @@ PrefabInstance:
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -10.25
+      value: -16.646173
       objectReference: {fileID: 0}
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
@@ -44423,7 +44541,7 @@ PrefabInstance:
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.73683214
+      value: 1.8004737
       objectReference: {fileID: 0}
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
@@ -44501,12 +44619,12 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1293838138}
+    m_TransformParent: {fileID: 1519345155}
     m_Modifications:
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -15.860001
+      value: -0.9430027
       objectReference: {fileID: 0}
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
@@ -44516,7 +44634,7 @@ PrefabInstance:
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.1900005
+      value: -0.533525
       objectReference: {fileID: 0}
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
@@ -45456,6 +45574,42 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1634053342}
   m_CullTransparentMesh: 1
+--- !u!114 &1638559783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
+  m_Name: JSON_Player
+  m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
+  originalInstance: {fileID: 11400000, guid: c5fe3b2204b8a471f9ab1ed260b7d9b9, type: 2}
+  instanceData:
+    Data: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
+    Id: 000000000000000000000000
+    DisplayName: Player
+    FriendshipXP: 0
+    Element: 0
+    Job: {fileID: 0}
+    ColorPalette: {fileID: 0}
+  skills:
+  - unit: {fileID: 1638559783}
+    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+    level: 1
+    xp: 0
+  - unit: {fileID: 1638559783}
+    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+    level: 1
+    xp: 0
+  - unit: {fileID: 1638559783}
+    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+    level: 1
+    xp: 0
+  friends: []
+  moments: []
 --- !u!1 &1652946787
 GameObject:
   m_ObjectHideFlags: 0
@@ -47099,43 +47253,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!114 &1697505990
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
-  m_Name: JSON_Crazy Jellyfish
-  m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
-  originalInstance: {fileID: 11400000, guid: 72e0f639e631d41768805d21444be136, type: 2}
-  instanceData:
-    Data: {fileID: 11400000, guid: 84acf7738ffbc4db09e660e7ce20b7a1, type: 2}
-    Id: 000000000000000000000002
-    DisplayName: Crazy Jellyfish
-    FriendshipXP: 0
-    Element: 0
-    Job: {fileID: 11400000, guid: 36c70f9e85b5d44f3bfe2ace33b2f7f6, type: 2}
-    ColorPalette: {fileID: 0}
-  skills:
-  - unit: {fileID: 1697505990}
-    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
-    level: 1
-    xp: 0
-  - unit: {fileID: 1697505990}
-    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
-    level: 1
-    xp: 0
-  - unit: {fileID: 1697505990}
-    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
-    level: 1
-    xp: 0
-  friends:
-  - {fileID: 1113973899}
-  moments: []
 --- !u!224 &1700727577 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4501346741178688902, guid: 652786932bf8d46d3a1fe6d5c4cbe514,
@@ -53156,6 +53273,43 @@ LODGroup:
     renderers:
     - renderer: {fileID: 919204028}
   m_Enabled: 0
+--- !u!114 &1964252671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
+  m_Name: JSON_Crazy Jellyfish
+  m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
+  originalInstance: {fileID: 11400000, guid: 72e0f639e631d41768805d21444be136, type: 2}
+  instanceData:
+    Data: {fileID: 11400000, guid: 84acf7738ffbc4db09e660e7ce20b7a1, type: 2}
+    Id: 000000000000000000000002
+    DisplayName: Crazy Jellyfish
+    FriendshipXP: 0
+    Element: 0
+    Job: {fileID: 11400000, guid: 36c70f9e85b5d44f3bfe2ace33b2f7f6, type: 2}
+    ColorPalette: {fileID: 0}
+  skills:
+  - unit: {fileID: 1964252671}
+    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+    level: 1
+    xp: 0
+  - unit: {fileID: 1964252671}
+    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+    level: 1
+    xp: 0
+  - unit: {fileID: 1964252671}
+    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+    level: 1
+    xp: 0
+  friends:
+  - {fileID: 547957869}
+  moments: []
 --- !u!1 &1976470803
 GameObject:
   m_ObjectHideFlags: 0
@@ -54329,8 +54483,8 @@ RectTransform:
   - {fileID: 180397760}
   m_Father: {fileID: 959773196}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.008547009, y: 0.003949447}
-  m_AnchorMax: {x: 0.2735043, y: 0.14060031}
+  m_AnchorMin: {x: 0.008547009, y: 0.044233806}
+  m_AnchorMax: {x: 0.991453, y: 0.94036335}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -55219,43 +55373,6 @@ MonoBehaviour:
   friends:
   - {fileID: 1904176733}
   moments: []
---- !u!114 &2096357589
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
-  m_Name: JSON_Spore Fox
-  m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
-  originalInstance: {fileID: 11400000, guid: 68aeec7fa1b32483689b83c8fed18ae7, type: 2}
-  instanceData:
-    Data: {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
-    Id: 000000000000000000000003
-    DisplayName: Spore Fox
-    FriendshipXP: 0
-    Element: 0
-    Job: {fileID: 11400000, guid: e0ccc44be171f4a238e11d7e110c89cc, type: 2}
-    ColorPalette: {fileID: 0}
-  skills:
-  - unit: {fileID: 2096357589}
-    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
-    level: 1
-    xp: 0
-  - unit: {fileID: 2096357589}
-    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
-    level: 1
-    xp: 0
-  - unit: {fileID: 2096357589}
-    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
-    level: 1
-    xp: 0
-  friends:
-  - {fileID: 1113973899}
-  moments: []
 --- !u!1 &2099235267
 GameObject:
   m_ObjectHideFlags: 0
@@ -55839,7 +55956,7 @@ PrefabInstance:
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -11.72942
+      value: -12.796209
       objectReference: {fileID: 0}
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
@@ -55849,7 +55966,7 @@ PrefabInstance:
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.7499995
+      value: 2.9966383
       objectReference: {fileID: 0}
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
@@ -56677,7 +56794,7 @@ Transform:
   m_GameObject: {fileID: 304056670036744325}
   serializedVersion: 2
   m_LocalRotation: {x: 0.25881913, y: 0, z: 0, w: 0.9659259}
-  m_LocalPosition: {x: 11.048098, y: 6.525001, z: -3.3919973}
+  m_LocalPosition: {x: -0.0070700645, y: 6.500001, z: -12.552319}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -57408,7 +57525,7 @@ PrefabInstance:
     - target: {fileID: 2526129002911352718, guid: b5a65936c7fe74e3ca085c517af15846,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -15
+      value: -14.999998
       objectReference: {fileID: 0}
     - target: {fileID: 2526129002911352718, guid: b5a65936c7fe74e3ca085c517af15846,
         type: 3}
@@ -57418,7 +57535,7 @@ PrefabInstance:
     - target: {fileID: 2526129002911352718, guid: b5a65936c7fe74e3ca085c517af15846,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.3999982
+      value: -2.3999968
       objectReference: {fileID: 0}
     - target: {fileID: 2526129002911352718, guid: b5a65936c7fe74e3ca085c517af15846,
         type: 3}
@@ -61552,7 +61669,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1293838138}
+    m_TransformParent: {fileID: 1519345155}
     m_Modifications:
     - target: {fileID: 225081015780643707, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
@@ -61567,17 +61684,17 @@ PrefabInstance:
     - target: {fileID: 1248008441582008258, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -17.75549
+      value: -17.05
       objectReference: {fileID: 0}
     - target: {fileID: 1248008441582008258, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.025000002
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1248008441582008258, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.379859
+      value: -2.04
       objectReference: {fileID: 0}
     - target: {fileID: 1248008441582008258, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
