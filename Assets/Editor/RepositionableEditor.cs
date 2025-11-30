@@ -55,7 +55,10 @@ public class RepositionableEditor : GURUEditor
         RoomController newRoom = null;
         foreach (var room in rooms)
         {
-            if (room.Floor != null && room.Floor.bounds.Contains(comp.transform.position))
+            Vector3 pos = comp.transform.position;
+            Bounds floorBounds = room.Floor.bounds;
+            if (pos.x >= floorBounds.min.x && pos.x <= floorBounds.max.x &&
+                pos.z >= floorBounds.min.z && pos.z <= floorBounds.max.z)
             {
                 newRoom = room;
                 break;

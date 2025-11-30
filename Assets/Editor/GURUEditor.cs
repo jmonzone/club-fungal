@@ -9,7 +9,6 @@ public class GURUEditor : Editor
     protected void OnEnable()
     {
         OnEditorEnable();
-        GURUInitializer.InitializeSystems();
     }
 
     protected virtual void OnEditorEnable() { }
