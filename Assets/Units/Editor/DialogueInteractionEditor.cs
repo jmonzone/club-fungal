@@ -8,22 +8,25 @@ using System.Text.RegularExpressions;
 [CustomEditor(typeof(DialogueInteraction))]
 public class DialogueInteractionEditor : Editor
 {
-    private ReorderableList dialogueList;
+    private ReorderableList interactionSequence;
 
     private void OnEnable()
     {
         var actionsProperty = serializedObject.FindProperty("actions");
-        dialogueList = new ReorderableList(serializedObject, actionsProperty, true, true, false, false);
-        dialogueList.drawHeaderCallback = (Rect rect) => EditorGUI.LabelField(rect, "Interaction Sequence");
-        dialogueList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+        interactionSequence = new ReorderableList(serializedObject, actionsProperty, true, true, false, false);
+        interactionSequence.drawHeaderCallback = (Rect rect) => EditorGUI.LabelField(rect, "Interaction Sequence");
+        interactionSequence.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
         {
-            var element = dialogueList.serializedProperty.GetArrayElementAtIndex(index);
-            EditorGUI.PropertyField(rect, element);
+            var element = interactionSequence.serializedProperty.GetArrayElementAtIndex(index);
+            Rect paddedRect = new Rect(rect.x + 5, rect.y + 5, rect.width - 10, rect.height - 10);
+            EditorGUI.PropertyField(paddedRect, element);
+            // Draw separator line
+            // EditorGUI.DrawRect(new Rect(rect.x, rect.yMax - 1, rect.width, 1), new Color(0.5f, 0.5f, 0.5f, 0.5f));
         };
-        dialogueList.elementHeightCallback = (int index) =>
+        interactionSequence.elementHeightCallback = (int index) =>
         {
-            var element = dialogueList.serializedProperty.GetArrayElementAtIndex(index);
-            return EditorGUI.GetPropertyHeight(element);
+            var element = interactionSequence.serializedProperty.GetArrayElementAtIndex(index);
+            return EditorGUI.GetPropertyHeight(element) + 10; // Add padding
         };
     }
 
@@ -33,25 +36,22 @@ public class DialogueInteractionEditor : Editor
 
         DrawDefaultInspector();
 
-        GURUStyler.DrawGuruSection(() =>
-        {
-            dialogueList.DoLayoutList();
+        interactionSequence.DoLayoutList();
 
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Add Dialogue"))
-            {
-                AddAction(new DialogueAction());
-            }
-            if (GUILayout.Button("Add Action"))
-            {
-                ShowAddActionMenu();
-            }
-            if (GUILayout.Button("Remove"))
-            {
-                RemoveLastAction();
-            }
-            EditorGUILayout.EndHorizontal();
-        }, "Customize interaction actions for dialogue and other behaviors");
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("Add Dialogue"))
+        {
+            AddAction(new DialogueAction());
+        }
+        if (GUILayout.Button("Add Action"))
+        {
+            ShowAddActionMenu();
+        }
+        if (GUILayout.Button("Remove"))
+        {
+            RemoveLastAction();
+        }
+        EditorGUILayout.EndHorizontal();
 
         serializedObject.ApplyModifiedProperties();
     }

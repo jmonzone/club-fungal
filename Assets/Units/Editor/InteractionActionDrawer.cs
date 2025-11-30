@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 [CustomPropertyDrawer(typeof(InteractionAction), useForChildren: true)]
 public class InteractionActionDrawer : PropertyDrawer
@@ -18,25 +19,55 @@ public class InteractionActionDrawer : PropertyDrawer
             EditorGUI.LabelField(labelRect, displayName, EditorStyles.boldLabel);
             y += EditorGUIUtility.singleLineHeight + 2;
 
-            var iterator = property.Copy();
-            bool hasChildren = iterator.NextVisible(true);
-            if (hasChildren)
+            // Handle double-click to open script
+            HandleDoubleClickToOpenScript(labelRect, action);
+
+            Rect customRect = new Rect(position.x, y, position.width, position.height - (y - position.y));
+            DrawCustom(customRect, property);
+        }
+    }
+
+    protected virtual void DrawCustom(Rect rect, SerializedProperty property)
+    {
+        var iterator = property.Copy();
+        bool hasChildren = iterator.NextVisible(true);
+        if (hasChildren)
+        {
+            float y = rect.y;
+            do
             {
-                do
-                {
-                    float height = EditorGUI.GetPropertyHeight(iterator);
-                    Rect rect = new Rect(position.x, y, position.width, height);
-                    EditorGUI.PropertyField(rect, iterator);
-                    y += height;
-                } while (iterator.NextVisible(false));
+                float height = EditorGUI.GetPropertyHeight(iterator);
+                Rect propRect = new Rect(rect.x, y, rect.width, height);
+                EditorGUI.PropertyField(propRect, iterator);
+                y += height;
+            } while (iterator.NextVisible(false));
+        }
+    }
+
+    protected static void HandleDoubleClickToOpenScript(Rect rect, InteractionAction action)
+    {
+        if (Event.current.type == EventType.MouseDown && Event.current.clickCount == 2 && rect.Contains(Event.current.mousePosition))
+        {
+            MonoScript[] scripts = Resources.FindObjectsOfTypeAll<MonoScript>();
+            var script = scripts.FirstOrDefault(s => s.GetClass() == action.GetType());
+            if (script != null)
+            {
+                AssetDatabase.OpenAsset(script);
             }
+            Event.current.Use();
         }
     }
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
         float height = EditorGUIUtility.singleLineHeight + 2; // label + spacing
+        height += GetCustomHeight(property);
+        return height;
+    }
 
+    protected virtual float GetCustomHeight(SerializedProperty property)
+    {
+        float height = 0;
         var iterator = property.Copy();
         bool hasChildren = iterator.NextVisible(true);
         if (hasChildren)
@@ -46,7 +77,6 @@ public class InteractionActionDrawer : PropertyDrawer
                 height += EditorGUI.GetPropertyHeight(iterator);
             } while (iterator.NextVisible(false));
         }
-
         return height;
     }
 }

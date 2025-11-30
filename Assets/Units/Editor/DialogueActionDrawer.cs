@@ -4,18 +4,14 @@ using UnityEngine;
 [CustomPropertyDrawer(typeof(DialogueAction))]
 public class DialogueActionDrawer : InteractionActionDrawer
 {
-    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+    protected override void DrawCustom(Rect rect, SerializedProperty property)
     {
         var speakerProp = property.FindPropertyRelative("speaker");
         var unitInstanceProp = property.FindPropertyRelative("unitInstance");
         var textProp = property.FindPropertyRelative("text");
 
-        // Type label
-        Rect typeRect = new Rect(position.x, position.y, 80, EditorGUIUtility.singleLineHeight);
-        EditorGUI.LabelField(typeRect, "Dialogue", EditorStyles.boldLabel);
-
         // Display area
-        Rect displayRect = new Rect(position.x + 85, position.y, position.width - 85 - 85, EditorGUIUtility.singleLineHeight);
+        Rect displayRect = new Rect(rect.x, rect.y, rect.width - 160, EditorGUIUtility.singleLineHeight);
         var speakerIndex = speakerProp.enumValueIndex;
         if (speakerIndex == 2) // Specific
         {
@@ -49,16 +45,23 @@ public class DialogueActionDrawer : InteractionActionDrawer
         }
 
         // Speaker dropdown
-        Rect speakerRect = new Rect(position.x + position.width - 80, position.y, 80, EditorGUIUtility.singleLineHeight);
+        Rect speakerRect = new Rect(rect.x + rect.width - 80, rect.y, 80, EditorGUIUtility.singleLineHeight);
         EditorGUI.PropertyField(speakerRect, speakerProp, GUIContent.none);
 
         // Text field
-        Rect textRect = new Rect(position.x + 85, position.y + EditorGUIUtility.singleLineHeight + 2, position.width - 85, EditorGUIUtility.singleLineHeight * 2);
+        string text = textProp.stringValue;
+        int lineCount = string.IsNullOrEmpty(text) ? 1 : text.Split('\n').Length;
+        float textHeight = EditorGUIUtility.singleLineHeight * Mathf.Max(2, lineCount);
+        Rect textRect = new Rect(rect.x, rect.y + EditorGUIUtility.singleLineHeight + 2, rect.width, textHeight);
         textProp.stringValue = EditorGUI.TextArea(textRect, textProp.stringValue);
     }
 
-    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+    protected override float GetCustomHeight(SerializedProperty property)
     {
-        return EditorGUIUtility.singleLineHeight * 3 + 4;
+        var textProp = property.FindPropertyRelative("text");
+        string text = textProp.stringValue;
+        int lineCount = string.IsNullOrEmpty(text) ? 1 : text.Split('\n').Length;
+        float textHeight = EditorGUIUtility.singleLineHeight * Mathf.Max(2, lineCount);
+        return EditorGUIUtility.singleLineHeight + 2 + textHeight;
     }
 }
