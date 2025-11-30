@@ -7,6 +7,7 @@ public class RoomManager : MonoBehaviour
     [SerializeField] private PlayerService playerReference;
     [SerializeField] private TransitionReference transitionReference;
     [SerializeField] private TeleportService teleportService;
+    [SerializeField] private SnapshotService snapshotService;
     [SerializeField] private RoomController roomControllerPrefab;
     [SerializeField] private List<Texture> wallTextureCollections;
     [SerializeField] private GameService settings;
@@ -84,6 +85,8 @@ public class RoomManager : MonoBehaviour
             Debug.Log($"Teleported player to {teleportPosition} door.OtherDoor.Room.transform.position {door.OtherDoor.Room.transform.position} door.OtherDoor.transform.position {door.OtherDoor.transform.position} teleportDirection {teleportDirection} ");
             if (settings.useOuterWalls) door.Room.SetAsOuterRoom();
             otherRoom.SetAsInnerRoom();
+
+            snapshotService.SaveSnapshot();
 
             if (settings.selectRoomOnTransition)
             {

@@ -29,6 +29,8 @@ public class SnapshotService : GURUService
 
     public void SaveSnapshot()
     {
+        if (unitControllerService.Controllers.Count == 0) return;
+
         Debug.Log($"Saving snapshot of unit positions controllers. Total controllers: {unitControllerService.Controllers.Count}");
         var snapshotJson = new JArray();
 
