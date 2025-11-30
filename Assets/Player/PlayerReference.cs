@@ -34,8 +34,12 @@ public class PlayerReference : ScriptableObject
     public void Initialize()
     {
         player = FindAnyObjectByType<PlayerController>();
-        SetTargetPosition(player.transform.position);
         activityUnit = player.GetComponent<ActivityUnit>();
+
+        player.OnNavMeshAgentReady += () =>
+        {
+            SetTargetPosition(player.transform.position);
+        };
     }
 
     public void SetTargetPosition(Vector3 targetPosition)
