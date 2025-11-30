@@ -11,7 +11,7 @@ public class GURUInitializer
 
     private static void OnPlayModeStateChanged(PlayModeStateChange state)
     {
-        Debug.Log("GURUServiceInitializer detected play mode state change: " + state);
+        // Debug.Log("GURUServiceInitializer detected play mode state change: " + state);
         if (state == PlayModeStateChange.EnteredEditMode)
         {
             var gs = LoadAsset<GameService>("GameService");

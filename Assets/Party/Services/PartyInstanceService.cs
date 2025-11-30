@@ -21,7 +21,6 @@ public class PartyInstanceService : GURUService
 
     protected override void OnInitialize()
     {
-        Debug.Log("Loading party from local data.");
         partyInstances = new List<UnitInstance>();
 
         // Load saved party

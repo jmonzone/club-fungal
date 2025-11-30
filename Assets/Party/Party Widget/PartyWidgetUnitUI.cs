@@ -10,7 +10,6 @@ public class PartyWidgetUnitUI : MonoBehaviour
 
     public void SetUnit(UnitInstance unit)
     {
-        Debug.Log("Setting party widget unit UI to " + unit.DisplayName);
         unitInstance = unit;
         unitImage.sprite = unit.Data.Sprite;
         unitNameText.text = unit.DisplayName;
