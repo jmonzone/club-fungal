@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 1162159686060968867}
   - component: {fileID: 871449771625494487}
   - component: {fileID: 8974912156065095882}
+  - component: {fileID: 6884083958957708954}
   m_Layer: 0
   m_Name: Player Controller
   m_TagString: Untagged
@@ -524,6 +525,18 @@ MonoBehaviour:
   isActive: 0
   isPaused: 0
   emissionInterval: 1
+--- !u!114 &6884083958957708954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 421527447816816506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb09765592314d27aca246b1811193d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1 &5392631694524631568
 GameObject:
   m_ObjectHideFlags: 0

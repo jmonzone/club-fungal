@@ -30,12 +30,14 @@ public class PlayerReference : ScriptableObject
     public event UnityAction OnTargetInteractableChanged;
     public event UnityAction OnTargetPositionChanged;
     public event UnityAction<bool> OnPOVCameraToggled;
+    public event UnityAction OnPlayerInitialized;
 
     public void SetPlayerController(PlayerController player)
     {
         this.player = player;
         playerInstance = player.Instance;
         activityUnit = player.GetComponent<ActivityUnit>();
+        OnPlayerInitialized?.Invoke();
     }
 
     public void SetTargetPosition(Vector3 targetPosition)

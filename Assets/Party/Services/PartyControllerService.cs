@@ -19,6 +19,23 @@ public class PartyControllerService : GURUService
     protected override void OnInitialize()
     {
         InitializeControllers();
+        playerReference.OnPlayerInitialized += OnPlayerInitialized;
+    }
+
+    private void OnPlayerInitialized()
+    {
+        foreach (var controller in unitControllerService.Controllers)
+        {
+            if (partyInstanceService.PartyInstances.Any(p => p.Id == controller.Instance.Id))
+            {
+                controller.OnNavMeshAgentReady += () =>
+                {
+                    AddToParty(controller);
+                };
+            }
+        }
+
+        playerReference.OnPlayerInitialized -= OnPlayerInitialized;
     }
 
     public override void OnSceneLoaded()
@@ -30,14 +47,6 @@ public class PartyControllerService : GURUService
     private void InitializeControllers()
     {
         partyControllers.Clear();
-
-        foreach (var controller in unitControllerService.Controllers)
-        {
-            if (partyInstanceService.PartyInstances.Any(p => p.Id == controller.Instance.Id))
-            {
-                AddToParty(controller);
-            }
-        }
     }
 
     public void AddToParty(UnitController unit)
