@@ -37,9 +37,6 @@ public class RepositionableEditor : GURUEditor
 
     protected new void OnDisable()
     {
-        var snapshotService = GURUStyler.LoadAsset<SnapshotService>("SnapshotService");
-        snapshotService.SaveSnapshot();
-
         Component controller = (Component)target;
         lastPositions.Remove(controller);
     }
@@ -72,6 +69,9 @@ public class RepositionableEditor : GURUEditor
                 comp.transform.SetParent(targetParent);
                 EditorGUIUtility.PingObject(comp.gameObject);
             }
+
+            var snapshotService = GURUStyler.LoadAsset<SnapshotService>("SnapshotService");
+            snapshotService.SaveSnapshot();
         }
     }
 }
