@@ -3,15 +3,15 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Collections.Generic;
 
+public enum DialogueSpeaker
+{
+    Source,
+    Target,
+}
+
 [Serializable]
 public class DialogueActionBlock
 {
-    public enum DialogueSpeaker
-    {
-        Source,
-        Target,
-    }
-
     [SerializeField] public DialogueSpeaker speaker;
     [SerializeField][TextArea] public string text;
 }
@@ -21,33 +21,51 @@ public class DialogueAction : InteractionAction
 {
     public override string DisplayName => "Dialogue";
 
+    [SerializeField] private DialogueReference dialogueReference;
     [SerializeField] private List<DialogueActionBlock> blocks = new();
 
-    public override void Execute(UnitController source, UnitController target, DialogueReference dialogueReference, UnitControllerService unitControllerService, PartyInstanceService partyInstanceService, PartyControllerService partyControllerService, UnityAction onComplete)
+    private int currentIndex = 0;
+
+    public override void Execute(UnitController source, UnitController target, UnityAction onComplete)
     {
-        source.Dialogue.StartDialogue(target);
-        target.Dialogue.StartDialogue(source);
-
-        dialogueReference.StartDialogueInteraction(new List<UnitController> { source, target });
-
-        foreach (var block in blocks)
+        if (currentIndex == 0)
         {
-            var unitInstance = block.speaker switch
-            {
-                DialogueActionBlock.DialogueSpeaker.Source => source.Instance,
-                DialogueActionBlock.DialogueSpeaker.Target => target.Instance,
-                _ => throw new ArgumentOutOfRangeException()
-            };
+            source.Dialogue.StartDialogue(target);
+            target.Dialogue.StartDialogue(source);
 
-            var speakerController = block.speaker switch
-            {
-                DialogueActionBlock.DialogueSpeaker.Source => source,
-                DialogueActionBlock.DialogueSpeaker.Target => target,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
-            var dialogue = new Dialogue(unitInstance, block.text, onComplete);
-            dialogueReference.StartDialogue(speakerController, dialogue);
+            dialogueReference.StartDialogueInteraction(new List<UnitController> { source, target });
         }
+
+        var block = blocks[currentIndex];
+        var unitInstance = block.speaker switch
+        {
+            DialogueSpeaker.Source => source.Instance,
+            DialogueSpeaker.Target => target.Instance,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        var speakerController = block.speaker switch
+        {
+            DialogueSpeaker.Source => source,
+            DialogueSpeaker.Target => target,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        var dialogue = new Dialogue(block.text);
+
+        dialogueReference.StartDialogue(speakerController, dialogue, onContinue: () =>
+        {
+            currentIndex++;
+            if (currentIndex < blocks.Count)
+            {
+                Execute(source, target, onComplete);
+            }
+            else
+            {
+                dialogueReference.CompleteDialogue();
+                onComplete?.Invoke();
+                currentIndex = 0; // reset for next execution
+            }
+        });
     }
 }

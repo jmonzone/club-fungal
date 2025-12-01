@@ -6,11 +6,6 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "DialogueInteraction", menuName = "Club Fungal/Interactions/Dialogue Interaction")]
 public class DialogueInteraction : UnitInteraction
 {
-    [SerializeField] private DialogueReference dialogueReference;
-    [SerializeField] private UnitControllerService unitControllerService;
-    [SerializeField] private PartyInstanceService partyInstanceService;
-    [SerializeField] private PartyControllerService partyControllerService;
-
     [HideInInspector]
     [SerializeReference] private List<InteractionAction> actions;
 
@@ -31,7 +26,7 @@ public class DialogueInteraction : UnitInteraction
     {
         if (currentActionIndex < actions.Count)
         {
-            actions[currentActionIndex].Execute(source, target, dialogueReference, unitControllerService, partyInstanceService, partyControllerService, () =>
+            actions[currentActionIndex].Execute(source, target, () =>
             {
                 currentActionIndex++;
                 ExecuteNext(onComplete);
@@ -39,7 +34,6 @@ public class DialogueInteraction : UnitInteraction
         }
         else
         {
-            dialogueReference.CompleteDialogue();
             onComplete?.Invoke();
         }
     }
@@ -59,5 +53,5 @@ public abstract class InteractionAction
         }
     }
 
-    public abstract void Execute(UnitController source, UnitController target, DialogueReference dialogueReference, UnitControllerService unitControllerService, PartyInstanceService partyInstanceService, PartyControllerService partyControllerService, UnityAction onComplete);
+    public abstract void Execute(UnitController source, UnitController target, UnityAction onComplete);
 }

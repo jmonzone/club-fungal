@@ -7,7 +7,6 @@ using UnityEngine;
 [CustomEditor(typeof(UnitInstanceService))]
 public class UnitInstanceServiceEditor : GURUEditor
 {
-
     protected override void OnEditorEnable()
     {
         // UnityEngine.Debug.Log("UnitInstanceServiceEditor OnEnable - Auto-populating lists if empty");

@@ -6,9 +6,14 @@ public class DialogueActionDrawer : InteractionActionDrawer
 {
     protected override void DrawCustom(Rect rect, SerializedProperty property)
     {
+        var dialogueRefProp = property.FindPropertyRelative("dialogueReference");
         var blocksProp = property.FindPropertyRelative("blocks");
 
-        float currentY = rect.y;
+        // Dialogue Reference field
+        Rect refRect = new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight);
+        EditorGUI.PropertyField(refRect, dialogueRefProp);
+
+        float currentY = rect.y + EditorGUIUtility.singleLineHeight + 5;
         for (int i = 0; i < blocksProp.arraySize; i++)
         {
             var blockProp = blocksProp.GetArrayElementAtIndex(i);
@@ -57,8 +62,8 @@ public class DialogueActionDrawer : InteractionActionDrawer
 
     protected override float GetCustomHeight(SerializedProperty property)
     {
+        float height = EditorGUIUtility.singleLineHeight + 5; // dialogue reference
         var blocksProp = property.FindPropertyRelative("blocks");
-        float height = 0;
         for (int i = 0; i < blocksProp.arraySize; i++)
         {
             var blockProp = blocksProp.GetArrayElementAtIndex(i);

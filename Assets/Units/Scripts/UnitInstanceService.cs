@@ -7,7 +7,6 @@ using UnityEngine.Events;
 public class UnitInstanceService : GURUService
 {
     [Header("References")]
-    [SerializeField] private PartyInstanceService partyInstanceService;
     [SerializeField] private LocalData localData;
     public LocalData LocalData => localData;
 
@@ -130,7 +129,7 @@ public class UnitInstanceService : GURUService
 
                             if (!string.IsNullOrEmpty(id))
                             {
-                                var matching = interactionCollection.Find(i => i.ID == id);
+                                var matching = interactionCollection.Find(i => i.Id == id);
                                 if (matching != null)
                                 {
                                     // Debug.Log($"Loading interaction '{id}' for unit '{unitName}'.");
@@ -479,7 +478,7 @@ public class UnitInstanceService : GURUService
             unitJson["interactions"] = new JArray(
                 unit.Moments.Where(i => i.Interaction != null).Select(i => new JObject
                 {
-                    ["id"] = i.Interaction.ID,
+                    ["id"] = i.Interaction.Id,
                     ["isComplete"] = i.IsComplete
                 })
             );

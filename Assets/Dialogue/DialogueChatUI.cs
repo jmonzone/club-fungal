@@ -15,7 +15,7 @@ public class DialogueChatUI : DialoguePageUI
         base.Awake();
         continueButton.onClick.AddListener(() =>
         {
-            dialogue.Dialogue.Continue();
+            dialogue.ContinueDialogue();
         });
     }
 

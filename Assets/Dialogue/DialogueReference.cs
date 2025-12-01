@@ -31,9 +31,12 @@ public class DialogueReference : ScriptableObject
         this.units = units;
     }
 
-    public void StartDialogue(UnitController unit, Dialogue dialogue)
+    private UnityAction onContinue;
+
+    public void StartDialogue(UnitController unit, Dialogue dialogue, UnityAction onContinue = null)
     {
         this.dialogue = dialogue;
+        this.onContinue = onContinue;
 
         if (currentUnit) currentUnit.Unfocus();
         currentUnit = unit;
@@ -51,7 +54,7 @@ public class DialogueReference : ScriptableObject
 
     public void ContinueDialogue()
     {
-        dialogue.Continue();
+        onContinue?.Invoke();
     }
 
     public void CompleteDialogue()

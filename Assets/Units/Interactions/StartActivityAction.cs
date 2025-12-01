@@ -10,7 +10,7 @@ public class StartActivityAction : InteractionAction
     [SerializeField] private ActivityReference activityReference;
     [SerializeField] private PlayerActivityReference playerActivityReference;
 
-    public override void Execute(UnitController source, UnitController target, DialogueReference dialogueReference, UnitControllerService unitControllerService, PartyInstanceService partyInstanceService, PartyControllerService partyControllerService, UnityAction onComplete)
+    public override void Execute(UnitController source, UnitController target, UnityAction onComplete)
     {
         var origin = target.transform.position;
         var activity = UnityEngine.Object.Instantiate(activityReference);

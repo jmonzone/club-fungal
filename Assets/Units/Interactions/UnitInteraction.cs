@@ -33,7 +33,7 @@ public class UnitMoment
 public abstract class UnitInteraction : ScriptableObject
 {
     [SerializeField] private string id;
-    public string ID => id;
+    public string Id => id;
 
     public virtual void StartInteraction(UnitController source, UnitController target, UnityAction onComplete = null)
     {
