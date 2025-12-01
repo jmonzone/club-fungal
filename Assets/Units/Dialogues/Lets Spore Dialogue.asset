@@ -24,6 +24,7 @@ MonoBehaviour:
   - rid: 7976657348012277839
   - rid: 7976657348012277840
   - rid: 7976657391336292431
+  - rid: 8952300663467147264
   references:
     version: 2
     RefIds:
@@ -33,12 +34,14 @@ MonoBehaviour:
         speaker: 1
         text: I was just about to spore before going in
         unitInstance: {fileID: 0}
+        isFirst: 1
     - rid: 7976657348012277840
       type: {class: DialogueAction, ns: , asm: Assembly-CSharp}
       data:
         speaker: 1
         text: Would you like to join me?
         unitInstance: {fileID: 0}
+        isFirst: 0
     - rid: 7976657391336292431
       type: {class: StartActivityAction, ns: , asm: Assembly-CSharp}
       data:
@@ -46,3 +49,10 @@ MonoBehaviour:
           type: 2}
         playerActivityReference: {fileID: 11400000, guid: 6c0d3a1124c364aa2817cfd5108833f2,
           type: 2}
+    - rid: 8952300663467147264
+      type: {class: DialogueAction, ns: , asm: Assembly-CSharp}
+      data:
+        speaker: 1
+        text: I just invited my friend, they should be coming by here soon.
+        unitInstance: {fileID: 0}
+        isFirst: 1

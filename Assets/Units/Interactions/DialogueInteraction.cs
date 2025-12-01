@@ -23,11 +23,6 @@ public class DialogueInteraction : UnitInteraction
         this.source = source;
         this.target = target;
 
-        source.Dialogue.StartDialogue(target);
-        target.Dialogue.StartDialogue(source);
-
-        dialogueReference.StartDialogueInteraction(new List<UnitController> { source, target });
-
         currentActionIndex = 0;
         ExecuteNext(onComplete);
     }

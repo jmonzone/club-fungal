@@ -9,9 +9,10 @@ public class DialogueActionDrawer : InteractionActionDrawer
         var speakerProp = property.FindPropertyRelative("speaker");
         var unitInstanceProp = property.FindPropertyRelative("unitInstance");
         var textProp = property.FindPropertyRelative("text");
+        var isFirstProp = property.FindPropertyRelative("isFirst");
 
         // Display area
-        Rect displayRect = new Rect(rect.x, rect.y, rect.width - 160, EditorGUIUtility.singleLineHeight);
+        Rect displayRect = new Rect(rect.x, rect.y, rect.width - 100, EditorGUIUtility.singleLineHeight);
         var speakerIndex = speakerProp.enumValueIndex;
         if (speakerIndex == 2) // Specific
         {
@@ -45,8 +46,12 @@ public class DialogueActionDrawer : InteractionActionDrawer
         }
 
         // Speaker dropdown
-        Rect speakerRect = new Rect(rect.x + rect.width - 80, rect.y, 80, EditorGUIUtility.singleLineHeight);
+        Rect speakerRect = new Rect(rect.x + rect.width - 80, rect.y, 60, EditorGUIUtility.singleLineHeight);
         EditorGUI.PropertyField(speakerRect, speakerProp, GUIContent.none);
+
+        // IsFirst toggle
+        Rect isFirstRect = new Rect(rect.x + rect.width - 20, rect.y, 20, EditorGUIUtility.singleLineHeight);
+        EditorGUI.PropertyField(isFirstRect, isFirstProp, GUIContent.none);
 
         // Text field
         string text = textProp.stringValue;
