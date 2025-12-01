@@ -4,9 +4,11 @@ using UnityEngine.Events;
 
 public class InviteFriendAction : InteractionAction
 {
+    [SerializeField] private UnitControllerService unitControllerService;
+
     public override void Execute(UnitController source, UnitController target, UnityAction onComplete)
     {
-        // Implement your action logic here
+        unitControllerService.InviteFriend(target);
         onComplete?.Invoke();
     }
 }

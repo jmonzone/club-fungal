@@ -248,8 +248,8 @@ public class UnitInstanceService : GURUService
     {
         var titles = new[] { "Mysterious", "Party", "DJ", "Crazy", "Wild", "Cool", "Happy", "Sad", "Fun", "Silly" };
         var names = new[] { "Sal", "Dan", "Cindy", "Bob", "Alice", "Tom", "Jerry", "Mickey", "Luna", "Rex", "Bella", "Max", "Lily", "Charlie", "Daisy" };
-        var title = titles[UnityEngine.Random.Range(0, titles.Length)];
-        var name = names[UnityEngine.Random.Range(0, names.Length)];
+        var title = titles[Random.Range(0, titles.Length)];
+        var name = names[Random.Range(0, names.Length)];
         return $"{title} {name}";
     }
 
@@ -431,25 +431,6 @@ public class UnitInstanceService : GURUService
         if (saveData) SaveData();
 
         return unit;
-    }
-
-    public void Reset()
-    {
-        if (localData == null)
-        {
-            Debug.LogError("LocalData is not assigned in UnitInstanceService");
-            return;
-        }
-        units.Clear();
-        localData.ResetData();
-
-        // Add initial units
-        foreach (var initialUnit in initialUnits.OrderBy(u => u.Id))
-        {
-            RegisterUnit(initialUnit, false);
-        }
-
-        SaveData();
     }
 
     public void SaveData()
