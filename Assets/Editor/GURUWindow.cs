@@ -144,6 +144,11 @@ public class GURUWindow : EditorWindow
             gameService.ResetJsonFile();
         }
 
+        if (GUILayout.Button("View Local Data"))
+        {
+            System.Diagnostics.Process.Start(LocalData.GetSaveDataPath());
+        }
+
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         EditorGUILayout.LabelField("Game Settings", EditorStyles.boldLabel);
 

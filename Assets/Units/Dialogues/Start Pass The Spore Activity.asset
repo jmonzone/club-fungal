@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87edd166db14a4a13ba4968b66eff320, type: 3}
   m_Name: Start Pass The Spore Activity
   m_EditorClassIdentifier: Assembly-CSharp::DialogueInteraction
-  id: default dialogue
+  id: startpassthesporeactivity
   dialogueReference: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
   unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
     type: 2}
@@ -21,13 +21,14 @@ MonoBehaviour:
   partyControllerService: {fileID: 11400000, guid: e9cb4948b4ecc4139a051939aec61d2b,
     type: 2}
   actions:
-  - rid: 7976657348012277839
+  - rid: 7976657391336292434
   references:
     version: 2
     RefIds:
-    - rid: 7976657348012277839
-      type: {class: DialogueAction, ns: , asm: Assembly-CSharp}
+    - rid: 7976657391336292434
+      type: {class: StartActivityAction, ns: , asm: Assembly-CSharp}
       data:
-        speaker: 1
-        text: We got this right?
-        unitInstance: {fileID: 0}
+        activityReference: {fileID: 11400000, guid: 20234f3cd19d34d52ba858ad98b27405,
+          type: 2}
+        playerActivityReference: {fileID: 11400000, guid: 6c0d3a1124c364aa2817cfd5108833f2,
+          type: 2}

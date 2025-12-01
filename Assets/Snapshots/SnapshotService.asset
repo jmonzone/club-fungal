@@ -15,5 +15,5 @@ MonoBehaviour:
   unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
     type: 2}
   localData: {fileID: 11400000, guid: 81d22df7435974c419891ceb2bc9e4ee, type: 2}
-  defaultSnapshotInstance: {fileID: 11400000, guid: ab7b0977924cf435b811485ee323333c,
+  defaultSnapshotInstance: {fileID: 11400000, guid: 5da980549a96e446ca948f0215ada47f,
     type: 2}

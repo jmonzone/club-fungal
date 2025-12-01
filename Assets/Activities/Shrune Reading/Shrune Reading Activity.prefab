@@ -278,6 +278,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -320,7 +321,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8805518107111566995}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Shrune Slot (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -356,7 +357,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1023131665107824880}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Center Anchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -513,6 +514,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -556,7 +558,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5033943381858730736}
   - component: {fileID: 8073417871149997650}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Intro
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -624,7 +626,7 @@ GameObject:
   - component: {fileID: 7566542585084067801}
   - component: {fileID: 5089355786750528138}
   - component: {fileID: 8912036075667862220}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -711,7 +713,7 @@ GameObject:
   - component: {fileID: 8263163238524085545}
   - component: {fileID: 4819219982754220954}
   - component: {fileID: 7567682048254381214}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Summary Anchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -879,6 +881,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -924,7 +927,7 @@ GameObject:
   - component: {fileID: 2179104244821791377}
   - component: {fileID: 4375945482698975504}
   - component: {fileID: 2823514970694881033}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1223,6 +1226,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1265,7 +1269,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2553085425953362757}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Shrune Slot (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1305,7 +1309,7 @@ GameObject:
   - component: {fileID: 8201670203968392309}
   - component: {fileID: 3361146090900840743}
   - component: {fileID: 2492804080395786904}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Options Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1465,7 +1469,7 @@ GameObject:
   - component: {fileID: 3937110666843056222}
   - component: {fileID: 6467976342787029728}
   - component: {fileID: 3069078322480956781}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1540,7 +1544,7 @@ GameObject:
   - component: {fileID: 3016637029573719648}
   - component: {fileID: 4257960593742742795}
   - component: {fileID: 8161615770242821875}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1615,7 +1619,7 @@ GameObject:
   - component: {fileID: 6914095555385023102}
   - component: {fileID: 700414113995653126}
   - component: {fileID: 4447862296662360530}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1688,7 +1692,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6100791224923561283}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Shrune Slot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1846,6 +1850,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1893,7 +1898,7 @@ GameObject:
   - component: {fileID: 6861488956524213036}
   - component: {fileID: 6312031004774124052}
   - component: {fileID: 166185285686216341}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2022,7 +2027,7 @@ GameObject:
   - component: {fileID: 7551279764019819134}
   - component: {fileID: 224812073270411975}
   - component: {fileID: 916739570059462371}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Shrune Reading UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2070,10 +2075,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 113ea101a724a4707ab893311cdecb70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  activity: {fileID: 11400000, guid: 6acca8bf6674942fc809a4d20308a3af, type: 2}
   playerActivityReference: {fileID: 11400000, guid: 6c0d3a1124c364aa2817cfd5108833f2,
     type: 2}
-  activity: {fileID: 11400000, guid: 6acca8bf6674942fc809a4d20308a3af, type: 2}
-  playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   controller: {fileID: 4603551121419728577}
   backButton: {fileID: 8133169908273886427}
   player: {fileID: 0}
@@ -2199,7 +2203,7 @@ GameObject:
   - component: {fileID: 8901269750424556408}
   - component: {fileID: 2971559659268615241}
   - component: {fileID: 6456513523375459087}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2311,8 +2315,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TarotActivityController
   activity: {fileID: 11400000, guid: 6acca8bf6674942fc809a4d20308a3af, type: 2}
-  primarySkill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
-  player: {fileID: 0}
   currentIndex: 0
   currentUnit: {fileID: 0}
   units: []
@@ -2338,7 +2340,7 @@ GameObject:
   - component: {fileID: 4130202344031721052}
   - component: {fileID: 8686034993546705147}
   - component: {fileID: 7673243840239104123}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Card Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2415,7 +2417,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8854772808459236840}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Spread Slot Anchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2460,7 +2462,7 @@ PrefabInstance:
     - target: {fileID: 958923405795208253, guid: f6558d4dd71864792b8f232062e669bb,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3711318896662967428, guid: f6558d4dd71864792b8f232062e669bb,
         type: 3}
@@ -2565,7 +2567,7 @@ PrefabInstance:
     - target: {fileID: 4577394700575747216, guid: f6558d4dd71864792b8f232062e669bb,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5851715661755799698, guid: f6558d4dd71864792b8f232062e669bb,
         type: 3}
@@ -2680,6 +2682,16 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.09985758
       objectReference: {fileID: 0}
+    - target: {fileID: 7175280061829557524, guid: f875e8addd200408d8a7ee659ff98b52,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7454211861726395731, guid: f875e8addd200408d8a7ee659ff98b52,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 7466608090131133187, guid: f875e8addd200408d8a7ee659ff98b52,
         type: 3}
       propertyPath: m_SizeDelta.y
@@ -2790,12 +2802,27 @@ PrefabInstance:
       propertyPath: m_Name
       value: Option View
       objectReference: {fileID: 0}
+    - target: {fileID: 8139020359709512777, guid: f875e8addd200408d8a7ee659ff98b52,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8162724567073824633, guid: f875e8addd200408d8a7ee659ff98b52,
         type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 287c586917c3145e2b4fbb78907104fd,
         type: 3}
+    - target: {fileID: 8608421822137119976, guid: f875e8addd200408d8a7ee659ff98b52,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8656872442867178866, guid: f875e8addd200408d8a7ee659ff98b52,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 9091028575769017145, guid: f875e8addd200408d8a7ee659ff98b52,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -2884,6 +2911,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Color.r
       value: 0.4716981
+      objectReference: {fileID: 0}
+    - target: {fileID: 7175280061829557524, guid: f875e8addd200408d8a7ee659ff98b52,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7454211861726395731, guid: f875e8addd200408d8a7ee659ff98b52,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7466608090131133187, guid: f875e8addd200408d8a7ee659ff98b52,
         type: 3}
@@ -3000,12 +3037,27 @@ PrefabInstance:
       propertyPath: m_Name
       value: Option View (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8139020359709512777, guid: f875e8addd200408d8a7ee659ff98b52,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8162724567073824633, guid: f875e8addd200408d8a7ee659ff98b52,
         type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 5d6af11de2b544af9bb74176b2bd699f,
         type: 3}
+    - target: {fileID: 8608421822137119976, guid: f875e8addd200408d8a7ee659ff98b52,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8656872442867178866, guid: f875e8addd200408d8a7ee659ff98b52,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 9091028575769017145, guid: f875e8addd200408d8a7ee659ff98b52,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -3089,6 +3141,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Color.r
       value: 0.18970276
+      objectReference: {fileID: 0}
+    - target: {fileID: 7175280061829557524, guid: f875e8addd200408d8a7ee659ff98b52,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7454211861726395731, guid: f875e8addd200408d8a7ee659ff98b52,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7466608090131133187, guid: f875e8addd200408d8a7ee659ff98b52,
         type: 3}
@@ -3205,12 +3267,27 @@ PrefabInstance:
       propertyPath: m_Name
       value: Option View (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 8139020359709512777, guid: f875e8addd200408d8a7ee659ff98b52,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8162724567073824633, guid: f875e8addd200408d8a7ee659ff98b52,
         type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 70f18116c47b14aa18f2905121c4e3fb,
         type: 3}
+    - target: {fileID: 8608421822137119976, guid: f875e8addd200408d8a7ee659ff98b52,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8656872442867178866, guid: f875e8addd200408d8a7ee659ff98b52,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 9091028575769017145, guid: f875e8addd200408d8a7ee659ff98b52,
         type: 3}
       propertyPath: m_AnchorMax.y
