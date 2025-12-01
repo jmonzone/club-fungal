@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System;
 using System.Linq;
@@ -157,12 +158,14 @@ public abstract class UnitListDrawer
                 var isInParty = partyInstanceService?.PartyInstances?.Any(p => p.Id == unitInstance.Id) ?? false;
 
                 var initialUnit = unitInstanceService?.InitialUnits.Find(instance => instance.Id == unitInstance.Id);
+
                 var controller = unitControllerService?.Controllers.Find(c => c.Instance != null && c.Instance.Id == unitInstance.Id);
 
-                if (controller == null)
+
+                if (controller == null && SceneManager.GetActiveScene().name == "Gameplay")
                     throw new Exception("Controller is missing - reset game");
 
-                bool isSelected = Selection.activeGameObject == controller.gameObject;
+                bool isSelected = controller != null && Selection.activeGameObject == controller.gameObject;
                 bool isInitial = initialUnit != null;
 
                 var backgroundColor = (isSelected, isInitial) switch

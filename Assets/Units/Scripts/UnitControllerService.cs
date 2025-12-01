@@ -38,7 +38,11 @@ public class UnitControllerService : GURUService
         var instancesById = unitInstanceService.Instances.ToDictionary(instance => instance.Id);
 
         InitializeExistingControllers(instancesById);
-        SpawnMissingControllers(instancesById);
+
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Gameplay")
+        {
+            SpawnMissingControllers(instancesById);
+        }
     }
 
     private void InitializeExistingControllers(Dictionary<string, UnitInstance> instancesById)
