@@ -4,50 +4,50 @@ using UnityEngine.Events;
 using System.Collections.Generic;
 
 [Serializable]
-public class DialogueAction : InteractionAction
+public class DialogueActionBlock
 {
-    public override string DisplayName => "Dialogue";
-
     public enum DialogueSpeaker
     {
         Source,
         Target,
-        Specific,
     }
-    [SerializeField] private DialogueSpeaker speaker;
-    [SerializeField][TextArea] private string text;
-    [SerializeField] private UnitInstance unitInstance;
-    [SerializeField] private bool isFirst;
 
-    public DialogueSpeaker Speaker => speaker;
-    public UnitInstance UnitInstance => unitInstance;
+    [SerializeField] public DialogueSpeaker speaker;
+    [SerializeField][TextArea] public string text;
+}
+
+[Serializable]
+public class DialogueAction : InteractionAction
+{
+    public override string DisplayName => "Dialogue";
+
+    [SerializeField] private List<DialogueActionBlock> blocks = new();
 
     public override void Execute(UnitController source, UnitController target, DialogueReference dialogueReference, UnitControllerService unitControllerService, PartyInstanceService partyInstanceService, PartyControllerService partyControllerService, UnityAction onComplete)
     {
-        if (isFirst)
+        source.Dialogue.StartDialogue(target);
+        target.Dialogue.StartDialogue(source);
+
+        dialogueReference.StartDialogueInteraction(new List<UnitController> { source, target });
+
+        foreach (var block in blocks)
         {
-            source.Dialogue.StartDialogue(target);
-            target.Dialogue.StartDialogue(source);
+            var unitInstance = block.speaker switch
+            {
+                DialogueActionBlock.DialogueSpeaker.Source => source.Instance,
+                DialogueActionBlock.DialogueSpeaker.Target => target.Instance,
+                _ => throw new ArgumentOutOfRangeException()
+            };
 
-            dialogueReference.StartDialogueInteraction(new List<UnitController> { source, target });
+            var speakerController = block.speaker switch
+            {
+                DialogueActionBlock.DialogueSpeaker.Source => source,
+                DialogueActionBlock.DialogueSpeaker.Target => target,
+                _ => throw new ArgumentOutOfRangeException()
+            };
 
+            var dialogue = new Dialogue(unitInstance, block.text, onComplete);
+            dialogueReference.StartDialogue(speakerController, dialogue);
         }
-
-        unitInstance = Speaker switch
-        {
-            DialogueSpeaker.Source => source.Instance,
-            DialogueSpeaker.Target => target.Instance,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-
-        var speakerController = Speaker switch
-        {
-            DialogueSpeaker.Source => source,
-            DialogueSpeaker.Target => target,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-
-        var dialogue = new Dialogue(unitInstance, text, onComplete);
-        dialogueReference.StartDialogue(speakerController, dialogue);
     }
 }

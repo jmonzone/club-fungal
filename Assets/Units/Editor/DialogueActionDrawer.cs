@@ -6,67 +6,69 @@ public class DialogueActionDrawer : InteractionActionDrawer
 {
     protected override void DrawCustom(Rect rect, SerializedProperty property)
     {
-        var speakerProp = property.FindPropertyRelative("speaker");
-        var unitInstanceProp = property.FindPropertyRelative("unitInstance");
-        var textProp = property.FindPropertyRelative("text");
-        var isFirstProp = property.FindPropertyRelative("isFirst");
+        var blocksProp = property.FindPropertyRelative("blocks");
 
-        // Display area
-        Rect displayRect = new Rect(rect.x, rect.y, rect.width - 100, EditorGUIUtility.singleLineHeight);
-        var speakerIndex = speakerProp.enumValueIndex;
-        if (speakerIndex == 2) // Specific
+        float currentY = rect.y;
+        for (int i = 0; i < blocksProp.arraySize; i++)
         {
-            // Show icon and unit field
-            Rect iconRect = new Rect(displayRect.x, displayRect.y, 32, displayRect.height);
-            Sprite icon = null;
-            if (unitInstanceProp.objectReferenceValue is UnitInstance unitInstance && unitInstance.Data != null)
-            {
-                icon = unitInstance.Data.Sprite;
-            }
-            if (icon != null)
-            {
-                Color oldColor = GUI.backgroundColor;
-                GUI.backgroundColor = Color.clear;
-                EditorGUI.DrawTextureTransparent(iconRect, icon.texture, ScaleMode.ScaleToFit);
-                GUI.backgroundColor = oldColor;
-            }
-            else
-            {
-                EditorGUI.LabelField(iconRect, "No Icon", EditorStyles.miniLabel);
-            }
+            var blockProp = blocksProp.GetArrayElementAtIndex(i);
+            var speakerProp = blockProp.FindPropertyRelative("speaker");
+            var textProp = blockProp.FindPropertyRelative("text");
 
-            Rect unitRect = new Rect(displayRect.x + 35, displayRect.y, displayRect.width - 35, displayRect.height);
-            EditorGUI.PropertyField(unitRect, unitInstanceProp, GUIContent.none);
+            // Label for speaker
+            Rect labelRect = new Rect(rect.x, currentY, rect.width - 105, EditorGUIUtility.singleLineHeight);
+            string labelText = speakerProp.enumValueIndex == 0 ? "Source Unit" : "Target Unit";
+            EditorGUI.LabelField(labelRect, labelText, EditorStyles.boldLabel);
+
+            // Speaker dropdown
+            Rect speakerRect = new Rect(rect.x + rect.width - 105, currentY, 80, EditorGUIUtility.singleLineHeight);
+            EditorGUI.PropertyField(speakerRect, speakerProp, GUIContent.none);
+
+            // Remove button
+            Rect removeRect = new Rect(rect.x + rect.width - 25, currentY, 25, EditorGUIUtility.singleLineHeight);
+            Color oldColor = GUI.backgroundColor;
+            GUI.backgroundColor = Color.red;
+            if (GUI.Button(removeRect, "X"))
+            {
+                blocksProp.DeleteArrayElementAtIndex(i);
+                break; // to avoid index issues
+            }
+            GUI.backgroundColor = oldColor;
+
+            // Text field
+            string text = textProp.stringValue;
+            int lineCount = string.IsNullOrEmpty(text) ? 1 : text.Split('\n').Length;
+            float textHeight = EditorGUIUtility.singleLineHeight * Mathf.Max(2, lineCount);
+            Rect textRect = new Rect(rect.x, currentY + EditorGUIUtility.singleLineHeight + 2, rect.width, textHeight);
+            textProp.stringValue = EditorGUI.TextArea(textRect, textProp.stringValue);
+
+            currentY += EditorGUIUtility.singleLineHeight + 2 + textHeight + 5;
         }
-        else
+
+        // Add button
+        if (GUI.Button(new Rect(rect.x + rect.width / 2 - 25, currentY, 50, EditorGUIUtility.singleLineHeight), "Add"))
         {
-            // Show label
-            string labelText = speakerIndex == 0 ? "Source Unit" : "Target Unit";
-            EditorGUI.LabelField(displayRect, labelText, EditorStyles.boldLabel);
+            blocksProp.InsertArrayElementAtIndex(blocksProp.arraySize);
+            var newBlock = blocksProp.GetArrayElementAtIndex(blocksProp.arraySize - 1);
+            newBlock.FindPropertyRelative("speaker").enumValueIndex = 0;
+            newBlock.FindPropertyRelative("text").stringValue = "";
         }
-
-        // Speaker dropdown
-        Rect speakerRect = new Rect(rect.x + rect.width - 80, rect.y, 60, EditorGUIUtility.singleLineHeight);
-        EditorGUI.PropertyField(speakerRect, speakerProp, GUIContent.none);
-
-        // IsFirst toggle
-        Rect isFirstRect = new Rect(rect.x + rect.width - 20, rect.y, 20, EditorGUIUtility.singleLineHeight);
-        EditorGUI.PropertyField(isFirstRect, isFirstProp, GUIContent.none);
-
-        // Text field
-        string text = textProp.stringValue;
-        int lineCount = string.IsNullOrEmpty(text) ? 1 : text.Split('\n').Length;
-        float textHeight = EditorGUIUtility.singleLineHeight * Mathf.Max(2, lineCount);
-        Rect textRect = new Rect(rect.x, rect.y + EditorGUIUtility.singleLineHeight + 2, rect.width, textHeight);
-        textProp.stringValue = EditorGUI.TextArea(textRect, textProp.stringValue);
     }
 
     protected override float GetCustomHeight(SerializedProperty property)
     {
-        var textProp = property.FindPropertyRelative("text");
-        string text = textProp.stringValue;
-        int lineCount = string.IsNullOrEmpty(text) ? 1 : text.Split('\n').Length;
-        float textHeight = EditorGUIUtility.singleLineHeight * Mathf.Max(2, lineCount);
-        return EditorGUIUtility.singleLineHeight + 2 + textHeight;
+        var blocksProp = property.FindPropertyRelative("blocks");
+        float height = 0;
+        for (int i = 0; i < blocksProp.arraySize; i++)
+        {
+            var blockProp = blocksProp.GetArrayElementAtIndex(i);
+            var textProp = blockProp.FindPropertyRelative("text");
+            string text = textProp.stringValue;
+            int lineCount = string.IsNullOrEmpty(text) ? 1 : text.Split('\n').Length;
+            float textHeight = EditorGUIUtility.singleLineHeight * Mathf.Max(2, lineCount);
+            height += EditorGUIUtility.singleLineHeight + 2 + textHeight + 5;
+        }
+        height += EditorGUIUtility.singleLineHeight + 5; // add button
+        return height;
     }
 }

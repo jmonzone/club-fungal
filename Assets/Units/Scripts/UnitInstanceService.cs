@@ -3,14 +3,13 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+
 public class UnitInstanceService : GURUService
 {
     [Header("References")]
     [SerializeField] private PartyInstanceService partyInstanceService;
     [SerializeField] private LocalData localData;
-
     public LocalData LocalData => localData;
-    public PartyInstanceService PartyInstanceService => partyInstanceService;
 
     [Header("Collections")]
     [SerializeField] private List<UnitInstance> initialUnits;
