@@ -101,9 +101,10 @@ public abstract class ActivityUI<T1, T2> : ActivityUI where T1 : ActivityUnitBeh
         BackButton.onClick.AddListener(playerActivityReference.ExitActivity);
     }
 
-    protected override void OnEnable()
+    protected override void BindEvents()
     {
-        base.OnEnable();
+
+        base.BindEvents();
         Activity.OnUnitEnter += OnUnitEnter;
         Activity.OnUnitExit += OnUnitExit;
         Activity.OnPlayerEnter += OnPlayerEnter;
