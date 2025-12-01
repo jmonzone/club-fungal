@@ -148,54 +148,64 @@ public abstract class UnitListDrawer
 
         foreach (var unitInstance in instances)
         {
-            // Compute instance-specific data
-            var icon = unitInstance?.Data?.Sprite?.texture;
-            var displayName = unitInstance?.DisplayName ?? "No Instance";
-            var job = unitInstance?.Job?.Id.ToUpper() ?? "No Job";
-            var isInParty = partyInstanceService?.PartyInstances?.Any(p => p.Id == unitInstance.Id) ?? false;
-
-            var initialUnit = unitInstanceService?.InitialUnits.Find(instance => instance.Id == unitInstance.Id);
-            var controller = unitControllerService?.Controllers.Find(c => c.Instance != null && c.Instance.Id == unitInstance.Id);
-
-            bool isSelected = controller != null && Selection.activeGameObject == controller.gameObject;
-            bool isInitial = initialUnit != null;
-
-            var backgroundColor = (isSelected, isInitial) switch
+            try
             {
-                (isSelected: true, _) => Color.cyan,
-                (isSelected: false, isInitial: true) => new Color(0.5f, 0.6f, 1f),
-                _ => Color.white
-            };
+                // Compute instance-specific data
+                var icon = unitInstance?.Data?.Sprite?.texture;
+                var displayName = unitInstance?.DisplayName ?? "No Instance";
+                var job = unitInstance?.Job?.Id.ToUpper() ?? "No Job";
+                var isInParty = partyInstanceService?.PartyInstances?.Any(p => p.Id == unitInstance.Id) ?? false;
 
-            var behaviour = isSelected ? (controller?.CurrentBehaviour?.GetType().Name ?? "None") : null;
-            var interaction = isSelected ? (controller?.CurrentInteraction?.name ?? "None") : null;
-            var activityUnit = controller?.GetComponent<ActivityUnit>();
-            var activity = activityUnit?.Activity;
+                var initialUnit = unitInstanceService?.InitialUnits.Find(instance => instance.Id == unitInstance.Id);
+                var controller = unitControllerService?.Controllers.Find(c => c.Instance != null && c.Instance.Id == unitInstance.Id);
 
-            // Create action lists
-            var menuItems = new List<UnitDrawerItemAction>
+                if (controller == null)
+                    throw new Exception("Controller is missing - reset game");
+
+                bool isSelected = Selection.activeGameObject == controller.gameObject;
+                bool isInitial = initialUnit != null;
+
+                var backgroundColor = (isSelected, isInitial) switch
+                {
+                    (isSelected: true, _) => Color.cyan,
+                    (isSelected: false, isInitial: true) => new Color(0.5f, 0.6f, 1f),
+                    _ => Color.white
+                };
+
+                var behaviour = isSelected ? (controller?.CurrentBehaviour?.GetType().Name ?? "None") : null;
+                var interaction = isSelected ? (controller?.CurrentInteraction?.name ?? "None") : null;
+                var activityUnit = controller?.GetComponent<ActivityUnit>();
+                var activity = activityUnit?.Activity;
+
+                // Create action lists
+                var menuItems = new List<UnitDrawerItemAction>
+                {
+                    new ViewAssetAction(unitInstance, initialUnit != null),
+                    new ViewInstanceAction(unitInstance),
+                    new TogglePartyAction(isInParty, partyInstanceService, unitInstance)
+                };
+
+                var shortcuts = new List<UnitDrawerItemAction>
+                {
+                    new ViewGameObjectAction(controller),
+                    new DeleteInstanceAction(unitInstance, controller, initialUnit != null)
+                };
+
+                var displayItems = new List<UnitDrawerDisplayItem>
+                {
+                    new InPartyDisplay(isInParty, jobStyle),
+                    new BehaviourDisplay(behaviour, jobStyle),
+                    new InteractionDisplay(interaction, controller, jobStyle),
+                    new ActivityDisplay(activity, jobStyle)
+                };
+
+                // Draw the unit
+                DrawUnit(icon, displayName, job, backgroundColor, shortcuts, menuItems, jobStyle, controller, displayItems);
+            }
+            catch (Exception ex)
             {
-                new ViewAssetAction(unitInstance, initialUnit != null),
-                new ViewInstanceAction(unitInstance),
-                new TogglePartyAction(isInParty, partyInstanceService, unitInstance)
-            };
-
-            var shortcuts = new List<UnitDrawerItemAction>
-            {
-                new ViewGameObjectAction(controller),
-                new DeleteInstanceAction(unitInstance, controller, initialUnit != null)
-            };
-
-            var displayItems = new List<UnitDrawerDisplayItem>
-            {
-                new InPartyDisplay(isInParty, jobStyle),
-                new BehaviourDisplay(behaviour, jobStyle),
-                new InteractionDisplay(interaction, controller, jobStyle),
-                new ActivityDisplay(activity, jobStyle)
-            };
-
-            // Draw the unit
-            DrawUnit(icon, displayName, job, backgroundColor, shortcuts, menuItems, jobStyle, controller, displayItems);
+                EditorGUILayout.HelpBox($"Error drawing unit {unitInstance?.Id ?? "unknown"}: {ex.Message}", MessageType.Error);
+            }
         }
     }
 
