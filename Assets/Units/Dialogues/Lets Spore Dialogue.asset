@@ -12,47 +12,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87edd166db14a4a13ba4968b66eff320, type: 3}
   m_Name: Lets Spore Dialogue
   m_EditorClassIdentifier: Assembly-CSharp::DialogueInteraction
-  id: pass_the_spore
-  dialogueReference: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
-  unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
-    type: 2}
-  partyInstanceService: {fileID: 11400000, guid: bb09c959525894035a6335dd29940cec,
-    type: 2}
-  partyControllerService: {fileID: 11400000, guid: e9cb4948b4ecc4139a051939aec61d2b,
-    type: 2}
+  id: lets spore
   actions:
-  - rid: 7976657348012277839
-  - rid: 7976657348012277840
-  - rid: 7976657391336292431
-  - rid: 8952300663467147264
+  - rid: 8952300663467147365
+  - rid: 8952300663467147366
+  - rid: 8952300663467147367
+  - rid: 8952300663467147369
   references:
     version: 2
     RefIds:
-    - rid: 7976657348012277839
+    - rid: 8952300663467147365
       type: {class: DialogueAction, ns: , asm: Assembly-CSharp}
       data:
-        speaker: 1
-        text: I was just about to spore before going in
-        unitInstance: {fileID: 0}
-        isFirst: 1
-    - rid: 7976657348012277840
-      type: {class: DialogueAction, ns: , asm: Assembly-CSharp}
-      data:
-        speaker: 1
-        text: Would you like to join me?
-        unitInstance: {fileID: 0}
-        isFirst: 0
-    - rid: 7976657391336292431
+        dialogueReference: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f,
+          type: 2}
+        blocks:
+        - speaker: 1
+          text: I'm passing a spore
+        - speaker: 1
+          text: Would you like to join?
+    - rid: 8952300663467147366
       type: {class: StartActivityAction, ns: , asm: Assembly-CSharp}
       data:
         activityReference: {fileID: 11400000, guid: 20234f3cd19d34d52ba858ad98b27405,
           type: 2}
         playerActivityReference: {fileID: 11400000, guid: 6c0d3a1124c364aa2817cfd5108833f2,
           type: 2}
-    - rid: 8952300663467147264
+    - rid: 8952300663467147367
       type: {class: DialogueAction, ns: , asm: Assembly-CSharp}
       data:
-        speaker: 1
-        text: I just invited my friend, they should be coming by here soon.
-        unitInstance: {fileID: 0}
-        isFirst: 1
+        dialogueReference: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f,
+          type: 2}
+        blocks:
+        - speaker: 1
+          text: Oh I just invited my friend
+    - rid: 8952300663467147369
+      type: {class: InviteFriendAction, ns: , asm: Assembly-CSharp}
+      data:
+        unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
+          type: 2}
