@@ -21,17 +21,8 @@ public class StartActivityAction : InteractionAction
         {
             onComplete?.Invoke();
 
-            // todo: add logic to select specific unit
-            // todo: add logic to make this conditional
-            // use InteractionSsytem;
-            // var targetUnit = unitsToRemove[0];
-            // dialogueReference.StartImmediateChat(
-            //     unit: targetUnit.Controller,
-            //     // dialogue: new Dialogue("I just invited my friend, they should be coming by here soon."),
-            //     onComplete: () =>
-            //     {
             //         unitControllerService.InviteFriend(targetUnit.Controller);
-            //     });
+
         };
     }
 }
