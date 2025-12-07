@@ -37,6 +37,13 @@ public class CameraZoomComponent : MonoBehaviour
     {
         if (vCam == null) return;
 
+        // Ensure the camera uses Vertical FOV for landscape games
+        // LensSettings.OverrideModes: None (auto), Orthographic, Perspective, Physical
+        // For vertical FOV control, use Vertical gate fit in lens settings
+        var lens = vCam.m_Lens;
+        lens.GateFit = Camera.GateFitMode.Vertical;
+        vCam.m_Lens = lens;
+
         float z = vCam.transform.localPosition.z;
         distance = targetDistance = Mathf.Abs(z) > 0.001f ? -z : (minDistance + maxDistance) * 0.5f;
 
