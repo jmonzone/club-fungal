@@ -7,7 +7,7 @@ using UnityEngine.Events;
 [Serializable]
 public struct UnitInstanceData
 {
-    public Unit Data;
+    public UnitSpecies Data;
     public string Id;
     public string DisplayName;
     public float FriendshipXP;
@@ -33,7 +33,7 @@ public class UnitInstance : ScriptableObject
     public UnitInstanceData InstanceData => instanceData;
     public string Id => instanceData.Id;
     public string DisplayName => instanceData.DisplayName;
-    public Unit Data => instanceData.Data;
+    public UnitSpecies Data => instanceData.Data;
     public Element Element => instanceData.Element;
     public Job Job => instanceData.Job;
     public ColorPalette ColorPalette => instanceData.ColorPalette;

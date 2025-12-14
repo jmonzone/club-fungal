@@ -2,12 +2,12 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(Unit))]
+[CustomEditor(typeof(UnitSpecies))]
 public class UnitEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        Unit unit = (Unit)target;
+        UnitSpecies unit = (UnitSpecies)target;
 
         // Draw the default inspector
         DrawDefaultInspector();
@@ -31,7 +31,7 @@ public class UnitEditor : Editor
         }, "Convert this Unit to a FungalUnit, preserving all data and setting default column mapping.");
     }
 
-    private void ConvertToFungalUnit(Unit unit)
+    private void ConvertToFungalUnit(UnitSpecies unit)
     {
         string path = AssetDatabase.GetAssetPath(unit);
 
@@ -39,7 +39,7 @@ public class UnitEditor : Editor
         FungalUnit fungalUnit = CreateInstance<FungalUnit>();
 
         // Manually copy the serialized fields using reflection
-        var unitType = typeof(Unit);
+        var unitType = typeof(UnitSpecies);
         var fields = unitType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
         foreach (var field in fields)
         {

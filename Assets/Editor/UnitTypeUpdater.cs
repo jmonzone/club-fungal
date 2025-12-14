@@ -17,7 +17,7 @@ public static class UnitTypeUpdater
         foreach (var guid in guids)
         {
             var path = AssetDatabase.GUIDToAssetPath(guid);
-            var unit = AssetDatabase.LoadAssetAtPath<Unit>(path);
+            var unit = AssetDatabase.LoadAssetAtPath<UnitSpecies>(path);
             if (unit != null && !(unit is FungalUnit))
             {
                 if (!unit.Name.Contains("Player", System.StringComparison.OrdinalIgnoreCase) && !unit.Name.Contains("Tree", System.StringComparison.OrdinalIgnoreCase))

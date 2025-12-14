@@ -12,8 +12,8 @@ public class UnitInstanceService : GURUService
 
     [Header("Collections")]
     [SerializeField] private List<UnitInstance> initialUnits;
-    [SerializeField] private Unit playerUnit;
-    [SerializeField] private List<Unit> unitCollection;
+    [SerializeField] private UnitSpecies playerUnit;
+    [SerializeField] private List<UnitSpecies> unitCollection;
     [SerializeField] private List<Job> jobCollection;
     [SerializeField] private List<Skill> skillCollection;
     [SerializeField] private List<ColorPalette> colorPalettes;
@@ -204,7 +204,7 @@ public class UnitInstanceService : GURUService
         SaveData();
     }
 
-    public delegate bool UnitQuery(Unit unit);
+    public delegate bool UnitQuery(UnitSpecies unit);
 
     public UnitInstance CreateUnit(UnitQuery query = null)
     {
@@ -280,7 +280,7 @@ public class UnitInstanceService : GURUService
         return RegisterUnit(copiedUnit, saveData);
     }
 
-    public (Unit unit, Element element) GenerateNewUnit(UnitQuery predicate)
+    public (UnitSpecies unit, Element element) GenerateNewUnit(UnitQuery predicate)
     {
         // Skip the player's own unit
         var availableUnits = unitCollection
@@ -309,7 +309,7 @@ public class UnitInstanceService : GURUService
         }
 
         // Step 2: all units have been seen → pick a unit that still has unseen elements
-        var availablePairs = new List<(Unit, Element)>();
+        var availablePairs = new List<(UnitSpecies, Element)>();
         foreach (var u in availableUnits)
         {
             if (TryPickUnseenElementForUnit(u, out Element e))
@@ -327,7 +327,7 @@ public class UnitInstanceService : GURUService
         return (fallbackUnit, fallbackElement);
     }
 
-    private bool TryPickUnseenElementForUnit(Unit unit, out Element element)
+    private bool TryPickUnseenElementForUnit(UnitSpecies unit, out Element element)
     {
         var usedElements = Instances
             .Where(ui => ui.Data == unit)
