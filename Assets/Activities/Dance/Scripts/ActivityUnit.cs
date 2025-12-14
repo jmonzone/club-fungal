@@ -25,8 +25,8 @@ public class ActivityUnit : MonoBehaviour
     public bool CanJoinActivity => activity && !IsPlayer;
     public bool CanLeaveActivity => activity && !IsPlayer;
 
-    public string Name => controller.Instance.Data.Name;
-    public Sprite Sprite => controller.Instance.Data.Sprite;
+    public string Name => controller.Instance.Species.Id;
+    public Sprite Sprite => controller.Instance.Species.Sprite;
     public Color Color => controller.Color;
     public SkillInstance Skill => controller.Instance.Skills[activity.PrimarySkill];
 

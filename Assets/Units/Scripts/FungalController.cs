@@ -50,7 +50,7 @@ public class FungalController : UnitController
         if (renderRoot == null)
         {
             Quaternion randomYRotation = Quaternion.Euler(0, Random.Range(135f, 225f), 0);
-            renderRoot = Instantiate(instance.Data.Prefab, transform.position, randomYRotation, transform).transform;
+            renderRoot = Instantiate(instance.Species.Prefab, transform.position, randomYRotation, transform).transform;
         }
         animator = GetComponentInChildren<Animator>();
         base.Initialize(instance);

@@ -5,11 +5,11 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [Serializable]
-public struct UnitInstanceData
+public struct UnitData
 {
-    public UnitSpecies Data;
     public string Id;
     public string DisplayName;
+    public UnitSpecies Species;
     public float FriendshipXP;
     public Element Element;
     public Job Job;
@@ -21,7 +21,7 @@ public struct UnitInstanceData
 public class UnitInstance : ScriptableObject
 {
     [SerializeField] private UnitInstance originalInstance;
-    [SerializeField] private UnitInstanceData instanceData;
+    [SerializeField] private UnitData data;
 
     [SerializeField] private List<SkillInstance> skills;
 
@@ -30,22 +30,22 @@ public class UnitInstance : ScriptableObject
     [SerializeField] private List<UnitInstance> friends;
     [SerializeField] private List<UnitMoment> moments;
 
-    public UnitInstanceData InstanceData => instanceData;
-    public string Id => instanceData.Id;
-    public string DisplayName => instanceData.DisplayName;
-    public UnitSpecies Data => instanceData.Data;
-    public Element Element => instanceData.Element;
-    public Job Job => instanceData.Job;
-    public ColorPalette ColorPalette => instanceData.ColorPalette;
+    public UnitData Data => data;
+    public string Id => data.Id;
+    public string DisplayName => data.DisplayName;
+    public UnitSpecies Species => data.Species;
+    public Element Element => data.Element;
+    public Job Job => data.Job;
+    public ColorPalette ColorPalette => data.ColorPalette;
 
-    public int FriendshipLevel => SkillInstance.GetLevelFromXP(instanceData.FriendshipXP);
-    public float FriendshipXP => instanceData.FriendshipXP;
+    public int FriendshipLevel => SkillInstance.GetLevelFromXP(data.FriendshipXP);
+    public float FriendshipXP => data.FriendshipXP;
     public bool IsFriends => FriendshipLevel > 1;
 
     public List<UnitInstance> Friends => friends;
     public List<UnitMoment> Moments => moments;
 
-    public JObject Json => instanceData.Json;
+    public JObject Json => data.Json;
 
     public UnitInstance OriginalInstance => originalInstance;
 
@@ -58,19 +58,19 @@ public class UnitInstance : ScriptableObject
 
     private void OnValidate()
     {
-        if (string.IsNullOrEmpty(instanceData.DisplayName) && instanceData.Data != null)
+        if (string.IsNullOrEmpty(data.DisplayName) && data.Species != null)
         {
-            var temp = instanceData;
-            temp.DisplayName = instanceData.Data.Name;
-            instanceData = temp;
+            var temp = data;
+            temp.DisplayName = data.Species.Id;
+            data = temp;
         }
     }
 
-    public void Initialize(UnitInstanceData data)
+    public void Initialize(UnitData data)
     {
         var initData = data;
         if (string.IsNullOrEmpty(initData.Id)) initData.Id = GenerateMongoLikeId();
-        instanceData = initData;
+        this.data = initData;
         friends = new List<UnitInstance>();
         moments = new List<UnitMoment>();
     }

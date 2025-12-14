@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -13,7 +14,7 @@ public class UnitInstanceService : GURUService
     [Header("Collections")]
     [SerializeField] private List<UnitInstance> initialUnits;
     [SerializeField] private UnitSpecies playerUnit;
-    [SerializeField] private List<UnitSpecies> unitCollection;
+    [SerializeField] private List<UnitSpecies> speciesCollection;
     [SerializeField] private List<Job> jobCollection;
     [SerializeField] private List<Skill> skillCollection;
     [SerializeField] private List<ColorPalette> colorPalettes;
@@ -34,6 +35,17 @@ public class UnitInstanceService : GURUService
         return colorPalettes.Find(p => p?.Element == element);
     }
 
+    private void OnValidate()
+    {
+        initialUnits = AssetDatabase.FindAssets("t:UnitInstance")
+            .Select(guid => AssetDatabase.LoadAssetAtPath<UnitInstance>(AssetDatabase.GUIDToAssetPath(guid)))
+            .ToList();
+
+        speciesCollection = AssetDatabase.FindAssets("t:UnitSpecies")
+            .Select(guid => AssetDatabase.LoadAssetAtPath<UnitSpecies>(AssetDatabase.GUIDToAssetPath(guid)))
+            .ToList();
+    }
+
     protected override void OnInitialize()
     {
         units = new List<UnitInstance>();
@@ -45,7 +57,7 @@ public class UnitInstanceService : GURUService
                 if (unit is JObject unitJson)
                 {
                     var unitName = unitJson.Value<string>("name");
-                    var matchingUnit = unitCollection.Find(u => u.Name == unitName);
+                    var matchingUnit = speciesCollection.Find(u => u.Id == unitName);
 
                     if (matchingUnit == null)
                     {
@@ -67,9 +79,9 @@ public class UnitInstanceService : GURUService
                     var displayName = unitJson.Value<string>("displayName") ?? unitName;
 
                     var unitInstance = CreateInstance<UnitInstance>();
-                    var data = new UnitInstanceData
+                    var data = new UnitData
                     {
-                        Data = matchingUnit,
+                        Species = matchingUnit,
                         Id = unitId,
                         DisplayName = displayName,
                         FriendshipXP = friendshipXP,
@@ -213,10 +225,10 @@ public class UnitInstanceService : GURUService
 
         var matchingColorPalette = GetColorPaletteByElement(newElement);
 
-        var displayName = GenerateDisplayName(newUnit.Name);
-        var data = new UnitInstanceData
+        var displayName = GenerateDisplayName(newUnit.Id);
+        var data = new UnitData
         {
-            Data = newUnit,
+            Species = newUnit,
             DisplayName = displayName,
             Element = newElement,
             ColorPalette = matchingColorPalette
@@ -256,7 +268,7 @@ public class UnitInstanceService : GURUService
     public UnitInstance CopyUnit(UnitInstance instance, bool saveData = true)
     {
         var copiedUnit = CreateInstance<UnitInstance>();
-        var data = instance.InstanceData;
+        var data = instance.Data;
         data.Id = null; // Generate new Id for copy
         copiedUnit.Initialize(data);
 
@@ -283,7 +295,7 @@ public class UnitInstanceService : GURUService
     public (UnitSpecies unit, Element element) GenerateNewUnit(UnitQuery predicate)
     {
         // Skip the player's own unit
-        var availableUnits = unitCollection
+        var availableUnits = speciesCollection
             .Where(unit => unit != playerUnit)
             .ToList();
 
@@ -298,7 +310,7 @@ public class UnitInstanceService : GURUService
 
         // Step 1: pick a unit the instance hasn't seen yet
         var unseenUnits = availableUnits
-            .Where(u => !Instances.Any(ui => ui.Data == u))
+            .Where(u => !Instances.Any(ui => ui.Species == u))
             .ToList();
 
         if (unseenUnits.Count > 0)
@@ -330,7 +342,7 @@ public class UnitInstanceService : GURUService
     private bool TryPickUnseenElementForUnit(UnitSpecies unit, out Element element)
     {
         var usedElements = Instances
-            .Where(ui => ui.Data == unit)
+            .Where(ui => ui.Species == unit)
             .Select(ui => ui.Element)
             .ToHashSet();
 
@@ -402,7 +414,7 @@ public class UnitInstanceService : GURUService
         }
         else
         {
-            var original = initialUnits.FirstOrDefault(i => i.Data == unit.Data);
+            var original = initialUnits.FirstOrDefault(i => i.Species == unit.Species);
             if (original != null)
             {
                 unit.SetOriginalInstance(original);
@@ -449,7 +461,7 @@ public class UnitInstanceService : GURUService
             // Debug.Log($"Saving unit {unit.Id}, Data: {unit.Data}, DisplayName: {unit.DisplayName}");
             var unitJson = new JObject();
             unitJson["id"] = unit.Id;
-            unitJson["name"] = unit.Data.Name;
+            unitJson["name"] = unit.Species.Id;
             unitJson["displayName"] = unit.DisplayName;
             unitJson["friendshipLevel"] = unit.FriendshipLevel;
             unitJson["friendshipXP"] = unit.FriendshipXP;

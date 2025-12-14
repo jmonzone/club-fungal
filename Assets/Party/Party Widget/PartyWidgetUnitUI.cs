@@ -11,7 +11,7 @@ public class PartyWidgetUnitUI : MonoBehaviour
     public void SetUnit(UnitInstance unit)
     {
         unitInstance = unit;
-        unitImage.sprite = unit.Data.Sprite;
+        unitImage.sprite = unit.Species.Sprite;
         unitNameText.text = unit.DisplayName;
     }
 }

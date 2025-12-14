@@ -89,7 +89,7 @@ public class UnitColorPalette : UnitBehaviour
                 Color origColor = tex.GetPixel(px, py);
 
                 // Get mapping for this column
-                int mapIndex = (Controller.Instance.Data as QuirkySeriesUnitSpecies).ColumnMapping[bx];
+                int mapIndex = (Controller.Instance.Species as QuirkySeriesUnitSpecies).ColumnMapping[bx];
 
                 // -1 = keep original
                 Color newColor = origColor;
@@ -135,7 +135,7 @@ public class UnitColorPalette : UnitBehaviour
                 int py = by * blockSize;
 
                 // Get mapping for this column
-                int columnMap = (Controller.Instance.Data as QuirkySeriesUnitSpecies).ColumnMapping[bx];
+                int columnMap = (Controller.Instance.Species as QuirkySeriesUnitSpecies).ColumnMapping[bx];
                 if (columnMap != mapIndex) continue;
 
                 // Recolor 2x2 block
@@ -186,7 +186,7 @@ public class UnitColorPalette : UnitBehaviour
         {
             for (int bx = 0; bx < blocksX; bx++)
             {
-                int index = (Controller.Instance.Data as QuirkySeriesUnitSpecies).ColumnMapping[bx];
+                int index = (Controller.Instance.Species as QuirkySeriesUnitSpecies).ColumnMapping[bx];
 
                 if (index == mapIndex)
                 {

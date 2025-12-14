@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Party Frog
   m_EditorClassIdentifier: 
   originalInstance: {fileID: 11400000}
-  instanceData:
-    Data: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
-    Id: 000000000000000000000001
+  data:
+    Id: party frog
+    Species: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
     DisplayName: Party Frog
-    FriendshipXP: 83
+    FriendshipXP: 0
     Element: 0
     Job: {fileID: 0}
     ColorPalette: {fileID: 0}

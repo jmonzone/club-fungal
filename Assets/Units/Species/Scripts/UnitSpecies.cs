@@ -11,8 +11,12 @@ public class UnitSpecies : ScriptableObject
     [SerializeField] private string id;
     [SerializeField] private Sprite sprite;
     [SerializeField] private GameObject prefab;
-
     [SerializeField] private List<DanceMove> moves;
+
+    public string Id => id;
+    public Sprite Sprite => sprite;
+    public GameObject Prefab => prefab;
+    public List<DanceMove> Moves => moves;
 
     private void OnValidate()
     {
@@ -21,9 +25,4 @@ public class UnitSpecies : ScriptableObject
             id = name.ToLower();
         }
     }
-
-    public string Name => id;
-    public Sprite Sprite => sprite;
-    public GameObject Prefab => prefab;
-    public List<DanceMove> Moves => moves;
 }

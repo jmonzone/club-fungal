@@ -146,7 +146,7 @@ public class UnitController : MonoBehaviour, IInteractable
     public virtual void Initialize(UnitInstance instance)
     {
         this.instance = instance;
-        name = "Unit - " + instance.Data.Name;
+        name = "Unit - " + instance.Species.Id;
         OnInitialized?.Invoke();
     }
 

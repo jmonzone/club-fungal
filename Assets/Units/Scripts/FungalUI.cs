@@ -32,8 +32,8 @@ public class FungalUI : MonoBehaviour
 
     public void SetFungal(UnitInstance unit)
     {
-        fungalImage.sprite = unit.Data.Sprite;
-        fungalName.text = unit.Data.Name;
+        fungalImage.sprite = unit.Species.Sprite;
+        fungalName.text = unit.Species.Id;
         //relationshipSlider.minValue = unit.Skills[0].Level;
         //relationshipSlider.maxValue = unit.GetMaxXP(Skill.FRIENDSHIP);
         //relationshipSlider.value = unit.FriendshipXP;

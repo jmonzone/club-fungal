@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45fef147c2c0a4a1099431e581e7bab9, type: 3}
+  m_Name: 1214
+  m_EditorClassIdentifier: Assembly-CSharp::SnapshotInstance
+  snapshots:
+  - id: the tree
+    position: {x: 0.00000047683716, y: 0.39018, z: 3}
+  - id: player
+    position: {x: -0.7778168, y: 0.024999987, z: -3.889087}
+  - id: party frog
+    position: {x: -1.6263454, y: 0.024999987, z: 1.343503}

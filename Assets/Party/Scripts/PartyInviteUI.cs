@@ -13,9 +13,9 @@ public class PartyInviteUI : MonoBehaviour
 
     public void SetUnit(UnitInstance unit, bool autoInvited)
     {
-        unitImage.sprite = unit.Data.Sprite;
+        unitImage.sprite = unit.Species.Sprite;
         unitImage.enabled = true;
-        text.text = unit.Data.Name;
+        text.text = unit.Species.Id;
         toggle.isOn = true;
         toggle.interactable = !autoInvited;
         invitedByImage.enabled = autoInvited;

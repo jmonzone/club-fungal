@@ -39756,42 +39756,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3371684486670831788}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1494459810
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
-  m_Name: JSON_Player
-  m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
-  originalInstance: {fileID: 11400000, guid: c5fe3b2204b8a471f9ab1ed260b7d9b9, type: 2}
-  instanceData:
-    Data: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
-    Id: 000000000000000000000000
-    DisplayName: Player
-    FriendshipXP: 0
-    Element: 0
-    Job: {fileID: 0}
-    ColorPalette: {fileID: 0}
-  skills:
-  - unit: {fileID: 1494459810}
-    skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
-    level: 1
-    xp: 0
-  - unit: {fileID: 1494459810}
-    skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
-    level: 1
-    xp: 0
-  - unit: {fileID: 1494459810}
-    skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
-    level: 1
-    xp: 0
-  friends: []
-  moments: []
 --- !u!1 &1497023981
 GameObject:
   m_ObjectHideFlags: 0
@@ -46243,10 +46207,10 @@ MonoBehaviour:
   m_Name: JSON_Player
   m_EditorClassIdentifier: Assembly-CSharp::UnitInstance
   originalInstance: {fileID: 11400000, guid: c5fe3b2204b8a471f9ab1ed260b7d9b9, type: 2}
-  instanceData:
-    Data: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
-    Id: 000000000000000000000000
-    DisplayName: Player
+  data:
+    Id: 
+    DisplayName: 
+    Species: {fileID: 0}
     FriendshipXP: 0
     Element: 0
     Job: {fileID: 0}
@@ -52983,7 +52947,7 @@ Transform:
   m_GameObject: {fileID: 304056670036744325}
   serializedVersion: 2
   m_LocalRotation: {x: 0.25881913, y: 0, z: 0, w: 0.9659259}
-  m_LocalPosition: {x: 10.601528, y: 6.525001, z: 4.0112057}
+  m_LocalPosition: {x: 0, y: 6.525001, z: -10.660254}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -57773,7 +57737,7 @@ PrefabInstance:
     - target: {fileID: 1248008441582008258, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10.601528
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1248008441582008258, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
@@ -57783,7 +57747,7 @@ PrefabInstance:
     - target: {fileID: 1248008441582008258, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 13.671459
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 1248008441582008258, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}

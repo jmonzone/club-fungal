@@ -13,14 +13,14 @@ public class DanceSkillInstance : SkillInstance
     {
         moves = new List<DanceMoveInstance>();
 
-        if (!unit.Data)
+        if (!unit.Species)
         {
             Debug.LogWarning($"UnitSkill: missing unit data {unit.Id}");
             return;
         }
 
         // Debug.Log($"Initializing skill {skill.Id} for unit {unit.Data.Name} at level {level} with {xp} XP");
-        foreach (var move in unit.Data.Moves)
+        foreach (var move in unit.Species.Moves)
         {
             if (level >= move.LevelRequirement)
             {
@@ -31,7 +31,7 @@ public class DanceSkillInstance : SkillInstance
 
     protected override void OnLevelUpSkillSpecifics()
     {
-        foreach (var move in unit.Data.Moves)
+        foreach (var move in unit.Species.Moves)
         {
             if (move.LevelRequirement == level)
             {

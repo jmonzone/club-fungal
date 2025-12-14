@@ -21,7 +21,7 @@ public class DialogueChatUI : DialoguePageUI
 
     public override IEnumerator Show()
     {
-        unitImage.sprite = dialogue.Unit.Instance.Data.Sprite;
+        unitImage.sprite = dialogue.Unit.Instance.Species.Sprite;
         unitNameText.text = dialogue.Unit.Instance.DisplayName;
         dialogueText.text = dialogue.Dialogue.Text;
         yield return base.Show();

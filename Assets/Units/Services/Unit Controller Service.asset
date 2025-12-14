@@ -16,4 +16,9 @@ MonoBehaviour:
     type: 2}
   unitPrefab: {fileID: 4106141727428995005, guid: e9f8a044aacf9498eb482430f1da38f4,
     type: 3}
-  unitControllers: []
+  unitControllers:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

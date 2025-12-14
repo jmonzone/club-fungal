@@ -9,7 +9,7 @@ public class SpeakerUI : MonoBehaviour
 
     public void SetSpeaker(UnitInstance instance)
     {
-        speakerText.text = instance.Data.Name;
-        speakerImage.sprite = instance.Data.Sprite;
+        speakerText.text = instance.Species.Id;
+        speakerImage.sprite = instance.Species.Sprite;
     }
 }

@@ -11,8 +11,6 @@ public class UnitInstanceServiceEditor : GURUEditor
     {
         // UnityEngine.Debug.Log("UnitInstanceServiceEditor OnEnable - Auto-populating lists if empty");
         // Cache the populated lists on enable
-        AutoPopulateList<UnitInstance>("initialUnits", "t:UnitInstance");
-        AutoPopulateList<UnitSpecies>("unitCollection", "t:Unit");
         AutoPopulateList<UnitInteraction>("interactionCollection", "t:UnitInteraction");
     }
 
@@ -40,11 +38,11 @@ public class UnitInstanceServiceEditor : GURUEditor
     {
         if (asset is UnitInstance unitInstance)
         {
-            return unitInstance.Data != null && !string.IsNullOrEmpty(unitInstance.DisplayName);
+            return unitInstance.Species != null && !string.IsNullOrEmpty(unitInstance.DisplayName);
         }
         if (asset is UnitSpecies unit)
         {
-            return !string.IsNullOrEmpty(unit.Name);
+            return !string.IsNullOrEmpty(unit.Id);
         }
         return true;
     }

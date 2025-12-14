@@ -152,7 +152,7 @@ public abstract class UnitListDrawer
             try
             {
                 // Compute instance-specific data
-                var icon = unitInstance?.Data?.Sprite?.texture;
+                var icon = unitInstance?.Species?.Sprite?.texture;
                 var displayName = unitInstance?.DisplayName ?? "No Instance";
                 var job = unitInstance?.Job?.Id.ToUpper() ?? "No Job";
                 var isInParty = partyInstanceService?.PartyInstances?.Any(p => p.Id == unitInstance.Id) ?? false;
