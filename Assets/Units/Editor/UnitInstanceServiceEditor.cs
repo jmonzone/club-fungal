@@ -81,7 +81,7 @@ public class UnitInstanceServiceEditor : GURUEditor
 
         UnitListDrawer.DrawList(service.Instances);
         EditorGUILayout.Space(10);
-        DrawIconButton("🆕", "Generate A New Unit", () => { service.CreateUnit(unit => unit is FungalUnit); EditorUtility.SetDirty(service); });
+        DrawIconButton("🆕", "Generate A New Unit", () => { service.CreateUnit(unit => unit is QuirkySeriesUnitSpecies); EditorUtility.SetDirty(service); });
     }
 
     protected override string Description =>
