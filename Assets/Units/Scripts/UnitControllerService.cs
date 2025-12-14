@@ -11,7 +11,9 @@ public class UnitControllerService : GURUService
 {
     [Header("References")]
     [SerializeField] private UnitInstanceService unitInstanceService;
-    [SerializeField] private UnitController unitPrefab;
+    [SerializeField] private FungalController fungalPrefab;
+    [SerializeField] private TreeController treePrefab;
+    [SerializeField] private PlayerController playerPrefab;
 
     [Header("Runtime")]
     [SerializeField] private List<UnitController> unitControllers;
@@ -39,7 +41,8 @@ public class UnitControllerService : GURUService
 
         InitializeExistingControllers(instancesById);
 
-        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Gameplay")
+        var sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        if (sceneName == "Gameplay" || sceneName == "Club Fungal")
         {
             SpawnMissingControllers(instancesById);
         }
@@ -72,6 +75,13 @@ public class UnitControllerService : GURUService
 
     public UnitController SpawnUnit(UnitInstance unit, Vector3 spawnPosition, Transform parent)
     {
+        UnitController unitPrefab = unit.Species.Id switch
+        {
+            "tree" => treePrefab,
+            "player" => playerPrefab,
+            _ => fungalPrefab,
+        };
+
 #if UNITY_EDITOR
         var unitController = PrefabUtility.InstantiatePrefab(unitPrefab, parent) as UnitController;
 #else

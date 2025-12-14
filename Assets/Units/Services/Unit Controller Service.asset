@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitControllerService
   unitInstanceService: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2,
     type: 2}
-  unitPrefab: {fileID: 4106141727428995005, guid: e9f8a044aacf9498eb482430f1da38f4,
+  fungalPrefab: {fileID: 4106141727428995005, guid: e9f8a044aacf9498eb482430f1da38f4,
+    type: 3}
+  treePrefab: {fileID: 6489991089625311762, guid: b5a65936c7fe74e3ca085c517af15846,
+    type: 3}
+  playerPrefab: {fileID: 8410541423507090983, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
     type: 3}
   unitControllers:
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
