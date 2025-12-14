@@ -15,7 +15,7 @@ public class GameServiceEditor : GURUEditor
 
         if (GUILayout.Button("Reset JSON File"))
         {
-            gameService.ResetJsonFile();
+            gameService.ResetData();
         }
     }
 

@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
-using UnityEngine.Events;
+// using UnityEngine.Events;
 
 [CreateAssetMenu]
 public class LocalData : ScriptableObject
@@ -10,7 +10,7 @@ public class LocalData : ScriptableObject
     [SerializeField] private JObject json;
     public JObject JsonFile => json;
 
-    public event UnityAction OnReset;
+    // public event UnityAction OnReset;
     public static string GetSaveDataPath()
     {
         string path = $"{Application.persistentDataPath}/data.json";
@@ -51,6 +51,6 @@ public class LocalData : ScriptableObject
         json = new JObject();
         Directory.CreateDirectory(Path.GetDirectoryName(saveDataPath));
         File.WriteAllText(saveDataPath, JsonFile.ToString());
-        OnReset?.Invoke();
+        // OnReset?.Invoke();
     }
 }

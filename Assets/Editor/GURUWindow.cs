@@ -141,7 +141,7 @@ public class GURUWindow : EditorWindow
 
         if (GUILayout.Button("Reset Game"))
         {
-            gameService.ResetJsonFile();
+            gameService.ResetData();
         }
 
         if (GUILayout.Button("View Local Data"))

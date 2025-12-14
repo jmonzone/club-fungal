@@ -22,11 +22,11 @@ public class GameService : GURUService
 
     protected override void OnInitialize()
     {
-        localData.OnReset += InitializeSystems;
+        // localData.OnReset += InitializeSystems;
         InitializeSystems();
     }
 
-    public void ResetJsonFile()
+    public void ResetData()
     {
         localData.ResetData();
         InitializeSystems();
