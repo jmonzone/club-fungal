@@ -60,13 +60,15 @@ public class UnitInstanceService : GURUService
 
             foreach (var unitData in unitsData)
             {
-                var matchingUnit = speciesCollection.Find(u => u.Id == unitData.name); if (matchingUnit == null)
+                var matchingUnit = speciesCollection.Find(u => u.Id == unitData.id);
+
+                if (matchingUnit == null)
                 {
                     Debug.LogWarning($"Unit '{unitData.name}' not found in game data.");
                     continue;
                 }
 
-                var matchingJob = jobCollection.Find(job => job.Id == unitData.job.Id);
+                var matchingJob = jobCollection.Find(job => job.Id == unitData.job?.Id);
 
                 Element element;
                 if (!Enum.TryParse(unitData.element.ToString(), true, out element))
