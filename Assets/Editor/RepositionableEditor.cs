@@ -9,7 +9,7 @@ public class RepositionableEditor : GURUEditor
 
     static RepositionableEditor()
     {
-        EditorApplication.update += OnEditorUpdate;
+        // EditorApplication.update += OnEditorUpdate;
     }
 
     private static void OnEditorUpdate()

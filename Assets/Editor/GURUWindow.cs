@@ -24,6 +24,9 @@ public class GURUWindow : EditorWindow
         Selection.selectionChanged += Repaint;
         EditorApplication.update += OnEditorUpdate;
         SceneView.duringSceneGui += OnSceneGUI;
+        // UnityEditor.SceneManagement.EditorSceneManager.sceneOpened += OnSceneOpened;
+        // UnityEditor.SceneManagement.EditorSceneManager.sceneClosed += OnSceneClosed;
+        UnityEditor.SceneManagement.EditorSceneManager.activeSceneChangedInEditMode += OnActiveSceneChanged;
     }
 
     void OnDisable()
@@ -31,11 +34,20 @@ public class GURUWindow : EditorWindow
         Selection.selectionChanged -= Repaint;
         EditorApplication.update -= OnEditorUpdate;
         SceneView.duringSceneGui -= OnSceneGUI;
+        // UnityEditor.SceneManagement.EditorSceneManager.sceneOpened -= OnSceneOpened;
+        // UnityEditor.SceneManagement.EditorSceneManager.sceneClosed -= OnSceneClosed;
+        UnityEditor.SceneManagement.EditorSceneManager.activeSceneChangedInEditMode -= OnActiveSceneChanged;
         if (currentEditor != null)
         {
             DestroyImmediate(currentEditor);
             currentEditor = null;
         }
+    }
+
+    void OnActiveSceneChanged(UnityEngine.SceneManagement.Scene current, UnityEngine.SceneManagement.Scene next)
+    {
+        gameService.InitializeSystems();
+        Repaint();
     }
 
     void OnEditorUpdate()

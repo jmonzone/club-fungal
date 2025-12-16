@@ -9,21 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 019be8b3b6ff34bf68a54b05fa5ce64b, type: 3}
+  m_Script: {fileID: 11500000, guid: 9821b78648e8c44c6b0ff88229f59992, type: 3}
   m_Name: Party Frog
-  m_EditorClassIdentifier: 
-  originalInstance: {fileID: 11400000}
+  m_EditorClassIdentifier: Assembly-CSharp::UnitTemplate
   data:
     Id: party frog
-    Species: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
     DisplayName: Party Frog
+    Species: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
     FriendshipXP: 0
     Element: 0
     Job: {fileID: 0}
     ColorPalette: {fileID: 0}
-  skills: []
-  friends:
-  - {fileID: 11400000, guid: 72e0f639e631d41768805d21444be136, type: 2}
   moments:
   - interaction: {fileID: 11400000, guid: 0740db2fd21f44859941442e25af726b, type: 2}
     isComplete: 0

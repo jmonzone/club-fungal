@@ -1,26 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
 [Serializable]
-public struct UnitData
+public class UnitData
 {
     public string Id;
     public string DisplayName;
     public UnitSpecies Species;
     public float FriendshipXP;
+    public int FriendshipLevel;
     public Element Element;
     public Job Job;
     public ColorPalette ColorPalette;
-    public JObject Json;
+    public string Scene;
+
+    // For JSON serialization
+    public string name;
+    public string displayName;
+    public float friendshipXP;
+    public int friendshipLevel;
+    public string element;
+    public string job;
+    public List<string> friends;
+    public List<InteractionData> interactions;
+    public List<SkillData> skills;
+
+    [Serializable]
+    public class SkillData
+    {
+        public string id;
+        public int level;
+        public float xp;
+    }
+
+    [Serializable]
+    public class InteractionData
+    {
+        public string id;
+        public bool isComplete;
+    }
 }
 
-[CreateAssetMenu(fileName = "UnitInstance", menuName = "Club Fungal/Units/Unit Instance")]
-public class UnitInstance : ScriptableObject
+[Serializable]
+public class UnitInstance
 {
-    [SerializeField] private UnitInstance originalInstance;
+    [SerializeField] private UnitTemplate template;
     [SerializeField] private UnitData data;
 
     [SerializeField] private List<SkillInstance> skills;
@@ -45,34 +71,22 @@ public class UnitInstance : ScriptableObject
     public List<UnitInstance> Friends => friends;
     public List<UnitMoment> Moments => moments;
 
-    public JObject Json => data.Json;
-
-    public UnitInstance OriginalInstance => originalInstance;
+    public UnitTemplate Template => template;
 
     public event UnityAction<float> OnXpChanged;
 
-    public void SetOriginalInstance(UnitInstance original)
-    {
-        originalInstance = original;
-    }
-
-    private void OnValidate()
-    {
-        if (string.IsNullOrEmpty(data.DisplayName) && data.Species != null)
-        {
-            var temp = data;
-            temp.DisplayName = data.Species.Id;
-            data = temp;
-        }
-    }
-
-    public void Initialize(UnitData data)
+    public UnitInstance(UnitData data)
     {
         var initData = data;
         if (string.IsNullOrEmpty(initData.Id)) initData.Id = GenerateMongoLikeId();
         this.data = initData;
         friends = new List<UnitInstance>();
         moments = new List<UnitMoment>();
+    }
+
+    public void SetTemplate(UnitTemplate template)
+    {
+        this.template = template;
     }
 
     public void InitializeSkills(List<SkillInstance> skills)

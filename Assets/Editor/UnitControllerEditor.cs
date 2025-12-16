@@ -38,12 +38,12 @@ public class UnitControllerEditor : RepositionableEditor
             selectedInteraction = null;
         }
 
-        if (controller.Instance.OriginalInstance != null)
+        if (controller.Instance.Template != null)
         {
             if (GUILayout.Button("Add Moment to Original Asset") && selectedInteraction != null)
             {
                 var moment = new UnitMoment(selectedInteraction, false);
-                controller.Instance.OriginalInstance.Moments.Add(moment);
+                controller.Instance.Template.Moments.Add(moment);
                 selectedInteraction = null;
                 GURUInitializer.InitializeSystems();
             }

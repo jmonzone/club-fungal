@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -12,7 +14,7 @@ public class UnitInstanceService : GURUService
     public LocalData LocalData => localData;
 
     [Header("Collections")]
-    [SerializeField] private List<UnitInstance> initialUnits;
+    [SerializeField] private List<UnitTemplate> initialUnits;
     [SerializeField] private UnitSpecies playerUnit;
     [SerializeField] private List<UnitSpecies> speciesCollection;
     [SerializeField] private List<Job> jobCollection;
@@ -22,7 +24,7 @@ public class UnitInstanceService : GURUService
 
     [SerializeField] private List<UnitInstance> units;
 
-    public List<UnitInstance> InitialUnits => initialUnits;
+    public List<UnitTemplate> InitialUnits => initialUnits;
 
     public List<UnitInstance> Instances => units;
 
@@ -37,8 +39,8 @@ public class UnitInstanceService : GURUService
 
     private void OnValidate()
     {
-        initialUnits = AssetDatabase.FindAssets("t:UnitInstance")
-            .Select(guid => AssetDatabase.LoadAssetAtPath<UnitInstance>(AssetDatabase.GUIDToAssetPath(guid)))
+        initialUnits = AssetDatabase.FindAssets("t:UnitTemplate")
+            .Select(guid => AssetDatabase.LoadAssetAtPath<UnitTemplate>(AssetDatabase.GUIDToAssetPath(guid)))
             .ToList();
 
         speciesCollection = AssetDatabase.FindAssets("t:UnitSpecies")
@@ -48,147 +50,133 @@ public class UnitInstanceService : GURUService
 
     protected override void OnInitialize()
     {
+        Debug.Log("Initializing UnitInstanceService");
         units = new List<UnitInstance>();
 
         if (localData.JsonFile.ContainsKey(UNIT_KEY))
         {
-            foreach (var unit in localData.JsonFile[UNIT_KEY] as JArray)
-            {
-                if (unit is JObject unitJson)
-                {
-                    var unitName = unitJson.Value<string>("name");
-                    var matchingUnit = speciesCollection.Find(u => u.Id == unitName);
+            var unitsJson = localData.JsonFile[UNIT_KEY].ToString();
+            var unitsData = JsonConvert.DeserializeObject<List<UnitData>>(unitsJson);
 
-                    if (matchingUnit == null)
+            foreach (var unitData in unitsData)
+            {
+                var matchingUnit = speciesCollection.Find(u => u.Id == unitData.name); if (matchingUnit == null)
+                {
+                    Debug.LogWarning($"Unit '{unitData.name}' not found in game data.");
+                    continue;
+                }
+
+                var matchingJob = jobCollection.Find(job => job.Id == unitData.job);
+
+                Element element;
+                if (!Enum.TryParse<Element>(unitData.element, true, out element))
+                {
+                    element = Element.NONE;
+                }
+
+                unitData.Species = matchingUnit;
+                unitData.Job = matchingJob;
+                unitData.DisplayName = unitData.displayName;
+                unitData.FriendshipXP = unitData.friendshipXP;
+                unitData.Element = element;
+
+                // Set color palette based on parsed element
+                unitData.ColorPalette = GetColorPaletteByElement(unitData.Element);
+
+                var unitInstance = new UnitInstance(unitData);
+
+                Debug.Log($"Loading UnitInstance for '{unitData.DisplayName}' (ID: {unitData.Id})");
+
+                var skills = new List<SkillInstance>();
+                var skillSaveDict = unitData.skills?.ToDictionary(s => s.id, s => s) ?? new Dictionary<string, UnitData.SkillData>();
+
+                foreach (var skill in skillCollection)
+                {
+                    float xp = 0f;
+                    if (skillSaveDict.TryGetValue(skill.Id, out var skillSave))
                     {
-                        Debug.LogWarning($"Unit '{unitName}' not found in game data.");
-                        continue;
+                        xp = skillSave.xp;
                     }
 
-                    var unitId = unitJson.Value<string>("id");
-
-                    var elementId = unitJson.Value<string>("element");
-                    var element = System.Enum.TryParse(elementId, ignoreCase: true, out Element elementResult) ? elementResult : Element.NONE;
-                    var matchingColorPalette = GetColorPaletteByElement(element);
-
-                    var jobId = unitJson.Value<string>("job");
-                    var matchingJob = jobCollection.Find(job => job.Id == jobId);
-
-                    float friendshipXP = unitJson.Value<float?>("friendshipXP") ?? 0f;
-
-                    var displayName = unitJson.Value<string>("displayName") ?? unitName;
-
-                    var unitInstance = CreateInstance<UnitInstance>();
-                    var data = new UnitData
+                    SkillInstance skillInstance;
+                    if (skill.Id.ToLower() == "dance")
                     {
-                        Species = matchingUnit,
-                        Id = unitId,
-                        DisplayName = displayName,
-                        FriendshipXP = friendshipXP,
-                        Element = element,
-                        Job = matchingJob,
-                        ColorPalette = matchingColorPalette,
-                        Json = unitJson
-                    };
-                    unitInstance.Initialize(data);
-
-                    unitInstance.name = $"JSON_{displayName}";
-
-                    var skillsJson = unitJson.Value<JArray>("skills") ?? new JArray();
-                    var skills = new List<SkillInstance>();
-
-                    foreach (var skill in skillCollection)
+                        skillInstance = new DanceSkillInstance(unitInstance, skill, xp);
+                    }
+                    else
                     {
-                        var skillJson = skillsJson
-                            .FirstOrDefault(x => x?["id"]?.ToString() == skill.Id);
+                        skillInstance = new SkillInstance(unitInstance, skill, xp);
+                    }
+                    skills.Add(skillInstance);
+                }
 
-                        float xp = skillJson?.Value<float?>("xp") ?? 0f;
+                // Check for skills in JSON that are not in the collection
+                var loadedSkillIds = unitData.skills?.Select(s => s.id).Where(id => !string.IsNullOrEmpty(id)).ToList() ?? new List<string>();
+                var collectionSkillIds = skillCollection.Select(s => s.Id).ToList();
+                var missingSkills = loadedSkillIds.Except(collectionSkillIds);
+                foreach (var missing in missingSkills)
+                {
+                    Debug.LogError($"Skill '{missing}' not found in skillCollection for unit '{unitData.name}'.");
+                }
 
-                        SkillInstance skillInstance;
-                        if (skill.Id.ToLower() == "dance")
+                unitInstance.InitializeSkills(skills);
+
+                var moments = new List<UnitMoment>();
+                foreach (var interactionData in unitData.interactions ?? new List<UnitData.InteractionData>())
+                {
+                    if (!string.IsNullOrEmpty(interactionData.id))
+                    {
+                        var matching = interactionCollection.Find(i => i.Id == interactionData.id);
+                        if (matching != null)
                         {
-                            skillInstance = new DanceSkillInstance(unitInstance, skill, xp);
+                            var moment = new UnitMoment(matching, interactionData.isComplete);
+                            moment.OnMomentComplete += () => SaveData();
+                            moments.Add(moment);
                         }
                         else
                         {
-                            skillInstance = new SkillInstance(unitInstance, skill, xp);
-                        }
-                        skills.Add(skillInstance);
-                    }
-
-                    // Check for skills in JSON that are not in the collection
-                    var loadedSkillIds = skillsJson
-                        .Select(s => s?["id"]?.ToString())
-                        .Where(id => !string.IsNullOrEmpty(id))
-                        .ToList();
-                    var collectionSkillIds = skillCollection.Select(s => s.Id).ToList();
-                    var missingSkills = loadedSkillIds.Except(collectionSkillIds);
-                    foreach (var missing in missingSkills)
-                    {
-                        Debug.LogError($"Skill '{missing}' not found in skillCollection for unit '{unitName}'.");
-                    }
-
-                    unitInstance.InitializeSkills(skills);
-
-                    var momentsJson = unitJson.Value<JArray>("interactions") ?? new JArray();
-                    var moments = new List<UnitMoment>();
-                    foreach (var momentToken in momentsJson)
-                    {
-                        if (momentToken is JObject momentObj)
-                        {
-                            string id = momentObj.Value<string>("id");
-                            bool isComplete = momentObj.Value<bool?>("isComplete") ?? false;
-
-                            if (!string.IsNullOrEmpty(id))
-                            {
-                                var matching = interactionCollection.Find(i => i.Id == id);
-                                if (matching != null)
-                                {
-                                    // Debug.Log($"Loading interaction '{id}' for unit '{unitName}'.");
-                                    var moment = new UnitMoment(matching, isComplete);
-                                    moment.OnMomentComplete += () => SaveData();
-                                    moments.Add(moment);
-                                }
-                                else
-                                {
-                                    Debug.LogError($"Interaction '{id}' not found in interactionCollection for unit '{unitName}'. This is because it has not been added to the UnitInstanceService, opening the asset automatically loads the interaciton to the collection. Do so and try again");
-                                }
-                            }
+                            Debug.LogError($"Interaction '{interactionData.id}' not found in interactionCollection for unit '{unitData.name}'. This is because it has not been added to the UnitInstanceService, opening the asset automatically loads the interaciton to the collection. Do so and try again");
                         }
                     }
-                    unitInstance.InitializeMoments(moments);
-
-                    RegisterUnit(unitInstance, false);
                 }
+                unitInstance.InitializeMoments(moments);
+
+                RegisterUnit(unitInstance, false);
             }
         }
 
-        // Ensure all initial units are in the collection
-        // Debug.Log($"Ensuring all initial units are registered. Initial units count: {initialUnits.Count}");
         foreach (var initialUnit in initialUnits)
         {
-            if (!units.Any(u => u.Id == initialUnit.Id))
+            if (!units.Any(u => u.Id == initialUnit.Data.Id))
             {
-                RegisterUnit(initialUnit, false);
+                var newUnitInstance = new UnitInstance(initialUnit.Data);
+                RegisterUnit(newUnitInstance, false);
+                newUnitInstance.SetTemplate(initialUnit);
+
+                Debug.Log($"Registered initial unit '{newUnitInstance.DisplayName}' with ID '{newUnitInstance.Id}'");
             }
         }
 
-
-        foreach (var unit in units)
+        // Rebuild friends relationships from saved data
+        if (localData.JsonFile.ContainsKey(UNIT_KEY))
         {
-            // Get the friends array from the unit's JObject
-            if (unit.Json?["friends"] is not JArray friendsArray) continue;
+            var unitsJson = localData.JsonFile[UNIT_KEY].ToString();
+            var unitsData = JsonConvert.DeserializeObject<List<UnitData>>(unitsJson);
 
-            foreach (var friendIdToken in friendsArray)
+            foreach (var unitData in unitsData)
             {
-                string friendId = friendIdToken?.ToString();
-                if (string.IsNullOrEmpty(friendId)) continue;
+                var unit = units.Find(u => u.Id == unitData.Id);
+                if (unit == null) continue;
 
-                // Find the matching UnitInstance in your units list
-                var friendUnit = units.Find(u => u.Id == friendId);
-                if (friendUnit != null && !unit.Friends.Contains(friendUnit))
+                foreach (var friendId in unitData.friends ?? new List<string>())
                 {
-                    unit.Friends.Add(friendUnit);
+                    if (string.IsNullOrEmpty(friendId)) continue;
+
+                    var friendUnit = units.Find(u => u.Id == friendId);
+                    if (friendUnit != null && !unit.Friends.Contains(friendUnit))
+                    {
+                        unit.Friends.Add(friendUnit);
+                    }
                 }
             }
         }
@@ -199,9 +187,9 @@ public class UnitInstanceService : GURUService
         // Update units with new moments from original assets
         foreach (var unit in units)
         {
-            if (unit.OriginalInstance != null)
+            if (unit.Template != null)
             {
-                foreach (var originalMoment in unit.OriginalInstance.Moments)
+                foreach (var originalMoment in unit.Template.Moments)
                 {
                     if (!unit.Moments.Any(m => m.Interaction == originalMoment.Interaction))
                     {
@@ -221,7 +209,6 @@ public class UnitInstanceService : GURUService
     public UnitInstance CreateUnit(UnitQuery query = null)
     {
         var (newUnit, newElement) = GenerateNewUnit(query);
-        var newUnitInstance = CreateInstance<UnitInstance>();
 
         var matchingColorPalette = GetColorPaletteByElement(newElement);
 
@@ -233,7 +220,8 @@ public class UnitInstanceService : GURUService
             Element = newElement,
             ColorPalette = matchingColorPalette
         };
-        newUnitInstance.Initialize(data);
+
+        var newUnitInstance = new UnitInstance(data);
 
         var skills = new List<SkillInstance>();
 
@@ -260,17 +248,16 @@ public class UnitInstanceService : GURUService
     {
         var titles = new[] { "Mysterious", "Party", "DJ", "Crazy", "Wild", "Cool", "Happy", "Sad", "Fun", "Silly" };
         var names = new[] { "Sal", "Dan", "Cindy", "Bob", "Alice", "Tom", "Jerry", "Mickey", "Luna", "Rex", "Bella", "Max", "Lily", "Charlie", "Daisy" };
-        var title = titles[Random.Range(0, titles.Length)];
-        var name = names[Random.Range(0, names.Length)];
+        var title = titles[UnityEngine.Random.Range(0, titles.Length)];
+        var name = names[UnityEngine.Random.Range(0, names.Length)];
         return $"{title} {name}";
     }
 
     public UnitInstance CopyUnit(UnitInstance instance, bool saveData = true)
     {
-        var copiedUnit = CreateInstance<UnitInstance>();
         var data = instance.Data;
         data.Id = null; // Generate new Id for copy
-        copiedUnit.Initialize(data);
+        var copiedUnit = new UnitInstance(data);
 
         var skills = new List<SkillInstance>();
 
@@ -329,12 +316,12 @@ public class UnitInstanceService : GURUService
         }
 
         if (availablePairs.Count > 0)
-            return availablePairs[Random.Range(0, availablePairs.Count)];
+            return availablePairs[UnityEngine.Random.Range(0, availablePairs.Count)];
 
         // Step 3: fallback → any unit and any element
-        var fallbackUnit = availableUnits[Random.Range(0, availableUnits.Count)];
+        var fallbackUnit = availableUnits[UnityEngine.Random.Range(0, availableUnits.Count)];
         var allElements = (Element[])System.Enum.GetValues(typeof(Element));
-        var fallbackElement = allElements[Random.Range(0, allElements.Length)];
+        var fallbackElement = allElements[UnityEngine.Random.Range(0, allElements.Length)];
 
         return (fallbackUnit, fallbackElement);
     }
@@ -353,12 +340,12 @@ public class UnitInstanceService : GURUService
 
         if (unseenElements.Count > 0)
         {
-            element = unseenElements[Random.Range(0, unseenElements.Count)];
+            element = unseenElements[UnityEngine.Random.Range(0, unseenElements.Count)];
             return true;
         }
 
         // fallback: all elements used → pick any
-        element = allElements[Random.Range(0, allElements.Length)];
+        element = allElements[UnityEngine.Random.Range(0, allElements.Length)];
         return false;
     }
 
@@ -374,7 +361,7 @@ public class UnitInstanceService : GURUService
             _ => 0f,
         };
 
-        if (unit.Friends.Count < 3 && Random.value < introduceNewFriend)
+        if (unit.Friends.Count < 3 && UnityEngine.Random.value < introduceNewFriend)
         {
             friend = CreateNewFriend(unit);
         }
@@ -383,11 +370,11 @@ public class UnitInstanceService : GURUService
             var availableFriends = unit.Friends.Where(friend => !blacklist.Contains(friend)).ToList();
             if (availableFriends.Count > 0)
             {
-                friend = availableFriends[Random.Range(0, availableFriends.Count)];
+                friend = availableFriends[UnityEngine.Random.Range(0, availableFriends.Count)];
             }
         }
 
-        return friend;
+        return friend != null;
     }
 
     public UnitInstance CreateNewFriend(UnitInstance unit)
@@ -405,20 +392,6 @@ public class UnitInstanceService : GURUService
         if (existing != null)
         {
             return existing; // Return the already-registered instance
-        }
-
-        // Set original instance reference
-        if (initialUnits.Contains(unit))
-        {
-            unit.SetOriginalInstance(unit);
-        }
-        else
-        {
-            var original = initialUnits.FirstOrDefault(i => i.Species == unit.Species);
-            if (original != null)
-            {
-                unit.SetOriginalInstance(original);
-            }
         }
 
         float sum = 0f;
@@ -454,46 +427,30 @@ public class UnitInstanceService : GURUService
         }
         if (localData.JsonFile == null) localData.Initialize();
 
-        var unitsJson = new JArray();
-
-        foreach (var unit in units)
+        var unitsData = units.Select(unit => new UnitData
         {
-            // Debug.Log($"Saving unit {unit.Id}, Data: {unit.Data}, DisplayName: {unit.DisplayName}");
-            var unitJson = new JObject();
-            unitJson["id"] = unit.Id;
-            unitJson["name"] = unit.Species.Id;
-            unitJson["displayName"] = unit.DisplayName;
-            unitJson["friendshipLevel"] = unit.FriendshipLevel;
-            unitJson["friendshipXP"] = unit.FriendshipXP;
-            unitJson["element"] = unit.Element.ToString().ToLower();
-            unitJson["job"] = unit.Job?.Id.ToString().ToLower() ?? "none";
-            unitJson["friends"] = new JArray(unit.Friends.Where(f => f != null && f.Id != null).Select(friend => friend.Id));
-            unitJson["interactions"] = new JArray(
-                unit.Moments.Where(i => i.Interaction != null).Select(i => new JObject
-                {
-                    ["id"] = i.Interaction.Id,
-                    ["isComplete"] = i.IsComplete
-                })
-            );
-
-            var skillsJson = new JArray();
-
-            foreach (var skill in unit.Skills.Keys)
+            Id = unit.Id,
+            name = unit.Species.Id,
+            displayName = unit.DisplayName,
+            friendshipLevel = unit.FriendshipLevel,
+            friendshipXP = unit.FriendshipXP,
+            element = unit.Element.ToString().ToLower(),
+            job = unit.Job?.Id.ToString().ToLower() ?? "none",
+            friends = unit.Friends.Where(f => f != null && f.Id != null).Select(f => f.Id).ToList(),
+            interactions = unit.Moments.Where(m => m.Interaction != null).Select(m => new UnitData.InteractionData
             {
-                var skillJson = new JObject
-                {
-                    ["id"] = skill.Id,
-                    ["level"] = unit.Skills[skill].Level,
-                    ["xp"] = unit.Skills[skill].XP,
-                };
+                id = m.Interaction.Id,
+                isComplete = m.IsComplete
+            }).ToList(),
+            skills = unit.Skills.Select(kvp => new UnitData.SkillData
+            {
+                id = kvp.Key.Id,
+                level = kvp.Value.Level,
+                xp = kvp.Value.XP
+            }).ToList()
+        }).ToList();
 
-                skillsJson.Add(skillJson);
-            }
-
-            unitJson["skills"] = skillsJson;
-            unitsJson.Add(unitJson);
-        }
-
-        localData.SaveData(UNIT_KEY, unitsJson);
+        var json = JsonConvert.SerializeObject(unitsData);
+        localData.SaveData(UNIT_KEY, JToken.Parse(json));
     }
 }

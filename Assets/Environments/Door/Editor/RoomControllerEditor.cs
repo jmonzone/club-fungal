@@ -41,16 +41,16 @@ public class RoomControllerEditor : GURUEditor
             PrefabUtility.RecordPrefabInstancePropertyModifications(roomController.Floor);
         });
 
-        unitSelector = new UnitSelectorComponent("Add Unit", (unit) =>
-        {
-            if (unit != null)
-            {
-                Undo.RecordObject(roomController, "Add Unit to Room");
-                roomController.AddUnit(unit);
-                EditorUtility.SetDirty(roomController);
-                unitSelector.Reset();
-            }
-        });
+        // unitSelector = new UnitSelectorComponent("Add Unit", (unit) =>
+        // {
+        //     if (unit != null)
+        //     {
+        //         Undo.RecordObject(roomController, "Add Unit to Room");
+        //         roomController.AddUnit(unit);
+        //         EditorUtility.SetDirty(roomController);
+        //         unitSelector.Reset();
+        //     }
+        // });
     }
 
     protected override void DrawContent()

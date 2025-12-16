@@ -16,7 +16,7 @@ public abstract class UnitDrawerItemAction
 
 public class ViewAssetAction : UnitDrawerItemAction
 {
-    public ViewAssetAction(UnitInstance unitInstance, bool isInitial)
+    public ViewAssetAction(UnitTemplate unitInstance, bool isInitial)
     {
         text = "View Asset";
         emoji = "📁";
@@ -31,7 +31,7 @@ public class ViewInstanceAction : UnitDrawerItemAction
     {
         text = "View Instance";
         emoji = "👁️";
-        action = () => PopupInspector.Show(unitInstance);
+        action = () => Debug.Log(unitInstance.Id);
         condition = () => true;
     }
 }
@@ -61,7 +61,7 @@ public class DeleteInstanceAction : UnitDrawerItemAction
     {
         text = "Delete Instance";
         emoji = "❌";
-        action = () => UnityEngine.Object.DestroyImmediate(unitInstance);
+        action = () => Debug.LogWarning($"Deleting unit instance '{unitInstance.Id}' is not implemented in editor.");
         condition = () => controller != null && !isInitial;
         backgroundColor = Color.red;
     }
@@ -157,7 +157,7 @@ public abstract class UnitListDrawer
                 var job = unitInstance?.Job?.Id.ToUpper() ?? "No Job";
                 var isInParty = partyInstanceService?.PartyInstances?.Any(p => p.Id == unitInstance.Id) ?? false;
 
-                var initialUnit = unitInstanceService?.InitialUnits.Find(instance => instance.Id == unitInstance.Id);
+                var initialUnit = unitInstanceService?.InitialUnits.Find(instance => instance.Data.Id == unitInstance.Id);
 
                 var controller = unitControllerService?.Controllers.Find(c => c.Instance != null && c.Instance.Id == unitInstance.Id);
 
@@ -183,7 +183,7 @@ public abstract class UnitListDrawer
                 // Create action lists
                 var menuItems = new List<UnitDrawerItemAction>
                 {
-                    new ViewAssetAction(unitInstance, initialUnit != null),
+                    new ViewAssetAction(unitInstance.Template, initialUnit != null),
                     new ViewInstanceAction(unitInstance),
                     new TogglePartyAction(isInParty, partyInstanceService, unitInstance)
                 };

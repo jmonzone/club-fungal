@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localData: {fileID: 11400000, guid: 81d22df7435974c419891ceb2bc9e4ee, type: 2}
   initialUnits:
-  - {fileID: 11400000, guid: 463ba2838266e4c609022c9ca93d4c8a, type: 2}
-  - {fileID: 11400000, guid: c5fe3b2204b8a471f9ab1ed260b7d9b9, type: 2}
-  - {fileID: 11400000, guid: 9ec731d5476604d08a81d3c2cc5ac210, type: 2}
+  - {fileID: 11400000, guid: 9f94c43fcb7de4716af0753df9bbdbb3, type: 2}
+  - {fileID: 11400000, guid: 1c13d7c1ade7f486ca3ed346a8a49b51, type: 2}
+  - {fileID: 11400000, guid: 6457afa495a7344de88409e5f7c817be, type: 2}
   playerUnit: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
   speciesCollection:
   - {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
@@ -44,6 +44,41 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5aa5b33e58c2149b9ae9267050d6e3ac, type: 2}
   - {fileID: 11400000, guid: bf953fd083dda4c43b09b918cd59dc87, type: 2}
   units:
-  - {fileID: 11400000, guid: 463ba2838266e4c609022c9ca93d4c8a, type: 2}
-  - {fileID: 11400000, guid: c5fe3b2204b8a471f9ab1ed260b7d9b9, type: 2}
-  - {fileID: 11400000, guid: 9ec731d5476604d08a81d3c2cc5ac210, type: 2}
+  - template: {fileID: 11400000, guid: 9f94c43fcb7de4716af0753df9bbdbb3, type: 2}
+    data:
+      Id: party frog
+      DisplayName: Party Frog
+      Species: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
+      FriendshipXP: 0
+      Element: 0
+      Job: {fileID: 0}
+      ColorPalette: {fileID: 0}
+    skills: []
+    friends: []
+    moments:
+    - interaction: {fileID: 11400000, guid: 0740db2fd21f44859941442e25af726b, type: 2}
+      isComplete: 0
+  - template: {fileID: 11400000, guid: 1c13d7c1ade7f486ca3ed346a8a49b51, type: 2}
+    data:
+      Id: player
+      DisplayName: Player
+      Species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
+      FriendshipXP: 0
+      Element: 0
+      Job: {fileID: 0}
+      ColorPalette: {fileID: 0}
+    skills: []
+    friends: []
+    moments: []
+  - template: {fileID: 11400000, guid: 6457afa495a7344de88409e5f7c817be, type: 2}
+    data:
+      Id: the tree
+      DisplayName: Tree
+      Species: {fileID: 11400000, guid: 95347a15aaf7f4b40b23e8fdfbd3a26f, type: 2}
+      FriendshipXP: 0
+      Element: 0
+      Job: {fileID: 0}
+      ColorPalette: {fileID: 0}
+    skills: []
+    friends: []
+    moments: []
