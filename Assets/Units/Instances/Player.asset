@@ -13,11 +13,17 @@ MonoBehaviour:
   m_Name: Player
   m_EditorClassIdentifier: Assembly-CSharp::UnitTemplate
   data:
-    Id: player
-    DisplayName: Player
-    Species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
-    FriendshipXP: 0
-    Element: 0
-    Job: {fileID: 0}
-    ColorPalette: {fileID: 0}
+    id: player
+    name: player
+    displayName: Player
+    friendshipLevel: 0
+    friendshipXP: 0
+    friends: []
+    interactions: []
+    skills: []
+    species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
+    job: {fileID: 0}
+    colorPalette: {fileID: 0}
+    element: 0
+    scene: 
   moments: []

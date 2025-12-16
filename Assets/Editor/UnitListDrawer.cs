@@ -31,7 +31,7 @@ public class ViewInstanceAction : UnitDrawerItemAction
     {
         text = "View Instance";
         emoji = "👁️";
-        action = () => Debug.Log(unitInstance.Id);
+        action = () => Debug.Log(unitInstance);
         condition = () => true;
     }
 }
@@ -157,7 +157,7 @@ public abstract class UnitListDrawer
                 var job = unitInstance?.Job?.Id.ToUpper() ?? "No Job";
                 var isInParty = partyInstanceService?.PartyInstances?.Any(p => p.Id == unitInstance.Id) ?? false;
 
-                var initialUnit = unitInstanceService?.InitialUnits.Find(instance => instance.Data.Id == unitInstance.Id);
+                var initialUnit = unitInstanceService?.InitialUnits.Find(instance => instance.Data.id == unitInstance.Id);
 
                 var controller = unitControllerService?.Controllers.Find(c => c.Instance != null && c.Instance.Id == unitInstance.Id);
 

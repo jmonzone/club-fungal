@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "ColorPalette", menuName = "Club Fungal/Units/Color Palette")]
-public class ColorPalette : ScriptableObject
+public class ColorPalette : GURUObject
 {
     [SerializeField] private Element element;
     [SerializeField] private Color primaryColor;

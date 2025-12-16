@@ -13,11 +13,17 @@ MonoBehaviour:
   m_Name: The Tree
   m_EditorClassIdentifier: Assembly-CSharp::UnitTemplate
   data:
-    Id: the tree
-    DisplayName: Tree
-    Species: {fileID: 11400000, guid: 95347a15aaf7f4b40b23e8fdfbd3a26f, type: 2}
-    FriendshipXP: 0
-    Element: 0
-    Job: {fileID: 0}
-    ColorPalette: {fileID: 0}
+    id: the tree
+    name: the tree
+    displayName: The Tree
+    friendshipLevel: 0
+    friendshipXP: 0
+    friends: []
+    interactions: []
+    skills: []
+    species: {fileID: 11400000, guid: 95347a15aaf7f4b40b23e8fdfbd3a26f, type: 2}
+    job: {fileID: 0}
+    colorPalette: {fileID: 0}
+    element: 0
+    scene: 
   moments: []

@@ -6,23 +6,13 @@ using UnityEngine;
 /// Contains the 2D sprite, 3D game object prefab, and available dance moves (animations).
 /// </summary>
 [CreateAssetMenu(fileName = "New Unit Species", menuName = "Club Fungal/Units/Unit Species")]
-public class UnitSpecies : ScriptableObject
+public class UnitSpecies : GURUObject
 {
-    [SerializeField] private string id;
     [SerializeField] private Sprite sprite;
     [SerializeField] private GameObject prefab;
     [SerializeField] private List<DanceMove> moves;
 
-    public string Id => id;
     public Sprite Sprite => sprite;
     public GameObject Prefab => prefab;
     public List<DanceMove> Moves => moves;
-
-    private void OnValidate()
-    {
-        if (string.IsNullOrEmpty(id))
-        {
-            id = name.ToLower();
-        }
-    }
 }

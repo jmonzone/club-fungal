@@ -66,26 +66,23 @@ public class UnitInstanceService : GURUService
                     continue;
                 }
 
-                var matchingJob = jobCollection.Find(job => job.Id == unitData.job);
+                var matchingJob = jobCollection.Find(job => job.Id == unitData.job.Id);
 
                 Element element;
-                if (!Enum.TryParse<Element>(unitData.element, true, out element))
+                if (!Enum.TryParse(unitData.element.ToString(), true, out element))
                 {
                     element = Element.NONE;
                 }
 
-                unitData.Species = matchingUnit;
-                unitData.Job = matchingJob;
-                unitData.DisplayName = unitData.displayName;
-                unitData.FriendshipXP = unitData.friendshipXP;
-                unitData.Element = element;
-
-                // Set color palette based on parsed element
-                unitData.ColorPalette = GetColorPaletteByElement(unitData.Element);
+                // Assign runtime-only fields
+                unitData.species = matchingUnit;
+                unitData.job = matchingJob;
+                unitData.element = element;
+                unitData.colorPalette = GetColorPaletteByElement(element);
 
                 var unitInstance = new UnitInstance(unitData);
 
-                Debug.Log($"Loading UnitInstance for '{unitData.DisplayName}' (ID: {unitData.Id})");
+                Debug.Log($"Loading UnitInstance for '{unitData.displayName}' (ID: {unitData.id})");
 
                 var skills = new List<SkillInstance>();
                 var skillSaveDict = unitData.skills?.ToDictionary(s => s.id, s => s) ?? new Dictionary<string, UnitData.SkillData>();
@@ -147,7 +144,7 @@ public class UnitInstanceService : GURUService
 
         foreach (var initialUnit in initialUnits)
         {
-            if (!units.Any(u => u.Id == initialUnit.Data.Id))
+            if (!units.Any(u => u.Id == initialUnit.Data.id))
             {
                 var newUnitInstance = new UnitInstance(initialUnit.Data);
                 RegisterUnit(newUnitInstance, false);
@@ -165,7 +162,7 @@ public class UnitInstanceService : GURUService
 
             foreach (var unitData in unitsData)
             {
-                var unit = units.Find(u => u.Id == unitData.Id);
+                var unit = units.Find(u => u.Id == unitData.id);
                 if (unit == null) continue;
 
                 foreach (var friendId in unitData.friends ?? new List<string>())
@@ -215,10 +212,12 @@ public class UnitInstanceService : GURUService
         var displayName = GenerateDisplayName(newUnit.Id);
         var data = new UnitData
         {
-            Species = newUnit,
-            DisplayName = displayName,
-            Element = newElement,
-            ColorPalette = matchingColorPalette
+            name = newUnit.Id,
+            displayName = displayName,
+            element = newElement,
+            job = null,
+            species = newUnit,
+            colorPalette = matchingColorPalette
         };
 
         var newUnitInstance = new UnitInstance(data);
@@ -256,7 +255,7 @@ public class UnitInstanceService : GURUService
     public UnitInstance CopyUnit(UnitInstance instance, bool saveData = true)
     {
         var data = instance.Data;
-        data.Id = null; // Generate new Id for copy
+        data.id = null; // Generate new Id for copy
         var copiedUnit = new UnitInstance(data);
 
         var skills = new List<SkillInstance>();
@@ -427,29 +426,7 @@ public class UnitInstanceService : GURUService
         }
         if (localData.JsonFile == null) localData.Initialize();
 
-        var unitsData = units.Select(unit => new UnitData
-        {
-            Id = unit.Id,
-            name = unit.Species.Id,
-            displayName = unit.DisplayName,
-            friendshipLevel = unit.FriendshipLevel,
-            friendshipXP = unit.FriendshipXP,
-            element = unit.Element.ToString().ToLower(),
-            job = unit.Job?.Id.ToString().ToLower() ?? "none",
-            friends = unit.Friends.Where(f => f != null && f.Id != null).Select(f => f.Id).ToList(),
-            interactions = unit.Moments.Where(m => m.Interaction != null).Select(m => new UnitData.InteractionData
-            {
-                id = m.Interaction.Id,
-                isComplete = m.IsComplete
-            }).ToList(),
-            skills = unit.Skills.Select(kvp => new UnitData.SkillData
-            {
-                id = kvp.Key.Id,
-                level = kvp.Value.Level,
-                xp = kvp.Value.XP
-            }).ToList()
-        }).ToList();
-
+        var unitsData = units.Select(unit => unit.Data).ToList();
         var json = JsonConvert.SerializeObject(unitsData);
         localData.SaveData(UNIT_KEY, JToken.Parse(json));
     }

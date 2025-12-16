@@ -1,31 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Events;
 
 [Serializable]
 public class UnitData
 {
-    public string Id;
-    public string DisplayName;
-    public UnitSpecies Species;
-    public float FriendshipXP;
-    public int FriendshipLevel;
-    public Element Element;
-    public Job Job;
-    public ColorPalette ColorPalette;
-    public string Scene;
-
-    // For JSON serialization
+    public string id;
     public string name;
     public string displayName;
-    public float friendshipXP;
+
+    [JsonConverter(typeof(GURUConverter))] public UnitSpecies species;
+    [JsonConverter(typeof(GURUConverter))] public Job job;
+    public Element element;
+    [JsonConverter(typeof(GURUConverter))] public ColorPalette colorPalette;
     public int friendshipLevel;
-    public string element;
-    public string job;
+    public float friendshipXP;
     public List<string> friends;
     public List<InteractionData> interactions;
     public List<SkillData> skills;
+
+    public string scene;
 
     [Serializable]
     public class SkillData
@@ -57,15 +53,15 @@ public class UnitInstance
     [SerializeField] private List<UnitMoment> moments;
 
     public UnitData Data => data;
-    public string Id => data.Id;
-    public string DisplayName => data.DisplayName;
-    public UnitSpecies Species => data.Species;
-    public Element Element => data.Element;
-    public Job Job => data.Job;
-    public ColorPalette ColorPalette => data.ColorPalette;
+    public string Id => data.id;
+    public string DisplayName => data.displayName;
+    public UnitSpecies Species => data.species;
+    public Element Element => data.element;
+    public Job Job => data.job;
+    public ColorPalette ColorPalette => data.colorPalette;
 
-    public int FriendshipLevel => SkillInstance.GetLevelFromXP(data.FriendshipXP);
-    public float FriendshipXP => data.FriendshipXP;
+    public int FriendshipLevel => SkillInstance.GetLevelFromXP(data.friendshipXP);
+    public float FriendshipXP => data.friendshipXP;
     public bool IsFriends => FriendshipLevel > 1;
 
     public List<UnitInstance> Friends => friends;
@@ -78,7 +74,7 @@ public class UnitInstance
     public UnitInstance(UnitData data)
     {
         var initData = data;
-        if (string.IsNullOrEmpty(initData.Id)) initData.Id = GenerateMongoLikeId();
+        if (string.IsNullOrEmpty(initData.id)) initData.id = GenerateMongoLikeId();
         this.data = initData;
         friends = new List<UnitInstance>();
         moments = new List<UnitMoment>();
