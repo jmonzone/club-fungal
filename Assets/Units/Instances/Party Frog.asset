@@ -16,16 +16,16 @@ MonoBehaviour:
     id: party frog
     name: party frog
     displayName: Party Frog
+    species: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
+    job: {fileID: 0}
+    element: 0
+    colorPalette: {fileID: 11400000, guid: 3489c52b81a94463aaa5e67d4ebd81b4, type: 2}
+    scene: 
     friendshipLevel: 0
     friendshipXP: 0
     friends: []
     interactions: []
     skills: []
-    species: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
-    job: {fileID: 0}
-    colorPalette: {fileID: 0}
-    element: 0
-    scene: 
   moments:
   - interaction: {fileID: 11400000, guid: 0740db2fd21f44859941442e25af726b, type: 2}
     isComplete: 0

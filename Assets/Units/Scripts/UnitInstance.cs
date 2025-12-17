@@ -10,18 +10,16 @@ public class UnitData
     public string id;
     public string name;
     public string displayName;
-
     [JsonConverter(typeof(GURUConverter))] public UnitSpecies species;
     [JsonConverter(typeof(GURUConverter))] public Job job;
     public Element element;
     [JsonConverter(typeof(GURUConverter))] public ColorPalette colorPalette;
+    public string scene;
     public int friendshipLevel;
     public float friendshipXP;
     public List<string> friends;
     public List<InteractionData> interactions;
     public List<SkillData> skills;
-
-    public string scene;
 
     [Serializable]
     public class SkillData
