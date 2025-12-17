@@ -83,3 +83,7 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]ecrets/
 Assets/.DS_Store
 .DS_Store
+
+# Ignore PolygonNightclubs import
+Assets/Imports/PolygonNightclubs/
+Assets/Imports/PolygonNightclubs.meta
