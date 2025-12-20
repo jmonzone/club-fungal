@@ -23643,17 +23643,17 @@ PrefabInstance:
     - target: {fileID: 1248008441582008258, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -12.833334
+      value: -20.333334
       objectReference: {fileID: 0}
     - target: {fileID: 1248008441582008258, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -14.941336
+      value: 0.018234253
       objectReference: {fileID: 0}
     - target: {fileID: 1248008441582008258, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 11.438557
+      value: 19.068151
       objectReference: {fileID: 0}
     - target: {fileID: 1248008441582008258, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
@@ -54515,6 +54515,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 547045888}
+  - component: {fileID: 547045889}
   m_Layer: 0
   m_Name: Floor
   m_TagString: Untagged
@@ -54786,6 +54787,38 @@ Transform:
   - {fileID: 351618299}
   m_Father: {fileID: 2140492456}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &547045889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 547045887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshSurface
+  m_SerializedVersion: 0
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.083333336
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: 310436d7a656e445bafa5c6138ed6b3c, type: 2}
+  m_BuildHeightMesh: 0
 --- !u!4 &547703252 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2118712718671841385, guid: d37a9a1126d2c9945a42a5ebde37bf22,
@@ -57934,17 +57967,17 @@ PrefabInstance:
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -18.108831
+      value: -29.20461
       objectReference: {fileID: 0}
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.046315424
+      value: 0.018234253
       objectReference: {fileID: 0}
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 30.708338
+      value: 30.583334
       objectReference: {fileID: 0}
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
@@ -204188,7 +204221,7 @@ Transform:
   m_GameObject: {fileID: 304056670036744325}
   serializedVersion: 2
   m_LocalRotation: {x: 0.25881913, y: 0, z: 0, w: 0.9659259}
-  m_LocalPosition: {x: -12.833334, y: -9.941335, z: 2.7783031}
+  m_LocalPosition: {x: -20.333334, y: 5.018235, z: 10.407898}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
