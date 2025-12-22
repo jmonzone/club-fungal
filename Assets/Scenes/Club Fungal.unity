@@ -23643,17 +23643,17 @@ PrefabInstance:
     - target: {fileID: 1248008441582008258, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -20.333334
+      value: -0.7778168
       objectReference: {fileID: 0}
     - target: {fileID: 1248008441582008258, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.018234253
+      value: 0.024999987
       objectReference: {fileID: 0}
     - target: {fileID: 1248008441582008258, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 19.068151
+      value: -3.889087
       objectReference: {fileID: 0}
     - target: {fileID: 1248008441582008258, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
@@ -48359,6 +48359,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 58b2872ef0b34d74ca35c7665c84e25d, type: 3}
+--- !u!4 &460259363 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1647962025224334118, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
+    type: 3}
+  m_PrefabInstance: {fileID: 238095781}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &461420042 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2311200878719755109, guid: 380cb0ac827ecfe40929a223ac35687a,
@@ -57967,17 +57973,17 @@ PrefabInstance:
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -29.20461
+      value: -1.6263454
       objectReference: {fileID: 0}
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.018234253
+      value: 0.024999987
       objectReference: {fileID: 0}
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 30.583334
+      value: 1.343503
       objectReference: {fileID: 0}
     - target: {fileID: 1460368080851433977, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
@@ -67803,7 +67809,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd616dca532cd46d091b3997dcf8a2b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  target: {fileID: 460259363}
   vCam: {fileID: 1446848726}
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   followComponent: {fileID: 0}
@@ -193403,8 +193409,8 @@ RectTransform:
   - {fileID: 180397760}
   m_Father: {fileID: 959773196}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.008547009, y: 0.044233806}
-  m_AnchorMax: {x: 0.991453, y: 0.94036335}
+  m_AnchorMin: {x: 0.016806724, y: 0.007022472}
+  m_AnchorMax: {x: 0.9831933, y: 0.9929775}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -194999,7 +195005,7 @@ PrefabInstance:
     - target: {fileID: 2526129002911352718, guid: b5a65936c7fe74e3ca085c517af15846,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -24.56
+      value: 0.00000047683716
       objectReference: {fileID: 0}
     - target: {fileID: 2526129002911352718, guid: b5a65936c7fe74e3ca085c517af15846,
         type: 3}
@@ -195009,7 +195015,7 @@ PrefabInstance:
     - target: {fileID: 2526129002911352718, guid: b5a65936c7fe74e3ca085c517af15846,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 7.03
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2526129002911352718, guid: b5a65936c7fe74e3ca085c517af15846,
         type: 3}
@@ -204221,7 +204227,7 @@ Transform:
   m_GameObject: {fileID: 304056670036744325}
   serializedVersion: 2
   m_LocalRotation: {x: 0.25881913, y: 0, z: 0, w: 0.9659259}
-  m_LocalPosition: {x: -20.333334, y: 5.018235, z: 10.407898}
+  m_LocalPosition: {x: -0.7778168, y: 5.025001, z: -12.54934}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
