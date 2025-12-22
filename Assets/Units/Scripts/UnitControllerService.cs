@@ -29,13 +29,6 @@ public class UnitControllerService : GURUService
     public override void OnSceneLoaded()
     {
         InitializeControllers();
-    }
-
-    private void InitializeControllers()
-    {
-        unitControllers = new List<UnitController>();
-        UnitController[] controllers = FindObjectsByType<UnitController>(FindObjectsSortMode.None);
-        unitControllers.AddRange(controllers);
 
         var instancesById = unitInstanceService.Instances.ToDictionary(instance => instance.Id);
 
@@ -46,6 +39,13 @@ public class UnitControllerService : GURUService
         {
             SpawnMissingControllers(instancesById);
         }
+    }
+
+    private void InitializeControllers()
+    {
+        unitControllers = new List<UnitController>();
+        UnitController[] controllers = FindObjectsByType<UnitController>(FindObjectsSortMode.None);
+        unitControllers.AddRange(controllers);
     }
 
     private void InitializeExistingControllers(Dictionary<string, UnitInstance> instancesById)

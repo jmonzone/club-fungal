@@ -16,7 +16,7 @@ public class SnapshotService : GURUService
     protected override void OnInitialize()
     {
         Application.quitting += SaveSnapshot;
-        LoadSnapshot();
+        // LoadSnapshot();
     }
 
     public override void OnSceneLoaded()
