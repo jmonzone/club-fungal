@@ -37,6 +37,7 @@ public class UnitInstanceService : GURUService
         return colorPalettes.Find(p => p?.Element == element);
     }
 
+#if UNITY_EDITOR
     private void OnValidate()
     {
         initialUnits = AssetDatabase.FindAssets("t:UnitTemplate")
@@ -47,6 +48,7 @@ public class UnitInstanceService : GURUService
             .Select(guid => AssetDatabase.LoadAssetAtPath<UnitSpecies>(AssetDatabase.GUIDToAssetPath(guid)))
             .ToList();
     }
+#endif
 
     protected override void OnInitialize()
     {
