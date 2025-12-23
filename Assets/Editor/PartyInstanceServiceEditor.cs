@@ -17,6 +17,6 @@ public class PartyInstanceServiceEditor : GURUEditor
     {
         PartyInstanceService service = (PartyInstanceService)target;
 
-        UnitListDrawer.DrawList(service.PartyInstances);
+        // UnitListDrawer.DrawList(service.PartyInstances);
     }
 }

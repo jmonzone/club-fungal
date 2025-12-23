@@ -10,7 +10,7 @@ public class PartyControllerServiceEditor : GURUEditor
     {
         Debug.Log("Drawing PartyControllerServiceEditor content.");
         PartyControllerService service = (PartyControllerService)target;
-        UnitListDrawer.DrawList(service.PartyControllers.Select(controller => controller.Instance));
+        // UnitListDrawer.DrawList(service.PartyControllers.Select(controller => controller.Instance));
     }
 
     protected override string Description =>

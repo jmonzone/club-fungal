@@ -16,6 +16,10 @@ public class GURUInitializer
         {
             InitializeSystems();
         }
+        // else if (state == PlayModeStateChange.EnteredPlayMode)
+        // {
+        //     InitializeSystems();
+        // }
     }
 
     public static void InitializeSystems()

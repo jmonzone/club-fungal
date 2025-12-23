@@ -22,8 +22,11 @@ public class GURUEditor : Editor
 
     public override void OnInspectorGUI()
     {
+        // GURUStyler.DrawGuruSection(() => DrawContent(), Description, target);
+
+        // EditorGUILayout.Space(10);
+
         DrawDefaultInspector();
-        GURUStyler.DrawGuruSection(() => DrawContent(), Description, target);
     }
 
     protected virtual void DrawContent()

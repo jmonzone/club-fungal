@@ -16,6 +16,7 @@ MonoBehaviour:
   initialUnits:
   - {fileID: 11400000, guid: 9f94c43fcb7de4716af0753df9bbdbb3, type: 2}
   - {fileID: 11400000, guid: 1c13d7c1ade7f486ca3ed346a8a49b51, type: 2}
+  - {fileID: 11400000, guid: b3a34daed756d4fbb83a6c4958dc5588, type: 2}
   - {fileID: 11400000, guid: 6457afa495a7344de88409e5f7c817be, type: 2}
   playerUnit: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
   speciesCollection:
@@ -46,39 +47,3887 @@ MonoBehaviour:
   units:
   - template: {fileID: 11400000, guid: 9f94c43fcb7de4716af0753df9bbdbb3, type: 2}
     data:
-      Id: party frog
-      DisplayName: Party Frog
-      Species: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
-      FriendshipXP: 0
-      Element: 0
-      Job: {fileID: 0}
-      ColorPalette: {fileID: 0}
+      id: party frog
+      name: party frog
+      displayName: Party Frog
+      species: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
+      job: {fileID: 0}
+      element: 0
+      colorPalette: {fileID: 11400000, guid: 3489c52b81a94463aaa5e67d4ebd81b4, type: 2}
+      scene: 
+      friendshipLevel: 0
+      friendshipXP: 0
+      friends: []
+      interactions: []
+      skills: []
     skills: []
     friends: []
     moments:
     - interaction: {fileID: 11400000, guid: 0740db2fd21f44859941442e25af726b, type: 2}
       isComplete: 0
-  - template: {fileID: 11400000, guid: 1c13d7c1ade7f486ca3ed346a8a49b51, type: 2}
+  - template: {fileID: 0}
     data:
-      Id: player
-      DisplayName: Player
-      Species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
-      FriendshipXP: 0
-      Element: 0
-      Job: {fileID: 0}
-      ColorPalette: {fileID: 0}
-    skills: []
+      id: player
+      name: player
+      displayName: Player
+      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
+      job: {fileID: 0}
+      element: 0
+      colorPalette: {fileID: 0}
+      scene: 
+      friendshipLevel: 0
+      friendshipXP: 0
+      friends: []
+      interactions: []
+      skills: []
+    skills:
+    - unit:
+        template: {fileID: 0}
+        data:
+          id: player
+          name: player
+          displayName: Player
+          species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
+          job: {fileID: 0}
+          element: 0
+          colorPalette: {fileID: 0}
+          scene: 
+          friendshipLevel: 0
+          friendshipXP: 0
+          friends: []
+          interactions: []
+          skills: []
+        skills:
+        - unit:
+            template: {fileID: 0}
+            data:
+              id: player
+              name: player
+              displayName: Player
+              species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                type: 2}
+              job: {fileID: 0}
+              element: 0
+              colorPalette: {fileID: 0}
+              scene: 
+              friendshipLevel: 0
+              friendshipXP: 0
+              friends: []
+              interactions: []
+              skills: []
+            skills:
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+              level: 1
+              xp: 0
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+              level: 1
+              xp: 0
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+              level: 1
+              xp: 0
+            friends: []
+            moments: []
+          skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+          level: 1
+          xp: 0
+        - unit:
+            template: {fileID: 0}
+            data:
+              id: player
+              name: player
+              displayName: Player
+              species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                type: 2}
+              job: {fileID: 0}
+              element: 0
+              colorPalette: {fileID: 0}
+              scene: 
+              friendshipLevel: 0
+              friendshipXP: 0
+              friends: []
+              interactions: []
+              skills: []
+            skills:
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+              level: 1
+              xp: 0
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+              level: 1
+              xp: 0
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+              level: 1
+              xp: 0
+            friends: []
+            moments: []
+          skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+          level: 1
+          xp: 0
+        - unit:
+            template: {fileID: 0}
+            data:
+              id: player
+              name: player
+              displayName: Player
+              species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                type: 2}
+              job: {fileID: 0}
+              element: 0
+              colorPalette: {fileID: 0}
+              scene: 
+              friendshipLevel: 0
+              friendshipXP: 0
+              friends: []
+              interactions: []
+              skills: []
+            skills:
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+              level: 1
+              xp: 0
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+              level: 1
+              xp: 0
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+              level: 1
+              xp: 0
+            friends: []
+            moments: []
+          skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+          level: 1
+          xp: 0
+        friends: []
+        moments: []
+      skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+      level: 1
+      xp: 0
+    - unit:
+        template: {fileID: 0}
+        data:
+          id: player
+          name: player
+          displayName: Player
+          species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
+          job: {fileID: 0}
+          element: 0
+          colorPalette: {fileID: 0}
+          scene: 
+          friendshipLevel: 0
+          friendshipXP: 0
+          friends: []
+          interactions: []
+          skills: []
+        skills:
+        - unit:
+            template: {fileID: 0}
+            data:
+              id: player
+              name: player
+              displayName: Player
+              species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                type: 2}
+              job: {fileID: 0}
+              element: 0
+              colorPalette: {fileID: 0}
+              scene: 
+              friendshipLevel: 0
+              friendshipXP: 0
+              friends: []
+              interactions: []
+              skills: []
+            skills:
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+              level: 1
+              xp: 0
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+              level: 1
+              xp: 0
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+              level: 1
+              xp: 0
+            friends: []
+            moments: []
+          skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+          level: 1
+          xp: 0
+        - unit:
+            template: {fileID: 0}
+            data:
+              id: player
+              name: player
+              displayName: Player
+              species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                type: 2}
+              job: {fileID: 0}
+              element: 0
+              colorPalette: {fileID: 0}
+              scene: 
+              friendshipLevel: 0
+              friendshipXP: 0
+              friends: []
+              interactions: []
+              skills: []
+            skills:
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+              level: 1
+              xp: 0
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+              level: 1
+              xp: 0
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+              level: 1
+              xp: 0
+            friends: []
+            moments: []
+          skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+          level: 1
+          xp: 0
+        - unit:
+            template: {fileID: 0}
+            data:
+              id: player
+              name: player
+              displayName: Player
+              species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                type: 2}
+              job: {fileID: 0}
+              element: 0
+              colorPalette: {fileID: 0}
+              scene: 
+              friendshipLevel: 0
+              friendshipXP: 0
+              friends: []
+              interactions: []
+              skills: []
+            skills:
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+              level: 1
+              xp: 0
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+              level: 1
+              xp: 0
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+              level: 1
+              xp: 0
+            friends: []
+            moments: []
+          skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+          level: 1
+          xp: 0
+        friends: []
+        moments: []
+      skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+      level: 1
+      xp: 0
+    - unit:
+        template: {fileID: 0}
+        data:
+          id: player
+          name: player
+          displayName: Player
+          species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
+          job: {fileID: 0}
+          element: 0
+          colorPalette: {fileID: 0}
+          scene: 
+          friendshipLevel: 0
+          friendshipXP: 0
+          friends: []
+          interactions: []
+          skills: []
+        skills:
+        - unit:
+            template: {fileID: 0}
+            data:
+              id: player
+              name: player
+              displayName: Player
+              species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                type: 2}
+              job: {fileID: 0}
+              element: 0
+              colorPalette: {fileID: 0}
+              scene: 
+              friendshipLevel: 0
+              friendshipXP: 0
+              friends: []
+              interactions: []
+              skills: []
+            skills:
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+              level: 1
+              xp: 0
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+              level: 1
+              xp: 0
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+              level: 1
+              xp: 0
+            friends: []
+            moments: []
+          skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+          level: 1
+          xp: 0
+        - unit:
+            template: {fileID: 0}
+            data:
+              id: player
+              name: player
+              displayName: Player
+              species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                type: 2}
+              job: {fileID: 0}
+              element: 0
+              colorPalette: {fileID: 0}
+              scene: 
+              friendshipLevel: 0
+              friendshipXP: 0
+              friends: []
+              interactions: []
+              skills: []
+            skills:
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+              level: 1
+              xp: 0
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+              level: 1
+              xp: 0
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+              level: 1
+              xp: 0
+            friends: []
+            moments: []
+          skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+          level: 1
+          xp: 0
+        - unit:
+            template: {fileID: 0}
+            data:
+              id: player
+              name: player
+              displayName: Player
+              species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                type: 2}
+              job: {fileID: 0}
+              element: 0
+              colorPalette: {fileID: 0}
+              scene: 
+              friendshipLevel: 0
+              friendshipXP: 0
+              friends: []
+              interactions: []
+              skills: []
+            skills:
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+              level: 1
+              xp: 0
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+              level: 1
+              xp: 0
+            - unit:
+                template: {fileID: 0}
+                data:
+                  id: player
+                  name: player
+                  displayName: Player
+                  species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                    type: 2}
+                  job: {fileID: 0}
+                  element: 0
+                  colorPalette: {fileID: 0}
+                  scene: 
+                  friendshipLevel: 0
+                  friendshipXP: 0
+                  friends: []
+                  interactions: []
+                  skills: []
+                skills:
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                - unit:
+                    template: {fileID: 0}
+                    data:
+                      id: player
+                      name: player
+                      displayName: Player
+                      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477,
+                        type: 2}
+                      job: {fileID: 0}
+                      element: 0
+                      colorPalette: {fileID: 0}
+                      scene: 
+                      friendshipLevel: 0
+                      friendshipXP: 0
+                      friends: []
+                      interactions: []
+                      skills: []
+                    skills:
+                    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                        type: 2}
+                      level: 1
+                      xp: 0
+                    friends: []
+                    moments: []
+                  skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e,
+                    type: 2}
+                  level: 1
+                  xp: 0
+                friends: []
+                moments: []
+              skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+              level: 1
+              xp: 0
+            friends: []
+            moments: []
+          skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+          level: 1
+          xp: 0
+        friends: []
+        moments: []
+      skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+      level: 1
+      xp: 0
     friends: []
     moments: []
+  - template: {fileID: 11400000, guid: b3a34daed756d4fbb83a6c4958dc5588, type: 2}
+    data:
+      id: sporekeeper fox
+      name: sporekeeper fox
+      displayName: The Fox
+      species: {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
+      job: {fileID: 11400000, guid: e0ccc44be171f4a238e11d7e110c89cc, type: 2}
+      element: 0
+      colorPalette: {fileID: 11400000, guid: 28fd44a00cafe4888abe1427813e8334, type: 2}
+      scene: 
+      friendshipLevel: 0
+      friendshipXP: 0
+      friends: []
+      interactions: []
+      skills: []
+    skills: []
+    friends: []
+    moments:
+    - interaction: {fileID: 11400000, guid: 5aa5b33e58c2149b9ae9267050d6e3ac, type: 2}
+      isComplete: 0
   - template: {fileID: 11400000, guid: 6457afa495a7344de88409e5f7c817be, type: 2}
     data:
-      Id: the tree
-      DisplayName: Tree
-      Species: {fileID: 11400000, guid: 95347a15aaf7f4b40b23e8fdfbd3a26f, type: 2}
-      FriendshipXP: 0
-      Element: 0
-      Job: {fileID: 0}
-      ColorPalette: {fileID: 0}
+      id: the tree
+      name: the tree
+      displayName: The Tree
+      species: {fileID: 11400000, guid: 95347a15aaf7f4b40b23e8fdfbd3a26f, type: 2}
+      job: {fileID: 0}
+      element: 0
+      colorPalette: {fileID: 0}
+      scene: 
+      friendshipLevel: 0
+      friendshipXP: 0
+      friends: []
+      interactions: []
+      skills: []
     skills: []
     friends: []
     moments: []

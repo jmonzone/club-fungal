@@ -37,19 +37,6 @@ public class UnitInstanceService : GURUService
         return colorPalettes.Find(p => p?.Element == element);
     }
 
-#if UNITY_EDITOR
-    private void OnValidate()
-    {
-        initialUnits = AssetDatabase.FindAssets("t:UnitTemplate")
-            .Select(guid => AssetDatabase.LoadAssetAtPath<UnitTemplate>(AssetDatabase.GUIDToAssetPath(guid)))
-            .ToList();
-
-        speciesCollection = AssetDatabase.FindAssets("t:UnitSpecies")
-            .Select(guid => AssetDatabase.LoadAssetAtPath<UnitSpecies>(AssetDatabase.GUIDToAssetPath(guid)))
-            .ToList();
-    }
-#endif
-
     protected override void OnInitialize()
     {
         Debug.Log("Initializing UnitInstanceService");
@@ -86,7 +73,7 @@ public class UnitInstanceService : GURUService
 
                 var unitInstance = new UnitInstance(unitData);
 
-                Debug.Log($"Loading UnitInstance for '{unitData.displayName}' (ID: {unitData.id})");
+                // Debug.Log($"Loading UnitInstance for '{unitData.displayName}' (ID: {unitData.id})");
 
                 var skills = new List<SkillInstance>();
                 var skillSaveDict = unitData.skills?.ToDictionary(s => s.id, s => s) ?? new Dictionary<string, UnitData.SkillData>();

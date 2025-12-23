@@ -23,26 +23,29 @@ public class UnitControllerService : GURUService
 
     protected override void OnInitialize()
     {
+        // Debug.Log("UnitControllerService Initialized.");
         InitializeControllers();
     }
 
     public override void OnSceneLoaded()
     {
+        // Debug.Log("UnitControllerService Scene Loaded.");
         InitializeControllers();
 
         var instancesById = unitInstanceService.Instances.ToDictionary(instance => instance.Id);
 
         InitializeExistingControllers(instancesById);
 
-        var sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
-        if (sceneName == "Gameplay" || sceneName == "Club Fungal")
-        {
-            SpawnMissingControllers(instancesById);
-        }
+        // var sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        // if (sceneName == "Gameplay" || sceneName == "Club Fungal")
+        // {
+        //     SpawnMissingControllers(instancesById);
+        // }
     }
 
     private void InitializeControllers()
     {
+        Debug.Log("Initializing UnitControllers in scene...");
         unitControllers = new List<UnitController>();
         UnitController[] controllers = FindObjectsByType<UnitController>(FindObjectsSortMode.None);
         unitControllers.AddRange(controllers);

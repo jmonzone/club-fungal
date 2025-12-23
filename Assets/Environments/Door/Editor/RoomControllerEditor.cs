@@ -70,7 +70,7 @@ public class RoomControllerEditor : GURUEditor
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         EditorGUILayout.Space(5);
 
-        UnitListDrawer.DrawList(roomController.Units.Select(u => u.Instance));
+        // UnitListDrawer.DrawList(roomController.Units.Select(u => u.Instance));
 
         EditorGUILayout.Space(15);
 

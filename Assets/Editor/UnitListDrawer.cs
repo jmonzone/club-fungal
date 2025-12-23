@@ -36,6 +36,23 @@ public class ViewInstanceAction : UnitDrawerItemAction
     }
 }
 
+public class CreateControllerAction : UnitDrawerItemAction
+{
+    public CreateControllerAction(UnitInstance unitInstance, UnitControllerService service)
+    {
+        text = "Create Controller";
+        emoji = "➕";
+        action = () =>
+        {
+            Debug.Log($"Spawning controller for unit instance '{unitInstance.Id}'");
+            var controller = service.SpawnUnit(unitInstance, Vector3.zero, null);
+            Selection.objects = new UnityEngine.Object[] { controller.gameObject };
+            EditorGUIUtility.PingObject(controller.gameObject);
+        };
+        condition = () => service.Controllers.All(c => c.Instance != unitInstance);
+    }
+}
+
 public class ViewGameObjectAction : UnitDrawerItemAction
 {
     public ViewGameObjectAction(UnitController controller)
@@ -133,16 +150,22 @@ public class ActivityDisplay : UnitDrawerDisplayItem
 
 public abstract class UnitListDrawer
 {
-    public static void DrawList(IEnumerable<UnitInstance> instances)
+    public static void DrawList(IEnumerable<UnitController> controllers, UnitControllerService unitControllerService)
+    {
+        DrawList(controllers.Select(controller => controller.Instance), unitControllerService);
+    }
+
+    public static void DrawList(IEnumerable<UnitInstance> instances, UnitControllerService unitControllerService)
     {
         instances = instances
         .Where(instance => instance != null)
         .OrderBy(i => i.Id);
 
-        // Load services once outside the loop for efficiency
-        var unitInstanceService = Resources.FindObjectsOfTypeAll<UnitInstanceService>().FirstOrDefault();
-        var partyInstanceService = Resources.FindObjectsOfTypeAll<PartyInstanceService>().FirstOrDefault();
-        var unitControllerService = Resources.FindObjectsOfTypeAll<UnitControllerService>().FirstOrDefault();
+        // Load services using GURUStyler - consistent with GURUWindow approach
+        var unitInstanceService = GURUStyler.LoadAsset<UnitInstanceService>("UnitInstanceService");
+        var partyInstanceService = GURUStyler.LoadAsset<PartyInstanceService>("PartyInstanceService");
+
+        unitControllerService.Controllers.RemoveAll(c => c == null || c.gameObject == null);
 
         // Predefine styles outside the loop
         GUIStyle jobStyle = new GUIStyle(EditorStyles.miniLabel) { fontStyle = FontStyle.Italic, normal = { textColor = new Color(0.5f, 0.5f, 0.5f) } };
@@ -159,11 +182,9 @@ public abstract class UnitListDrawer
 
                 var initialUnit = unitInstanceService?.InitialUnits.Find(instance => instance.Data.id == unitInstance.Id);
 
+                // Find controller by comparing IDs directly (string comparison)
+                // Filter out destroyed controllers and match by instance ID
                 var controller = unitControllerService?.Controllers.Find(c => c.Instance != null && c.Instance.Id == unitInstance.Id);
-
-
-                if (controller == null && SceneManager.GetActiveScene().name == "Gameplay")
-                    throw new Exception("Controller is missing - reset game");
 
                 bool isSelected = controller != null && Selection.activeGameObject == controller.gameObject;
                 bool isInitial = initialUnit != null;
@@ -177,7 +198,7 @@ public abstract class UnitListDrawer
 
                 var behaviour = isSelected ? (controller?.CurrentBehaviour?.GetType().Name ?? "None") : null;
                 var interaction = isSelected ? (controller?.CurrentInteraction?.name ?? "None") : null;
-                var activityUnit = controller?.GetComponent<ActivityUnit>();
+                var activityUnit = controller != null ? controller.GetComponent<ActivityUnit>() : null;
                 var activity = activityUnit?.Activity;
 
                 // Create action lists
@@ -190,6 +211,7 @@ public abstract class UnitListDrawer
 
                 var shortcuts = new List<UnitDrawerItemAction>
                 {
+                    new CreateControllerAction(unitInstance, unitControllerService),
                     new ViewGameObjectAction(controller),
                     new DeleteInstanceAction(unitInstance, controller, initialUnit != null)
                 };
@@ -207,7 +229,7 @@ public abstract class UnitListDrawer
             }
             catch (Exception ex)
             {
-                EditorGUILayout.HelpBox($"Error drawing unit {unitInstance?.Id ?? "unknown"}: {ex.Message}", MessageType.Error);
+                EditorGUILayout.HelpBox($"Error drawing unit {unitInstance?.Id ?? "unknown"}: {ex.Message}\n{ex.StackTrace}", MessageType.Error);
             }
         }
     }

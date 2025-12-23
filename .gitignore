@@ -84,6 +84,11 @@ crashlytics-build.properties
 Assets/.DS_Store
 .DS_Store
 
-# Ignore PolygonNightclubs import
+# Ignore imports
 Assets/Imports/PolygonNightclubs/
 Assets/Imports/PolygonNightclubs.meta
+Assets/Imports/PolygonIcons/
+Assets/Imports/PolygonIcons.meta
+Assets/Imports/PolygonIcons/
+Assets/Imports/Synty/
+Assets/Imports/Synty.meta

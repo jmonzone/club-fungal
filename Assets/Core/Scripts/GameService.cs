@@ -8,7 +8,14 @@ public class GameService : GURUService
     public bool useOuterWalls = false;
     public bool selectRoomOnTransition = true;
 
-    [Header("Services")]
+    [Header("Core Services")]
+    [SerializeField] private UnitInstanceService unitInstanceService;
+    [SerializeField] private UnitControllerService unitControllerService;
+
+    public UnitInstanceService UnitInstanceService => unitInstanceService;
+    public UnitControllerService UnitControllerService => unitControllerService;
+
+    [Header("Other Services")]
     [SerializeField] private LocalData localData;
     [SerializeField] private BuildReference build;
     [SerializeField] private InventoryReference inventory;
@@ -34,13 +41,24 @@ public class GameService : GURUService
 
     public void InitializeSystems()
     {
-        // Debug.Log("Initializing Game Systems...");
+        Debug.Log("Initializing Game Systems...");
         localData.Initialize();
         inventory.Initialize();
         build.Initialize();
 
-        foreach (var service in services)
+        var servicesToInitialize = new List<GURUService>()
         {
+            unitInstanceService,
+            unitControllerService,
+        };
+
+        servicesToInitialize.AddRange(services);
+
+        // Debug.Log($"Initializing {servicesToInitialize.Count} services...");
+
+        foreach (var service in servicesToInitialize)
+        {
+            // Debug.Log($"Initializing service: {service.name}");
             service.Initialize();
         }
 

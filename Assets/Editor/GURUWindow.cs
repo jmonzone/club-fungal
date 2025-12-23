@@ -16,9 +16,11 @@ public class GURUWindow : EditorWindow
     private bool selectUnitOnMeshClick = true;
     private Editor currentEditor;
     private GameObject previousSelectedUnit;
+    private MonoScript thisScript;
 
     void OnEnable()
     {
+        thisScript = MonoScript.FromScriptableObject(this);
         gameService = GURUStyler.LoadAsset<GameService>("GameService");
         unitInstanceService = GURUStyler.LoadAsset<UnitInstanceService>("UnitInstanceService");
         Selection.selectionChanged += Repaint;
@@ -81,17 +83,24 @@ public class GURUWindow : EditorWindow
         EditorGUILayout.BeginVertical(EditorStyles.helpBox);
         GUI.backgroundColor = Color.white;
 
-
         scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
-        // var headerText = "GURU";
-        // EditorGUILayout.LabelField(headerText, GURUStyler.LogoStyle);
-        // EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        // Header
+        var headerText = "🍄 GURU of The Fungal Network";
+        var headerStyle = new GUIStyle(GURUStyler.LogoStyle) { fontSize = 20 };
+        EditorGUILayout.LabelField(headerText, headerStyle, GUILayout.Height(64));
 
-        var helpText = "GURU provides Game Utilities & Resources for Unity by providing a custom editor experience to manage game data and services.";
-        EditorGUILayout.HelpBox(helpText, MessageType.Info);
+        // Script field
+        EditorGUI.BeginDisabledGroup(true);
+        EditorGUILayout.ObjectField("Script", thisScript, typeof(MonoScript), false);
+        EditorGUI.EndDisabledGroup();
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
-        EditorGUILayout.Space(15);
+        EditorGUILayout.Space(10);
+
+        // var helpText = "GURU provides Game Utilities & Resources for Unity by providing a custom editor experience to manage game data and services.";
+        // EditorGUILayout.HelpBox(helpText, MessageType.Info);
+        // EditorGUILayout.Space(15);
 
         if (Selection.activeObject is DialogueInteraction dialogue)
         {
@@ -127,7 +136,7 @@ public class GURUWindow : EditorWindow
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.LabelField(activity.name, EditorStyles.boldLabel);
-            UnitListDrawer.DrawList(activity.Units.Select(unit => unit?.Controller?.Instance));
+            UnitListDrawer.DrawList(activity.Units.Select(unit => unit?.Controller?.Instance), gameService.UnitControllerService);
         }
         else
         {
@@ -143,7 +152,10 @@ public class GURUWindow : EditorWindow
                 DestroyImmediate(currentEditor);
                 currentEditor = null;
             }
-            UnitListDrawer.DrawList(unitInstanceService.Instances);
+
+            EditorGUILayout.LabelField("Units", EditorStyles.boldLabel);
+            // UnitListDrawer.DrawList(unitControllerService.Instances.Select(instance => instance));
+            UnitListDrawer.DrawList(unitInstanceService.Instances, gameService.UnitControllerService);
         }
 
 

@@ -8,7 +8,7 @@ public class UnitControllerServiceEditor : GURUEditor
     protected override void DrawContent()
     {
         UnitControllerService service = (UnitControllerService)target;
-        UnitListDrawer.DrawList(service.Controllers.Select(controller => controller.Instance));
+        // UnitListDrawer.DrawList(service.Controllers.Select(controller => controller.Instance));
     }
 
     protected override string Description =>

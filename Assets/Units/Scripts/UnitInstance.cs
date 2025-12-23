@@ -125,4 +125,30 @@ public class UnitInstance
         return BitConverter.ToString(bytes).Replace("-", "").ToLower();
     }
 
+    public override bool Equals(object obj)
+    {
+        if (obj is UnitInstance other)
+        {
+            return Id == other.Id;
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return Id?.GetHashCode() ?? 0;
+    }
+
+    public static bool operator ==(UnitInstance left, UnitInstance right)
+    {
+        if (ReferenceEquals(left, null) && ReferenceEquals(right, null)) return true;
+        if (ReferenceEquals(left, null) || ReferenceEquals(right, null)) return false;
+        return left.Id == right.Id;
+    }
+
+    public static bool operator !=(UnitInstance left, UnitInstance right)
+    {
+        return !(left == right);
+    }
+
 }

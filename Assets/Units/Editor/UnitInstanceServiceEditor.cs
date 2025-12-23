@@ -47,6 +47,28 @@ public class UnitInstanceServiceEditor : GURUEditor
         return true;
     }
 
+    private void RefreshCollections()
+    {
+        var service = (UnitInstanceService)target;
+
+        var initialUnitsField = typeof(UnitInstanceService).GetField("initialUnits", BindingFlags.NonPublic | BindingFlags.Instance);
+        var speciesCollectionField = typeof(UnitInstanceService).GetField("speciesCollection", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        var initialUnits = AssetDatabase.FindAssets("t:UnitTemplate")
+            .Select(guid => AssetDatabase.LoadAssetAtPath<UnitTemplate>(AssetDatabase.GUIDToAssetPath(guid)))
+            .ToList();
+
+        var speciesCollection = AssetDatabase.FindAssets("t:UnitSpecies")
+            .Select(guid => AssetDatabase.LoadAssetAtPath<UnitSpecies>(AssetDatabase.GUIDToAssetPath(guid)))
+            .ToList();
+
+        initialUnitsField.SetValue(service, initialUnits);
+        speciesCollectionField.SetValue(service, speciesCollection);
+
+        Debug.Log($"Refreshed collections: {initialUnits.Count} unit templates, {speciesCollection.Count} species");
+        EditorUtility.SetDirty(service);
+    }
+
     private void DrawIconButton(string emoji, string text, System.Action action, GUIStyle style = null)
     {
         EditorGUILayout.BeginHorizontal();
@@ -77,8 +99,9 @@ public class UnitInstanceServiceEditor : GURUEditor
     {
         UnitInstanceService service = (UnitInstanceService)target;
 
-        UnitListDrawer.DrawList(service.Instances);
+        // UnitListDrawer.DrawList(service.Instances);
         EditorGUILayout.Space(10);
+        DrawIconButton("🔄", "Refresh Collections", RefreshCollections);
         DrawIconButton("🆕", "Generate A New Unit", () => { service.CreateUnit(unit => unit is QuirkySeriesUnitSpecies); EditorUtility.SetDirty(service); });
     }
 
