@@ -38,21 +38,11 @@ public class UnitDestination : MonoBehaviour
     {
         //Debug.Log("Setting destination");
         target = null;
-
-        // Sample the NavMesh to find the nearest valid position
-        if (NavMesh.SamplePosition(destination, out NavMeshHit hit, 5f, NavMesh.AllAreas))
-        {
-            this.destination = hit.position;
-        }
-        else
-        {
-            this.destination = destination;
-        }
-
+        this.destination = destination;
         navMeshAgent.enabled = true;
         navMeshAgent.isStopped = false;
         isAtDestination = false;
-        navMeshAgent.SetDestination(this.destination);
+        navMeshAgent.SetDestination(destination);
     }
 
     public void SetTarget(Transform target)
