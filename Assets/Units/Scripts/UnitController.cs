@@ -64,7 +64,7 @@ public class UnitController : MonoBehaviour, IInteractable
 
     protected virtual void Awake()
     {
-        targetLookPosition = transform.position;
+        targetLookPosition = transform.position + transform.forward;
 
         var allBehaviours = GetComponents<UnitBehaviour>();
         foreach (var behaviour in allBehaviours)
