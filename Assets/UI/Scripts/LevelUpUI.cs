@@ -35,14 +35,14 @@ public class LevelUpUI : MonoBehaviour
 
     private void PlayerActivityReference_OnLevelUp(ActivityUnit unit)
     {
-        levelText.text = unit.Skill.Level.ToString();
-        levelUpText.text = $"{unit.Name} Leveled Up! How Sweet\nWhat's your {unit.Skill.Label} level now?";
+        levelText.text = unit.PrimarySkill.Level.ToString();
+        levelUpText.text = $"{unit.Name} Leveled Up! How Sweet\nWhat's your {unit.PrimarySkill.Label} level now?";
 
-        var milestones = unit.Skill.Milestones;
+        var milestones = unit.PrimarySkill.Milestones;
         milestoneContainer.SetActive(milestones.Count > 0);
         if (milestones.Count > 0)
         {
-            var firstMilestone = unit.Skill.Milestones[0];
+            var firstMilestone = unit.PrimarySkill.Milestones[0];
             milestoneImage.sprite = firstMilestone.Sprite;
             milestoneName.text = firstMilestone.Label.ToString();
             milestoneDescription.text = firstMilestone.Description;

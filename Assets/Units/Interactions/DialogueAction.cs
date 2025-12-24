@@ -26,6 +26,12 @@ public class DialogueAction : InteractionAction
 
     private int currentIndex = 0;
 
+    public override void Initialize()
+    {
+        base.Initialize();
+        currentIndex = 0;
+    }
+
     public override void Execute(UnitController source, UnitController target, UnityAction onComplete)
     {
         if (currentIndex == 0)

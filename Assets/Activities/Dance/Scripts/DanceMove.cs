@@ -51,7 +51,7 @@ public class DanceMoveInstance : ScriptableObject
 
     public event UnityAction OnUpgrade;
 
-    public void Initialize(DanceMove data, SkillInstance skill)
+    public void Initialize(DanceMove data, SkillInstance skill, UnitInstance unit)
     {
         this.data = data;
         this.skill = skill;
@@ -64,7 +64,7 @@ public class DanceMoveInstance : ScriptableObject
             }
         }
 
-        skill.OnLevelUp += CheckForUpgrades;
+        skill.OnLevelUp += () => CheckForUpgrades(unit);
     }
 
     private void CheckForUpgrades(UnitInstance unit)

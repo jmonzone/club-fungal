@@ -45,15 +45,20 @@ public class UnitInstanceService : GURUService
         if (localData.JsonFile.ContainsKey(UNIT_KEY))
         {
             var unitsJson = localData.JsonFile[UNIT_KEY].ToString();
-            var unitsData = JsonConvert.DeserializeObject<List<UnitData>>(unitsJson);
+
+            var settings = new JsonSerializerSettings
+            {
+                Converters = new List<JsonConverter> { new UnitSpeciesConverter(speciesCollection) }
+            };
+
+            var unitsData = JsonConvert.DeserializeObject<List<UnitData>>(unitsJson, settings);
 
             foreach (var unitData in unitsData)
             {
-                var matchingUnit = speciesCollection.Find(u => u.Id == unitData.id);
-
-                if (matchingUnit == null)
+                // Species is now auto-resolved via UnitSpeciesConverter
+                if (unitData.species == null)
                 {
-                    Debug.LogWarning($"Unit '{unitData.name}' not found in game data.");
+                    Debug.LogError($"Species could not be resolved for unit '{unitData.name}'.");
                     continue;
                 }
 
@@ -66,14 +71,12 @@ public class UnitInstanceService : GURUService
                 }
 
                 // Assign runtime-only fields
-                unitData.species = matchingUnit;
                 unitData.job = matchingJob;
                 unitData.element = element;
                 unitData.colorPalette = GetColorPaletteByElement(element);
 
                 var unitInstance = new UnitInstance(unitData);
 
-                // Debug.Log($"Loading UnitInstance for '{unitData.displayName}' (ID: {unitData.id})");
 
                 var skills = new List<SkillInstance>();
                 var skillSaveDict = unitData.skills?.ToDictionary(s => s.id, s => s) ?? new Dictionary<string, UnitData.SkillData>();
@@ -109,39 +112,25 @@ public class UnitInstanceService : GURUService
 
                 unitInstance.InitializeSkills(skills);
 
-                var moments = new List<UnitMoment>();
-                foreach (var interactionData in unitData.interactions ?? new List<UnitData.InteractionData>())
-                {
-                    if (!string.IsNullOrEmpty(interactionData.id))
-                    {
-                        var matching = interactionCollection.Find(i => i.Id == interactionData.id);
-                        if (matching != null)
-                        {
-                            var moment = new UnitMoment(matching, interactionData.isComplete);
-                            moment.OnMomentComplete += () => SaveData();
-                            moments.Add(moment);
-                        }
-                        else
-                        {
-                            Debug.LogError($"Interaction '{interactionData.id}' not found in interactionCollection for unit '{unitData.name}'. This is because it has not been added to the UnitInstanceService, opening the asset automatically loads the interaciton to the collection. Do so and try again");
-                        }
-                    }
-                }
-                unitInstance.InitializeMoments(moments);
-
                 RegisterUnit(unitInstance, false);
+
+                // assign original template to compare momeents
+                var template = initialUnits.Find(unit => unit.Data.id == unitInstance.Id);
+                if (template != null) unitInstance.SetTemplate(template);
             }
         }
 
+
+        // adding initial units not already
         foreach (var initialUnit in initialUnits)
         {
-            if (!units.Any(u => u.Id == initialUnit.Data.id))
+            if (!units.Any(unit => unit.Id == initialUnit.Data.id))
             {
                 var newUnitInstance = new UnitInstance(initialUnit.Data);
                 RegisterUnit(newUnitInstance, false);
                 newUnitInstance.SetTemplate(initialUnit);
 
-                Debug.Log($"Registered initial unit '{newUnitInstance.DisplayName}' with ID '{newUnitInstance.Id}'");
+                // Debug.Log($"Registered initial unit '{newUnitInstance.DisplayName}' with ID '{newUnitInstance.Id}'");
             }
         }
 
@@ -161,9 +150,9 @@ public class UnitInstanceService : GURUService
                     if (string.IsNullOrEmpty(friendId)) continue;
 
                     var friendUnit = units.Find(u => u.Id == friendId);
-                    if (friendUnit != null && !unit.Friends.Contains(friendUnit))
+                    if (friendUnit != null && !unit.Friends.Contains(friendUnit.Id))
                     {
-                        unit.Friends.Add(friendUnit);
+                        unit.Friends.Add(friendUnit.Id);
                     }
                 }
             }
@@ -357,10 +346,11 @@ public class UnitInstanceService : GURUService
         }
         else
         {
-            var availableFriends = unit.Friends.Where(friend => !blacklist.Contains(friend)).ToList();
+            var availableFriends = unit.Friends.Where(friendId => !blacklist.Any(unit => unit.Id == friendId)).ToList();
             if (availableFriends.Count > 0)
             {
-                friend = availableFriends[UnityEngine.Random.Range(0, availableFriends.Count)];
+                var targetFriend = availableFriends[UnityEngine.Random.Range(0, availableFriends.Count)];
+                friend = units.Find(unit => unit.Id == targetFriend);
             }
         }
 
@@ -370,8 +360,8 @@ public class UnitInstanceService : GURUService
     public UnitInstance CreateNewFriend(UnitInstance unit)
     {
         var friend = CreateUnit();
-        unit.Friends.Add(friend);
-        friend.Friends.Add(unit);
+        unit.Friends.Add(friend.Id);
+        friend.Friends.Add(unit.Id);
         return friend;
     }
 
@@ -418,7 +408,14 @@ public class UnitInstanceService : GURUService
         if (localData.JsonFile == null) localData.Initialize();
 
         var unitsData = units.Select(unit => unit.Data).ToList();
-        var json = JsonConvert.SerializeObject(unitsData);
+
+        var settings = new JsonSerializerSettings
+        {
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            Converters = new List<JsonConverter> { new UnitSpeciesConverter(speciesCollection) }
+        };
+
+        var json = JsonConvert.SerializeObject(unitsData, settings);
         localData.SaveData(UNIT_KEY, JToken.Parse(json));
     }
 }

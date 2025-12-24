@@ -5,7 +5,6 @@ public class FriendManager : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private UnitControllerService unitControllerService;
-    [SerializeField] private Transform unitSpawnAnchor;
     [SerializeField] private TextAsset textAsset;
 
     [Header("Spawn Settings")]
@@ -13,9 +12,9 @@ public class FriendManager : MonoBehaviour
     [SerializeField] private AnimationCurve riseCurve;
     [SerializeField] private float riseDuration = 1f;
 
-    private Vector3 GetRandomSpawnPosition()
+    private Vector3 GetRandomSpawnPosition(Vector3 startPosition)
     {
-        var spawnPosition = unitSpawnAnchor.transform.position;
+        var spawnPosition = startPosition;
         var randomDirection = Random.insideUnitSphere;
         randomDirection.y = 0;
         spawnPosition += randomDirection * 2f;
@@ -41,7 +40,7 @@ public class FriendManager : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
 
-        var spawnPosition = GetRandomSpawnPosition();
+        var spawnPosition = GetRandomSpawnPosition(unit.transform.position);
 
         // Step 1: create portal
         var portal = Instantiate(portalPrefab, spawnPosition, Quaternion.identity);

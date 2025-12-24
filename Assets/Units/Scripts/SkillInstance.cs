@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -13,7 +14,6 @@ public interface IMilestone
 [Serializable]
 public class SkillInstance
 {
-    [SerializeField] protected UnitInstance unit;
     [SerializeField] protected Skill skill;
     [SerializeField] protected int level;
     [SerializeField] protected float xp;
@@ -25,22 +25,21 @@ public class SkillInstance
     public List<IMilestone> Milestones { get; private set; }
 
     public event UnityAction<float> OnXpChanged;
-    public event UnityAction<UnitInstance> OnLevelUp;
+    public event UnityAction OnLevelUp;
 
     public SkillInstance(UnitInstance unit, Skill skill, float xp)
     {
-        this.unit = unit;
         this.skill = skill;
         this.xp = xp;
         level = GetLevelFromXP(xp);
 
-        InitializeSkillSpecifics();
+        InitializeSkillSpecifics(unit);
     }
 
-    protected virtual void InitializeSkillSpecifics() { }
+    protected virtual void InitializeSkillSpecifics(UnitInstance unit) { }
 
-    protected virtual void OnLevelUpSkillSpecifics() { }
-    public void IncreaseSkillXP(float value)
+    protected virtual void OnLevelUpSkillSpecifics(UnitInstance unit) { }
+    public void IncreaseSkillXP(UnitInstance unit, float value)
     {
         //Debug.Log("increasing skill xp");
 
@@ -54,8 +53,8 @@ public class SkillInstance
         if (previousLevel != level)
         {
             Milestones = new List<IMilestone>();
-            OnLevelUpSkillSpecifics();
-            OnLevelUp?.Invoke(unit);
+            OnLevelUpSkillSpecifics(unit);
+            OnLevelUp?.Invoke();
         }
     }
 

@@ -19,6 +19,12 @@ public class DialogueInteraction : UnitInteraction
         this.target = target;
 
         currentActionIndex = 0;
+
+        foreach (var action in actions)
+        {
+            action.Initialize();
+        }
+
         ExecuteNext(onComplete);
     }
 
@@ -42,6 +48,11 @@ public class DialogueInteraction : UnitInteraction
 [Serializable]
 public abstract class InteractionAction
 {
+    public virtual void Initialize()
+    {
+
+    }
+
     public virtual string DisplayName
     {
         get

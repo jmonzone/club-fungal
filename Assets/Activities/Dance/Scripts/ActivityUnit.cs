@@ -28,8 +28,7 @@ public class ActivityUnit : MonoBehaviour
     public string Name => controller.Instance.Species.Id;
     public Sprite Sprite => controller.Instance.Species.Sprite;
     public Color Color => controller.Color;
-    public SkillInstance Skill => controller.Instance.Skills[activity.PrimarySkill];
-
+    public SkillInstance PrimarySkill => controller.Instance.Skills[activity.PrimarySkill];
     public event UnityAction<OnXpIncreasedEventArgs> OnXPIncreased;
 
     private void Awake()
@@ -62,7 +61,7 @@ public class ActivityUnit : MonoBehaviour
     public void IncreaseXP(float value, Vector3 sourcePosition)
     {
         //Debug.Log("ActivityUnit.IncreaseXP");
-        controller.Instance.Skills[activity.PrimarySkill].IncreaseSkillXP(value);
+        PrimarySkill.IncreaseSkillXP(controller.Instance, value);
         OnXPIncreased?.Invoke(new OnXpIncreasedEventArgs
         {
             Unit = this,

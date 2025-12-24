@@ -31,7 +31,7 @@ public class SkillLevelUI : MonoBehaviour
     public void SetUnit(ActivityUnit unit)
     {
         unitImage.sprite = unit.Sprite;
-        SetDisplayedXP(unit.Skill.XP);
+        SetDisplayedXP(unit.PrimarySkill.XP);
         SetColor(unit.Color);
     }
 

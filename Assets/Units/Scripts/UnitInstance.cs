@@ -10,7 +10,7 @@ public class UnitData
     public string id;
     public string name;
     public string displayName;
-    [JsonConverter(typeof(GURUConverter))] public UnitSpecies species;
+    public UnitSpecies species;
     [JsonConverter(typeof(GURUConverter))] public Job job;
     public Element element;
     [JsonConverter(typeof(GURUConverter))] public ColorPalette colorPalette;
@@ -47,7 +47,7 @@ public class UnitInstance
 
     public Dictionary<Skill, SkillInstance> Skills = new Dictionary<Skill, SkillInstance>();
 
-    [SerializeField] private List<UnitInstance> friends;
+    [SerializeField] private List<string> friends;
     [SerializeField] private List<UnitMoment> moments;
 
     public UnitData Data => data;
@@ -62,7 +62,7 @@ public class UnitInstance
     public float FriendshipXP => data.friendshipXP;
     public bool IsFriends => FriendshipLevel > 1;
 
-    public List<UnitInstance> Friends => friends;
+    public List<string> Friends => friends;
     public List<UnitMoment> Moments => moments;
 
     public UnitTemplate Template => template;
@@ -74,7 +74,7 @@ public class UnitInstance
         var initData = data;
         if (string.IsNullOrEmpty(initData.id)) initData.id = GenerateMongoLikeId();
         this.data = initData;
-        friends = new List<UnitInstance>();
+        friends = new List<string>();
         moments = new List<UnitMoment>();
     }
 

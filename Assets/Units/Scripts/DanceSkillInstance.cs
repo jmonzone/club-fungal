@@ -9,7 +9,7 @@ public class DanceSkillInstance : SkillInstance
 
     public DanceSkillInstance(UnitInstance unit, Skill skill, float xp) : base(unit, skill, xp) { }
 
-    protected override void InitializeSkillSpecifics()
+    protected override void InitializeSkillSpecifics(UnitInstance unit)
     {
         moves = new List<DanceMoveInstance>();
 
@@ -24,27 +24,27 @@ public class DanceSkillInstance : SkillInstance
         {
             if (level >= move.LevelRequirement)
             {
-                RegisterMove(move);
+                RegisterMove(move, unit);
             }
         }
     }
 
-    protected override void OnLevelUpSkillSpecifics()
+    protected override void OnLevelUpSkillSpecifics(UnitInstance unit)
     {
         foreach (var move in unit.Species.Moves)
         {
             if (move.LevelRequirement == level)
             {
-                RegisterMove(move);
+                RegisterMove(move, unit);
                 Milestones.Add(move);
             }
         }
     }
 
-    private void RegisterMove(DanceMove move)
+    private void RegisterMove(DanceMove move, UnitInstance unit)
     {
         var moveInstance = ScriptableObject.CreateInstance<DanceMoveInstance>();
-        moveInstance.Initialize(move, this);
+        moveInstance.Initialize(move, this, unit);
         moves.Add(moveInstance);
     }
 }

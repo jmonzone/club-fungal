@@ -16,14 +16,14 @@ MonoBehaviour:
     id: player
     name: player
     displayName: Player
+    species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
+    job: {fileID: 0}
+    element: 0
+    colorPalette: {fileID: 0}
+    scene: 
     friendshipLevel: 0
     friendshipXP: 0
     friends: []
     interactions: []
     skills: []
-    species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
-    job: {fileID: 0}
-    colorPalette: {fileID: 0}
-    element: 0
-    scene: 
   moments: []
