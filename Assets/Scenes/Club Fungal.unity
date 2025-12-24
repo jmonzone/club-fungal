@@ -32546,13 +32546,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshSurface
   m_SerializedVersion: 0
   m_AgentTypeID: 0
-  m_CollectObjects: 0
+  m_CollectObjects: 2
   m_Size: {x: 10, y: 10, z: 10}
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
     m_Bits: 507
-  m_UseGeometry: 0
+  m_UseGeometry: 1
   m_DefaultArea: 0
   m_GenerateLinks: 0
   m_IgnoreNavMeshAgent: 1
@@ -48894,7 +48894,6 @@ MonoBehaviour:
       friends: []
       interactions: []
       skills: []
-    skills: []
     friends: []
     moments: []
 --- !u!4 &450366893 stripped
@@ -65975,6 +65974,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1293110465}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &632315432 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8942836040533603822, guid: c07e8bf0416173440bdb4a929aea5a9e,
+    type: 3}
+  m_PrefabInstance: {fileID: 2084758913}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &632901619
 GameObject:
   m_ObjectHideFlags: 0
@@ -71649,7 +71654,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc61bde2749f14716ac429311ace94b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraZoomComponent
-  minDistance: 1
+  minDistance: 0
   maxDistance: 20
   zoomSpeed: 5
   zoomSmoothTime: 0.12
@@ -71705,7 +71710,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11f67448ec3634643a836cdf506b07f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraFollowComponent
-  followOffset: {x: 0, y: 1, z: 0}
+  followOffset: {x: 0, y: 1.5, z: 0}
   followSmoothTime: 0.12
   followVelocity: {x: 0, y: 0, z: 0}
 --- !u!4 &694607576 stripped
@@ -85268,7 +85273,6 @@ MonoBehaviour:
       friends: []
       interactions: []
       skills: []
-    skills: []
     friends: []
     moments: []
 --- !u!1001 &816293374
@@ -114402,6 +114406,27 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2084758913}
   m_PrefabAsset: {fileID: 0}
+--- !u!65 &1065525616
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 632315432}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.5, y: 1.1008464, z: 1.5}
+  m_Center: {x: 0.000000014901167, y: 0.5504233, z: -0.000000059604645}
 --- !u!4 &1065793318 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5060767883619301405, guid: 7068f38c7fb6a364a85b7461318e0f7d,
@@ -213494,8 +213519,8 @@ RectTransform:
   - {fileID: 180397760}
   m_Father: {fileID: 959773196}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.00635324, y: 0.010695187}
-  m_AnchorMax: {x: 0.8754765, y: 0.98930484}
+  m_AnchorMin: {x: 0.007788162, y: 0.003599712}
+  m_AnchorMax: {x: 0.9922118, y: 0.9964003}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -218641,10 +218666,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Prop_Table_11
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 412700392, guid: c07e8bf0416173440bdb4a929aea5a9e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8942836040533603822, guid: c07e8bf0416173440bdb4a929aea5a9e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1065525616}
   m_SourcePrefab: {fileID: 100100000, guid: c07e8bf0416173440bdb4a929aea5a9e, type: 3}
 --- !u!1 &2084882595
 GameObject:
