@@ -1,177 +1,12 @@
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System;
 using System.Linq;
 
 namespace TheFungalNetwork.Editor
 {
-    public abstract class UnitDrawerItemAction
-    {
-        public string text;
-        public string emoji;
-        public Action action;
-        public Func<bool> condition;
-        public Color? backgroundColor;
-    }
-
-    public class ViewAssetAction : UnitDrawerItemAction
-    {
-        public ViewAssetAction(UnitTemplate unitInstance, bool isInitial)
-        {
-            text = "View Asset";
-            emoji = "📁";
-            action = () => { Selection.activeObject = unitInstance; EditorGUIUtility.PingObject(unitInstance); };
-            condition = () => isInitial;
-        }
-    }
-
-    public class ViewInstanceAction : UnitDrawerItemAction
-    {
-        public ViewInstanceAction(UnitInstance unitInstance)
-        {
-            text = "View Instance";
-            emoji = "👁️";
-            action = () => Debug.Log(unitInstance);
-            condition = () => true;
-        }
-    }
-
-    public class CreateControllerAction : UnitDrawerItemAction
-    {
-        public CreateControllerAction(UnitInstance unitInstance, UnitControllerService service)
-        {
-            text = "Create Controller";
-            emoji = "➕";
-            action = () =>
-            {
-                Debug.Log($"Spawning controller for unit instance '{unitInstance.Id}'");
-                var controller = service.SpawnUnit(unitInstance, Vector3.zero, null);
-                Selection.objects = new UnityEngine.Object[] { controller.gameObject };
-                EditorGUIUtility.PingObject(controller.gameObject);
-            };
-            condition = () => service.Controllers.All(c => c.Instance != unitInstance);
-        }
-    }
-
-    public class ViewGameObjectAction : UnitDrawerItemAction
-    {
-        public ViewGameObjectAction(UnitController controller)
-        {
-            text = "View GameObject";
-            emoji = "👁️";
-            action = () =>
-            {
-                Selection.objects = new UnityEngine.Object[] { controller.gameObject };
-                EditorGUIUtility.PingObject(controller.gameObject);
-                var sceneView = SceneView.lastActiveSceneView;
-                sceneView.pivot = controller.transform.position;
-                sceneView.size = 10f;
-                sceneView.Repaint();
-            };
-            condition = () => controller != null;
-        }
-    }
-
-    public class DeleteInstanceAction : UnitDrawerItemAction
-    {
-        public DeleteInstanceAction(UnitInstance unitInstance, UnitController controller, bool isInitial)
-        {
-            text = "Delete Instance";
-            emoji = "❌";
-            action = () => Debug.LogWarning($"Deleting unit instance '{unitInstance.Id}' is not implemented in editor.");
-            condition = () => controller != null && !isInitial;
-            backgroundColor = Color.red;
-        }
-    }
-
-    public class TogglePartyAction : UnitDrawerItemAction
-    {
-        public TogglePartyAction(bool isInParty, PartyInstanceService service, UnitInstance unitInstance)
-        {
-            text = isInParty ? "Remove from Party" : "Add to Party";
-            emoji = "🎉";
-            action = () =>
-            {
-                if (isInParty)
-                    service.RemoveUnitInstanceFromParty(unitInstance);
-                else
-                    service.AddUnitInstanceToParty(unitInstance);
-            };
-            condition = () => true;
-        }
-    }
-
-    public class InviteFriendAction : UnitDrawerItemAction
-    {
-        public InviteFriendAction(UnitControllerService service, UnitController controller)
-        {
-            text = "Invite Friend";
-            emoji = "📨";
-            action = () =>
-            {
-                if (controller != null)
-                {
-                    service.InviteFriend(controller);
-                }
-                else
-                {
-                    Debug.LogWarning($"No controller found for unit instance '{controller.Instance.Id}' to invite friend.");
-                }
-            };
-            condition = () => true;
-        }
-    }
-
-    public abstract class UnitDrawerDisplayItem
-    {
-        public Func<bool> condition;
-        public Color color;
-        public Action drawAction;
-    }
-
-    public class InPartyDisplay : UnitDrawerDisplayItem
-    {
-        public InPartyDisplay(bool isInParty, GUIStyle jobStyle)
-        {
-            condition = () => isInParty;
-            color = Color.green;
-            drawAction = () => EditorGUILayout.LabelField("🎉 In Party", jobStyle);
-        }
-    }
-
-    public class BehaviourDisplay : UnitDrawerDisplayItem
-    {
-        public BehaviourDisplay(string behaviour, GUIStyle jobStyle)
-        {
-            condition = () => !string.IsNullOrEmpty(behaviour);
-            color = Color.yellow;
-            drawAction = () => EditorGUILayout.LabelField("Behaviour: " + behaviour, jobStyle);
-        }
-    }
-
-    public class InteractionDisplay : UnitDrawerDisplayItem
-    {
-        public InteractionDisplay(string interaction, UnitController controller, GUIStyle jobStyle)
-        {
-            condition = () => !string.IsNullOrEmpty(interaction);
-            color = Color.yellow;
-            drawAction = () => EditorGUILayout.ObjectField("Interaction", controller?.CurrentInteraction, typeof(UnitInteraction), false);
-        }
-    }
-
-    public class ActivityDisplay : UnitDrawerDisplayItem
-    {
-        public ActivityDisplay(ActivityReference activity, GUIStyle jobStyle)
-        {
-            condition = () => activity != null;
-            color = Color.magenta;
-            drawAction = () => EditorGUILayout.ObjectField("Activity", activity, typeof(ActivityReference), false);
-        }
-    }
-
-    public abstract class UnitListDrawer
+    public class UnitListDrawer
     {
         public static void DrawList(IEnumerable<UnitController> controllers, UnitControllerService unitControllerService)
         {
@@ -185,8 +20,8 @@ namespace TheFungalNetwork.Editor
             .OrderBy(i => i.Id);
 
             // Load services using GURUStyler - consistent with GURUWindow approach
-            var unitInstanceService = GURUStyler.LoadAsset<UnitInstanceService>("UnitInstanceService");
-            var partyInstanceService = GURUStyler.LoadAsset<PartyInstanceService>("PartyInstanceService");
+            var unitInstanceService = GURUStyler.LoadAsset<UnitInstanceService>(nameof(UnitInstanceService));
+            var partyInstanceService = GURUStyler.LoadAsset<PartyInstanceService>(nameof(PartyInstanceService));
 
             unitControllerService.Controllers.RemoveAll(c => c == null || c.gameObject == null);
 
@@ -226,27 +61,27 @@ namespace TheFungalNetwork.Editor
 
                     // Create action lists
                     var menuItems = new List<UnitDrawerItemAction>
-                {
-                    new ViewAssetAction(unitInstance.Template, initialUnit != null),
-                    new ViewInstanceAction(unitInstance),
-                    new TogglePartyAction(isInParty, partyInstanceService, unitInstance),
-                    new InviteFriendAction(unitControllerService, controller),
-                    new DeleteInstanceAction(unitInstance, controller, initialUnit != null)
-                };
+                    {
+                        new ViewAssetAction(unitInstance.Template, initialUnit != null),
+                        new ViewInstanceAction(unitInstance),
+                        new TogglePartyAction(isInParty, partyInstanceService, unitInstance),
+                        new InviteFriendAction(unitControllerService, controller),
+                        new DeleteInstanceAction(unitInstance, controller, initialUnit != null)
+                    };
 
                     var shortcuts = new List<UnitDrawerItemAction>
-                {
-                    new CreateControllerAction(unitInstance, unitControllerService),
-                    new ViewGameObjectAction(controller),
-                };
+                    {
+                        new CreateControllerAction(unitInstance, unitControllerService),
+                        new ViewGameObjectAction(controller),
+                    };
 
                     var displayItems = new List<UnitDrawerDisplayItem>
-                {
-                    new InPartyDisplay(isInParty, jobStyle),
-                    new BehaviourDisplay(behaviour, jobStyle),
-                    new InteractionDisplay(interaction, controller, jobStyle),
-                    new ActivityDisplay(activity, jobStyle)
-                };
+                    {
+                        new InPartyDisplay(isInParty, jobStyle),
+                        new BehaviourDisplay(behaviour, jobStyle),
+                        new InteractionDisplay(interaction, controller, jobStyle),
+                        new ActivityDisplay(activity, jobStyle)
+                    };
 
                     // Draw the unit
                     DrawUnit(icon, displayName, job, backgroundColor, shortcuts, menuItems, jobStyle, controller, displayItems);
