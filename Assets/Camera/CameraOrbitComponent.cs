@@ -10,6 +10,9 @@ public class CameraOrbitComponent : MonoBehaviour
     public float minPitchClamp = -30f;
     public float maxPitchClamp = 80f;
 
+    [Header("References")]
+    public CameraService cameraService;
+
     [Header("Pokémon GO Effect")]
     [Range(0f, 1f)]
     [Tooltip("Blend between manual pitch and auto pitch determined by zoom/dolly. 0 = only manual pitch, 1 = only auto (zoom driven)")]
@@ -28,9 +31,23 @@ public class CameraOrbitComponent : MonoBehaviour
     {
         yaw = targetYaw = initialYaw;
         pitch = targetPitch = Mathf.Clamp(initialPitch, minPitchClamp, maxPitchClamp);
+
+        if (cameraService != null)
+        {
+        }
     }
 
-    public void AddYaw(float delta)
+    private void OnEnable()
+    {
+        cameraService.OnYawDeltaRequested += OnYawDeltaRequested;
+    }
+
+    private void OnDisable()
+    {
+        cameraService.OnYawDeltaRequested -= OnYawDeltaRequested;
+    }
+
+    private void OnYawDeltaRequested(float delta)
     {
         targetYaw += delta * orbitSensitivity;
     }

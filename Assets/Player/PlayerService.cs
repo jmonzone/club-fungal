@@ -10,6 +10,9 @@ public class PlayerService : GURUService
     [Header("Editor Settings")]
     [SerializeField] private float editorSpeed = 5f;
 
+    [Header("References")]
+    [SerializeField] private CameraService cameraService;
+
 
     [Header("Runtime")]
     [SerializeField] private UnitInstance playerInstance;
@@ -35,6 +38,16 @@ public class PlayerService : GURUService
     override protected void OnInitialize()
     {
         FindPlayerController();
+    }
+
+    private void OnEnable()
+    {
+        cameraService.OnCameraModeChanged += OnCameraModeChanged;
+    }
+
+    private void OnDisable()
+    {
+        cameraService.OnCameraModeChanged -= OnCameraModeChanged;
     }
 
     override public void OnSceneLoaded()
@@ -70,8 +83,8 @@ public class PlayerService : GURUService
         OnTargetInteractableChanged?.Invoke();
     }
 
-    public void SetCameraZoom(float t)
+    private void OnCameraModeChanged(CameraMode mode)
     {
-        player.RenderRoot.gameObject.SetActive(t >= 0.01f);
+        player.RenderRoot.gameObject.SetActive(mode == CameraMode.THIRD_PERSON);
     }
 }

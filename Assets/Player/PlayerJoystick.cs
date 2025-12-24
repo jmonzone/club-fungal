@@ -10,6 +10,7 @@ public class PlayerJoystick : MonoBehaviour
     [SerializeField] private PlayerService playerReference;
     [SerializeField] private VirtualJoystick virtualJoystick;
     [SerializeField] private InteractionController interaction;
+    [SerializeField] private CameraService cameraService;
 
     private Camera mainCamera;
 
@@ -38,6 +39,12 @@ public class PlayerJoystick : MonoBehaviour
 
             // Rotate joystick input to be relative to camera
             Vector3 moveDir = camForward * direction.z + camRight * direction.x;
+
+            // Rotate camera based on horizontal joystick input only
+            if (cameraService != null && cameraService.CameraMode == CameraMode.THIRD_PERSON && Mathf.Abs(direction.x) > 0.01f)
+            {
+                cameraService.AddYaw(direction.x * 0.5f);
+            }
 
             // Compute target position
             var targetPosition = playerReference.Player.transform.position + moveDir.normalized;

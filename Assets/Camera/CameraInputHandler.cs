@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 public class CameraInputHandler : MonoBehaviour
 {
     [Header("References")]
-    public CameraOrbitComponent orbitComponent;
+    [SerializeField] private CameraService cameraService;
     public CameraZoomComponent zoomComponent;
 
     [Header("Read Only")]
@@ -29,7 +29,7 @@ public class CameraInputHandler : MonoBehaviour
 
     void HandleOrbitInput()
     {
-        if (orbitComponent == null || zoomComponent == null) return;
+        if (zoomComponent == null) return;
 
         // One finger touch -> yaw
         if (Input.touchCount == 1)
@@ -38,7 +38,7 @@ public class CameraInputHandler : MonoBehaviour
             if (t.phase == TouchPhase.Moved)
             {
                 float directionMultiplier = zoomComponent.CurrentDistance < 0 ? -1 : 1;
-                orbitComponent.AddYaw(t.deltaPosition.x * directionMultiplier);
+                cameraService.AddYaw(t.deltaPosition.x * directionMultiplier);
             }
         }
         else if (Application.isEditor)
@@ -61,7 +61,7 @@ public class CameraInputHandler : MonoBehaviour
                 lastMousePos = current;
 
                 float directionMultiplier = zoomComponent.CurrentDistance < 0 ? -1 : 1;
-                orbitComponent.AddYaw(delta.x * directionMultiplier);
+                cameraService.AddYaw(delta.x * directionMultiplier);
             }
         }
     }

@@ -32,10 +32,8 @@ public class CameraRotationController : MonoBehaviour
         if (inputHandler == null) inputHandler = gameObject.AddComponent<CameraInputHandler>();
 
         // Setup component references
-        inputHandler.orbitComponent = orbitComponent;
         inputHandler.zoomComponent = zoomComponent;
         zoomComponent.vCam = vCam;
-        zoomComponent.playerReference = playerReference;
 
         // Initialize orbit component with current rotation
         Vector3 e = transform.eulerAngles;

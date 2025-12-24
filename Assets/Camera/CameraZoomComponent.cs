@@ -16,7 +16,7 @@ public class CameraZoomComponent : MonoBehaviour
 
     [Header("References")]
     public CinemachineVirtualCamera vCam;
-    public PlayerService playerReference;
+    public CameraService cameraService;
 
     [Header("Read Only")]
     [SerializeField][ReadOnly] float targetDistance;
@@ -61,7 +61,7 @@ public class CameraZoomComponent : MonoBehaviour
 
         // Update targetFov mapped to distance
         float t = Mathf.InverseLerp(minDistance, maxDistance, targetDistance);
-        if (playerReference != null) playerReference.SetCameraZoom(t);
+        if (cameraService != null) cameraService.SetZoomT(t);
 
         targetFov = Mathf.Lerp(fovMin, fovMax, t);
     }

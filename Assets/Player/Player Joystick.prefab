@@ -207,6 +207,7 @@ MonoBehaviour:
   joystickRect: {fileID: 6566661412833813432}
   target: {fileID: 1808530242244708393}
   sensitivity: 0.05
+  isActive: 0
   direction: {x: 0, y: 0, z: 0}
 --- !u!114 &6441055369160939139
 MonoBehaviour:
@@ -223,6 +224,7 @@ MonoBehaviour:
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   virtualJoystick: {fileID: 7648035716296380751}
   interaction: {fileID: 0}
+  cameraService: {fileID: 11400000, guid: 6a3cd891900334ca1ba50dee37569ba4, type: 2}
 --- !u!114 &2544199452080494545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,6 +237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebd2fff1df3f04054802f0e6c09c1b9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  isActive: 0
 --- !u!1 &6176524460262269198
 GameObject:
   m_ObjectHideFlags: 0

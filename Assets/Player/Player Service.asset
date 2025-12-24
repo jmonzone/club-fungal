@@ -12,8 +12,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49e7ffceae1c64ad39d17f6171535600, type: 3}
   m_Name: Player Service
   m_EditorClassIdentifier: 
-  speed: 2
+  speed: 5
   editorSpeed: 5
-  playerInstance: {fileID: 11400000, guid: c5fe3b2204b8a471f9ab1ed260b7d9b9, type: 2}
+  cameraService: {fileID: 11400000, guid: 6a3cd891900334ca1ba50dee37569ba4, type: 2}
+  playerInstance:
+    template: {fileID: 11400000, guid: 1c13d7c1ade7f486ca3ed346a8a49b51, type: 2}
+    data:
+      id: player
+      name: player
+      displayName: Player
+      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
+      job: {fileID: 0}
+      element: 0
+      colorPalette: {fileID: 0}
+      scene: 
+      friendshipLevel: 0
+      friendshipXP: 0
+      friends: []
+      interactions: []
+      skills: []
+    skills: []
+    friends: []
+    moments: []
   player: {fileID: 0}
-  targetPosition: {x: 0, y: 0, z: 0}
+  targetPosition: {x: -21.689999, y: -1.0745217, z: -27.93}
