@@ -88,7 +88,7 @@ namespace TheFungalNetwork.Editor
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
             // Header
-            var headerText = "🍄 GURU of The Fungal Network";
+            var headerText = "Unit Manager";
             var headerStyle = new GUIStyle(GURUStyler.LogoStyle) { fontSize = 20 };
             EditorGUILayout.LabelField(headerText, headerStyle, GUILayout.Height(64));
 

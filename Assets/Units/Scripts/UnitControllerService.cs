@@ -9,6 +9,8 @@ using UnityEditor;
 [CreateAssetMenu(fileName = "UnitControllerService", menuName = "Club Fungal/Units/Unit Controller Service")]
 public class UnitControllerService : GURUService
 {
+    public delegate void FriendInvitedDelegate(UnitController inviter, UnitController friend);
+
     [Header("References")]
     [SerializeField] private UnitInstanceService unitInstanceService;
     [SerializeField] private FungalController fungalPrefab;
@@ -97,14 +99,26 @@ public class UnitControllerService : GURUService
         return unitController;
     }
 
-    public event UnityAction<UnitController, UnitInstance> OnFriendInvited;
+    public event FriendInvitedDelegate OnFriendInvited;
+
+    public Vector3 GetRandomSpawnPosition(Vector3 startPosition)
+    {
+        var spawnPosition = startPosition + Random.insideUnitSphere.normalized * 2f;
+        spawnPosition.y = startPosition.y;
+        return spawnPosition;
+    }
 
     public void InviteFriend(UnitController unit)
     {
         var friend = unitInstanceService.CreateNewFriend(unit.Instance);
-        OnFriendInvited?.Invoke(unit, friend);
-    }
+        var spawnPosition = GetRandomSpawnPosition(unit.transform.position);
 
+        // Always spawn immediately
+        var spawnedUnit = SpawnUnit(friend, spawnPosition, null);
+
+        // Notify for optional fancy effects
+        OnFriendInvited?.Invoke(unit, spawnedUnit);
+    }
     public void SpawnNewUnit(UnitInstanceService.UnitQuery unitQuery, Vector3 position, UnityAction<UnitController> onSpawned = null)
     {
         var unit = unitInstanceService.CreateUnit(unitQuery);

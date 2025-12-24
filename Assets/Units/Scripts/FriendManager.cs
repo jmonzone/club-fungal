@@ -12,15 +12,6 @@ public class FriendManager : MonoBehaviour
     [SerializeField] private AnimationCurve riseCurve;
     [SerializeField] private float riseDuration = 1f;
 
-    private Vector3 GetRandomSpawnPosition(Vector3 startPosition)
-    {
-        var spawnPosition = startPosition;
-        var randomDirection = Random.insideUnitSphere;
-        randomDirection.y = 0;
-        spawnPosition += randomDirection * 2f;
-        return spawnPosition;
-    }
-
     private void OnEnable()
     {
         unitControllerService.OnFriendInvited += UnitList_OnFriendInvited;
@@ -31,16 +22,20 @@ public class FriendManager : MonoBehaviour
         unitControllerService.OnFriendInvited -= UnitList_OnFriendInvited;
     }
 
-    private void UnitList_OnFriendInvited(UnitController unit, UnitInstance friend)
+    private void UnitList_OnFriendInvited(UnitController unit, UnitController spawnedUnit)
     {
-        StartCoroutine(SpawnFriendRoutine(unit, friend));
+        StartCoroutine(SpawnFriendRoutine(unit, spawnedUnit));
     }
 
-    private IEnumerator SpawnFriendRoutine(UnitController unit, UnitInstance friend)
+    private IEnumerator SpawnFriendRoutine(UnitController unit, UnitController spawnedUnit)
     {
-        yield return new WaitForSeconds(2f);
+        // Capture the spawn position from the unit's current position
+        Vector3 spawnPosition = spawnedUnit.transform.position;
 
-        var spawnPosition = GetRandomSpawnPosition(unit.transform.position);
+        // Move the already-spawned unit underground for animation
+        spawnedUnit.transform.position = spawnPosition + Vector3.down;
+
+        yield return new WaitForSeconds(2f);
 
         // Step 1: create portal
         var portal = Instantiate(portalPrefab, spawnPosition, Quaternion.identity);
@@ -51,27 +46,24 @@ public class FriendManager : MonoBehaviour
         // Wait until the portal finishes opening
         yield return new WaitUntil(() => portalOpened);
 
-        // Step 2: spawn fungal
-        var summonedUnit = unitControllerService.SpawnUnit(friend, spawnPosition + Vector3.down, null);
-
-        // Animate the fungal rising out of the portal
+        // Step 2: animate the fungal rising out of the portal
         float elapsed = 0f;
-        Vector3 start = summonedUnit.transform.position;
+        Vector3 start = spawnedUnit.transform.position;
         Vector3 end = spawnPosition;
 
         while (elapsed < riseDuration)
         {
             elapsed += Time.deltaTime;
             float t = riseCurve.Evaluate(elapsed / riseDuration);
-            summonedUnit.transform.position = Vector3.LerpUnclamped(start, end, t);
+            spawnedUnit.transform.position = Vector3.LerpUnclamped(start, end, t);
             yield return null;
         }
 
-        summonedUnit.transform.position = end;
+        spawnedUnit.transform.position = end;
 
         if (unit is FungalController fungal)
         {
-            fungal.GreetFriend(summonedUnit);
+            fungal.GreetFriend(spawnedUnit);
         }
     }
 }

@@ -138,7 +138,13 @@ public class UnitInstanceService : GURUService
         if (localData.JsonFile.ContainsKey(UNIT_KEY))
         {
             var unitsJson = localData.JsonFile[UNIT_KEY].ToString();
-            var unitsData = JsonConvert.DeserializeObject<List<UnitData>>(unitsJson);
+
+            var settings = new JsonSerializerSettings
+            {
+                Converters = new List<JsonConverter> { new UnitSpeciesConverter(speciesCollection) }
+            };
+
+            var unitsData = JsonConvert.DeserializeObject<List<UnitData>>(unitsJson, settings);
 
             foreach (var unitData in unitsData)
             {
