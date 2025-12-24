@@ -31,7 +31,9 @@ public class CameraInputHandler : MonoBehaviour
     {
         if (zoomComponent == null) return;
 
-        // One finger touch -> yaw
+        bool isFirstPerson = cameraService.CameraMode == CameraMode.FIRST_PERSON;
+
+        // One finger touch -> yaw (and pitch in first-person)
         if (Input.touchCount == 1)
         {
             Touch t = Input.GetTouch(0);
@@ -39,11 +41,16 @@ public class CameraInputHandler : MonoBehaviour
             {
                 float directionMultiplier = zoomComponent.CurrentDistance < 0 ? -1 : 1;
                 cameraService.AddYaw(t.deltaPosition.x * directionMultiplier);
+
+                if (isFirstPerson)
+                {
+                    cameraService.AddPitch(-t.deltaPosition.y * directionMultiplier);
+                }
             }
         }
         else if (Application.isEditor)
         {
-            // Mouse drag (Editor) -> yaw
+            // Mouse drag (Editor) -> yaw (and pitch in first-person)
             if (Input.GetMouseButtonDown(0))
             {
                 dragging = true;
@@ -62,6 +69,11 @@ public class CameraInputHandler : MonoBehaviour
 
                 float directionMultiplier = zoomComponent.CurrentDistance < 0 ? -1 : 1;
                 cameraService.AddYaw(delta.x * directionMultiplier);
+
+                if (isFirstPerson)
+                {
+                    cameraService.AddPitch(-delta.y * directionMultiplier);
+                }
             }
         }
     }

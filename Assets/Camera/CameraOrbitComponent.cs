@@ -40,16 +40,24 @@ public class CameraOrbitComponent : MonoBehaviour
     private void OnEnable()
     {
         cameraService.OnYawDeltaRequested += OnYawDeltaRequested;
+        cameraService.OnPitchDeltaRequested += OnPitchDeltaRequested;
     }
 
     private void OnDisable()
     {
         cameraService.OnYawDeltaRequested -= OnYawDeltaRequested;
+        cameraService.OnPitchDeltaRequested -= OnPitchDeltaRequested;
     }
 
     private void OnYawDeltaRequested(float delta)
     {
         targetYaw += delta * orbitSensitivity;
+    }
+
+    private void OnPitchDeltaRequested(float delta)
+    {
+        targetPitch += delta * orbitSensitivity;
+        targetPitch = Mathf.Clamp(targetPitch, minPitchClamp, maxPitchClamp);
     }
 
     public void AddPitch(float delta)

@@ -17,6 +17,7 @@ public class CameraService : GURUService
 
     public event UnityAction<CameraMode> OnCameraModeChanged;
     public event UnityAction<float> OnYawDeltaRequested;
+    public event UnityAction<float> OnPitchDeltaRequested;
 
     protected override void OnInitialize()
     {
@@ -36,5 +37,10 @@ public class CameraService : GURUService
     public void AddYaw(float yawDelta)
     {
         OnYawDeltaRequested?.Invoke(yawDelta);
+    }
+
+    public void AddPitch(float pitchDelta)
+    {
+        OnPitchDeltaRequested?.Invoke(pitchDelta);
     }
 }
