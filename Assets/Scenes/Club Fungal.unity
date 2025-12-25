@@ -48878,25 +48878,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PartyWidgetUnitUI
   unitImage: {fileID: 623170967}
   unitNameText: {fileID: 2038104712}
-  unitInstance:
-    template: {fileID: 0}
-    data:
-      id: 
-      name: 
-      displayName: 
-      species: {fileID: 0}
-      job: {fileID: 0}
-      element: 0
-      colorPalette: {fileID: 0}
-      scene: 
-      friendshipLevel: 0
-      friendshipXP: 0
-      friends: []
-      interactions: []
-      skills: []
-    skills: []
-    friends: []
-    moments: []
 --- !u!4 &450366893 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2483398672390825995, guid: 58b2872ef0b34d74ca35c7665c84e25d,
@@ -85258,25 +85239,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PartyWidgetUnitUI
   unitImage: {fileID: 340018811}
   unitNameText: {fileID: 425578508}
-  unitInstance:
-    template: {fileID: 0}
-    data:
-      id: 
-      name: 
-      displayName: 
-      species: {fileID: 0}
-      job: {fileID: 0}
-      element: 0
-      colorPalette: {fileID: 0}
-      scene: 
-      friendshipLevel: 0
-      friendshipXP: 0
-      friends: []
-      interactions: []
-      skills: []
-    skills: []
-    friends: []
-    moments: []
 --- !u!1001 &816293374
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -218896,7 +218858,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
     type: 2}
-  unitSpawnAnchor: {fileID: 0}
   textAsset: {fileID: 4900000, guid: 653e626fc96d2478fa72e028a19d495d, type: 3}
   portalPrefab: {fileID: 4051312024755215841, guid: e9a29fa9f135940e7825900f5cc5ce4f,
     type: 3}
