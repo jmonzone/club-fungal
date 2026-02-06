@@ -11,30 +11,63 @@ namespace TheFungalNetwork.Editor
         {
             if (currentRun == null) return;
 
+            var items = currentRun.Inventory.Items;
+            if (items == null || items.Count == 0)
+            {
+                EditorGUILayout.LabelField("  No items in inventory");
+                return;
+            }
+
+            var itemGroups = new System.Collections.Generic.Dictionary<ItemTemplate, int>();
+            foreach (var item in items)
+            {
+                if (item != null)
+                {
+                    if (itemGroups.ContainsKey(item))
+                    {
+                        itemGroups[item]++;
+                    }
+                    else
+                    {
+                        itemGroups[item] = 1;
+                    }
+                }
+            }
+
+            foreach (var kvp in itemGroups)
+            {
+                DrawItem(currentRun, kvp.Key, kvp.Value);
+            }
+        }
+
+        private void DrawItem(NetworkRun currentRun, ItemTemplate itemTemplate, int count)
+        {
             var shortcuts = new List<UnitDrawerItemAction>
             {
                 new ActivityItemAction(
-                    text: "Add 50 Spores",
+                    text: "Add Item",
                     emoji: "➕",
                     action: () =>
                     {
-                        currentRun.AddSpores(50);
+                        currentRun.Inventory.AddItem(itemTemplate);
                     }
                 ),
                 new ActivityItemAction(
-                    text: "Subtract 50 Spores",
+                    text: "Remove Item",
                     emoji: "➖",
                     action: () =>
                     {
-                        currentRun.SpendSpores(50);
+                        currentRun.Inventory.RemoveItem(itemTemplate);
                     }
                 )
             };
 
+            Texture icon = itemTemplate.Sprite?.texture;
+
             ItemDrawer.DrawItem(
-                icon: null,
-                displayName: "Spores",
-                subtitle: currentRun.Spores.ToString(),
+                icon: icon,
+                displayName: itemTemplate.DisplayName,
+                subtitle: $"x{count}",
                 backgroundColor: Color.white,
                 shortcuts: shortcuts,
                 menuItems: null,
