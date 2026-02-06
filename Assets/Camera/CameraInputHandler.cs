@@ -6,6 +6,11 @@ public class CameraInputHandler : MonoBehaviour
     [Header("References")]
     [SerializeField] private CameraService cameraService;
     public CameraZoomComponent zoomComponent;
+    public CameraPanComponent panComponent;
+
+    [Header("Pan Settings")]
+    public float panTouchSensitivity = 0.01f;
+    public float panMouseSensitivity = 10f;
 
     [Header("Read Only")]
     [SerializeField][ReadOnly] bool canOrbit = true;
@@ -25,6 +30,7 @@ public class CameraInputHandler : MonoBehaviour
 
         if (canOrbit) HandleOrbitInput();
         HandleZoomInput();
+        HandlePanInput();
     }
 
     void HandleOrbitInput()
@@ -105,6 +111,31 @@ public class CameraInputHandler : MonoBehaviour
             float delta = currDist - prevDist;
 
             zoomComponent.Zoom(delta * zoomComponent.zoomSpeed * 0.1f * Time.deltaTime);
+        }
+    }
+
+    void HandlePanInput()
+    {
+        if (panComponent == null) return;
+
+        // Two finger swipe -> pan (average the delta movement)
+        if (Input.touchCount == 2)
+        {
+            Touch t0 = Input.GetTouch(0);
+            Touch t1 = Input.GetTouch(1);
+
+            // Only pan if both touches are moving (not just pinching)
+            if (t0.phase == TouchPhase.Moved && t1.phase == TouchPhase.Moved)
+            {
+                Vector2 avgDelta = (t0.deltaPosition + t1.deltaPosition) * 0.5f;
+                panComponent.AddPan(-avgDelta * panTouchSensitivity);
+            }
+        }
+        else if (Application.isEditor && Input.GetMouseButton(0))
+        {
+            // Shift + Left mouse drag (Editor) -> pan
+            Vector2 delta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+            panComponent.AddPan(-delta * panMouseSensitivity);
         }
     }
 }

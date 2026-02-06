@@ -113,4 +113,28 @@ public class SnapshotService : GURUService
 
         return positions;
     }
+
+    public void RemoveUnit(string unitId)
+    {
+        if (!localData.JsonFile.ContainsKey(SNAPSHOT_KEY)) return;
+
+        var snapshotArray = localData.JsonFile[SNAPSHOT_KEY] as JArray;
+        if (snapshotArray == null) return;
+
+        JObject toRemove = null;
+        foreach (var item in snapshotArray)
+        {
+            if (item is JObject obj && obj.Value<string>("id") == unitId)
+            {
+                toRemove = obj;
+                break;
+            }
+        }
+
+        if (toRemove != null)
+        {
+            snapshotArray.Remove(toRemove);
+            localData.SaveData(SNAPSHOT_KEY, snapshotArray);
+        }
+    }
 }

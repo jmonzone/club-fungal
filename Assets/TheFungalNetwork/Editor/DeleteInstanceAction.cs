@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 namespace TheFungalNetwork.Editor
@@ -8,8 +9,33 @@ namespace TheFungalNetwork.Editor
         {
             text = "Delete Instance";
             emoji = "❌";
-            action = () => Debug.LogWarning($"Deleting unit instance '{unitInstance.Id}' is not implemented in editor.");
-            condition = () => controller != null && !isInitial;
+            action = () =>
+            {
+                if (!EditorUtility.DisplayDialog(
+                    "Delete Unit Instance",
+                    $"Are you sure you want to delete '{unitInstance.DisplayName}' ({unitInstance.Id})?\n\nThis will remove it from data.json and cannot be undone.",
+                    "Delete",
+                    "Cancel"))
+                {
+                    return;
+                }
+
+                var unitInstanceService = GURUStyler.LoadAsset<UnitInstanceService>(nameof(UnitInstanceService));
+                var unitControllerService = GURUStyler.LoadAsset<UnitControllerService>(nameof(UnitControllerService));
+
+                // Remove from services
+                unitInstanceService.DeleteUnit(unitInstance);
+
+                // Destroy GameObject if controller exists
+                if (controller != null)
+                {
+                    unitControllerService.RemoveController(controller);
+                    Object.DestroyImmediate(controller.gameObject);
+                }
+
+                Debug.Log($"Deleted unit instance '{unitInstance.DisplayName}' ({unitInstance.Id})");
+            };
+            condition = () => !isInitial;
             backgroundColor = Color.red;
         }
     }

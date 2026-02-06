@@ -8,40 +8,73 @@ public class CameraRotationController : MonoBehaviour
     public CinemachineVirtualCamera vCam;
     public PlayerService playerReference;
 
+    [Header("Component Toggles")]
+    public bool enableFollow = true;
+    public bool enableOrbit = true;
+    public bool enableZoom = true;
+    public bool enablePan = true;
+    public bool enableInputHandler = true;
+
     [Header("Components - Auto-configured")]
     [SerializeField][ReadOnly] CameraFollowComponent followComponent;
     [SerializeField][ReadOnly] CameraOrbitComponent orbitComponent;
     [SerializeField][ReadOnly] CameraZoomComponent zoomComponent;
+    [SerializeField][ReadOnly] CameraPanComponent panComponent;
     [SerializeField][ReadOnly] CameraInputHandler inputHandler;
 
     void Start()
     {
         if (vCam == null) Debug.LogError("CameraRotationController: vCam not assigned!");
 
-        // Get or add components
-        followComponent = GetComponent<CameraFollowComponent>();
-        if (followComponent == null) followComponent = gameObject.AddComponent<CameraFollowComponent>();
+        // Get or add components based on toggles
+        if (enableFollow)
+        {
+            followComponent = GetComponent<CameraFollowComponent>();
+            if (followComponent == null) followComponent = gameObject.AddComponent<CameraFollowComponent>();
+        }
 
-        orbitComponent = GetComponent<CameraOrbitComponent>();
-        if (orbitComponent == null) orbitComponent = gameObject.AddComponent<CameraOrbitComponent>();
+        if (enableOrbit)
+        {
+            orbitComponent = GetComponent<CameraOrbitComponent>();
+            if (orbitComponent == null) orbitComponent = gameObject.AddComponent<CameraOrbitComponent>();
+        }
 
-        zoomComponent = GetComponent<CameraZoomComponent>();
-        if (zoomComponent == null) zoomComponent = gameObject.AddComponent<CameraZoomComponent>();
+        if (enableZoom)
+        {
+            zoomComponent = GetComponent<CameraZoomComponent>();
+            if (zoomComponent == null) zoomComponent = gameObject.AddComponent<CameraZoomComponent>();
+        }
 
-        inputHandler = GetComponent<CameraInputHandler>();
-        if (inputHandler == null) inputHandler = gameObject.AddComponent<CameraInputHandler>();
+        if (enablePan)
+        {
+            panComponent = GetComponent<CameraPanComponent>();
+            if (panComponent == null) panComponent = gameObject.AddComponent<CameraPanComponent>();
+        }
+
+        if (enableInputHandler)
+        {
+            inputHandler = GetComponent<CameraInputHandler>();
+            if (inputHandler == null) inputHandler = gameObject.AddComponent<CameraInputHandler>();
+        }
 
         // Setup component references
-        inputHandler.zoomComponent = zoomComponent;
-        zoomComponent.vCam = vCam;
+        if (inputHandler && zoomComponent) inputHandler.zoomComponent = zoomComponent;
+        if (inputHandler && panComponent) inputHandler.panComponent = panComponent;
+        if (zoomComponent) zoomComponent.vCam = vCam;
 
         // Initialize orbit component with current rotation
-        Vector3 e = transform.eulerAngles;
-        float normalizedX = (e.x > 180f) ? (e.x - 360f) : e.x;
-        orbitComponent.Initialize(e.y, normalizedX);
+        if (orbitComponent)
+        {
+            Vector3 e = transform.eulerAngles;
+            float normalizedX = (e.x > 180f) ? (e.x - 360f) : e.x;
+            orbitComponent.Initialize(e.y, normalizedX);
+        }
 
         // Initialize zoom component
-        zoomComponent.Initialize();
+        if (zoomComponent) zoomComponent.Initialize();
+
+        // Initialize pan component
+        if (panComponent) panComponent.Initialize();
     }
 
     void Update()
@@ -49,12 +82,13 @@ public class CameraRotationController : MonoBehaviour
         if (target == null || vCam == null) return;
 
         // Apply camera behavior
-        followComponent.ApplyFollow(target);
-        orbitComponent.ApplyRotation(zoomComponent.CurrentDistance, zoomComponent.minDistance, zoomComponent.maxDistance);
-        zoomComponent.ApplyZoom();
+        if (followComponent) followComponent.ApplyFollow(target);
+        if (panComponent) panComponent.ApplyPan();
+        if (orbitComponent && zoomComponent) orbitComponent.ApplyRotation(zoomComponent.CurrentDistance, zoomComponent.minDistance, zoomComponent.maxDistance);
+        if (zoomComponent) zoomComponent.ApplyZoom();
 
         // Handle input
-        inputHandler.HandleInput();
+        if (inputHandler) inputHandler.HandleInput();
     }
 
     public void SetCanOrbit(bool canOrbit)

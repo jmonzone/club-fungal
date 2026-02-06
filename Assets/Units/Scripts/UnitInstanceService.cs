@@ -404,6 +404,19 @@ public class UnitInstanceService : GURUService
         return unit;
     }
 
+    public void DeleteUnit(UnitInstance unit)
+    {
+        units.Remove(unit);
+
+        // Remove this unit from all other units' friend lists
+        foreach (var otherUnit in units)
+        {
+            otherUnit.Friends.Remove(unit.Id);
+        }
+
+        SaveData();
+    }
+
     public void SaveData()
     {
         if (localData == null)

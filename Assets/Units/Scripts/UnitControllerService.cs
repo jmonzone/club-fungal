@@ -119,6 +119,11 @@ public class UnitControllerService : GURUService
         // Notify for optional fancy effects
         OnFriendInvited?.Invoke(unit, spawnedUnit);
     }
+
+    public void RemoveController(UnitController controller)
+    {
+        unitControllers.Remove(controller);
+    }
     public void SpawnNewUnit(UnitInstanceService.UnitQuery unitQuery, Vector3 position, UnityAction<UnitController> onSpawned = null)
     {
         var unit = unitInstanceService.CreateUnit(unitQuery);
