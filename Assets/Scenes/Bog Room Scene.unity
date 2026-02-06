@@ -1219,6 +1219,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -2588,6 +2589,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -4160,6 +4162,7 @@ MonoBehaviour:
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -5800,6 +5803,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -6896,6 +6900,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -7681,6 +7686,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -8009,6 +8015,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -11211,6 +11218,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -11252,101 +11260,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 321502174}
   m_CullTransparentMesh: 1
---- !u!1 &327665640
-GameObject:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 327665641}
-  - component: {fileID: 327665644}
-  - component: {fileID: 327665643}
-  - component: {fileID: 327665642}
-  m_Layer: 0
-  m_Name: cm
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &327665641
-Transform:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 327665640}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1446848727}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &327665642
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 327665640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa7155796051b734daa718462081dc5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_BindingMode: 1
-  m_FollowOffset: {x: 0, y: 0, z: -10}
-  m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
-  m_AngularDampingMode: 0
-  m_PitchDamping: 0
-  m_YawDamping: 0
-  m_RollDamping: 0
-  m_AngularDamping: 0
---- !u!114 &327665643
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 327665640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4044717213e31446939f7bd49c896ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TrackedObjectOffset: {x: 0, y: 0, z: 0}
-  m_LookaheadTime: 0
-  m_LookaheadSmoothing: 0
-  m_LookaheadIgnoreY: 0
-  m_HorizontalDamping: 0.5
-  m_VerticalDamping: 0.5
-  m_ScreenX: 0.5
-  m_ScreenY: 0.5
-  m_DeadZoneWidth: 0
-  m_DeadZoneHeight: 0
-  m_SoftZoneWidth: 0.8
-  m_SoftZoneHeight: 0.8
-  m_BiasX: 0
-  m_BiasY: 0
-  m_CenterOnActivate: 1
---- !u!114 &327665644
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 327665640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &329545403
 GameObject:
   m_ObjectHideFlags: 0
@@ -11937,7 +11850,7 @@ MonoBehaviour:
     type: 3}
   poolSize: 20
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
-  unitManager: {fileID: 2087691131}
+  unitControllerService: {fileID: 0}
   buildReference: {fileID: 11400000, guid: 2526ce71d791f49acb54c441f1370a16, type: 2}
   plants: []
 --- !u!224 &375824916 stripped
@@ -12346,6 +12259,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -12520,9 +12434,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e753995f600bd44afb1843332eb8d069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   dialogue: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
-  unitListReference: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2, type: 2}
   speakerUI: {fileID: 1566617435}
   actionPage: {fileID: 407616905}
   chatPage: {fileID: 399686885}
@@ -12628,7 +12540,6 @@ MonoBehaviour:
   unitNameText: {fileID: 1522672987}
   dialogueText: {fileID: 523573890}
   continueButton: {fileID: 1052168910}
-  unitReference: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2, type: 2}
 --- !u!1 &407349044
 GameObject:
   m_ObjectHideFlags: 0
@@ -13138,6 +13049,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -13623,6 +13535,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -14140,6 +14053,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -14768,6 +14682,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 5
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15027,6 +14942,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15164,6 +15080,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15634,6 +15551,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -17029,6 +16947,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -17241,6 +17160,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 2.57
+  m_characterHorizontalScale: 1
   m_wordSpacing: 21.53
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -17603,6 +17523,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -17644,69 +17565,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 692565153}
   m_CullTransparentMesh: 1
---- !u!1 &693003845
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 693003846}
-  - component: {fileID: 693003847}
-  m_Layer: 0
-  m_Name: Gameplay Camera Controller
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &693003846
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 693003845}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.24420099, y: 0, z: 0, w: 0.96972466}
-  m_LocalPosition: {x: 0, y: 1.5083323, z: -5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1446848727}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
---- !u!114 &693003847
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 693003845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd616dca532cd46d091b3997dcf8a2b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 1882211478}
-  vCam: {fileID: 1446848726}
-  followOffset: {x: 0, y: 1.5, z: 0}
-  followSmoothTime: 0.12
-  orbitSensitivity: 0.2
-  orbitSmoothTime: 0.1
-  minPitch: 15
-  maxPitch: 45
-  minPitchClamp: 30
-  maxPitchClamp: 45
-  minDistance: -1
-  maxDistance: 25
-  zoomSpeed: 10
-  zoomSmoothTime: 0.1
-  fovMin: 100
-  fovMax: 45
-  fovSmoothTime: 0.12
-  pogoEffectAmount: 0.75
 --- !u!1 &695539375
 GameObject:
   m_ObjectHideFlags: 0
@@ -18603,6 +18461,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 7.5
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -18913,6 +18772,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -19342,6 +19202,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -20108,6 +19969,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -20356,6 +20218,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -20683,6 +20546,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -20911,6 +20775,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 2.57
+  m_characterHorizontalScale: 1
   m_wordSpacing: 21.53
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -24815,6 +24680,12 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!4 &995179148 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1647962025224334118, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
+    type: 3}
+  m_PrefabInstance: {fileID: 7305205459602921054}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1011249585
 GameObject:
   m_ObjectHideFlags: 0
@@ -24948,7 +24819,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 133d3788a48cf41318a9445f2cce1d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitListReference: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2, type: 2}
+  unitInstanceService: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2,
+    type: 2}
   unitViewContainer: {fileID: 1274209468}
   unitViewPrefab: {fileID: 8851320129192961372, guid: 73139be3c694145f78c0ac1c18518dba,
     type: 3}
@@ -25622,6 +25494,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -26230,6 +26103,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -26650,6 +26524,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -26877,6 +26752,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -27815,6 +27691,7 @@ MonoBehaviour:
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 2.57
+  m_characterHorizontalScale: 1
   m_wordSpacing: 21.53
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -28080,6 +27957,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -28217,6 +28095,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -28682,6 +28561,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -29087,17 +28967,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 422a226767551414ea63b8346b94cf4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
-  unitManager: {fileID: 2087691131}
-  unitList: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2, type: 2}
-  frogAnchor: {fileID: 102165638}
-  unitPrefab: {fileID: 4106141727428995005, guid: e9f8a044aacf9498eb482430f1da38f4,
-    type: 3}
-  spawnAnchor: {fileID: 1329972940}
-  currentTimer: 0
-  navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
-  gameplayView: {fileID: 11400000, guid: 76e524d331f5b4a15b8b9df9fff47b4d, type: 2}
-  vibeMeterCanvas: {fileID: 1365724380}
 --- !u!114 &1170789630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29554,6 +29423,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -29737,6 +29607,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -30090,6 +29961,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -30640,6 +30512,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -30826,6 +30699,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -31796,6 +31670,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -31933,6 +31808,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -32498,6 +32374,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -32675,6 +32552,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -33249,6 +33127,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -34134,6 +34013,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -34271,6 +34151,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -35248,78 +35129,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!1 &1446848725
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1446848727}
-  - component: {fileID: 1446848726}
-  m_Layer: 0
-  m_Name: Gameplay Virtual Camera
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1446848726
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1446848725}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ExcludedPropertiesInInspector:
-  - m_Script
-  m_LockStageInInspector: 
-  m_StreamingVersion: 20170927
-  m_Priority: 10
-  m_StandbyUpdate: 2
-  m_LookAt: {fileID: 0}
-  m_Follow: {fileID: 0}
-  m_Lens:
-    FieldOfView: 60.216278
-    OrthographicSize: 10
-    NearClipPlane: 0.3
-    FarClipPlane: 1000
-    Dutch: 0
-    ModeOverride: 0
-    LensShift: {x: 0, y: 0}
-    GateFit: 2
-    FocusDistance: 10
-    m_SensorSize: {x: 1, y: 1}
-  m_Transitions:
-    m_BlendHint: 0
-    m_InheritPosition: 0
-    m_OnCameraLive:
-      m_PersistentCalls:
-        m_Calls: []
-  m_LegacyBlendHint: 0
-  m_ComponentOwner: {fileID: 327665641}
---- !u!4 &1446848727
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1446848725}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 327665641}
-  m_Father: {fileID: 693003846}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1454621655
 GameObject:
   m_ObjectHideFlags: 0
@@ -35674,6 +35483,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -35811,6 +35621,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -36112,6 +35923,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -36492,81 +36304,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tutorialParty: {fileID: 11400000, guid: d2ecfe3914a684efa8c6711f0e3427c0, type: 2}
   firstParty: {fileID: 11400000, guid: 3e2126086a0bf4939a1d9425c43b733e, type: 2}
-  sceneNavigation: {fileID: 11400000, guid: 5c885c9a984a3470684bef7e76ca5c2a, type: 2}
-  unitReference: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2, type: 2}
-  unitManager: {fileID: 2087691131}
-  playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
   storyReference: {fileID: 11400000, guid: ccd6553192cde4616980b916ffb4faa7, type: 2}
   photoReference: {fileID: 11400000, guid: cb7b1e6b2b5d744488ab7a95f0210ad8, type: 2}
   guestPictureAnchor: {fileID: 1329972940}
   cameraPositionAnchor: {fileID: 197055839}
-  danceActivity: {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}
-  danceZoneAnchor: {fileID: 0}
-  sporeActivity: {fileID: 11400000, guid: 20234f3cd19d34d52ba858ad98b27405, type: 2}
-  sporeZoneAnchor: {fileID: 0}
-  shruneReadingActivity: {fileID: 11400000, guid: 6acca8bf6674942fc809a4d20308a3af,
-    type: 2}
-  shruneReadingAnchor: {fileID: 0}
   initialUI: {fileID: 2016030642}
   navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
   gameplayView: {fileID: 11400000, guid: 76e524d331f5b4a15b8b9df9fff47b4d, type: 2}
   dialogueReference: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
   lostDialogue:
-  - unit: {fileID: 0}
-    text: oof what a trip
-    responses: []
-    type: 0
-    action: 0
-    element: 
-  - unit: {fileID: 0}
-    text: 'where am i?
+  - text: oof what a trip
+  - text: 'where am i?
 
       (always the question)'
-    responses: []
-    type: 0
-    action: 0
-    element: 
-  - unit: {fileID: 0}
-    text: 'best i ask around
+  - text: 'best i ask around
 
       huh?'
-    responses: []
-    type: 0
-    action: 0
-    element: 
   letsTakeAPhotoDialogue:
-  - unit: {fileID: 0}
-    text: alright friends, that's the end of my set, thanks for coming to my party
-    responses: []
-    type: 0
-    action: 0
-    element: 
-  - unit: {fileID: 0}
-    text: 'before you leave, let''s take a pic yea? '
-    responses: []
-    type: 0
-    action: 0
-    element: 
-  - unit: {fileID: 0}
-    text: hey you over there, would you help a frog out?
-    responses: []
-    type: 0
-    action: 0
-    element: 
+  - text: alright friends, that's the end of my set, thanks for coming to my party
+  - text: 'before you leave, let''s take a pic yea? '
+  - text: hey you over there, would you help a frog out?
   afterPhotoTakenDialogue:
-  - unit: {fileID: 0}
-    text: oh gosh golly, we look great!
-    responses: []
-    type: 0
-    action: 0
-    element: 
-  - unit: {fileID: 0}
-    text: alright thanks for coming, and as always love
-    responses: []
-    type: 0
-    action: 0
-    element: 
+  - text: oh gosh golly, we look great!
+  - text: alright thanks for coming, and as always love
 --- !u!1 &1485212479
 GameObject:
   m_ObjectHideFlags: 0
@@ -37044,6 +36805,7 @@ MonoBehaviour:
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 2.57
+  m_characterHorizontalScale: 1
   m_wordSpacing: 21.53
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -37754,7 +37516,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88dde70a55cd64d3cbcba2d07431e7f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitListReference: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2, type: 2}
+  unitInstanceService: {fileID: 0}
   fungalImage: {fileID: 695539377}
   fungalName: {fileID: 760044970}
   relationshipSlider: {fileID: 21666382}
@@ -38917,6 +38679,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1610164944}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1610164948 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7648035716296380751, guid: b1747face9cb04ce399d11a1df9ed869,
+    type: 3}
+  m_PrefabInstance: {fileID: 1610164944}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfdb3ff39d7d94b63aebb4052e8031d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1618316999
 GameObject:
   m_ObjectHideFlags: 0
@@ -39218,6 +38992,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -39725,6 +39500,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -40363,55 +40139,20 @@ MonoBehaviour:
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   dialogueReference: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
   workTogetherDialogue:
-  - unit: {fileID: 0}
-    text: 'WAHT? you didn''t mean to come to my party?
+  - text: 'WAHT? you didn''t mean to come to my party?
 
       but i threw it 4 u!
       i''m just kidding, so...'
-    responses: []
-    type: 0
-    action: 0
-    element: 
-  - unit: {fileID: 0}
-    text: you're lost? join the club. no literally. join my club :) i'm trying to
+  - text: you're lost? join the club. no literally. join my club :) i'm trying to
       build a reputation
-    responses: []
-    type: 0
-    action: 0
-    element: 
-  - unit: {fileID: 0}
-    text: you may be lost today so party along the way
-    responses: []
-    type: 0
-    action: 0
-    element: 
-  - unit: {fileID: 0}
-    text: do you wanna help out?
-    responses: []
-    type: 0
-    action: 0
-    element: 
-  - unit: {fileID: 0}
-    text: yay! ok we're going to need to more plants. when we party, so do the plants.
-    responses: []
-    type: 0
-    action: 0
-    element: 
-  - unit: {fileID: 0}
-    text: they emit spores and spores are EVERYTHING. here take this, it's yours,
+  - text: you may be lost today so party along the way
+  - text: do you wanna help out?
+  - text: yay! ok we're going to need to more plants. when we party, so do the plants.
+  - text: they emit spores and spores are EVERYTHING. here take this, it's yours,
       why don't you go plant this somewhere
-    responses: []
-    type: 0
-    action: 4
-    element: 
   buildCompleteDialogue:
-  - unit: {fileID: 0}
-    text: sweet! now its a party. alright i have my friends on the ready. let me
+  - text: sweet! now its a party. alright i have my friends on the ready. let me
       know when you're ready.
-    responses: []
-    type: 0
-    action: 0
-    element: 
   playerAnchor: {fileID: 1881101864}
   frogAnchor: {fileID: 238164570}
   plantGift: {fileID: 7274716744692762698}
@@ -40902,6 +40643,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -43631,6 +43373,97 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1810025239}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1812709326
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1882211478}
+    m_Modifications:
+    - target: {fileID: 109002106049269285, guid: 82279fc98484043e4839c80d41b5326a,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 109002106049269285, guid: 82279fc98484043e4839c80d41b5326a,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 109002106049269285, guid: 82279fc98484043e4839c80d41b5326a,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2.84
+      objectReference: {fileID: 0}
+    - target: {fileID: 109002106049269285, guid: 82279fc98484043e4839c80d41b5326a,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9659258
+      objectReference: {fileID: 0}
+    - target: {fileID: 109002106049269285, guid: 82279fc98484043e4839c80d41b5326a,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.2588191
+      objectReference: {fileID: 0}
+    - target: {fileID: 109002106049269285, guid: 82279fc98484043e4839c80d41b5326a,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 109002106049269285, guid: 82279fc98484043e4839c80d41b5326a,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 109002106049269285, guid: 82279fc98484043e4839c80d41b5326a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 109002106049269285, guid: 82279fc98484043e4839c80d41b5326a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 109002106049269285, guid: 82279fc98484043e4839c80d41b5326a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1978737160216740394, guid: 82279fc98484043e4839c80d41b5326a,
+        type: 3}
+      propertyPath: target
+      value: 
+      objectReference: {fileID: 995179148}
+    - target: {fileID: 8668372443482122776, guid: 82279fc98484043e4839c80d41b5326a,
+        type: 3}
+      propertyPath: m_Name
+      value: 'Gameplay Camera Controller '
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 82279fc98484043e4839c80d41b5326a, type: 3}
+--- !u!4 &1812709327 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 109002106049269285, guid: 82279fc98484043e4839c80d41b5326a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1812709326}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1812709332 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1978737160216740394, guid: 82279fc98484043e4839c80d41b5326a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1812709326}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd616dca532cd46d091b3997dcf8a2b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1818217113
 GameObject:
   m_ObjectHideFlags: 0
@@ -44433,9 +44266,9 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 64
-  navigation: {fileID: 11400000, guid: 7af35f01730a846d692adda4734cddd3, type: 2}
   homeView: {fileID: 11400000, guid: 76e524d331f5b4a15b8b9df9fff47b4d, type: 2}
-  partyView: {fileID: 11400000, guid: 9bfb1103a1c06425080a014677e9dbed, type: 2}
+  virtualJoystick: {fileID: 1610164948}
+  cameraRotationController: {fileID: 1812709332}
   selected: {fileID: 0}
 --- !u!1 &1858841102
 GameObject:
@@ -45040,6 +44873,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -45481,6 +45315,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -46498,6 +46333,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -47164,18 +47000,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2038075241 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8410541423507090983, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
-    type: 3}
-  m_PrefabInstance: {fileID: 7305205459602921054}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 385d8aaab4d1f4d28b438ca704a43f7d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2056489155
 GameObject:
   m_ObjectHideFlags: 0
@@ -47641,16 +47465,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c47aaccae7a1347f2bdda3ca9bd978a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitList: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2, type: 2}
-  unitPrefab: {fileID: 4106141727428995005, guid: e9f8a044aacf9498eb482430f1da38f4,
-    type: 3}
-  unitSpawnAnchor: {fileID: 1694181736}
-  playerController: {fileID: 2038075241}
+  unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
+    type: 2}
   textAsset: {fileID: 4900000, guid: 653e626fc96d2478fa72e028a19d495d, type: 3}
-  unitControllers: []
   portalPrefab: {fileID: 4051312024755215841, guid: e9a29fa9f135940e7825900f5cc5ce4f,
     type: 3}
-  spawnOffsetY: -1
   riseCurve:
     serializedVersion: 2
     m_Curve:
@@ -49005,8 +48824,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 304056670036744325}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.24420099, y: 0, z: 0, w: 0.96972466}
-  m_LocalPosition: {x: 0, y: 6.244487, z: -13.807318}
+  m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
+  m_LocalPosition: {x: 0, y: 5.000001, z: -10.820253}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -52643,6 +52462,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -53509,7 +53329,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 1248008441582008258, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1812709327}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aeb9ea07d40654a459c0e87b5ab0f0d2, type: 3}
 --- !u!114 &7381932254542758454
@@ -54854,7 +54678,6 @@ SceneRoots:
   - {fileID: 818851464}
   - {fileID: 189055205}
   - {fileID: 1851915126}
-  - {fileID: 693003846}
   - {fileID: 7305205459602921054}
   - {fileID: 2328578699890120328}
   - {fileID: 940769017}

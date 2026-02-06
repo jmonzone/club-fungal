@@ -71,7 +71,9 @@ MonoBehaviour:
       level: 1
       xp: 0
     friends: []
-    moments: []
+    moments:
+    - interaction: {fileID: 11400000, guid: 0740db2fd21f44859941442e25af726b, type: 2}
+      isComplete: 0
   - template: {fileID: 11400000, guid: 1c13d7c1ade7f486ca3ed346a8a49b51, type: 2}
     data:
       id: player
@@ -125,7 +127,9 @@ MonoBehaviour:
       level: 1
       xp: 0
     friends: []
-    moments: []
+    moments:
+    - interaction: {fileID: 11400000, guid: 5aa5b33e58c2149b9ae9267050d6e3ac, type: 2}
+      isComplete: 0
   - template: {fileID: 11400000, guid: 6457afa495a7344de88409e5f7c817be, type: 2}
     data:
       id: the tree

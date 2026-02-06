@@ -31,12 +31,6 @@ public class UnitControllerService : GURUService
     public override void OnSceneLoaded()
     {
         InitializeControllers();
-
-        // var sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
-        // if (sceneName == "Gameplay" || sceneName == "Club Fungal")
-        // {
-        //     SpawnMissingControllers(instancesById);
-        // }
     }
 
     private void InitializeControllers()
@@ -48,6 +42,12 @@ public class UnitControllerService : GURUService
 
         var instancesById = unitInstanceService.Instances.ToDictionary(instance => instance.Id);
         InitializeExistingControllers(instancesById);
+
+        var sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        if (sceneName == "Gameplay" || sceneName == "Club Fungal")
+        {
+            SpawnMissingControllers(instancesById);
+        }
     }
 
     private void InitializeExistingControllers(Dictionary<string, UnitInstance> instancesById)
@@ -85,12 +85,12 @@ public class UnitControllerService : GURUService
         };
 
 #if UNITY_EDITOR
-        var unitController = PrefabUtility.InstantiatePrefab(unitPrefab, parent) as UnitController;
+        UnitController unitController;
+        unitController = PrefabUtility.InstantiatePrefab(unitPrefab, parent) as UnitController;
 #else
-        var unitController = Instantiate(unitPrefab, parent);
+        unitController = Instantiate(unitPrefab, parent);
 #endif
-        unitController.transform.position = spawnPosition;
-        unitController.transform.rotation = Quaternion.identity;
+        unitController.transform.SetPositionAndRotation(spawnPosition, Quaternion.identity);
         unitController.Initialize(unit);
 
         unitControllers.Add(unitController);

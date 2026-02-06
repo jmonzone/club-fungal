@@ -168,11 +168,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderRoot: {fileID: 1647962025224334118}
-  destination: {fileID: 0}
-  dialogue: {fileID: 0}
+  destination: {fileID: 4440137496922120304}
+  dialogue: {fileID: 1162159686060968867}
   defaultBehaviour: {fileID: 8396654974067815368}
   defaultInteraction: {fileID: 11400000, guid: cd6893964a6274906b52bbbf6b56f4d8, type: 2}
-  instance: {fileID: 11400000, guid: c5fe3b2204b8a471f9ab1ed260b7d9b9, type: 2}
+  instance:
+    template: {fileID: 0}
+    data:
+      id: 
+      name: 
+      displayName: 
+      species: {fileID: 0}
+      job: {fileID: 0}
+      element: 0
+      colorPalette: {fileID: 0}
+      scene: 
+      friendshipLevel: 0
+      friendshipXP: 0
+      friends: []
+      interactions: []
+      skills: []
+    skills: []
+    friends: []
+    moments: []
   currentBehaviour: {fileID: 0}
   targetLookPosition: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
@@ -215,7 +233,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitPlayer
   isActive: 0
-  isPaused: 0
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
 --- !u!114 &8264549079356023806
 MonoBehaviour:
@@ -254,10 +271,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  isPaused: 0
   target: {fileID: 0}
   leader: {fileID: 0}
   followers: []
+  navMeshAgent: {fileID: 225081015780643707}
 --- !u!114 &4440137496922120304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -286,7 +303,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  isPaused: 0
   dJTableReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
   step: 4
   audioClips:
@@ -438,7 +454,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  isPaused: 0
   activityReference: {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}
   djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
   baseDanceAnimation: Dance_SwordAndShield
@@ -455,7 +470,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  isPaused: 0
   activityReference: {fileID: 11400000, guid: 20234f3cd19d34d52ba858ad98b27405, type: 2}
   sporeOffset: {x: 0, y: 0.1, z: 0.4}
 --- !u!114 &495309119734572904
@@ -507,7 +521,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShruneReadingUnit
   isActive: 0
-  isPaused: 0
   activityReference: {fileID: 11400000, guid: 6acca8bf6674942fc809a4d20308a3af, type: 2}
 --- !u!114 &8974912156065095882
 MonoBehaviour:
@@ -522,7 +535,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitSpore
   isActive: 0
-  isPaused: 0
   emissionInterval: 1
 --- !u!1 &5392631694524631568
 GameObject:
