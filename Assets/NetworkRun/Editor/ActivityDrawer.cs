@@ -50,6 +50,20 @@ namespace TheFungalNetwork.Editor
                     }
                 ),
                 new ActivityItemAction(
+                    text: "Delete Activity & Skill",
+                    emoji: "🗑️",
+                    action: () =>
+                    {
+                        if (EditorUtility.DisplayDialog("Delete Activity",
+                            $"Are you sure you want to delete '{activity.Name}' and its associated skill? This cannot be undone.",
+                            "Delete", "Cancel"))
+                        {
+                            DeleteActivityAndSkill(selectedRoom, activity);
+                            onChanged?.Invoke();
+                        }
+                    }
+                ),
+                new ActivityItemAction(
                     text: "Select Template",
                     emoji: "📄",
                     action: () => Selection.activeObject = activity.Template
@@ -178,6 +192,40 @@ namespace TheFungalNetwork.Editor
                 room.Data.activities.Remove(activity);
                 EditorUtility.SetDirty(room);
                 AssetDatabase.SaveAssets();
+            }
+        }
+
+        private static void DeleteActivityAndSkill(RoomTemplate room, ActivityInstance activity)
+        {
+            RemoveActivityFromRoom(room, activity);
+
+            if (activity.Template != null)
+            {
+                var templatePath = AssetDatabase.GetAssetPath(activity.Template);
+
+                if (!string.IsNullOrEmpty(templatePath))
+                {
+                    var folderPath = System.IO.Path.GetDirectoryName(templatePath);
+
+                    if (activity.Template.PrimarySkill != null)
+                    {
+                        var skillPath = AssetDatabase.GetAssetPath(activity.Template.PrimarySkill);
+                        if (!string.IsNullOrEmpty(skillPath))
+                        {
+                            AssetDatabase.DeleteAsset(skillPath);
+                        }
+                    }
+
+                    AssetDatabase.DeleteAsset(templatePath);
+
+                    if (!string.IsNullOrEmpty(folderPath) && AssetDatabase.IsValidFolder(folderPath))
+                    {
+                        AssetDatabase.DeleteAsset(folderPath);
+                    }
+
+                    AssetDatabase.SaveAssets();
+                    AssetDatabase.Refresh();
+                }
             }
         }
     }
