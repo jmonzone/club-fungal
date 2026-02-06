@@ -9,6 +9,17 @@ public abstract class ActivityBehaviour : MonoBehaviour
 
     protected virtual void Awake()
     {
+        var activityController = GetComponentInParent<ActivityController>();
+
+        if (activityController.Activity)
+        {
+            SetActivity(activityController.Activity);
+        }
+
+        activityController.OnInitialized += () =>
+        {
+            SetActivity(activityController.Activity);
+        };
     }
 
     protected virtual void OnEnable()
@@ -47,27 +58,7 @@ public abstract class ActivityBehaviour : MonoBehaviour
     }
 }
 
-public abstract class ActivityComponent : ActivityBehaviour
-{
-    protected override void Awake()
-    {
-        base.Awake();
-
-        var activityController = GetComponentInParent<ActivityController>();
-
-        if (activityController.Activity)
-        {
-            SetActivity(activityController.Activity);
-        }
-
-        activityController.OnInitialized += () =>
-        {
-            SetActivity(activityController.Activity);
-        };
-    }
-}
-
-public abstract class ActivityUI : ActivityComponent
+public abstract class ActivityUI : ActivityBehaviour
 {
     private Camera mainCamera;
 

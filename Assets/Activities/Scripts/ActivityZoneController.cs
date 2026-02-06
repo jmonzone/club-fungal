@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class ActivityZoneController : ActivityComponent, IInteractable
+public class ActivityZoneController : ActivityBehaviour, IInteractable
 {
     [Header("References")]
     [SerializeField] private PlayerActivityReference activityUIReference;

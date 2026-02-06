@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -11,6 +12,7 @@ public class ActivityInstance
     public string Id => data.id;
     public string Name => data.name;
     public ActivityReference Template => template;
+    public List<UnitInstance> Units => data.units;
 
     public ActivityInstance(ActivityData data)
     {
@@ -32,6 +34,45 @@ public class ActivityInstance
     public void SetTemplate(ActivityReference template)
     {
         this.template = template;
+    }
+
+    public void AddUnit(UnitInstance unit)
+    {
+        if (data.units == null)
+        {
+            data.units = new List<UnitInstance>();
+        }
+        if (!data.units.Contains(unit))
+        {
+            data.units.Add(unit);
+        }
+    }
+
+    public void RemoveUnit(UnitInstance unit)
+    {
+        if (data.units != null)
+        {
+            data.units.Remove(unit);
+        }
+    }
+
+    public void Update()
+    {
+        // Activity update logic here
+    }
+
+    public void Update(NetworkRun networkRun)
+    {
+        if (template?.Components != null)
+        {
+            foreach (var component in template.Components)
+            {
+                if (component != null)
+                {
+                    component.Update(networkRun, this);
+                }
+            }
+        }
     }
 
     public override bool Equals(object obj)

@@ -93,7 +93,10 @@ namespace TheFungalNetwork.Editor
             }
 
             // Menu button
-            DrawMenuButton(menuItems);
+            if (menuItems != null && menuItems.Count > 0)
+            {
+                DrawMenuButton(menuItems);
+            }
             EditorGUILayout.EndVertical();
 
             GUI.backgroundColor = originalBG;

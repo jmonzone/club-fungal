@@ -25,6 +25,11 @@ namespace TheFungalNetwork.Editor
         private RoomSelectionDrawer roomSelectionDrawer;
         private CurrentRoomDrawer currentRoomDrawer;
         private PartyDrawer partyDrawer;
+        private InventoryDrawer inventoryDrawer;
+
+        private bool isRunning = false;
+        private int frameCount = 0;
+        private const int RepaintInterval = 30;
 
         void OnEnable()
         {
@@ -36,6 +41,15 @@ namespace TheFungalNetwork.Editor
             roomSelectionDrawer = new RoomSelectionDrawer();
             currentRoomDrawer = new CurrentRoomDrawer();
             partyDrawer = new PartyDrawer();
+            inventoryDrawer = new InventoryDrawer();
+        }
+
+        void OnDisable()
+        {
+            if (isRunning)
+            {
+                StopRun();
+            }
         }
 
         private void LoadRoomTemplates()
@@ -67,7 +81,16 @@ namespace TheFungalNetwork.Editor
 
             EditorGUILayout.Space(10);
 
+            DrawPlayPauseButtons();
+
+            EditorGUILayout.Space(10);
+
             roomSelectionDrawer.Draw(roomTemplates, ref selectedRoomIndex, ref currentRun, LoadRoomTemplates);
+
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            EditorGUILayout.Space(10);
+
+            inventoryDrawer.Draw(currentRun);
 
             EditorGUILayout.Space(10);
 
@@ -80,6 +103,79 @@ namespace TheFungalNetwork.Editor
             EditorGUILayout.EndScrollView();
 
             EditorGUILayout.EndVertical();
+        }
+
+        private void DrawPlayPauseButtons()
+        {
+            EditorGUILayout.BeginHorizontal();
+
+            if (!isRunning)
+            {
+                if (GUILayout.Button("▶ Play", GUILayout.Height(30)))
+                {
+                    StartRun();
+                }
+            }
+            else
+            {
+                if (GUILayout.Button("⏸ Pause", GUILayout.Height(30)))
+                {
+                    PauseRun();
+                }
+            }
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private void StartRun()
+        {
+            isRunning = true;
+            EditorApplication.update += UpdateLoop;
+        }
+
+        private void PauseRun()
+        {
+            isRunning = false;
+            EditorApplication.update -= UpdateLoop;
+        }
+
+        private void StopRun()
+        {
+            isRunning = false;
+            EditorApplication.update -= UpdateLoop;
+        }
+
+        private void UpdateLoop()
+        {
+            if (!isRunning) return;
+
+            bool hasUpdates = false;
+
+            if (currentRun != null && roomTemplates != null && roomTemplates.Count > selectedRoomIndex)
+            {
+                var currentRoom = roomTemplates[selectedRoomIndex];
+                if (currentRoom?.Data?.activities != null)
+                {
+                    foreach (var activity in currentRoom.Data.activities)
+                    {
+                        if (activity != null)
+                        {
+                            activity.Update(currentRun);
+                            hasUpdates = true;
+                        }
+                    }
+                }
+            }
+
+            if (hasUpdates)
+            {
+                frameCount++;
+                if (frameCount >= RepaintInterval)
+                {
+                    frameCount = 0;
+                    Repaint();
+                }
+            }
         }
     }
 }

@@ -12,6 +12,7 @@ public class ActivityReference : ScriptableObject
     [SerializeField] private ViewReference activityView;
     [SerializeField] private Skill primarySkill;
     [SerializeField] private ActivityController activityControllerPrefab;
+    [SerializeField] private List<ActivityComponent> components = new List<ActivityComponent>();
 
     [Header("Runtime")]
     [SerializeField] private Vector3 origin;
@@ -21,6 +22,7 @@ public class ActivityReference : ScriptableObject
     public Sprite Sprite => sprite;
     public ViewReference ViewReference => activityView;
     public Skill PrimarySkill => primarySkill;
+    public List<ActivityComponent> Components => components;
 
     public Vector3 Origin => origin;
     public bool PlayerIsActive => player;

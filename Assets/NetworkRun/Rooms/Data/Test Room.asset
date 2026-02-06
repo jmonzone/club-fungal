@@ -20,3 +20,66 @@ MonoBehaviour:
       data:
         id: 8c8f856991d28df643fdb784
         name: Dance Activity
+        units: []
+    - template: {fileID: 11400000, guid: ca1aabf6e3c494667a63065cc6ff3a76, type: 2}
+      data:
+        id: 8293856964fbf3406eba1d37
+        name: Foraging
+        units:
+        - template: {fileID: 11400000, guid: 1c13d7c1ade7f486ca3ed346a8a49b51, type: 2}
+          data:
+            id: player
+            name: player
+            displayName: Player
+            species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
+            job: {fileID: 0}
+            element: 0
+            colorPalette: {fileID: 0}
+            scene: 
+            friendshipLevel: 0
+            friendshipXP: 0
+            friends: []
+            interactions: []
+            skills: []
+          skills:
+          - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+            level: 1
+            xp: 0
+          - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+            level: 1
+            xp: 0
+          - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+            level: 1
+            xp: 0
+          friends: []
+          moments: []
+        - template: {fileID: 11400000, guid: 9f94c43fcb7de4716af0753df9bbdbb3, type: 2}
+          data:
+            id: party frog
+            name: party frog
+            displayName: Party Frog
+            species: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
+            job: {fileID: 0}
+            element: 0
+            colorPalette: {fileID: 0}
+            scene: 
+            friendshipLevel: 0
+            friendshipXP: 0
+            friends: []
+            interactions: []
+            skills: []
+          skills:
+          - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+            level: 1
+            xp: 0
+          - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+            level: 1
+            xp: 0
+          - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+            level: 1
+            xp: 0
+          friends: []
+          moments:
+          - interaction: {fileID: 11400000, guid: 0740db2fd21f44859941442e25af726b,
+              type: 2}
+            isComplete: 0

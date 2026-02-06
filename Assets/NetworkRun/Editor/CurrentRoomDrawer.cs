@@ -54,9 +54,17 @@ namespace TheFungalNetwork.Editor
                 {
                     menu.AddItem(new GUIContent(activity.name), false, () => AddActivityToRoom(selectedRoom, activity));
                 }
+
+                menu.AddSeparator("");
+                menu.AddItem(new GUIContent("Create New Activity"), false, () => CreateNewActivity(selectedRoom));
             }
 
             menu.ShowAsContext();
+        }
+
+        private void CreateNewActivity(RoomTemplate selectedRoom)
+        {
+            ActivityCreationWindow.ShowWindow(selectedRoom);
         }
 
         private void AddActivityToRoom(RoomTemplate selectedRoom, ActivityReference activity)

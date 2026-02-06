@@ -19,5 +19,4 @@ MonoBehaviour:
     type: 3}
   origin: {x: -1.352847, y: 0, z: -1.638304}
   player: {fileID: 0}
-  units:
-  - {fileID: 0}
+  units: []
