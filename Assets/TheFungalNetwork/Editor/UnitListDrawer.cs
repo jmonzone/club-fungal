@@ -84,91 +84,13 @@ namespace TheFungalNetwork.Editor
                     };
 
                     // Draw the unit
-                    DrawUnit(icon, displayName, job, backgroundColor, shortcuts, menuItems, jobStyle, controller, displayItems);
+                    ItemDrawer.DrawItem(icon, displayName, job, backgroundColor, shortcuts, menuItems, displayItems);
                 }
                 catch (Exception ex)
                 {
                     EditorGUILayout.HelpBox($"Error drawing unit {unitInstance?.Id ?? "unknown"}: {ex.Message}\n{ex.StackTrace}", MessageType.Error);
                 }
             }
-        }
-
-        private static void DrawUnit(Texture icon, string displayName, string job, Color backgroundColor, List<UnitDrawerItemAction> shortcuts, List<UnitDrawerItemAction> menuItems, GUIStyle jobStyle, UnitController controller, List<UnitDrawerDisplayItem> displayItems)
-        {
-            EditorGUILayout.BeginHorizontal();
-            Color originalBG = GUI.backgroundColor;
-            GUI.backgroundColor = backgroundColor;
-            Color originalColor = GUI.color;
-            GUI.color = Color.white;
-            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            // Top: icon and info horizontal
-            EditorGUILayout.BeginHorizontal();
-            // Left side: icon
-            EditorGUILayout.BeginVertical();
-            // Draw icon
-            if (icon != null)
-            {
-                GUIContent content = new GUIContent(icon);
-                GUILayout.Label(content, GUILayout.Width(32), GUILayout.Height(32));
-            }
-            else
-            {
-                GUILayout.Label("No Icon", GUILayout.Width(32), GUILayout.Height(32));
-            }
-            EditorGUILayout.EndVertical();
-            // Right side: name and job
-            EditorGUILayout.BeginVertical();
-            EditorGUILayout.LabelField(displayName);
-            EditorGUILayout.Space(-2);
-            EditorGUILayout.LabelField(job, jobStyle);
-
-            foreach (var displayItem in displayItems)
-            {
-                if (displayItem.condition())
-                {
-                    GUI.color = displayItem.color;
-                    displayItem.drawAction();
-                    GUI.color = Color.white;
-                }
-            }
-            EditorGUILayout.EndVertical();
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.EndVertical();
-            EditorGUILayout.BeginVertical();
-
-            // Shortcuts
-            foreach (var actionItem in shortcuts)
-            {
-                if (actionItem.condition())
-                {
-                    Color originalBGShortcut = GUI.backgroundColor;
-                    GUI.backgroundColor = actionItem.backgroundColor ?? originalBGShortcut;
-                    if (GUILayout.Button(new GUIContent(actionItem.emoji, actionItem.text), GUILayout.Width(20), GUILayout.Height(20)))
-                    {
-                        actionItem.action();
-                    }
-                    GUI.backgroundColor = originalBGShortcut;
-                }
-            }
-
-            // ... button
-            if (GUILayout.Button("...", GUILayout.Width(20), GUILayout.Height(20)))
-            {
-                GenericMenu menu = new GenericMenu();
-                foreach (var actionItem in menuItems)
-                {
-                    if (actionItem.condition())
-                    {
-                        menu.AddItem(new GUIContent(actionItem.text), false, () => actionItem.action());
-                    }
-                }
-                menu.ShowAsContext();
-            }
-            EditorGUILayout.EndVertical();
-            GUI.backgroundColor = originalBG;
-            GUI.color = originalColor;
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.Space(5);
         }
     }
 }

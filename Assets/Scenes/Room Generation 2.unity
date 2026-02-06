@@ -59368,6 +59368,7 @@ GameObject:
   - component: {fileID: 4596016516629409359}
   - component: {fileID: 6319959642017140789}
   - component: {fileID: 5938224291943433423}
+  - component: {fileID: 8668372441766908414}
   m_Layer: 0
   m_Name: Isometric Camera Controller
   m_TagString: Untagged
@@ -59375,6 +59376,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8668372441766908414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8668372441766908413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d3993750f4df46cbb3b0e85fb9033b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraPanComponent
+  panSpeed: 0.05
+  panSmoothTime: 0.12
+  driftDamping: 0.99
+  panVelocity: {x: 0, y: 0, z: 0}
+  driftVelocity: {x: -0.061879396, y: 0.05432379, z: 0}
 --- !u!1001 &8704870209907885222
 PrefabInstance:
   m_ObjectHideFlags: 0

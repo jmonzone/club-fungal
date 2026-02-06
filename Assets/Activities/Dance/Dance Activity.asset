@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd90feebe4523426e82f058687423bef, type: 3}
   m_Name: Dance Activity
   m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: eeced34d807f6405d87b3b325e7a2337, type: 3}
   activityView: {fileID: 11400000, guid: 2376b3424466b48ecaa0fe32e9b08034, type: 2}
-  dialogueReference: {fileID: 11400000, guid: 66db6a8c7a0524bd8b89b88de939507f, type: 2}
-  unitListReference: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2, type: 2}
   primarySkill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
   activityControllerPrefab: {fileID: 4050794547405489306, guid: 39ee5be8268a84f1597e99d0420397bb,
     type: 3}
