@@ -135,21 +135,11 @@ namespace TheFungalNetwork.Editor
             string displayName = activity.Name;
             if (hasInspectComponent && currentRun?.CurrentRoom?.Data?.doors != null && inspectComponent?.AssignedDoor != null)
             {
-                var doors = currentRun.CurrentRoom.Data.doors;
-                int doorIndex = doors.IndexOf(inspectComponent.AssignedDoor);
-                if (doorIndex >= 0)
-                {
-                    displayName = $"Door {doorIndex + 1}: {activity.Name}";
-                }
+                displayName = GetDoorDisplayName(currentRun.CurrentRoom.Data.doors, inspectComponent.AssignedDoor, inspectComponent.GetType().Name);
             }
             else if (hasUnlockComponent && currentRun?.CurrentRoom?.Data?.doors != null && unlockComponent?.AssignedDoor != null)
             {
-                var doors = currentRun.CurrentRoom.Data.doors;
-                int doorIndex = doors.IndexOf(unlockComponent.AssignedDoor);
-                if (doorIndex >= 0)
-                {
-                    displayName = $"Door {doorIndex + 1}: {activity.Name}";
-                }
+                displayName = GetDoorDisplayName(currentRun.CurrentRoom.Data.doors, unlockComponent.AssignedDoor, unlockComponent.GetType().Name);
             }
 
             ItemDrawer.DrawItem(
@@ -161,6 +151,20 @@ namespace TheFungalNetwork.Editor
                 menuItems: menuItems,
                 displayItems: displayItems
             );
+        }
+
+        private static string GetDoorDisplayName(List<Door> doors, Door assignedDoor, string componentTypeName)
+        {
+            if (doors.Count > 1)
+            {
+                int doorIndex = doors.IndexOf(assignedDoor);
+                if (doorIndex >= 0)
+                {
+                    return $"Door {doorIndex + 1}: {componentTypeName}";
+                }
+            }
+
+            return $"Door: {componentTypeName}";
         }
 
         private static void DrawUnit(UnitInstance unit, ActivityInstance activity, RoomTemplate selectedRoom, System.Action onChanged)
