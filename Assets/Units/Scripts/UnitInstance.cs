@@ -97,7 +97,14 @@ public class UnitInstance
         this.data = initData;
         friends = new List<string>();
         moments = new List<UnitMoment>();
-        inventory = new Inventory();
+        inventory = new Inventory(GetInventoryCapacityForSpecies(data.species));
+    }
+
+    private static int GetInventoryCapacityForSpecies(UnitSpecies species)
+    {
+        const int baseCapacity = 10;
+        if (species?.Type == null) return baseCapacity;
+        return baseCapacity + species.Type.InventoryBonus;
     }
 
     public void SetTemplate(UnitTemplate template)

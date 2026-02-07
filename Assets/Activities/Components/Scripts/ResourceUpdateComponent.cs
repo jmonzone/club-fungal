@@ -7,9 +7,6 @@ public class ResourceUpdateComponent : ActivityComponent
     [SerializeField] private ItemTemplate itemTemplate;
     [SerializeField] private int itemsPerUpdate = 1;
     [SerializeField] private float updateInterval = 1f;
-    [SerializeField] private float aquaSpeedBonus = 2f; // Speed multiplier for Aqua units collecting fish
-    [SerializeField] private float pawSpeedBonus = 2f; // Speed multiplier for Paw units collecting spores
-    [SerializeField] private float skySpeedBonus = 2f; // Speed multiplier for Sky units (future use)
 
     private Dictionary<int, float> unitLastUpdateTimes = new Dictionary<int, float>();
 
@@ -23,16 +20,9 @@ public class ResourceUpdateComponent : ActivityComponent
             return 1f;
 
         var unitType = unit.Species.Type;
-        var itemId = itemTemplate.Id?.ToLower();
 
-        // Check for type matches and apply appropriate bonus
-        float speedBonus = 1f;
-        if (unitType == UnitType.Aqua && itemId?.Contains("fish") == true)
-            speedBonus = aquaSpeedBonus;
-        else if (unitType == UnitType.Paw && itemId?.Contains("spore") == true)
-            speedBonus = pawSpeedBonus;
-        else if (unitType == UnitType.Sky)
-            speedBonus = skySpeedBonus; // Reserved for future sky-type resources
+        // Get speed bonus from unit type for this resource
+        float speedBonus = unitType?.GetSpeedBonusForResource(itemTemplate) ?? 1f;
 
         // Add skill level bonus to speed
         if (activity?.Template?.PrimarySkill != null && unit?.Skills != null)

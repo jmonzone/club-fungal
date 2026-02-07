@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Tree
   m_EditorClassIdentifier: 
   id: tree
+  type: {fileID: 11400000, guid: 4beea518c1eb34ae7848300c1932b1c0, type: 2}
   sprite: {fileID: 21300000, guid: a7bb0020552b447278e887e40a358ecb, type: 3}
   prefab: {fileID: 3803047099492716171, guid: b5a65936c7fe74e3ca085c517af15846, type: 3}
   moves: []

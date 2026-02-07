@@ -1,14 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public enum UnitType
-{
-    None,
-    Aqua,
-    Sky,
-    Paw
-}
-
 /// <summary>
 /// Represents a unit type defining visual and animation properties.
 /// Contains the 2D sprite, 3D game object prefab, and available dance moves (animations).

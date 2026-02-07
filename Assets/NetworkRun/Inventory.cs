@@ -9,6 +9,11 @@ public class Inventory
     [SerializeField] private List<ItemStack> itemStacks = new List<ItemStack>();
     [SerializeField] private int maxCapacity = 10; // 0 = unlimited
 
+    public Inventory(int maxCapacity = 10)
+    {
+        this.maxCapacity = maxCapacity;
+    }
+
     [Serializable]
     public class ItemStack
     {

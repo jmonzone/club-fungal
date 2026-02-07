@@ -9,10 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67a5beef93c584273a484a04a6155fe5, type: 3}
-  m_Name: NetworkRunSettings
-  m_EditorClassIdentifier: Assembly-CSharp::NetworkRunSettings
-  defaultPartySize: 3
-  updateInterval: 1
-  debugMode: 1
-  speedMultiplier: 7.01
+  m_Script: {fileID: 11500000, guid: 61042d740525e46099e12bde4c37aa90, type: 3}
+  m_Name: Sky
+  m_EditorClassIdentifier: Assembly-CSharp::UnitType
+  id: sky
+  inventoryBonus: 0
+  resourceSpeedBonuses: []

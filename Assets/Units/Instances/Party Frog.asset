@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Party Frog
   m_EditorClassIdentifier: Assembly-CSharp::UnitTemplate
   data:
-    id: party frog
+    id: eaa387695f50be19290dc598
     name: party frog
     displayName: Party Frog
     species: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
