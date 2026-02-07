@@ -22,6 +22,7 @@ namespace TheFungalNetwork.Editor
         private List<RoomTemplate> roomTemplates;
         private int selectedRoomIndex = 0;
         private NetworkRun currentRun;
+        private NetworkRunSettings defaultSettings;
 
         private RoomSelectionDrawer roomSelectionDrawer;
         private CurrentRoomDrawer currentRoomDrawer;
@@ -40,6 +41,9 @@ namespace TheFungalNetwork.Editor
             unitInstanceService = GURUStyler.LoadAsset<UnitInstanceService>("UnitInstanceService");
             unlockComponentTemplate = GURUStyler.LoadAsset<UnlockComponent>("UnlockComponent");
             LoadRoomTemplates();
+
+            // Load default settings asset
+            defaultSettings = AssetDatabase.LoadAssetAtPath<NetworkRunSettings>("Assets/NetworkRun/NetworkRunSettings.asset");
 
             roomSelectionDrawer = new RoomSelectionDrawer();
             currentRoomDrawer = new CurrentRoomDrawer();
@@ -77,11 +81,30 @@ namespace TheFungalNetwork.Editor
             var headerStyle = new GUIStyle(GURUStyler.LogoStyle) { fontSize = 20 };
             EditorGUILayout.LabelField(headerText, headerStyle, GUILayout.Height(64));
 
+
             // Script field
             EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.ObjectField("Script", thisScript, typeof(MonoScript), false);
             EditorGUI.EndDisabledGroup();
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+
+            // Show settings connection status
+            string settingsStatus = defaultSettings != null ? $"Settings: Connected ({defaultSettings.name})" : "Settings: Not Connected";
+            var statusStyle = new GUIStyle(EditorStyles.miniLabel) { fontSize = 10, normal = { textColor = defaultSettings != null ? new Color(0.3f, 0.8f, 0.3f) : new Color(1f, 0.5f, 0.5f) } };
+            EditorGUILayout.LabelField(settingsStatus, statusStyle, GUILayout.Height(16));
+
+            // Debug mode toggle
+            if (defaultSettings != null)
+            {
+                EditorGUI.BeginChangeCheck();
+                bool debugMode = EditorGUILayout.ToggleLeft("Debug Mode", defaultSettings.debugMode, GUILayout.Width(120));
+                if (EditorGUI.EndChangeCheck())
+                {
+                    Undo.RecordObject(defaultSettings, "Toggle Debug Mode");
+                    defaultSettings.debugMode = debugMode;
+                    EditorUtility.SetDirty(defaultSettings);
+                }
+            }
 
 
 
@@ -140,8 +163,9 @@ namespace TheFungalNetwork.Editor
             LoadRoomTemplates();
             var doorConditions = LoadAllDoorConditions();
             var activities = LoadAllActivityReferences();
-            var party = GetRandomParty(3);
-            currentRun = new NetworkRun(doorConditions, activities, party, unlockComponentTemplate);
+            var partySize = defaultSettings != null ? defaultSettings.defaultPartySize : 3;
+            var party = GetRandomParty(partySize);
+            currentRun = new NetworkRun(doorConditions, activities, party, unlockComponentTemplate, defaultSettings);
             StartRun();
             Repaint();
         }

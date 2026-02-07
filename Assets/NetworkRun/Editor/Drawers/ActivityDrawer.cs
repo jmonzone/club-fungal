@@ -75,9 +75,6 @@ namespace TheFungalNetwork.Editor
                 )
             };
 
-            Texture icon = null;
-            if (activity.Template?.Sprite) icon = activity.Template.Sprite.texture;
-
             var displayItems = new List<UnitDrawerDisplayItem>();
 
             // Check if this activity has InspectComponent - if so, show door info
@@ -171,6 +168,17 @@ namespace TheFungalNetwork.Editor
                         }
                     }
                 }
+            }
+
+            // Assign icon after component detection
+            Texture icon = null;
+            if (hasResourceUpdateComponent && resourceUpdateComponent?.ItemTemplate?.Sprite != null)
+            {
+                icon = resourceUpdateComponent.ItemTemplate.Sprite.texture;
+            }
+            else if (activity.Template?.Sprite)
+            {
+                icon = activity.Template.Sprite.texture;
             }
 
             ItemDrawer.DrawItem(

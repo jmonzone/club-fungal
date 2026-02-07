@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
+
 public class NetworkRun
 {
     private RoomInstance currentRoom;
@@ -12,19 +13,22 @@ public class NetworkRun
     [SerializeField] private List<RoomInstance> visitedRooms;
     [SerializeField] private List<UnitInstance> party;
     [SerializeField] private UnlockComponent unlockComponentTemplate;
+    [SerializeField] private NetworkRunSettings settings;
 
     public Inventory Inventory => inventory;
     public RoomInstance CurrentRoom => currentRoom;
     public List<RoomInstance> VisitedRooms => visitedRooms;
     public List<UnitInstance> Party => party;
+    public NetworkRunSettings Settings => settings;
 
-    public NetworkRun(List<DoorCondition> doorConditions, List<ActivityReference> activities, List<UnitInstance> partyUnits, UnlockComponent unlockTemplate)
+    public NetworkRun(List<DoorCondition> doorConditions, List<ActivityReference> activities, List<UnitInstance> partyUnits, UnlockComponent unlockTemplate, NetworkRunSettings settings = null)
     {
         inventory = new Inventory();
         this.doorConditions = doorConditions ?? new List<DoorCondition>();
         this.activities = activities ?? new List<ActivityReference>();
         this.party = partyUnits ?? new List<UnitInstance>();
         this.unlockComponentTemplate = unlockTemplate;
+        this.settings = settings;
         visitedRooms = new List<RoomInstance>();
         currentRoom = CreateNewRoomInstance();
         visitedRooms.Add(currentRoom);

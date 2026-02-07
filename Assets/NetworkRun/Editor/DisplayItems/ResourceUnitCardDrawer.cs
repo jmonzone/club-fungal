@@ -7,6 +7,27 @@ namespace TheFungalNetwork.Editor
 {
     public class ResourceUnitCardDrawer
     {
+        // Draws a resource item with icon and label (count or name)
+        private void DrawResourceItem(ItemTemplate item, int? count = null, string labelOverride = null)
+        {
+            if (item == null) { GUILayout.Space(10); return; }
+            var icon = item.Sprite != null ? item.Sprite.texture : null;
+            var label = labelOverride ?? (count.HasValue ? $"{count.Value}x {item.DisplayName ?? item.Id}" : item.DisplayName ?? item.Id);
+            var style = new GUIStyle(EditorStyles.miniLabel)
+            {
+                alignment = TextAnchor.MiddleLeft,
+                fontSize = 8,
+                normal = { textColor = count.HasValue && count.Value > 0 ? new Color(0.5f, 1f, 0.5f) : new Color(0.7f, 0.7f, 0.7f) }
+            };
+            EditorGUILayout.BeginHorizontal(GUILayout.Width(90));
+            if (icon != null)
+                GUILayout.Box(icon, GUILayout.Width(14), GUILayout.Height(14));
+            else
+                GUILayout.Space(14);
+            EditorGUILayout.LabelField(label, style, GUILayout.Height(14), GUILayout.Width(66));
+            EditorGUILayout.EndHorizontal();
+        }
+
         private static Dictionary<string, CollectionState> _collectionStates = new Dictionary<string, CollectionState>();
 
         private class CollectionState
@@ -32,7 +53,10 @@ namespace TheFungalNetwork.Editor
             DrawName(unit);
             DrawSkillLevel(unit, activity);
             DrawXPProgressBar(unit, activity);
-            DrawSpeedBonus(unit, activity, resourceComponent);
+            if (currentRun.Settings.debugMode)
+            {
+                DrawSpeedBonus(unit, activity, resourceComponent);
+            }
             DrawDivider();
             DrawResourceCount(unit, resourceComponent);
             DrawClaimButton(unit, resourceComponent, currentRun, onChanged);
@@ -137,30 +161,11 @@ namespace TheFungalNetwork.Editor
             if (resourceComponent?.ItemTemplate != null)
             {
                 var count = unit.Inventory.GetItemCount(resourceComponent.ItemTemplate);
-                var resourceName = resourceComponent.ItemTemplate.DisplayName ?? resourceComponent.ItemTemplate.Id;
-                string countText;
-                Color textColor;
-                if (count > 0)
-                {
-                    countText = $"{count}x {resourceName}";
-                    textColor = new Color(0.5f, 1f, 0.5f);
-                }
-                else
-                {
-                    countText = "No resources";
-                    textColor = new Color(0.7f, 0.7f, 0.7f);
-                }
-                var countStyle = new GUIStyle(EditorStyles.miniLabel)
-                {
-                    alignment = TextAnchor.MiddleCenter,
-                    fontSize = 8,
-                    normal = { textColor = textColor }
-                };
-                EditorGUILayout.LabelField(countText, countStyle, GUILayout.Height(10), GUILayout.Width(90));
+                DrawResourceItem(resourceComponent.ItemTemplate, count);
             }
             else
             {
-                GUILayout.Space(10);
+                GUILayout.Space(16);
             }
         }
 
@@ -278,9 +283,10 @@ namespace TheFungalNetwork.Editor
         {
             var timeSinceLevelUp = EditorApplication.timeSinceStartup - state.LastLevelUpTime;
             var timeSinceCollection = EditorApplication.timeSinceStartup - state.LastCollectionTime;
-            var itemName = resourceComponent.ItemTemplate?.DisplayName ?? "Unknown";
-            string statusText;
-            Color statusColor;
+            var item = resourceComponent.ItemTemplate;
+            string statusText = null;
+            Color statusColor = Color.white;
+            string labelOverride = null;
 
             // Priority 1: Level up message (show for 2 seconds)
             if (timeSinceLevelUp < 2.0)
@@ -299,22 +305,23 @@ namespace TheFungalNetwork.Editor
             // Priority 2: Collection message (show for 2 seconds)
             else if (timeSinceCollection < 2.0)
             {
-                statusText = $"+{resourceComponent.ItemsPerUpdate} {itemName}";
+                statusText = $"+{resourceComponent.ItemsPerUpdate}";
                 statusColor = new Color(0.3f, 1f, 0.3f);
+                labelOverride = statusText + (item != null ? $" {item.DisplayName ?? item.Id}" : "");
             }
             // Priority 3: Collecting status
             else if (progress > 0)
             {
                 statusText = "Collecting...";
                 statusColor = new Color(0.7f, 0.7f, 1f);
-            }
-            else
-            {
-                statusText = "";
-                statusColor = Color.white;
+                labelOverride = statusText;
             }
 
-            if (!string.IsNullOrEmpty(statusText))
+            if (!string.IsNullOrEmpty(labelOverride) && item != null)
+            {
+                DrawResourceItem(item, null, labelOverride);
+            }
+            else if (!string.IsNullOrEmpty(statusText))
             {
                 var statusStyle = new GUIStyle(EditorStyles.miniLabel)
                 {
