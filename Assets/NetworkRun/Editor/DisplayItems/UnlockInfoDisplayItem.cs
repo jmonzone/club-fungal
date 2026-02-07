@@ -46,48 +46,40 @@ namespace TheFungalNetwork.Editor
 
                     EditorGUILayout.Space(4);
 
-                    // Show party units with contribution options
-                    if (currentRun.Party != null && currentRun.Party.Count > 0)
+                    // Show contribute button for network run inventory
+                    if (!hasEnough)
                     {
-                        EditorGUILayout.LabelField("Party Units:", EditorStyles.boldLabel);
+                        var inventoryItemCount = currentRun.Inventory.GetItemCount(unlockComponent.ResourceCondition.RequiredItem);
+                        var remainingNeeded = unlockComponent.RequiredAmount - unlockComponent.CurrentResourceCount;
+                        var canContribute = Mathf.Min(inventoryItemCount, remainingNeeded);
 
-                        foreach (var unit in currentRun.Party)
+                        if (canContribute > 0)
                         {
-                            if (unit != null)
+                            GUI.backgroundColor = new Color(0.7f, 1f, 0.7f);
+                            if (GUILayout.Button($"✓ Contribute {canContribute}x {resourceName} from Inventory", GUILayout.Height(30)))
                             {
-                                EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-
-                                EditorGUILayout.LabelField(unit.DisplayName, EditorStyles.boldLabel);
-
-                                // Show unit inventory
-                                var unitItemCount = unit.Inventory.GetItemCount(unlockComponent.ResourceCondition.RequiredItem);
-                                if (unitItemCount > 0)
+                                // Remove items from network run inventory and contribute to unlock progress
+                                for (int i = 0; i < canContribute; i++)
                                 {
-                                    EditorGUILayout.LabelField($"📦 {unitItemCount}x {resourceName}", EditorStyles.miniLabel);
-
-                                    // Show contribute button
-                                    var remainingNeeded = unlockComponent.RequiredAmount - unlockComponent.CurrentResourceCount;
-                                    var canContribute = Mathf.Min(unitItemCount, remainingNeeded);
-
-                                    if (canContribute > 0 && !hasEnough)
-                                    {
-                                        GUI.backgroundColor = new Color(0.7f, 1f, 0.7f);
-                                        if (GUILayout.Button($"✓ Contribute {canContribute}x {resourceName}", GUILayout.Height(24)))
-                                        {
-                                            unlockComponent.ContributeFromUnit(unit);
-                                            onChanged?.Invoke();
-                                        }
-                                        GUI.backgroundColor = Color.white;
-                                    }
+                                    currentRun.Inventory.RemoveItem(unlockComponent.ResourceCondition.RequiredItem);
                                 }
-                                else
+                                unlockComponent.ContributeResources(canContribute);
+                                Debug.Log($"Contributed {canContribute}x {resourceName} from network run inventory");
+
+                                // Check if door is now unlocked and open it automatically
+                                if (unlockComponent.IsUnlocked)
                                 {
-                                    EditorGUILayout.LabelField($"No {resourceName} to contribute", EditorStyles.miniLabel);
+                                    unlockComponent.CompleteTask(currentRun);
+                                    currentRun.OpenDoorAndTransition(door);
                                 }
 
-                                EditorGUILayout.EndVertical();
-                                EditorGUILayout.Space(2);
+                                onChanged?.Invoke();
                             }
+                            GUI.backgroundColor = Color.white;
+                        }
+                        else
+                        {
+                            EditorGUILayout.LabelField($"Collect {resourceName} to contribute", EditorStyles.miniLabel);
                         }
                     }
 

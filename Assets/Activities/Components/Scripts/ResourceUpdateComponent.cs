@@ -20,20 +20,15 @@ public class ResourceUpdateComponent : ActivityComponent
         if (Time.realtimeSinceStartup - lastUpdateTime >= updateInterval)
         {
             int unitCount = activityInstance.Units?.Count ?? 0;
+            int totalItems = itemsPerUpdate * unitCount;
 
-            if (unitCount > 0 && itemTemplate != null)
+            if (totalItems > 0 && itemTemplate != null)
             {
-                foreach (var unit in activityInstance.Units)
+                for (int i = 0; i < totalItems; i++)
                 {
-                    if (unit != null)
-                    {
-                        for (int i = 0; i < itemsPerUpdate; i++)
-                        {
-                            unit.Inventory.AddItem(itemTemplate);
-                        }
-                    }
+                    networkRun.Inventory.AddItem(itemTemplate);
                 }
-                Debug.Log($"Adding {itemsPerUpdate}x {itemTemplate.DisplayName} to {unitCount} unit inventories");
+                Debug.Log($"Adding {totalItems}x {itemTemplate.DisplayName} ({unitCount} units × {itemsPerUpdate}) to network run inventory");
             }
 
             lastUpdateTime = Time.realtimeSinceStartup;

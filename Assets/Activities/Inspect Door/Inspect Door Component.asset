@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InspectComponent
   displayName: Inspect Door
   inspectDuration: 10
+  autoCompleteOnInitialize: 1
   remainingDuration: 0
   isComplete: 0

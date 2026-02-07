@@ -4,6 +4,7 @@ using UnityEngine;
 public class InspectComponent : ActivityComponent
 {
     [SerializeField] private float inspectDuration = 10f;
+    [SerializeField] private bool autoCompleteOnInitialize = false;
 
     [SerializeField] private float remainingDuration;
     [SerializeField] private bool isComplete;
@@ -22,11 +23,20 @@ public class InspectComponent : ActivityComponent
 
     public override void Initialize(NetworkRun networkRun, ActivityInstance activityInstance)
     {
-        isComplete = false;
-
-        remainingDuration = inspectDuration;
-        lastUpdateTime = Time.realtimeSinceStartup;
-        Debug.Log($"InspectComponent Initialized - Duration: {inspectDuration}s");
+        if (autoCompleteOnInitialize)
+        {
+            isComplete = true;
+            remainingDuration = 0;
+            Debug.Log($"InspectComponent Auto-Completed on Initialize");
+            CompleteTask(networkRun, activityInstance);
+        }
+        else
+        {
+            isComplete = false;
+            remainingDuration = inspectDuration;
+            lastUpdateTime = Time.realtimeSinceStartup;
+            Debug.Log($"InspectComponent Initialized - Duration: {inspectDuration}s");
+        }
     }
 
     public override void DoUpdate(NetworkRun networkRun, ActivityInstance activityInstance)

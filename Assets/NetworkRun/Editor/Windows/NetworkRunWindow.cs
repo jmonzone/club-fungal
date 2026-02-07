@@ -104,11 +104,11 @@ namespace TheFungalNetwork.Editor
                 }
                 else
                 {
-                    inventoryDrawer.Draw(currentRun);
+                    currentRoomDrawer.Draw(currentRun);
 
                     EditorGUILayout.Space(10);
 
-                    currentRoomDrawer.Draw(currentRun);
+                    inventoryDrawer.Draw(currentRun);
 
                     EditorGUILayout.Space(10);
 

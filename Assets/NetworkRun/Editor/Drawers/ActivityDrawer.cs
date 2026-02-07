@@ -127,7 +127,7 @@ namespace TheFungalNetwork.Editor
             // If this activity has ResourceUpdateComponent, show collection progress
             if (hasResourceUpdateComponent && resourceUpdateComponent != null)
             {
-                var resourceProgressItem = new ResourceProgressDisplayItem(resourceUpdateComponent, activity);
+                var resourceProgressItem = new ResourceProgressDisplayItem(resourceUpdateComponent, activity, currentRun, onChanged);
                 displayItems.Add(resourceProgressItem);
             }
 
@@ -216,11 +216,6 @@ namespace TheFungalNetwork.Editor
             Texture icon = unit.Species?.Sprite?.texture;
 
             var displayItems = new List<UnitDrawerDisplayItem>();
-
-            // Add inventory display
-            var jobStyle = new GUIStyle(EditorStyles.miniLabel) { fontStyle = FontStyle.Italic, normal = { textColor = new Color(0.5f, 0.5f, 0.5f) } };
-            var inventoryItem = new InventoryDisplay(unit, jobStyle);
-            displayItems.Add(inventoryItem);
 
             // Add unlock contribution button if this activity has an unlock component
             if (unlockComponent != null && unlockComponent.ResourceCondition != null && currentRun != null)

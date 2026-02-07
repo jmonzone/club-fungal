@@ -139,10 +139,11 @@ public class NetworkRun
 
             activityInstance = new ActivityInstance(activityRefCopy);
 
-            // Initialize all components
+            // Initialize all components (iterate over a copy to avoid modification during enumeration)
             if (activityRefCopy.Components != null)
             {
-                foreach (var component in activityRefCopy.Components)
+                var componentsCopy = new List<ActivityComponent>(activityRefCopy.Components);
+                foreach (var component in componentsCopy)
                 {
                     if (component != null)
                     {
@@ -177,7 +178,7 @@ public class NetworkRun
             }
         }
 
-        var activityInstances = new List<ActivityInstance> { activityInstance };
+        var activityInstances = new List<ActivityInstance>();
 
         // Create doors list with no initial conditions - they will be assigned on inspect completion
         var doors = new List<Door> {
@@ -189,59 +190,53 @@ public class NetworkRun
             }
         };
 
-        // Create an inspect activity for each door
+        // Create an unlock activity for each door (skip inspect, go straight to unlock)
         if (inspectActivityRef != null)
         {
             foreach (var door in doors)
             {
-                // Create a runtime copy of the activity reference with copied components
-                var inspectRefCopy = ScriptableObject.Instantiate(inspectActivityRef);
-                inspectRefCopy.name = inspectActivityRef.name;
+                // Create ResourceCondition for the door based on the resource activity in this room
+                var resourceCondition = CreateResourceConditionForDoor(activityInstance);
 
-                // Copy all components so each room has independent state
-                if (inspectRefCopy.Components != null && inspectRefCopy.Components.Count > 0)
+                if (resourceCondition != null)
                 {
-                    var copiedComponents = new List<ActivityComponent>();
-                    foreach (var component in inspectRefCopy.Components)
+                    // Add the resource condition to the door
+                    if (door.conditions == null)
                     {
-                        if (component != null)
-                        {
-                            var componentCopy = ScriptableObject.Instantiate(component);
-                            componentCopy.name = component.name;
-
-                            // Assign door to InspectComponent
-                            if (componentCopy is InspectComponent inspectComp)
-                            {
-                                inspectComp.SetDoor(door);
-                            }
-
-                            copiedComponents.Add(componentCopy);
-                        }
+                        door.conditions = new System.Collections.Generic.List<DoorCondition>();
                     }
+                    door.conditions.Add(resourceCondition);
 
-                    // Replace the components list with the copied ones
+                    // Create a runtime copy of the activity reference
+                    var unlockRefCopy = ScriptableObject.Instantiate(inspectActivityRef);
+                    unlockRefCopy.name = inspectActivityRef.name;
+
+                    // Create UnlockComponent directly (skip InspectComponent)
+                    var unlockComponent = ScriptableObject.CreateInstance<UnlockComponent>();
+                    unlockComponent.name = "UnlockComponent";
+                    unlockComponent.SetDoorAndCondition(door, resourceCondition);
+
+                    // Set the components list to just the unlock component
+                    var copiedComponents = new List<ActivityComponent> { unlockComponent };
                     var componentsField = typeof(ActivityReference).GetField("components",
                         System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                    componentsField?.SetValue(inspectRefCopy, copiedComponents);
+                    componentsField?.SetValue(unlockRefCopy, copiedComponents);
+
+                    var unlockInstance = new ActivityInstance(unlockRefCopy);
+
+                    // Initialize the unlock component
+                    unlockComponent.Initialize(this, unlockInstance);
+
+                    activityInstances.Add(unlockInstance);
+                    Debug.Log($"Added unlock activity for door: {inspectActivityRef.name}");
                 }
-
-                var inspectInstance = new ActivityInstance(inspectRefCopy);
-
-                // Initialize all components
-                if (inspectRefCopy.Components != null)
-                {
-                    foreach (var component in inspectRefCopy.Components)
-                    {
-                        if (component != null)
-                        {
-                            component.Initialize(this, inspectInstance);
-                        }
-                    }
-                }
-
-                activityInstances.Add(inspectInstance);
-                Debug.Log($"Added inspect activity copy for door: {inspectActivityRef.name}");
             }
+        }
+
+        // Add resource activity after door activities
+        if (activityInstance != null)
+        {
+            activityInstances.Add(activityInstance);
         }
 
         return new RoomInstance(new RoomData
@@ -359,15 +354,33 @@ public class NetworkRun
         return roomItems;
     }
 
-    public ResourceCondition CreateResourceConditionForDoor()
+    public ResourceCondition CreateResourceConditionForDoor(ActivityInstance roomActivityInstance = null)
     {
-        // First, try to get items from the current room's activities
-        var roomItems = GetItemsFromRoomActivities();
-        var selectedItem = roomItems.Count > 0
-            ? roomItems[UnityEngine.Random.Range(0, roomItems.Count)]
-            : null;
+        ItemTemplate selectedItem = null;
 
-        // Fallback to any available item from all activities
+        // First, try to get item from the provided activity instance (the resource activity for this room)
+        if (roomActivityInstance?.Template?.Components != null)
+        {
+            foreach (var component in roomActivityInstance.Template.Components)
+            {
+                if (component is ResourceUpdateComponent resourceComponent && resourceComponent.ItemTemplate != null)
+                {
+                    selectedItem = resourceComponent.ItemTemplate;
+                    break;
+                }
+            }
+        }
+
+        // Fallback: try to get items from the current room's activities
+        if (selectedItem == null)
+        {
+            var roomItems = GetItemsFromRoomActivities();
+            selectedItem = roomItems.Count > 0
+                ? roomItems[UnityEngine.Random.Range(0, roomItems.Count)]
+                : null;
+        }
+
+        // Final fallback: any available item from all activities
         if (selectedItem == null)
         {
             var availableItems = GetAvailableItemsFromActivities();

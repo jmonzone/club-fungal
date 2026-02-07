@@ -6,7 +6,7 @@ namespace TheFungalNetwork.Editor
 {
     public class ResourceProgressDisplayItem : UnitDrawerDisplayItem
     {
-        public ResourceProgressDisplayItem(ResourceUpdateComponent resourceComponent, ActivityInstance activity)
+        public ResourceProgressDisplayItem(ResourceUpdateComponent resourceComponent, ActivityInstance activity, NetworkRun currentRun, System.Action onChanged)
         {
             condition = () => true;
             color = Color.white;
