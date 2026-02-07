@@ -36,8 +36,25 @@ public class ActivityInstance
         this.template = template;
     }
 
-    public void AddUnit(UnitInstance unit)
+    public void AddUnit(UnitInstance unit, List<ActivityInstance> allActivities = null)
     {
+        // Remove unit from any other activity first (units can only be in one activity at a time)
+        if (allActivities != null)
+        {
+            foreach (var otherActivity in allActivities)
+            {
+                if (otherActivity != null && otherActivity != this && otherActivity.Units != null)
+                {
+                    if (otherActivity.Units.Contains(unit))
+                    {
+                        otherActivity.RemoveUnit(unit);
+                        Debug.Log($"Removed {unit.DisplayName} from {otherActivity.Name}");
+                    }
+                }
+            }
+        }
+
+        // Add unit to this activity
         if (data.units == null)
         {
             data.units = new List<UnitInstance>();

@@ -33,7 +33,7 @@ namespace TheFungalNetwork.Editor
                     emoji: "➕",
                     action: () =>
                     {
-                        ShowAddUnitMenu(activity, selectedRoom, onChanged);
+                        ShowAddUnitMenu(activity, selectedRoom, onChanged, currentRun);
                     }
                 )
             };
@@ -120,7 +120,7 @@ namespace TheFungalNetwork.Editor
             // Add party units grid as display item
             if (unitInstanceService != null && unitInstanceService.Instances != null && unitInstanceService.Instances.Count > 0)
             {
-                var partyGridItem = new PartyUnitsGridDisplayItem(activity, selectedRoom, unitInstanceService, onChanged);
+                var partyGridItem = new PartyUnitsGridDisplayItem(activity, selectedRoom, unitInstanceService, onChanged, currentRun);
                 displayItems.Add(partyGridItem);
             }
 
@@ -218,7 +218,7 @@ namespace TheFungalNetwork.Editor
             }
         }
 
-        private static void ShowAddUnitMenu(ActivityInstance activity, RoomTemplate selectedRoom, System.Action onChanged)
+        private static void ShowAddUnitMenu(ActivityInstance activity, RoomTemplate selectedRoom, System.Action onChanged, NetworkRun currentRun = null)
         {
             var unitService = GURUStyler.LoadAsset<UnitInstanceService>("UnitInstanceService");
             if (unitService == null || unitService.Instances == null || unitService.Instances.Count == 0)
@@ -234,7 +234,7 @@ namespace TheFungalNetwork.Editor
                 {
                     menu.AddItem(new GUIContent(unit.DisplayName), false, () =>
                     {
-                        AddUnitToActivity(activity, unit, selectedRoom);
+                        AddUnitToActivity(activity, unit, selectedRoom, currentRun);
                         onChanged?.Invoke();
                     });
                 }
@@ -242,15 +242,27 @@ namespace TheFungalNetwork.Editor
             menu.ShowAsContext();
         }
 
-        private static void AddUnitToActivity(ActivityInstance activity, UnitInstance unit, RoomTemplate room)
+        private static void AddUnitToActivity(ActivityInstance activity, UnitInstance unit, RoomTemplate room, NetworkRun currentRun = null)
         {
-            activity.AddUnit(unit);
+            // Get all activities from either room or currentRun
+            List<ActivityInstance> allActivities = null;
+            if (currentRun?.CurrentRoom?.Data?.activities != null)
+            {
+                allActivities = currentRun.CurrentRoom.Data.activities;
+            }
+            else if (room?.Data?.activities != null)
+            {
+                allActivities = room.Data.activities;
+            }
+
+            // Add unit to the activity (logic handles removal from other activities)
+            activity.AddUnit(unit, allActivities);
             AssetDatabase.SaveAssets();
         }
 
         private class PartyUnitsGridDisplayItem : UnitDrawerDisplayItem
         {
-            public PartyUnitsGridDisplayItem(ActivityInstance activity, RoomTemplate selectedRoom, UnitInstanceService unitInstanceService, System.Action onChanged)
+            public PartyUnitsGridDisplayItem(ActivityInstance activity, RoomTemplate selectedRoom, UnitInstanceService unitInstanceService, System.Action onChanged, NetworkRun currentRun = null)
             {
                 condition = () => true;
                 color = new Color(0.95f, 0.95f, 1f);
@@ -291,7 +303,7 @@ namespace TheFungalNetwork.Editor
                             }
                             else
                             {
-                                AddUnitToActivity(activity, unit, selectedRoom);
+                                AddUnitToActivity(activity, unit, selectedRoom, currentRun);
                                 onChanged?.Invoke();
                             }
                         }
