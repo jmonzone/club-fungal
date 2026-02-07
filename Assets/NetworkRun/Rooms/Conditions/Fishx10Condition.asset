@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: Fishx2Condition
+  m_Script: {fileID: 11500000, guid: e57d0f100883640528e9b27f3a694256, type: 3}
+  m_Name: Fishx10Condition
   m_EditorClassIdentifier: Assembly-CSharp::ResourceCondition
   requiredItem: {fileID: 11400000, guid: 20b1daf91d6764492a8d2376e4644d03, type: 2}
-  requiredAmount: 2
+  requiredAmount: 10

@@ -69,7 +69,7 @@ public class ActivityInstance
             {
                 if (component != null)
                 {
-                    component.Update(networkRun, this);
+                    component.DoUpdate(networkRun, this);
                 }
             }
         }

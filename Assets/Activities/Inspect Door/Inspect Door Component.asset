@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: Sporex20Condition
-  m_EditorClassIdentifier: Assembly-CSharp::ResourceCondition
-  requiredItem: {fileID: 11400000, guid: ddde813dc82944f04928d4fd69f1a1b8, type: 2}
-  requiredAmount: 20
+  m_Script: {fileID: 11500000, guid: ef69d945126d64e2db222ab469f57552, type: 3}
+  m_Name: Inspect Door Component
+  m_EditorClassIdentifier: Assembly-CSharp::InspectComponent
+  inspectDuration: 10
+  remainingDuration: 0
+  isInitialized: 1

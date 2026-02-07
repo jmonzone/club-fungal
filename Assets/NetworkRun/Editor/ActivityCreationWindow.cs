@@ -10,7 +10,7 @@ namespace TheFungalNetwork.Editor
         private Sprite activitySprite;
         private Skill primarySkill;
         private System.Collections.Generic.List<ActivityComponent> components = new System.Collections.Generic.List<ActivityComponent>();
-        private RoomTemplate targetRoom;
+        private RoomData targetRoom;
         private Vector2 scrollPosition;
 
         private bool isCreatingNewSkill = false;
@@ -23,7 +23,7 @@ namespace TheFungalNetwork.Editor
         private int newComponentSporesPerUpdate = 1;
         private float newComponentUpdateInterval = 1f;
 
-        public static void ShowWindow(RoomTemplate room)
+        public static void ShowWindow(RoomData room)
         {
             var window = GetWindow<ActivityCreationWindow>("Create Activity");
             window.targetRoom = room;
@@ -412,15 +412,13 @@ namespace TheFungalNetwork.Editor
 
             if (targetRoom != null)
             {
-                if (targetRoom.Data.activities == null)
+                if (targetRoom.activities == null)
                 {
-                    targetRoom.Data.activities = new System.Collections.Generic.List<ActivityInstance>();
+                    targetRoom.activities = new System.Collections.Generic.List<ActivityInstance>();
                 }
 
                 var activityInstance = new ActivityInstance(newActivity);
-                targetRoom.Data.activities.Add(activityInstance);
-                EditorUtility.SetDirty(targetRoom);
-                AssetDatabase.SaveAssets();
+                targetRoom.activities.Add(activityInstance);
             }
 
             Selection.activeObject = newActivity;

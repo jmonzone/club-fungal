@@ -7,7 +7,7 @@ namespace TheFungalNetwork.Editor
 {
     public class DoorDrawer
     {
-        public static void DrawList(List<Door> doors, RoomTemplate selectedRoom, System.Action onChanged = null)
+        public static void DrawList(List<Door> doors, RoomTemplate selectedRoom, NetworkRun currentRun = null, System.Action onChanged = null)
         {
             if (doors == null || doors.Count == 0)
             {
@@ -17,26 +17,41 @@ namespace TheFungalNetwork.Editor
 
             for (int i = 0; i < doors.Count; i++)
             {
-                DrawDoor(doors[i], i, selectedRoom, onChanged);
+                DrawDoor(doors[i], i, selectedRoom, currentRun, onChanged);
             }
         }
 
-        private static void DrawDoor(Door door, int index, RoomTemplate selectedRoom, System.Action onChanged)
+        private static void DrawDoor(Door door, int index, RoomTemplate selectedRoom, NetworkRun currentRun, System.Action onChanged)
         {
-            var shortcuts = new List<UnitDrawerItemAction>
+            var shortcuts = new List<UnitDrawerItemAction>();
+
+            if (!door.isLocked && currentRun != null)
             {
-                new ActivityItemAction(
-                    text: door.isLocked ? "Unlock" : "Lock",
-                    emoji: door.isLocked ? "🔓" : "🔒",
+                shortcuts.Add(new ActivityItemAction(
+                    text: "Open",
+                    emoji: "🚪",
                     action: () =>
                     {
-                        door.isLocked = !door.isLocked;
-                        EditorUtility.SetDirty(selectedRoom);
-                        AssetDatabase.SaveAssets();
+                        currentRun.OpenDoorAndTransition(door);
                         onChanged?.Invoke();
                     }
-                )
-            };
+                ));
+            }
+
+            shortcuts.Add(new ActivityItemAction(
+                text: door.isLocked ? "Unlock" : "Lock",
+                emoji: door.isLocked ? "🔓" : "🔒",
+                action: () =>
+                {
+                    door.isLocked = !door.isLocked;
+                    if (selectedRoom != null)
+                    {
+                        EditorUtility.SetDirty(selectedRoom);
+                        AssetDatabase.SaveAssets();
+                    }
+                    onChanged?.Invoke();
+                }
+            ));
 
             var menuItems = new List<UnitDrawerItemAction>
             {
@@ -75,6 +90,26 @@ namespace TheFungalNetwork.Editor
                 displayItems.Add(conditionsItem);
             }
 
+            // Check if current room has any activities with InspectComponent
+            if (currentRun?.CurrentRoom?.Data?.activities != null)
+            {
+                foreach (var activity in currentRun.CurrentRoom.Data.activities)
+                {
+                    if (activity?.Template?.Components != null)
+                    {
+                        foreach (var component in activity.Template.Components)
+                        {
+                            if (component is InspectComponent inspectComponent)
+                            {
+                                var inspectItem = new InspectProgressDisplayItem(inspectComponent);
+                                displayItems.Add(inspectItem);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
             ItemDrawer.DrawItem(
                 icon: icon,
                 displayName: $"Door {index + 1}",
@@ -110,6 +145,26 @@ namespace TheFungalNetwork.Editor
                             }
                         }
                     }
+                };
+            }
+        }
+
+        private class InspectProgressDisplayItem : UnitDrawerDisplayItem
+        {
+            public InspectProgressDisplayItem(InspectComponent inspectComponent)
+            {
+                condition = () => true;
+                color = Color.white;
+                drawAction = () =>
+                {
+                    EditorGUILayout.Space(4);
+                    var progress = 1f - (inspectComponent.RemainingDuration / inspectComponent.InspectDuration);
+                    var rect = EditorGUILayout.GetControlRect(false, 20);
+                    rect.x += 8;
+                    rect.width -= 16;
+
+                    EditorGUI.ProgressBar(rect, progress, $"Inspect: {inspectComponent.RemainingDuration:F1}s / {inspectComponent.InspectDuration:F1}s");
+                    EditorGUILayout.Space(2);
                 };
             }
         }

@@ -9,7 +9,9 @@ public class ResourceUpdateComponent : ActivityComponent
 
     private float lastUpdateTime;
 
-    public override void Update(NetworkRun networkRun, ActivityInstance activityInstance)
+    public ItemTemplate ItemTemplate => itemTemplate;
+
+    public override void DoUpdate(NetworkRun networkRun, ActivityInstance activityInstance)
     {
         if (Time.realtimeSinceStartup - lastUpdateTime >= updateInterval)
         {
@@ -22,7 +24,7 @@ public class ResourceUpdateComponent : ActivityComponent
                 {
                     networkRun.Inventory.AddItem(itemTemplate);
                 }
-                Debug.Log($"Adding {totalItems} {itemTemplate.DisplayName} ({unitCount} units × {itemsPerUpdate}) to the network run");
+                // Debug.Log($"Adding {totalItems} {itemTemplate.DisplayName} ({unitCount} units × {itemsPerUpdate}) to the network run");
             }
 
             lastUpdateTime = Time.realtimeSinceStartup;

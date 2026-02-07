@@ -22,6 +22,8 @@ public class RoomInstance
         {
             id = template.Data.id,
             name = template.name,
+            doors = template.Data.doors,
+            activities = new List<ActivityInstance>()
         };
     }
 }

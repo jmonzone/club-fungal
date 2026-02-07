@@ -26,13 +26,11 @@ namespace TheFungalNetwork.Editor
         private CurrentRoomDrawer currentRoomDrawer;
         private PartyDrawer partyDrawer;
         private InventoryDrawer inventoryDrawer;
+        private SavedRunsDrawer savedRunsDrawer;
 
         private bool isRunning = false;
         private int frameCount = 0;
         private const int RepaintInterval = 30;
-
-        private bool showSavedRuns = false;
-        private string[] savedRunFiles;
 
         void OnEnable()
         {
@@ -45,6 +43,7 @@ namespace TheFungalNetwork.Editor
             currentRoomDrawer = new CurrentRoomDrawer();
             partyDrawer = new PartyDrawer();
             inventoryDrawer = new InventoryDrawer();
+            savedRunsDrawer = new SavedRunsDrawer();
         }
 
         void OnDisable()
@@ -82,19 +81,20 @@ namespace TheFungalNetwork.Editor
             EditorGUI.EndDisabledGroup();
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
-            EditorGUILayout.Space(10);
-
-            DrawPlayPauseButtons();
-
-            EditorGUILayout.Space(10);
-
-            DrawSavedRunsSection();
-
-            EditorGUILayout.Space(10);
 
 
             if (currentRun != null)
             {
+                EditorGUILayout.Space(10);
+
+                DrawPlayPauseButtons();
+
+                EditorGUILayout.Space(10);
+
+                savedRunsDrawer.Draw(LoadRun);
+
+                EditorGUILayout.Space(10);
+
                 if (currentRun.CurrentRoom == null)
                 {
                     roomSelectionDrawer.Draw(roomTemplates, ref selectedRoomIndex, ref currentRun, LoadRoomTemplates, (newRun) =>
@@ -108,12 +108,29 @@ namespace TheFungalNetwork.Editor
 
                     EditorGUILayout.Space(10);
 
-                    currentRoomDrawer.Draw(currentRun, roomTemplates, selectedRoomIndex);
+                    currentRoomDrawer.Draw(currentRun, unitInstanceService);
 
                     EditorGUILayout.Space(10);
 
                     partyDrawer.Draw(unitInstanceService, gameService);
                 }
+            }
+            else
+            {
+                EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+                EditorGUILayout.Space(10);
+                if (GUILayout.Button("Start New Run", GUILayout.Height(40)))
+                {
+                    selectedRoomIndex = 0;
+                    LoadRoomTemplates();
+                    var doorConditions = LoadAllDoorConditions();
+                    var activities = LoadAllActivityReferences();
+                    currentRun = new NetworkRun(doorConditions, activities);
+                    StartRun();
+                    Repaint();
+                }
+                EditorGUILayout.Space(10);
+                EditorGUILayout.EndVertical();
             }
 
             EditorGUILayout.EndScrollView();
@@ -124,7 +141,7 @@ namespace TheFungalNetwork.Editor
         private void DrawPlayPauseButtons()
         {
             // if (currentRun == null) return; // Don't show buttons if no run exists
-            
+
             EditorGUILayout.BeginHorizontal();
 
             if (!isRunning)
@@ -147,103 +164,27 @@ namespace TheFungalNetwork.Editor
                 SaveRun();
             }
 
-            if (GUILayout.Button("🔄 Start New Run", GUILayout.Height(30)))
+            if (GUILayout.Button("� Inspect", GUILayout.Height(30)))
+            {
+                NetworkRunInspectorWindow.ShowWindow(currentRun);
+            }
+
+            if (GUILayout.Button("�🔄 Start New Run", GUILayout.Height(30)))
             {
                 if (EditorUtility.DisplayDialog("Start New Run", "Are you sure? Current run will be lost if not saved.", "Start New", "Cancel"))
                 {
                     StopRun();
-                    
-                    // Clear activities from current room
-                    if (roomTemplates != null && roomTemplates.Count > selectedRoomIndex)
-                    {
-                        var currentRoom = roomTemplates[selectedRoomIndex];
-                        if (currentRoom?.Data?.activities != null)
-                        {
-                            currentRoom.Data.activities.Clear();
-                        }
-                    }
-                    
-                    currentRun = new NetworkRun();
                     selectedRoomIndex = 0;
                     LoadRoomTemplates();
+                    var doorConditions = LoadAllDoorConditions();
+                    var activities = LoadAllActivityReferences();
+                    currentRun = new NetworkRun(doorConditions, activities);
+                    StartRun();
                     Repaint();
                 }
             }
 
             EditorGUILayout.EndHorizontal();
-        }
-
-        private void DrawSavedRunsSection()
-        {
-            EditorGUILayout.BeginHorizontal();
-            showSavedRuns = EditorGUILayout.Foldout(showSavedRuns, "Saved Runs", true, EditorStyles.foldoutHeader);
-
-            if (GUILayout.Button("🔄 Refresh", GUILayout.Width(80)))
-            {
-                LoadSavedRuns();
-            }
-
-            EditorGUILayout.EndHorizontal();
-
-            if (showSavedRuns)
-            {
-                LoadSavedRuns();
-
-                if (savedRunFiles == null || savedRunFiles.Length == 0)
-                {
-                    EditorGUILayout.LabelField("  No saved runs found", EditorStyles.miniLabel);
-                }
-                else
-                {
-                    EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-                    for (int i = 0; i < savedRunFiles.Length; i++)
-                    {
-                        var filePath = savedRunFiles[i];
-                        EditorGUILayout.BeginHorizontal();
-
-                        var fileName = System.IO.Path.GetFileNameWithoutExtension(filePath);
-                        var reverseIndex = savedRunFiles.Length - 1 - i;
-                        EditorGUILayout.LabelField($"{reverseIndex}: {fileName}", GUILayout.ExpandWidth(true));
-
-                        if (GUILayout.Button("� Load", GUILayout.Width(60)))
-                        {
-                            LoadRun(filePath);
-                        }
-
-                        if (GUILayout.Button("�📂 Show", GUILayout.Width(60)))
-                        {
-                            EditorUtility.RevealInFinder(filePath);
-                        }
-
-                        if (GUILayout.Button("🗑️", GUILayout.Width(30)))
-                        {
-                            if (EditorUtility.DisplayDialog("Delete Save", $"Delete {fileName}?", "Delete", "Cancel"))
-                            {
-                                System.IO.File.Delete(filePath);
-                                LoadSavedRuns();
-                            }
-                        }
-
-                        EditorGUILayout.EndHorizontal();
-                    }
-                    EditorGUILayout.EndVertical();
-                }
-            }
-        }
-
-        private void LoadSavedRuns()
-        {
-            var savePath = System.IO.Path.Combine(Application.dataPath, "NetworkRunSaves");
-            if (System.IO.Directory.Exists(savePath))
-            {
-                savedRunFiles = System.IO.Directory.GetFiles(savePath, "*.json")
-                    .OrderByDescending(f => System.IO.File.GetLastWriteTime(f))
-                    .ToArray();
-            }
-            else
-            {
-                savedRunFiles = new string[0];
-            }
         }
 
         private void SaveRun()
@@ -284,12 +225,12 @@ namespace TheFungalNetwork.Editor
 
             // Save activities and units
             var savedActivities = new List<SavedActivityData>();
-            if (roomTemplates != null && roomTemplates.Count > selectedRoomIndex)
+            if (currentRun.CurrentRoom != null && currentRun.CurrentRoom.Data != null)
             {
-                var currentRoom = roomTemplates[selectedRoomIndex];
-                if (currentRoom?.Data?.activities != null)
+                var roomData = currentRun.CurrentRoom.Data;
+                if (roomData.activities != null)
                 {
-                    foreach (var activity in currentRoom.Data.activities)
+                    foreach (var activity in roomData.activities)
                     {
                         if (activity != null)
                         {
@@ -318,10 +259,8 @@ namespace TheFungalNetwork.Editor
             var saveData = new NetworkRunSaveData
             {
                 inventoryItems = inventoryItems,
-                currentRoomIndex = selectedRoomIndex,
-                currentRoomName = roomTemplates != null && roomTemplates.Count > selectedRoomIndex
-                    ? roomTemplates[selectedRoomIndex].Data.name
-                    : "Unknown",
+                roomId = currentRun.CurrentRoom?.Data?.id ?? "0",
+                currentRoomName = currentRun.CurrentRoom?.Data?.name ?? "Unknown",
                 activities = savedActivities
             };
 
@@ -349,93 +288,93 @@ namespace TheFungalNetwork.Editor
                 return;
             }
 
-            selectedRoomIndex = saveData.currentRoomIndex;
-            if (selectedRoomIndex >= 0 && selectedRoomIndex < roomTemplates.Count)
+            // Create a new room instance from saved data
+            var activities = new List<ActivityInstance>();
+            if (saveData.activities != null)
             {
-                var roomInstance = new RoomInstance(roomTemplates[selectedRoomIndex]);
-                // currentRun = new NetworkRun(roomInstance);
-                
-                // Restore inventory from efficient format
-                var inventory = new Inventory();
-                if (saveData.inventoryItems != null)
+                foreach (var savedActivity in saveData.activities)
                 {
-                    foreach (var itemData in saveData.inventoryItems)
+                    var activityAssets = AssetDatabase.FindAssets($"t:ActivityReference")
+                        .Select(guid => AssetDatabase.LoadAssetAtPath<ActivityReference>(AssetDatabase.GUIDToAssetPath(guid)))
+                        .Where(activityRef => activityRef != null && activityRef.name == savedActivity.activityName)
+                        .ToList();
+
+                    if (activityAssets.Count > 0)
                     {
-                        var itemTemplates = AssetDatabase.FindAssets($"t:ItemTemplate")
-                            .Select(guid => AssetDatabase.LoadAssetAtPath<ItemTemplate>(AssetDatabase.GUIDToAssetPath(guid)))
-                            .Where(template => template != null && template.Id == itemData.itemId)
-                            .ToList();
-                        
-                        if (itemTemplates.Count > 0)
+                        var activityRef = activityAssets[0];
+                        var activityInstance = new ActivityInstance(activityRef);
+
+                        if (savedActivity.unitIds != null)
                         {
-                            var itemTemplate = itemTemplates[0];
-                            for (int i = 0; i < itemData.count; i++)
+                            foreach (var unitName in savedActivity.unitIds)
                             {
-                                inventory.AddItem(itemTemplate);
-                            }
-                        }
-                    }
-                }
-                currentRun.SetInventory(inventory);
-                
-                // Restore activities with units
-                var currentRoom = roomTemplates[selectedRoomIndex];
-                if (currentRoom?.Data != null && saveData.activities != null)
-                {
-                    currentRoom.Data.activities.Clear();
-                    
-                    foreach (var savedActivity in saveData.activities)
-                    {
-                        var activityAssets = AssetDatabase.FindAssets($"t:ActivityReference")
-                            .Select(guid => AssetDatabase.LoadAssetAtPath<ActivityReference>(AssetDatabase.GUIDToAssetPath(guid)))
-                            .Where(activityRef => activityRef != null && activityRef.name == savedActivity.activityName)
-                            .ToList();
-                        
-                        if (activityAssets.Count > 0)
-                        {
-                            var activityRef = activityAssets[0];
-                            var activityInstance = new ActivityInstance(activityRef);
-                            
-                            if (savedActivity.unitIds != null)
-                            {
-                                foreach (var unitName in savedActivity.unitIds)
+                                var unitTemplates = AssetDatabase.FindAssets($"t:UnitTemplate")
+                                    .Select(guid => AssetDatabase.LoadAssetAtPath<UnitTemplate>(AssetDatabase.GUIDToAssetPath(guid)))
+                                    .Where(template => template != null && template.name == unitName)
+                                    .ToList();
+
+                                if (unitTemplates.Count > 0)
                                 {
-                                    var unitTemplates = AssetDatabase.FindAssets($"t:UnitTemplate")
-                                        .Select(guid => AssetDatabase.LoadAssetAtPath<UnitTemplate>(AssetDatabase.GUIDToAssetPath(guid)))
-                                        .Where(template => template != null && template.name == unitName)
-                                        .ToList();
-                                    
-                                    if (unitTemplates.Count > 0)
-                                    {
-                                        var unitTemplate = unitTemplates[0];
-                                        var unitInstance = new UnitInstance(unitTemplate.Data);
-                                        unitInstance.SetTemplate(unitTemplate);
-                                        activityInstance.AddUnit(unitInstance);
-                                    }
+                                    var unitTemplate = unitTemplates[0];
+                                    var unitInstance = new UnitInstance(unitTemplate.Data);
+                                    unitInstance.SetTemplate(unitTemplate);
+                                    activityInstance.AddUnit(unitInstance);
                                 }
                             }
-                            
-                            currentRoom.Data.activities.Add(activityInstance);
+                        }
+
+                        activities.Add(activityInstance);
+                    }
+                }
+            }
+
+            var roomData = new RoomData
+            {
+                id = saveData.roomId,
+                name = saveData.currentRoomName,
+                doors = new List<Door> { new Door() },
+                activities = activities
+            };
+
+            var roomInstance = new RoomInstance(roomData);
+            var doorConditions = LoadAllDoorConditions();
+            var activitiesRefs = LoadAllActivityReferences();
+            currentRun = new NetworkRun(doorConditions, activitiesRefs);
+
+            // Restore inventory
+            var inventory = new Inventory();
+            if (saveData.inventoryItems != null)
+            {
+                foreach (var itemData in saveData.inventoryItems)
+                {
+                    var itemTemplates = AssetDatabase.FindAssets($"t:ItemTemplate")
+                        .Select(guid => AssetDatabase.LoadAssetAtPath<ItemTemplate>(AssetDatabase.GUIDToAssetPath(guid)))
+                        .Where(template => template != null && template.Id == itemData.itemId)
+                        .ToList();
+
+                    if (itemTemplates.Count > 0)
+                    {
+                        var itemTemplate = itemTemplates[0];
+                        for (int i = 0; i < itemData.count; i++)
+                        {
+                            inventory.AddItem(itemTemplate);
                         }
                     }
                 }
-                
-                PerformUpdate();
-                
-                Debug.Log($"Network Run loaded from: {filePath}");
-                Repaint();
             }
-            else
-            {
-                EditorUtility.DisplayDialog("Load Failed", "Invalid room index in save file.", "OK");
-            }
+            currentRun.SetInventory(inventory);
+
+            PerformUpdate();
+
+            Debug.Log($"Network Run loaded from: {filePath}");
+            Repaint();
         }
 
         [System.Serializable]
         private class NetworkRunSaveData
         {
             public List<InventoryItemData> inventoryItems;
-            public int currentRoomIndex;
+            public string roomId;
             public string currentRoomName;
             public List<SavedActivityData> activities;
         }
@@ -494,12 +433,12 @@ namespace TheFungalNetwork.Editor
         {
             bool hasUpdates = false;
 
-            if (currentRun != null && roomTemplates != null && roomTemplates.Count > selectedRoomIndex)
+            if (currentRun != null && currentRun.CurrentRoom != null)
             {
-                var currentRoom = roomTemplates[selectedRoomIndex];
-                if (currentRoom?.Data?.activities != null)
+                var roomData = currentRun.CurrentRoom.Data;
+                if (roomData?.activities != null)
                 {
-                    foreach (var activity in currentRoom.Data.activities)
+                    foreach (var activity in roomData.activities)
                     {
                         if (activity != null)
                         {
@@ -509,9 +448,9 @@ namespace TheFungalNetwork.Editor
                     }
                 }
 
-                if (currentRoom?.Data?.doors != null)
+                if (roomData?.doors != null)
                 {
-                    foreach (var door in currentRoom.Data.doors)
+                    foreach (var door in roomData.doors)
                     {
                         if (door != null && door.conditions != null && door.conditions.Count() > 0)
                         {
@@ -535,10 +474,28 @@ namespace TheFungalNetwork.Editor
                     }
                 }
 
-                currentRoomDrawer.Update(currentRun, roomTemplates, selectedRoomIndex);
+                currentRoomDrawer.Update(currentRun);
             }
 
             return hasUpdates;
+        }
+
+
+
+        private List<DoorCondition> LoadAllDoorConditions()
+        {
+            return AssetDatabase.FindAssets("t:DoorCondition")
+                .Select(guid => AssetDatabase.LoadAssetAtPath<DoorCondition>(AssetDatabase.GUIDToAssetPath(guid)))
+                .Where(condition => condition != null)
+                .ToList();
+        }
+
+        private List<ActivityReference> LoadAllActivityReferences()
+        {
+            return AssetDatabase.FindAssets("t:ActivityReference")
+                .Select(guid => AssetDatabase.LoadAssetAtPath<ActivityReference>(AssetDatabase.GUIDToAssetPath(guid)))
+                .Where(activityRef => activityRef != null)
+                .ToList();
         }
     }
 }

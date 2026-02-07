@@ -14,66 +14,45 @@ namespace TheFungalNetwork.Editor
         private ItemTemplate requiredItem;
         private int requiredAmount = 1;
 
-        public void Draw(NetworkRun currentRun, List<RoomTemplate> roomTemplates, int selectedRoomIndex)
+        public void Draw(NetworkRun currentRun, UnitInstanceService unitInstanceService)
         {
-            if (currentRun == null || roomTemplates == null || roomTemplates.Count == 0) return;
+            if (currentRun == null || currentRun.CurrentRoom == null) return;
 
+            var roomData = currentRun.CurrentRoom.Data;
             EditorGUILayout.LabelField("Current Room", EditorStyles.boldLabel);
-            EditorGUILayout.LabelField(roomTemplates[selectedRoomIndex].Data.name);
 
-            if (GUILayout.Button("View Room Template"))
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField(roomData.name);
+            if (GUILayout.Button("View Room", GUILayout.Width(100)))
             {
-                Selection.activeObject = roomTemplates[selectedRoomIndex];
-                EditorGUIUtility.PingObject(roomTemplates[selectedRoomIndex]);
+                RoomInstanceWindow.ShowWindow(currentRun.CurrentRoom);
             }
+            EditorGUILayout.EndHorizontal();
 
-            var doors = roomTemplates[selectedRoomIndex].Data.doors;
-            if (doors != null && doors.Count > 0)
-            {
-                EditorGUILayout.Space(5);
-                EditorGUILayout.LabelField("Doors:", EditorStyles.boldLabel);
-                DoorDrawer.DrawList(doors, roomTemplates[selectedRoomIndex], () => EditorWindow.GetWindow<NetworkRunWindow>().Repaint());
-            }
-            else
-            {
-                EditorGUILayout.Space(5);
-                EditorGUILayout.LabelField("Doors:", EditorStyles.boldLabel);
-                DoorDrawer.DrawList(null, roomTemplates[selectedRoomIndex], () => EditorWindow.GetWindow<NetworkRunWindow>().Repaint());
-            }
+            // Doors are now shown within InspectDoor activities
 
-            EditorGUILayout.Space(5);
-            if (GUILayout.Button("Add Door to Room"))
-            {
-                isCreatingDoor = !isCreatingDoor;
-            }
-
-            if (isCreatingDoor)
-            {
-                DrawDoorCreationForm(roomTemplates[selectedRoomIndex]);
-            }
-
-            var activities = roomTemplates[selectedRoomIndex].Data.activities;
+            var activities = roomData.activities;
             if (activities != null && activities.Count > 0)
             {
                 EditorGUILayout.Space(5);
                 EditorGUILayout.LabelField("Activities:", EditorStyles.boldLabel);
-                ActivityDrawer.DrawList(activities, roomTemplates[selectedRoomIndex], () => EditorWindow.GetWindow<NetworkRunWindow>().Repaint());
+                ActivityDrawer.DrawList(activities, null, unitInstanceService, () => EditorWindow.GetWindow<NetworkRunWindow>().Repaint(), currentRun);
             }
             else
             {
                 EditorGUILayout.Space(5);
                 EditorGUILayout.LabelField("Activities:", EditorStyles.boldLabel);
-                ActivityDrawer.DrawList(null, roomTemplates[selectedRoomIndex], () => EditorWindow.GetWindow<NetworkRunWindow>().Repaint());
+                ActivityDrawer.DrawList(null, null, unitInstanceService, () => EditorWindow.GetWindow<NetworkRunWindow>().Repaint(), currentRun);
             }
 
             EditorGUILayout.Space(5);
             if (GUILayout.Button("Add Activity to Room"))
             {
-                ShowActivityMenu(roomTemplates[selectedRoomIndex]);
+                ShowActivityMenu(roomData);
             }
         }
 
-        private void ShowActivityMenu(RoomTemplate selectedRoom)
+        private void ShowActivityMenu(RoomData roomData)
         {
             var menu = new GenericMenu();
             var allActivities = AssetDatabase.FindAssets("t:ActivityReference")
@@ -89,35 +68,33 @@ namespace TheFungalNetwork.Editor
             {
                 foreach (var activity in allActivities)
                 {
-                    menu.AddItem(new GUIContent(activity.name), false, () => AddActivityToRoom(selectedRoom, activity));
+                    menu.AddItem(new GUIContent(activity.name), false, () => AddActivityToRoom(roomData, activity));
                 }
 
                 menu.AddSeparator("");
-                menu.AddItem(new GUIContent("Create New Activity"), false, () => CreateNewActivity(selectedRoom));
+                menu.AddItem(new GUIContent("Create New Activity"), false, () => CreateNewActivity(roomData));
             }
 
             menu.ShowAsContext();
         }
 
-        private void CreateNewActivity(RoomTemplate selectedRoom)
+        private void CreateNewActivity(RoomData roomData)
         {
-            ActivityCreationWindow.ShowWindow(selectedRoom);
+            ActivityCreationWindow.ShowWindow(roomData);
         }
 
-        private void AddActivityToRoom(RoomTemplate selectedRoom, ActivityReference activity)
+        private void AddActivityToRoom(RoomData roomData, ActivityReference activity)
         {
-            if (selectedRoom.Data.activities == null)
+            if (roomData.activities == null)
             {
-                selectedRoom.Data.activities = new List<ActivityInstance>();
+                roomData.activities = new List<ActivityInstance>();
             }
 
             var activityInstance = new ActivityInstance(activity);
-            selectedRoom.Data.activities.Add(activityInstance);
-            EditorUtility.SetDirty(selectedRoom);
-            AssetDatabase.SaveAssets();
+            roomData.activities.Add(activityInstance);
         }
 
-        private void DrawDoorCreationForm(RoomTemplate selectedRoom)
+        private void DrawDoorCreationForm(RoomData roomData)
         {
             EditorGUILayout.Space(5);
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
@@ -143,7 +120,7 @@ namespace TheFungalNetwork.Editor
 
             if (GUILayout.Button("Create Door"))
             {
-                CreateDoor(selectedRoom);
+                CreateDoor(roomData);
             }
 
             if (GUILayout.Button("Cancel"))
@@ -160,15 +137,14 @@ namespace TheFungalNetwork.Editor
             EditorGUILayout.Space(5);
         }
 
-        public void Update(NetworkRun currentRun, List<RoomTemplate> roomTemplates, int selectedRoomIndex)
+        public void Update(NetworkRun currentRun)
         {
-            if (currentRun == null || roomTemplates == null || roomTemplates.Count <= selectedRoomIndex) return;
+            if (currentRun == null || currentRun.CurrentRoom == null) return;
 
-            var currentRoom = roomTemplates[selectedRoomIndex];
-            if (currentRoom?.Data?.doors == null) return;
+            var roomData = currentRun.CurrentRoom.Data;
+            if (roomData?.doors == null) return;
 
-            bool updated = false;
-            foreach (var door in currentRoom.Data.doors)
+            foreach (var door in roomData.doors)
             {
                 if (door != null && door.isLocked && door.conditions != null && door.conditions.Count > 0)
                 {
@@ -185,23 +161,16 @@ namespace TheFungalNetwork.Editor
                     if (allConditionsMet)
                     {
                         door.isLocked = false;
-                        updated = true;
                     }
                 }
             }
-
-            if (updated)
-            {
-                EditorUtility.SetDirty(currentRoom);
-                AssetDatabase.SaveAssets();
-            }
         }
 
-        private void CreateDoor(RoomTemplate selectedRoom)
+        private void CreateDoor(RoomData roomData)
         {
-            if (selectedRoom.Data.doors == null)
+            if (roomData.doors == null)
             {
-                selectedRoom.Data.doors = new List<Door>();
+                roomData.doors = new List<Door>();
             }
 
             var newDoor = new Door { isLocked = doorIsLocked };
@@ -211,9 +180,7 @@ namespace TheFungalNetwork.Editor
                 var condition = ScriptableObject.CreateInstance<ResourceCondition>();
                 condition.name = $"{requiredItem.DisplayName}x{requiredAmount}Condition";
 
-                var roomPath = AssetDatabase.GetAssetPath(selectedRoom);
-                var folderPath = System.IO.Path.GetDirectoryName(roomPath);
-                var conditionPath = $"{folderPath}/{condition.name}.asset";
+                var conditionPath = $"Assets/NetworkRun/Rooms/Conditions/{condition.name}.asset";
                 conditionPath = AssetDatabase.GenerateUniqueAssetPath(conditionPath);
 
                 AssetDatabase.CreateAsset(condition, conditionPath);
@@ -233,9 +200,7 @@ namespace TheFungalNetwork.Editor
                 newDoor.conditions.Add(condition);
             }
 
-            selectedRoom.Data.doors.Add(newDoor);
-            EditorUtility.SetDirty(selectedRoom);
-            AssetDatabase.SaveAssets();
+            roomData.doors.Add(newDoor);
 
             isCreatingDoor = false;
             doorIsLocked = false;

@@ -11,19 +11,24 @@ public class RoomTemplate : ScriptableObject
 
     public RoomData Data => data;
 
-#if UNITY_EDITOR
-    private void OnValidate()
+    public void SetRoomData(RoomData newData)
     {
-        if (string.IsNullOrEmpty(data.id))
-        {
-            data.id = GetNextRoomId().ToString("D12");
-            EditorUtility.SetDirty(this);
-        }
+        data = newData;
+    }
 
-        if (string.IsNullOrEmpty(data.name))
-        {
-            data.name = this.name;
-        }
+#if UNITY_EDITOR
+    public void OnValidate()
+    {
+        // if (string.IsNullOrEmpty(data.id))
+        // {
+        //     data.id = GetNextRoomId().ToString("D12");
+        //     EditorUtility.SetDirty(this);
+        // }
+
+        // if (string.IsNullOrEmpty(data.name))
+        // {
+        //     data.name = this.name;
+        // }
     }
 
     private static int GetNextRoomId()
