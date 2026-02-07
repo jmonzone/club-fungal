@@ -149,7 +149,7 @@ public class RoomManager : MonoBehaviour
 
         door.SetOtherDoor(oppositeDoor);
         oppositeDoor.SetOtherDoor(door);
-        newRoom.ActivateDoor(oppositeDoor);
+        // newRoom.ActivateDoor(oppositeDoor);
     }
 
     private DoorController GetOppositeDoor(Direction direction, RoomController otherRoom)

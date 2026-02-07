@@ -83,6 +83,9 @@ namespace TheFungalNetwork.Editor
             // Check if this activity has InspectComponent - if so, show door info
             bool hasInspectComponent = false;
             InspectComponent inspectComponent = null;
+            bool hasUnlockComponent = false;
+            UnlockComponent unlockComponent = null;
+
             if (activity.Template?.Components != null)
             {
                 foreach (var component in activity.Template.Components)
@@ -91,7 +94,11 @@ namespace TheFungalNetwork.Editor
                     {
                         hasInspectComponent = true;
                         inspectComponent = inspect;
-                        break;
+                    }
+                    else if (component is UnlockComponent unlock)
+                    {
+                        hasUnlockComponent = true;
+                        unlockComponent = unlock;
                     }
                 }
             }
@@ -99,8 +106,15 @@ namespace TheFungalNetwork.Editor
             // If this is an inspect activity, show door info and progress
             if (hasInspectComponent && currentRun?.CurrentRoom?.Data?.doors != null)
             {
-                var doorInfoItem = new DoorInfoDisplayItem(currentRun, inspectComponent);
+                var doorInfoItem = new DoorInfoDisplayItem(currentRun, inspectComponent, onChanged, activity);
                 displayItems.Add(doorInfoItem);
+            }
+
+            // If this is an unlock activity, show resource collection progress
+            if (hasUnlockComponent && currentRun?.CurrentRoom?.Data?.doors != null)
+            {
+                var unlockInfoItem = new UnlockInfoDisplayItem(currentRun, unlockComponent, onChanged);
+                displayItems.Add(unlockInfoItem);
             }
 
             // Add party units grid as display item
@@ -117,15 +131,24 @@ namespace TheFungalNetwork.Editor
                 displayItems.Add(unitListItem);
             }
 
-            // Update display name for inspect activities
+            // Update display name for inspect or unlock activities
             string displayName = activity.Name;
-            if (hasInspectComponent && currentRun?.CurrentRoom?.Data?.doors != null)
+            if (hasInspectComponent && currentRun?.CurrentRoom?.Data?.doors != null && inspectComponent?.AssignedDoor != null)
             {
                 var doors = currentRun.CurrentRoom.Data.doors;
-                for (int i = 0; i < doors.Count; i++)
+                int doorIndex = doors.IndexOf(inspectComponent.AssignedDoor);
+                if (doorIndex >= 0)
                 {
-                    displayName = $"Door {i + 1}: {activity.Name}";
-                    break;
+                    displayName = $"Door {doorIndex + 1}: {activity.Name}";
+                }
+            }
+            else if (hasUnlockComponent && currentRun?.CurrentRoom?.Data?.doors != null && unlockComponent?.AssignedDoor != null)
+            {
+                var doors = currentRun.CurrentRoom.Data.doors;
+                int doorIndex = doors.IndexOf(unlockComponent.AssignedDoor);
+                if (doorIndex >= 0)
+                {
+                    displayName = $"Door {doorIndex + 1}: {activity.Name}";
                 }
             }
 
@@ -329,7 +352,7 @@ namespace TheFungalNetwork.Editor
 
         private class DoorInfoDisplayItem : UnitDrawerDisplayItem
         {
-            public DoorInfoDisplayItem(NetworkRun currentRun, InspectComponent inspectComponent)
+            public DoorInfoDisplayItem(NetworkRun currentRun, InspectComponent inspectComponent, System.Action onChanged, ActivityInstance activityInstance)
             {
                 condition = () => true;
                 color = Color.white;
@@ -337,11 +360,10 @@ namespace TheFungalNetwork.Editor
                 {
                     EditorGUILayout.Space(4);
 
-                    // Show door conditions
-                    var doors = currentRun.CurrentRoom.Data.doors;
-                    if (doors != null && doors.Count > 0)
+                    // Show door conditions using the assigned door from the component
+                    var door = inspectComponent.AssignedDoor;
+                    if (door != null)
                     {
-                        var door = doors[0];
                         if (door.conditions != null && door.conditions.Count > 0)
                         {
                             foreach (var doorCondition in door.conditions)
@@ -375,16 +397,77 @@ namespace TheFungalNetwork.Editor
                         }
                     }
 
-                    // Show inspect progress
+                    // Show inspect progress or completion button
                     if (inspectComponent != null)
                     {
                         EditorGUILayout.Space(4);
-                        var progress = 1f - (inspectComponent.RemainingDuration / inspectComponent.InspectDuration);
-                        var rect = EditorGUILayout.GetControlRect(false, 20);
-                        rect.x += 8;
-                        rect.width -= 16;
 
-                        EditorGUI.ProgressBar(rect, progress, $"Inspect: {inspectComponent.RemainingDuration:F1}s / {inspectComponent.InspectDuration:F1}s");
+                        if (inspectComponent.IsComplete)
+                        {
+                            GUI.backgroundColor = Color.green;
+                            if (GUILayout.Button("✓ Complete Task", GUILayout.Height(30)))
+                            {
+                                inspectComponent.CompleteTask(currentRun, activityInstance);
+                                onChanged?.Invoke();
+                            }
+                            GUI.backgroundColor = Color.white;
+                        }
+                        else
+                        {
+                            var progress = 1f - (inspectComponent.RemainingDuration / inspectComponent.InspectDuration);
+                            var elapsedTime = inspectComponent.InspectDuration - inspectComponent.RemainingDuration;
+                            var rect = EditorGUILayout.GetControlRect(false, 20);
+                            rect.x += 8;
+                            rect.width -= 16;
+
+                            EditorGUI.ProgressBar(rect, progress, $"Inspect: {elapsedTime:F1}s / {inspectComponent.InspectDuration:F1}s");
+                        }
+
+                        EditorGUILayout.Space(2);
+                    }
+                };
+            }
+        }
+
+        private class UnlockInfoDisplayItem : UnitDrawerDisplayItem
+        {
+            public UnlockInfoDisplayItem(NetworkRun currentRun, UnlockComponent unlockComponent, System.Action onChanged)
+            {
+                condition = () => true;
+                color = Color.white;
+                drawAction = () =>
+                {
+                    EditorGUILayout.Space(4);
+
+                    // Show door conditions using the assigned door from the component
+                    var door = unlockComponent.AssignedDoor;
+                    if (door != null && unlockComponent.ResourceCondition != null)
+                    {
+                        var hasEnough = unlockComponent.CurrentResourceCount >= unlockComponent.RequiredAmount;
+                        var resourceName = unlockComponent.ResourceCondition.RequiredItem?.DisplayName ?? "Unknown";
+
+                        // Show Open Door button if enough resources collected, otherwise show progress bar
+                        if (hasEnough)
+                        {
+                            if (GUILayout.Button("🚪 Open Door", GUILayout.Height(30)))
+                            {
+                                // Unlock the door before transitioning
+                                door.isLocked = false;
+                                currentRun.OpenDoorAndTransition(door);
+                                onChanged?.Invoke();
+                            }
+                        }
+                        else
+                        {
+                            // Show progress bar with resource name
+                            var progress = Mathf.Clamp01((float)unlockComponent.CurrentResourceCount / unlockComponent.RequiredAmount);
+                            var rect = EditorGUILayout.GetControlRect(false, 20);
+                            rect.x += 8;
+                            rect.width -= 16;
+
+                            EditorGUI.ProgressBar(rect, progress, $"{resourceName}: {unlockComponent.CurrentResourceCount}/{unlockComponent.RequiredAmount}");
+                        }
+
                         EditorGUILayout.Space(2);
                     }
                 };

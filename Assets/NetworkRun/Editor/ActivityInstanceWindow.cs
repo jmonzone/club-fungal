@@ -67,6 +67,28 @@ namespace TheFungalNetwork.Editor
                 }
             }
 
+            EditorGUILayout.Space(10);
+            EditorGUILayout.LabelField($"Components ({activityInstance.Template?.Components?.Count ?? 0})", EditorStyles.boldLabel);
+
+            if (activityInstance.Template?.Components != null && activityInstance.Template.Components.Count > 0)
+            {
+                foreach (var component in activityInstance.Template.Components)
+                {
+                    if (component != null)
+                    {
+                        EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+                        EditorGUILayout.LabelField($"  {component.GetType().Name}", EditorStyles.miniLabel);
+                        EditorGUILayout.ObjectField("", component, component.GetType(), false);
+                        EditorGUILayout.EndVertical();
+                        EditorGUILayout.Space(2);
+                    }
+                }
+            }
+            else
+            {
+                EditorGUILayout.LabelField("  No components");
+            }
+
             EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.EndScrollView();

@@ -24,7 +24,7 @@ public class ResourceUpdateComponent : ActivityComponent
                 {
                     networkRun.Inventory.AddItem(itemTemplate);
                 }
-                // Debug.Log($"Adding {totalItems} {itemTemplate.DisplayName} ({unitCount} units × {itemsPerUpdate}) to the network run");
+                Debug.Log($"Adding {totalItems} {itemTemplate.DisplayName} ({unitCount} units × {itemsPerUpdate}) to the network run");
             }
 
             lastUpdateTime = Time.realtimeSinceStartup;
