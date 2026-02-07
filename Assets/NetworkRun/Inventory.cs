@@ -7,6 +7,7 @@ using UnityEngine;
 public class Inventory
 {
     [SerializeField] private List<ItemStack> itemStacks = new List<ItemStack>();
+    [SerializeField] private int maxCapacity = 10; // 0 = unlimited
 
     [Serializable]
     public class ItemStack
@@ -22,6 +23,9 @@ public class Inventory
     }
 
     public List<ItemStack> ItemStacks => itemStacks;
+    public int MaxCapacity => maxCapacity;
+    public int TotalItemCount => itemStacks.Sum(s => s.count);
+    public bool IsFull => TotalItemCount >= maxCapacity;
 
     public void AddItem(ItemTemplate item)
     {

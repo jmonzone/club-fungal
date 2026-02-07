@@ -15,11 +15,15 @@ public class NetworkRun
     [SerializeField] private UnlockComponent unlockComponentTemplate;
     [SerializeField] private NetworkRunSettings settings;
 
+    private float simulationTime = 0f;
+    private float lastRealTime = 0f;
+
     public Inventory Inventory => inventory;
     public RoomInstance CurrentRoom => currentRoom;
     public List<RoomInstance> VisitedRooms => visitedRooms;
     public List<UnitInstance> Party => party;
     public NetworkRunSettings Settings => settings;
+    public float SimulationTime => simulationTime;
 
     public NetworkRun(List<DoorCondition> doorConditions, List<ActivityReference> activities, List<UnitInstance> partyUnits, UnlockComponent unlockTemplate, NetworkRunSettings settings = null)
     {
@@ -32,6 +36,16 @@ public class NetworkRun
         visitedRooms = new List<RoomInstance>();
         currentRoom = CreateNewRoomInstance();
         visitedRooms.Add(currentRoom);
+        lastRealTime = UnityEngine.Time.realtimeSinceStartup;
+    }
+
+    public void UpdateSimulationTime()
+    {
+        float currentRealTime = UnityEngine.Time.realtimeSinceStartup;
+        float deltaTime = currentRealTime - lastRealTime;
+        float speedMultiplier = settings?.speedMultiplier ?? 1f;
+        simulationTime += deltaTime * speedMultiplier;
+        lastRealTime = currentRealTime;
     }
 
     public void SetInventory(Inventory loadedInventory)

@@ -57,6 +57,8 @@ Example: When `UnitInstance.Skills` dictionary was lost after recompilation, the
 - **Movement**: Call `controller.Teleport(position, parent)` for precise positioning (updates transform and parent).
 - **Snapshots**: `SnapshotInstance` assets store unit positions. Load/save via `SnapshotService` methods.
 - **Editor UI**: Extend `GURUEditor` with `DrawContent()`. Use `GURUStyler.DrawGuruSection()` for styled sections with service buttons.
+- **Inventory**: Use `Inventory.IsFull` to check capacity limits. `MaxCapacity` of 0 means unlimited. `TotalItemCount` returns sum of all items.
+- **Simulation Speed**: `NetworkRunSettings.speedMultiplier` controls update speed (1.0 = normal, 2.0 = 2x speed, etc.). Applied to activity component timing calculations.
 
 ## Workflows
 

@@ -53,19 +53,22 @@ namespace TheFungalNetwork.Editor
             DrawName(unit);
             DrawSkillLevel(unit, activity);
             DrawXPProgressBar(unit, activity);
+
             if (currentRun.Settings.debugMode)
             {
                 DrawSpeedBonus(unit, activity, resourceComponent);
             }
             DrawDivider();
+
             DrawResourceCount(unit, resourceComponent);
+            DrawMaxInventory(unit);
             DrawClaimButton(unit, resourceComponent, currentRun, onChanged);
 
             DrawDivider();
 
             if (isInActivity)
             {
-                DrawActivityStatus(unit, activity, resourceComponent);
+                DrawActivityStatus(unit, activity, resourceComponent, currentRun);
                 DrawStopButton(unit, activity, onChanged);
             }
             else
@@ -169,6 +172,27 @@ namespace TheFungalNetwork.Editor
             }
         }
 
+        private void DrawMaxInventory(UnitInstance unit)
+        {
+            if (unit?.Inventory != null)
+            {
+                var maxCapacity = unit.Inventory.MaxCapacity;
+                var totalCount = unit.Inventory.TotalItemCount;
+                var capacityText = maxCapacity > 0 ? $"Capacity: {totalCount}/{maxCapacity}" : $"Capacity: {totalCount}/∞";
+                var capacityStyle = new GUIStyle(EditorStyles.miniLabel)
+                {
+                    alignment = TextAnchor.MiddleLeft,
+                    fontSize = 7,
+                    normal = { textColor = new Color(0.6f, 0.6f, 0.6f) }
+                };
+                EditorGUILayout.LabelField(capacityText, capacityStyle, GUILayout.Height(10), GUILayout.Width(90));
+            }
+            else
+            {
+                GUILayout.Space(10);
+            }
+        }
+
         private void DrawDivider()
         {
             GUILayout.Space(2);
@@ -242,9 +266,9 @@ namespace TheFungalNetwork.Editor
             }
         }
 
-        private void DrawActivityStatus(UnitInstance unit, ActivityInstance activity, ResourceUpdateComponent resourceComponent)
+        private void DrawActivityStatus(UnitInstance unit, ActivityInstance activity, ResourceUpdateComponent resourceComponent, NetworkRun currentRun)
         {
-            var progress = resourceComponent.GetUnitProgress(unit, activity);
+            var progress = resourceComponent.GetUnitProgress(unit, activity, currentRun);
 
             // Track collection state for this unit
             var stateKey = $"{activity.GetHashCode()}_{unit.GetHashCode()}";
@@ -288,7 +312,7 @@ namespace TheFungalNetwork.Editor
             Color statusColor = Color.white;
             string labelOverride = null;
 
-            // Priority 1: Level up message (show for 2 seconds)
+            // Priority 0: Level up message (show for 2 seconds)
             if (timeSinceLevelUp < 2.0)
             {
                 var currentLevel = 1;
@@ -301,6 +325,12 @@ namespace TheFungalNetwork.Editor
                 }
                 statusText = $"Level Up! Lv.{currentLevel}";
                 statusColor = new Color(1f, 0.8f, 0f);
+            }
+            // Priority 1: Inventory full (show when inventory is full)
+            else if (unit?.Inventory != null && unit.Inventory.IsFull)
+            {
+                statusText = "INVENTORY FULL";
+                statusColor = new Color(1f, 0.5f, 0.5f);
             }
             // Priority 2: Collection message (show for 2 seconds)
             else if (timeSinceCollection < 2.0)

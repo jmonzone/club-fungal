@@ -102,6 +102,20 @@ namespace TheFungalNetwork.Editor
                 {
                     Undo.RecordObject(defaultSettings, "Toggle Debug Mode");
                     defaultSettings.debugMode = debugMode;
+                    if (!debugMode)
+                    {
+                        defaultSettings.speedMultiplier = 1f;
+                    }
+                    EditorUtility.SetDirty(defaultSettings);
+                }
+
+                // Speed multiplier slider
+                EditorGUI.BeginChangeCheck();
+                float speedMultiplier = EditorGUILayout.Slider("Speed", defaultSettings.speedMultiplier, 0.1f, 10f);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    Undo.RecordObject(defaultSettings, "Change Speed Multiplier");
+                    defaultSettings.speedMultiplier = speedMultiplier;
                     EditorUtility.SetDirty(defaultSettings);
                 }
             }
@@ -450,6 +464,8 @@ namespace TheFungalNetwork.Editor
 
             if (currentRun != null && currentRun.CurrentRoom != null)
             {
+                // Update simulation time with speed multiplier
+                currentRun.UpdateSimulationTime();
                 var roomData = currentRun.CurrentRoom.Data;
                 if (roomData?.activities != null)
                 {

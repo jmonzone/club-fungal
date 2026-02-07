@@ -47,7 +47,7 @@ public class ResourceUpdateComponent : ActivityComponent
         return speedBonus;
     }
 
-    public float GetEffectiveInterval(UnitInstance unit, ActivityInstance activity = null)
+    public float GetEffectiveInterval(UnitInstance unit, ActivityInstance activity = null, NetworkRun networkRun = null)
     {
         if (unit?.Species == null || itemTemplate == null)
             return updateInterval;
@@ -56,18 +56,26 @@ public class ResourceUpdateComponent : ActivityComponent
         return updateInterval / speedBonus;
     }
 
-    public float GetUnitProgress(UnitInstance unit, ActivityInstance activity = null)
+    public float GetUnitProgress(UnitInstance unit, ActivityInstance activity = null, NetworkRun networkRun = null)
     {
         if (unit == null) return 0f;
-        var unitKey = unit.GetHashCode();
-        if (!unitLastUpdateTimes.ContainsKey(unitKey))
+
+        // If inventory is full, don't show any progress
+        if (unit.Inventory != null && unit.Inventory.IsFull)
         {
-            unitLastUpdateTimes[unitKey] = Time.realtimeSinceStartup;
             return 0f;
         }
 
-        var effectiveInterval = GetEffectiveInterval(unit, activity);
-        var timeSinceLastUpdate = Time.realtimeSinceStartup - unitLastUpdateTimes[unitKey];
+        var unitKey = unit.GetHashCode();
+        if (!unitLastUpdateTimes.ContainsKey(unitKey))
+        {
+            unitLastUpdateTimes[unitKey] = networkRun?.SimulationTime ?? Time.realtimeSinceStartup;
+            return 0f;
+        }
+
+        var effectiveInterval = GetEffectiveInterval(unit, activity, networkRun);
+        var currentTime = networkRun?.SimulationTime ?? Time.realtimeSinceStartup;
+        var timeSinceLastUpdate = currentTime - unitLastUpdateTimes[unitKey];
         return Mathf.Clamp01(timeSinceLastUpdate / effectiveInterval);
     }
 
@@ -85,16 +93,26 @@ public class ResourceUpdateComponent : ActivityComponent
             var unitKey = unit.GetHashCode();
             if (!unitLastUpdateTimes.ContainsKey(unitKey))
             {
-                unitLastUpdateTimes[unitKey] = Time.realtimeSinceStartup;
+                unitLastUpdateTimes[unitKey] = networkRun?.SimulationTime ?? Time.realtimeSinceStartup;
                 continue;
             }
 
-            var effectiveInterval = GetEffectiveInterval(unit, activityInstance);
-            var timeSinceLastUpdate = Time.realtimeSinceStartup - unitLastUpdateTimes[unitKey];
+            var effectiveInterval = GetEffectiveInterval(unit, activityInstance, networkRun);
+            var currentTime = networkRun?.SimulationTime ?? Time.realtimeSinceStartup;
+            var timeSinceLastUpdate = currentTime - unitLastUpdateTimes[unitKey];
             if (timeSinceLastUpdate >= effectiveInterval)
             {
-                if (itemTemplate != null)
+                // Check if unit inventory has space before collecting
+                if (itemTemplate != null && unit.Inventory != null)
                 {
+                    // Check if inventory is full
+                    if (unit.Inventory.IsFull)
+                    {
+                        // Inventory is full, keep progress at 0% (reset timer to current time)
+                        unitLastUpdateTimes[unitKey] = currentTime;
+                        continue;
+                    }
+
                     for (int i = 0; i < itemsPerUpdate; i++)
                     {
                         unit.Inventory.AddItem(itemTemplate);
@@ -111,7 +129,7 @@ public class ResourceUpdateComponent : ActivityComponent
                     }
                 }
 
-                unitLastUpdateTimes[unitKey] = Time.realtimeSinceStartup;
+                unitLastUpdateTimes[unitKey] = networkRun?.SimulationTime ?? Time.realtimeSinceStartup;
             }
         }
 
