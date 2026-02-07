@@ -131,17 +131,17 @@ namespace TheFungalNetwork.Editor
                 displayItems.Add(resourceProgressItem);
             }
 
-            // Add party units grid as display item
-            if (party != null && party.Count > 0)
+            // Add party units grid as display item (skip for unlock components)
+            if (!hasUnlockComponent && party != null && party.Count > 0)
             {
                 var partyGridItem = new PartyUnitsGridDisplayItem(activity, selectedRoom, party, onChanged, currentRun);
                 displayItems.Add(partyGridItem);
             }
 
-            // Add unit list as display item
-            if (activity.Units != null && activity.Units.Count > 0)
+            // Add unit list as display item (skip for unlock components since they show party in UnlockInfoDisplayItem)
+            if (!hasUnlockComponent && activity.Units != null && activity.Units.Count > 0)
             {
-                var unitListItem = new UnitListDisplayItem(activity, selectedRoom, onChanged);
+                var unitListItem = new UnitListDisplayItem(activity, selectedRoom, onChanged, hasUnlockComponent ? unlockComponent : null, currentRun);
                 displayItems.Add(unitListItem);
             }
 
@@ -198,7 +198,7 @@ namespace TheFungalNetwork.Editor
             return $"{componentTypeName}";
         }
 
-        private static void DrawUnit(UnitInstance unit, ActivityInstance activity, RoomTemplate selectedRoom, System.Action onChanged)
+        private static void DrawUnit(UnitInstance unit, ActivityInstance activity, RoomTemplate selectedRoom, System.Action onChanged, UnlockComponent unlockComponent = null, NetworkRun currentRun = null)
         {
             var shortcuts = new List<UnitDrawerItemAction>
             {
@@ -215,6 +215,20 @@ namespace TheFungalNetwork.Editor
 
             Texture icon = unit.Species?.Sprite?.texture;
 
+            var displayItems = new List<UnitDrawerDisplayItem>();
+
+            // Add inventory display
+            var jobStyle = new GUIStyle(EditorStyles.miniLabel) { fontStyle = FontStyle.Italic, normal = { textColor = new Color(0.5f, 0.5f, 0.5f) } };
+            var inventoryItem = new InventoryDisplay(unit, jobStyle);
+            displayItems.Add(inventoryItem);
+
+            // Add unlock contribution button if this activity has an unlock component
+            if (unlockComponent != null && unlockComponent.ResourceCondition != null && currentRun != null)
+            {
+                var contributeItem = new UnitContributeDisplayItem(unit, unlockComponent, currentRun, onChanged);
+                displayItems.Add(contributeItem);
+            }
+
             ItemDrawer.DrawItem(
                 icon: icon,
                 displayName: unit.DisplayName,
@@ -222,7 +236,7 @@ namespace TheFungalNetwork.Editor
                 backgroundColor: Color.white,
                 shortcuts: shortcuts,
                 menuItems: null,
-                displayItems: null
+                displayItems: displayItems.Count > 0 ? displayItems : null
             );
         }
 
@@ -234,7 +248,7 @@ namespace TheFungalNetwork.Editor
 
         private class UnitListDisplayItem : UnitDrawerDisplayItem
         {
-            public UnitListDisplayItem(ActivityInstance activity, RoomTemplate selectedRoom, System.Action onChanged)
+            public UnitListDisplayItem(ActivityInstance activity, RoomTemplate selectedRoom, System.Action onChanged, UnlockComponent unlockComponent = null, NetworkRun currentRun = null)
             {
                 condition = () => true;
                 color = Color.white;
@@ -246,7 +260,7 @@ namespace TheFungalNetwork.Editor
                     {
                         if (unit != null)
                         {
-                            DrawUnit(unit, activity, selectedRoom, onChanged);
+                            DrawUnit(unit, activity, selectedRoom, onChanged, unlockComponent, currentRun);
                         }
                     }
                 };
@@ -472,6 +486,44 @@ namespace TheFungalNetwork.Editor
 
                         EditorGUILayout.Space(2);
                     }
+                };
+            }
+        }
+
+        private class UnitContributeDisplayItem : UnitDrawerDisplayItem
+        {
+            public UnitContributeDisplayItem(UnitInstance unit, UnlockComponent unlockComponent, NetworkRun currentRun, System.Action onChanged)
+            {
+                condition = () => true;
+                color = new Color(1f, 0.95f, 0.85f);
+                drawAction = () =>
+                {
+                    EditorGUILayout.Space(2);
+
+                    var requiredItem = unlockComponent.ResourceCondition.RequiredItem;
+                    var requiredAmount = unlockComponent.ResourceCondition.RequiredAmount;
+                    var unitItemCount = unit.Inventory.GetItemCount(requiredItem);
+
+                    if (unitItemCount > 0)
+                    {
+                        GUI.backgroundColor = new Color(0.7f, 1f, 0.7f);
+                        var buttonText = $"✓ Use {unitItemCount}x {requiredItem.DisplayName}";
+
+                        if (GUILayout.Button(buttonText, GUILayout.Height(24)))
+                        {
+                            unlockComponent.ContributeFromUnit(unit);
+                            onChanged?.Invoke();
+                        }
+                        GUI.backgroundColor = Color.white;
+                    }
+                    else
+                    {
+                        GUI.enabled = false;
+                        EditorGUILayout.LabelField($"  No {requiredItem.DisplayName} to contribute", EditorStyles.miniLabel);
+                        GUI.enabled = true;
+                    }
+
+                    EditorGUILayout.Space(2);
                 };
             }
         }
