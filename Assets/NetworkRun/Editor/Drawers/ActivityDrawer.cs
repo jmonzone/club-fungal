@@ -139,11 +139,11 @@ namespace TheFungalNetwork.Editor
             }
 
             // Add unit list as display item (skip for unlock components since they show party in UnlockInfoDisplayItem)
-            if (!hasUnlockComponent && activity.Units != null && activity.Units.Count > 0)
-            {
-                var unitListItem = new UnitListDisplayItem(activity, selectedRoom, onChanged, hasUnlockComponent ? unlockComponent : null, currentRun);
-                displayItems.Add(unitListItem);
-            }
+            // if (!hasUnlockComponent && activity.Units != null && activity.Units.Count > 0)
+            // {
+            //     var unitListItem = new UnitListDisplayItem(activity, selectedRoom, onChanged, hasUnlockComponent ? unlockComponent : null, currentRun);
+            //     displayItems.Add(unitListItem);
+            // }
 
             // Update display name for inspect or unlock activities
             string displayName = activity.Name;
