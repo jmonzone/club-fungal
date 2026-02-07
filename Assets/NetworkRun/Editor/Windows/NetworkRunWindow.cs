@@ -18,6 +18,7 @@ namespace TheFungalNetwork.Editor
         private Vector2 scrollPosition;
         private GameService gameService;
         private UnitInstanceService unitInstanceService;
+        private UnlockComponent unlockComponentTemplate;
         private List<RoomTemplate> roomTemplates;
         private int selectedRoomIndex = 0;
         private NetworkRun currentRun;
@@ -37,6 +38,7 @@ namespace TheFungalNetwork.Editor
             thisScript = MonoScript.FromScriptableObject(this);
             gameService = GURUStyler.LoadAsset<GameService>("GameService");
             unitInstanceService = GURUStyler.LoadAsset<UnitInstanceService>("UnitInstanceService");
+            unlockComponentTemplate = GURUStyler.LoadAsset<UnlockComponent>("UnlockComponent");
             LoadRoomTemplates();
 
             roomSelectionDrawer = new RoomSelectionDrawer();
@@ -100,7 +102,7 @@ namespace TheFungalNetwork.Editor
                     roomSelectionDrawer.Draw(roomTemplates, ref selectedRoomIndex, ref currentRun, LoadRoomTemplates, (newRun) =>
                     {
                         currentRun = newRun;
-                    }, unitInstanceService);
+                    }, unitInstanceService, unlockComponentTemplate);
                 }
                 else
                 {
@@ -127,7 +129,7 @@ namespace TheFungalNetwork.Editor
                     var activities = LoadAllActivityReferences();
                     var party = GetRandomParty(3);
 
-                    currentRun = new NetworkRun(doorConditions, activities, party);
+                    currentRun = new NetworkRun(doorConditions, activities, party, unlockComponentTemplate);
                     StartRun();
                     Repaint();
                 }
@@ -181,7 +183,7 @@ namespace TheFungalNetwork.Editor
                     var doorConditions = LoadAllDoorConditions();
                     var activities = LoadAllActivityReferences();
                     var party = GetRandomParty(3);
-                    currentRun = new NetworkRun(doorConditions, activities, party);
+                    currentRun = new NetworkRun(doorConditions, activities, party, unlockComponentTemplate);
                     StartRun();
                     Repaint();
                 }
@@ -206,24 +208,12 @@ namespace TheFungalNetwork.Editor
 
             // Convert inventory to efficient format
             var inventoryItems = new List<InventoryItemData>();
-            var itemCounts = new Dictionary<string, int>();
-            foreach (var item in currentRun.Inventory.Items)
+            foreach (var stack in currentRun.Inventory.ItemStacks)
             {
-                if (item != null && !string.IsNullOrEmpty(item.Id))
+                if (stack?.item != null && !string.IsNullOrEmpty(stack.item.Id))
                 {
-                    if (itemCounts.ContainsKey(item.Id))
-                    {
-                        itemCounts[item.Id]++;
-                    }
-                    else
-                    {
-                        itemCounts[item.Id] = 1;
-                    }
+                    inventoryItems.Add(new InventoryItemData { itemId = stack.item.Id, count = stack.count });
                 }
-            }
-            foreach (var kvp in itemCounts)
-            {
-                inventoryItems.Add(new InventoryItemData { itemId = kvp.Key, count = kvp.Value });
             }
 
             // Save activities and units
@@ -343,7 +333,7 @@ namespace TheFungalNetwork.Editor
             var doorConditions = LoadAllDoorConditions();
             var activitiesRefs = LoadAllActivityReferences();
             var party = GetRandomParty(3);
-            currentRun = new NetworkRun(doorConditions, activitiesRefs, party);
+            currentRun = new NetworkRun(doorConditions, activitiesRefs, party, unlockComponentTemplate);
 
             // Restore inventory
             var inventory = new Inventory();

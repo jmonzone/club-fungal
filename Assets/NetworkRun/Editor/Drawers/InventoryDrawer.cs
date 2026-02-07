@@ -11,32 +11,19 @@ namespace TheFungalNetwork.Editor
         {
             if (currentRun == null) return;
 
-            var items = currentRun.Inventory.Items;
-            if (items == null || items.Count == 0)
+            var itemStacks = currentRun.Inventory.ItemStacks;
+            if (itemStacks == null || itemStacks.Count == 0)
             {
                 EditorGUILayout.LabelField("  No items in inventory");
                 return;
             }
 
-            var itemGroups = new System.Collections.Generic.Dictionary<ItemTemplate, int>();
-            foreach (var item in items)
+            foreach (var stack in itemStacks)
             {
-                if (item != null)
+                if (stack?.item != null)
                 {
-                    if (itemGroups.ContainsKey(item))
-                    {
-                        itemGroups[item]++;
-                    }
-                    else
-                    {
-                        itemGroups[item] = 1;
-                    }
+                    DrawItem(currentRun, stack.item, stack.count);
                 }
-            }
-
-            foreach (var kvp in itemGroups)
-            {
-                DrawItem(currentRun, kvp.Key, kvp.Value);
             }
         }
 

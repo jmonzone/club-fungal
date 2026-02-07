@@ -11,18 +11,20 @@ public class NetworkRun
     [SerializeField] private List<ActivityReference> activities;
     [SerializeField] private List<RoomInstance> visitedRooms;
     [SerializeField] private List<UnitInstance> party;
+    [SerializeField] private UnlockComponent unlockComponentTemplate;
 
     public Inventory Inventory => inventory;
     public RoomInstance CurrentRoom => currentRoom;
     public List<RoomInstance> VisitedRooms => visitedRooms;
     public List<UnitInstance> Party => party;
 
-    public NetworkRun(List<DoorCondition> doorConditions, List<ActivityReference> activities, List<UnitInstance> partyUnits)
+    public NetworkRun(List<DoorCondition> doorConditions, List<ActivityReference> activities, List<UnitInstance> partyUnits, UnlockComponent unlockTemplate = null)
     {
         inventory = new Inventory();
         this.doorConditions = doorConditions ?? new List<DoorCondition>();
         this.activities = activities ?? new List<ActivityReference>();
         this.party = partyUnits ?? new List<UnitInstance>();
+        this.unlockComponentTemplate = unlockTemplate;
         visitedRooms = new List<RoomInstance>();
         currentRoom = CreateNewRoomInstance();
         visitedRooms.Add(currentRoom);
@@ -54,16 +56,21 @@ public class NetworkRun
     {
         if (door == null) return false;
 
+        Debug.Log($"[NetworkRun] OpenDoorAndTransition called. Inventory stacks: {inventory?.ItemStacks?.Count ?? -1}");
+
         var nextRoomInstance = door.Open(inventory);
 
         if (nextRoomInstance == null && doorConditions != null && doorConditions.Count > 0)
         {
+            Debug.Log($"[NetworkRun] Creating new room instance. Inventory before: {inventory?.ItemStacks?.Count ?? -1}");
             nextRoomInstance = CreateNewRoomInstance();
+            Debug.Log($"[NetworkRun] New room created. Inventory after: {inventory?.ItemStacks?.Count ?? -1}");
         }
 
         if (nextRoomInstance != null)
         {
             TransitionToRoom(nextRoomInstance);
+            Debug.Log($"[NetworkRun] Transitioned to new room. Final inventory stacks: {inventory?.ItemStacks?.Count ?? -1}");
             return true;
         }
 
@@ -229,9 +236,18 @@ public class NetworkRun
                     var unlockRefCopy = ScriptableObject.Instantiate(inspectActivityRef);
                     unlockRefCopy.name = inspectActivityRef.name;
 
-                    // Create UnlockComponent directly (skip InspectComponent)
-                    var unlockComponent = ScriptableObject.CreateInstance<UnlockComponent>();
-                    unlockComponent.name = "UnlockComponent";
+                    // Create UnlockComponent from template or create new instance
+                    UnlockComponent unlockComponent;
+                    if (unlockComponentTemplate != null)
+                    {
+                        unlockComponent = ScriptableObject.Instantiate(unlockComponentTemplate);
+                        unlockComponent.name = unlockComponentTemplate.name;
+                    }
+                    else
+                    {
+                        unlockComponent = ScriptableObject.CreateInstance<UnlockComponent>();
+                        unlockComponent.name = "UnlockComponent";
+                    }
                     unlockComponent.SetDoorAndCondition(door, resourceCondition);
 
                     // Set the components list to just the unlock component

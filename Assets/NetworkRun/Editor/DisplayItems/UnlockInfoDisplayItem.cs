@@ -24,14 +24,14 @@ namespace TheFungalNetwork.Editor
                     // Show Open Door button if enough resources collected, otherwise show progress bar
                     if (hasEnough)
                     {
-                        var buttonText = $"🚪 Open Door ({unlockComponent.RequiredAmount}x {resourceName})";
-                        if (GUILayout.Button(buttonText, GUILayout.Height(30)))
-                        {
-                            // Complete task: remove resources and unlock door
-                            unlockComponent.CompleteTask(currentRun);
-                            currentRun.OpenDoorAndTransition(door);
-                            onChanged?.Invoke();
-                        }
+                        // var buttonText = $"🚪 Open Door ({unlockComponent.RequiredAmount}x {resourceName})";
+                        // if (GUILayout.Button(buttonText, GUILayout.Height(30)))
+                        // {
+                        //     // Complete task: remove resources and unlock door
+                        //     unlockComponent.CompleteTask(currentRun);
+                        //     currentRun.OpenDoorAndTransition(door);
+                        //     onChanged?.Invoke();
+                        // }
                     }
                     else
                     {
@@ -63,18 +63,23 @@ namespace TheFungalNetwork.Editor
                         if (GUILayout.Button(buttonText, GUILayout.Height(30)))
                         {
                             // Remove items from network run inventory and contribute to unlock progress
-                            for (int i = 0; i < canContribute; i++)
-                            {
-                                currentRun.Inventory.RemoveItem(unlockComponent.ResourceCondition.RequiredItem);
-                            }
+                            // for (int i = 0; i < canContribute; i++)
+                            // {
+                            //     currentRun.Inventory.RemoveItem(unlockComponent.ResourceCondition.RequiredItem);
+                            // }
                             unlockComponent.ContributeResources(canContribute);
                             Debug.Log($"Contributed {canContribute}x {resourceName} from network run inventory");
 
                             // Check if door is now unlocked and open it automatically
                             if (unlockComponent.IsUnlocked)
                             {
+                                Debug.Log($"[UnlockInfoDisplayItem] BEFORE CompleteTask - Inventory item count check");
                                 unlockComponent.CompleteTask(currentRun);
+                                Debug.Log($"[UnlockInfoDisplayItem] AFTER CompleteTask - Before transition");
+
                                 currentRun.OpenDoorAndTransition(door);
+
+                                Debug.Log($"[UnlockInfoDisplayItem] AFTER OpenDoorAndTransition - Inventory still same reference: {currentRun.Inventory != null}");
                             }
 
                             onChanged?.Invoke();

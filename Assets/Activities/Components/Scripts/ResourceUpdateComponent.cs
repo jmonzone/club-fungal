@@ -80,7 +80,7 @@ public class ResourceUpdateComponent : ActivityComponent
                     {
                         networkRun.Inventory.AddItem(itemTemplate);
                     }
-                    Debug.Log($"{unit.DisplayName} collected {itemsPerUpdate}x {itemTemplate.DisplayName}");
+                    // Debug.Log($"{unit.DisplayName} collected {itemsPerUpdate}x {itemTemplate.DisplayName}");
                 }
 
                 unitLastUpdateTimes[unitKey] = Time.realtimeSinceStartup;

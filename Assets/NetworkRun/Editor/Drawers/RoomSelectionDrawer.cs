@@ -12,7 +12,7 @@ namespace TheFungalNetwork.Editor
         private bool isCreatingNewRoom = false;
         private List<RoomTemplate> cachedRoomTemplates;
 
-        public void Draw(List<RoomTemplate> roomTemplates, ref int selectedRoomIndex, ref NetworkRun currentRun, System.Action onTemplatesChanged, System.Action<NetworkRun> onRunStarted, UnitInstanceService unitInstanceService)
+        public void Draw(List<RoomTemplate> roomTemplates, ref int selectedRoomIndex, ref NetworkRun currentRun, System.Action onTemplatesChanged, System.Action<NetworkRun> onRunStarted, UnitInstanceService unitInstanceService, UnlockComponent unlockTemplate = null)
         {
             cachedRoomTemplates = roomTemplates;
             EditorGUILayout.LabelField("Room Selection", EditorStyles.boldLabel);
@@ -35,7 +35,7 @@ namespace TheFungalNetwork.Editor
                             var doorConditions = LoadAllDoorConditions();
                             var activities = LoadAllActivityReferences();
                             var party = GetRandomParty(unitInstanceService, 3);
-                            var newRun = new NetworkRun(doorConditions, activities, party);
+                            var newRun = new NetworkRun(doorConditions, activities, party, unlockTemplate);
                             onRunStarted?.Invoke(newRun);
                         })
                     };

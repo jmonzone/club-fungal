@@ -8,13 +8,13 @@ namespace TheFungalNetwork.Editor
     {
         public InventoryDisplay(UnitInstance unitInstance, GUIStyle jobStyle)
         {
-            condition = () => unitInstance?.Inventory?.Items != null && unitInstance.Inventory.Items.Count > 0;
+            condition = () => unitInstance?.Inventory?.ItemStacks != null && unitInstance.Inventory.ItemStacks.Count > 0;
             color = new Color(1f, 0.95f, 0.8f);
             drawAction = () =>
             {
-                var itemCounts = unitInstance.Inventory.Items
-                    .GroupBy(item => item)
-                    .Select(g => $"{g.Count()}x {g.Key?.DisplayName ?? "Unknown"}")
+                var itemCounts = unitInstance.Inventory.ItemStacks
+                    .Where(stack => stack?.item != null)
+                    .Select(stack => $"{stack.count}x {stack.item.DisplayName}")
                     .ToList();
 
                 var inventoryText = string.Join(", ", itemCounts);

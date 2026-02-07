@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 077ff222673bf4557b522e5bc28e8f28, type: 3}
+  m_Name: Unlock Door Component
+  m_EditorClassIdentifier: Assembly-CSharp::UnlockComponent
+  displayName: Unlock Door
+  fishReward: {fileID: 11400000, guid: 20b1daf91d6764492a8d2376e4644d03, type: 2}
+  fishRewardAmount: 5
+  sporesReward: {fileID: 11400000, guid: ddde813dc82944f04928d4fd69f1a1b8, type: 2}
+  sporesRewardAmount: 5
