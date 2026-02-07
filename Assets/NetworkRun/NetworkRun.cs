@@ -72,8 +72,7 @@ public class NetworkRun
 
     private RoomInstance CreateNewRoomInstance()
     {
-        // Pick 1 resource-producing activity (has ResourceUpdateComponent, no InspectComponent)
-        ActivityReference activityRef = null;
+        // Pick resource-producing activities (has ResourceUpdateComponent, no InspectComponent)
         var resourceActivities = new List<ActivityReference>();
 
         if (activities != null && activities.Count > 0)
@@ -103,17 +102,35 @@ public class NetworkRun
                     resourceActivities.Add(activity);
                 }
             }
+        }
 
-            if (resourceActivities.Count > 0)
+        // Determine how many activities to create (scale with room count, max at unique activity count)
+        int activityCount = Mathf.Min(visitedRooms.Count + 1, resourceActivities.Count);
+        var selectedActivities = new List<ActivityReference>();
+
+        if (resourceActivities.Count > 0 && activityCount > 0)
+        {
+            // Shuffle and take the required number of unique activities
+            var shuffled = new List<ActivityReference>(resourceActivities);
+            for (int i = 0; i < shuffled.Count; i++)
             {
-                activityRef = resourceActivities[UnityEngine.Random.Range(0, resourceActivities.Count)];
+                var temp = shuffled[i];
+                int randomIndex = UnityEngine.Random.Range(i, shuffled.Count);
+                shuffled[i] = shuffled[randomIndex];
+                shuffled[randomIndex] = temp;
+            }
+
+            for (int i = 0; i < activityCount; i++)
+            {
+                selectedActivities.Add(shuffled[i]);
             }
         }
 
-        // Create a runtime copy of the activity reference with copied components
-        ActivityInstance activityInstance = null;
-        if (activityRef != null)
+        // Create activity instances for all selected activities
+        var resourceActivityInstances = new List<ActivityInstance>();
+        foreach (var activityRef in selectedActivities)
         {
+            // Create a runtime copy of the activity reference with copied components
             var activityRefCopy = ScriptableObject.Instantiate(activityRef);
             activityRefCopy.name = activityRef.name;
 
@@ -137,7 +154,7 @@ public class NetworkRun
                 componentsField?.SetValue(activityRefCopy, copiedComponents);
             }
 
-            activityInstance = new ActivityInstance(activityRefCopy);
+            var activityInstance = new ActivityInstance(activityRefCopy);
 
             // Initialize all components (iterate over a copy to avoid modification during enumeration)
             if (activityRefCopy.Components != null)
@@ -151,11 +168,11 @@ public class NetworkRun
                     }
                 }
             }
+
+            resourceActivityInstances.Add(activityInstance);
         }
-        else
-        {
-            activityInstance = new ActivityInstance((ActivityReference)null);
-        }
+
+        Debug.Log($"Created {resourceActivityInstances.Count} resource activities for room {visitedRooms.Count + 1}");
 
         // Find 1 door activity with InspectComponent
         ActivityReference inspectActivityRef = null;
@@ -195,8 +212,9 @@ public class NetworkRun
         {
             foreach (var door in doors)
             {
-                // Create ResourceCondition for the door based on the resource activity in this room
-                var resourceCondition = CreateResourceConditionForDoor(activityInstance);
+                // Create ResourceCondition for the door based on the first resource activity in this room
+                var firstActivityInstance = resourceActivityInstances.Count > 0 ? resourceActivityInstances[0] : null;
+                var resourceCondition = CreateResourceConditionForDoor(firstActivityInstance);
 
                 if (resourceCondition != null)
                 {
@@ -233,11 +251,8 @@ public class NetworkRun
             }
         }
 
-        // Add resource activity after door activities
-        if (activityInstance != null)
-        {
-            activityInstances.Add(activityInstance);
-        }
+        // Add resource activities after door activities
+        activityInstances.AddRange(resourceActivityInstances);
 
         return new RoomInstance(new RoomData
         {
