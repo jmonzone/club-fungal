@@ -15,4 +15,7 @@ MonoBehaviour:
   displayName: Collect Fish
   itemTemplate: {fileID: 11400000, guid: 20b1daf91d6764492a8d2376e4644d03, type: 2}
   itemsPerUpdate: 1
-  updateInterval: 1
+  updateInterval: 5
+  aquaSpeedBonus: 2
+  pawSpeedBonus: 1
+  skySpeedBonus: 1.5

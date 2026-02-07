@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "ResourceUpdateComponent", menuName = "Club Fungal/Activities/Components/Resource Update")]
@@ -6,32 +7,104 @@ public class ResourceUpdateComponent : ActivityComponent
     [SerializeField] private ItemTemplate itemTemplate;
     [SerializeField] private int itemsPerUpdate = 1;
     [SerializeField] private float updateInterval = 1f;
+    [SerializeField] private float aquaSpeedBonus = 2f; // Speed multiplier for Aqua units collecting fish
+    [SerializeField] private float pawSpeedBonus = 2f; // Speed multiplier for Paw units collecting spores
+    [SerializeField] private float skySpeedBonus = 2f; // Speed multiplier for Sky units (future use)
 
-    private float lastUpdateTime;
+    private Dictionary<int, float> unitLastUpdateTimes = new Dictionary<int, float>();
 
     public ItemTemplate ItemTemplate => itemTemplate;
     public float UpdateInterval => updateInterval;
     public int ItemsPerUpdate => itemsPerUpdate;
-    public float TimeSinceLastUpdate => Time.realtimeSinceStartup - lastUpdateTime;
-    public float Progress => Mathf.Clamp01(TimeSinceLastUpdate / updateInterval);
+
+    private float GetEffectiveInterval(UnitInstance unit)
+    {
+        if (unit?.Species == null || itemTemplate == null)
+            return updateInterval;
+
+        var unitType = unit.Species.Type;
+        var itemId = itemTemplate.Id?.ToLower();
+
+        // Check for type matches and apply appropriate bonus
+        float speedBonus = 1f;
+        if (unitType == UnitType.Aqua && itemId?.Contains("fish") == true)
+            speedBonus = aquaSpeedBonus;
+        else if (unitType == UnitType.Paw && itemId?.Contains("spore") == true)
+            speedBonus = pawSpeedBonus;
+        else if (unitType == UnitType.Sky)
+            speedBonus = skySpeedBonus; // Reserved for future sky-type resources
+
+        return updateInterval / speedBonus;
+    }
+
+    public float GetUnitProgress(UnitInstance unit)
+    {
+        if (unit == null) return 0f;
+        var unitKey = unit.GetHashCode();
+        if (!unitLastUpdateTimes.ContainsKey(unitKey))
+        {
+            unitLastUpdateTimes[unitKey] = Time.realtimeSinceStartup;
+            return 0f;
+        }
+
+        var effectiveInterval = GetEffectiveInterval(unit);
+        var timeSinceLastUpdate = Time.realtimeSinceStartup - unitLastUpdateTimes[unitKey];
+        return Mathf.Clamp01(timeSinceLastUpdate / effectiveInterval);
+    }
 
     public override void DoUpdate(NetworkRun networkRun, ActivityInstance activityInstance)
     {
-        if (Time.realtimeSinceStartup - lastUpdateTime >= updateInterval)
-        {
-            int unitCount = activityInstance.Units?.Count ?? 0;
-            int totalItems = itemsPerUpdate * unitCount;
+        if (activityInstance.Units == null || activityInstance.Units.Count == 0)
+            return;
 
-            if (totalItems > 0 && itemTemplate != null)
+        // Update each unit independently
+        var unitsToUpdate = new List<UnitInstance>(activityInstance.Units);
+        foreach (var unit in unitsToUpdate)
+        {
+            if (unit == null) continue;
+
+            var unitKey = unit.GetHashCode();
+            if (!unitLastUpdateTimes.ContainsKey(unitKey))
             {
-                for (int i = 0; i < totalItems; i++)
-                {
-                    networkRun.Inventory.AddItem(itemTemplate);
-                }
-                Debug.Log($"Adding {totalItems}x {itemTemplate.DisplayName} ({unitCount} units × {itemsPerUpdate}) to network run inventory");
+                unitLastUpdateTimes[unitKey] = Time.realtimeSinceStartup;
+                continue;
             }
 
-            lastUpdateTime = Time.realtimeSinceStartup;
+            var effectiveInterval = GetEffectiveInterval(unit);
+            var timeSinceLastUpdate = Time.realtimeSinceStartup - unitLastUpdateTimes[unitKey];
+            if (timeSinceLastUpdate >= effectiveInterval)
+            {
+                if (itemTemplate != null)
+                {
+                    for (int i = 0; i < itemsPerUpdate; i++)
+                    {
+                        networkRun.Inventory.AddItem(itemTemplate);
+                    }
+                    Debug.Log($"{unit.DisplayName} collected {itemsPerUpdate}x {itemTemplate.DisplayName}");
+                }
+
+                unitLastUpdateTimes[unitKey] = Time.realtimeSinceStartup;
+            }
+        }
+
+        // Clean up removed units
+        var activeUnitKeys = new HashSet<int>();
+        foreach (var unit in activityInstance.Units)
+        {
+            if (unit != null)
+                activeUnitKeys.Add(unit.GetHashCode());
+        }
+
+        var keysToRemove = new List<int>();
+        foreach (var key in unitLastUpdateTimes.Keys)
+        {
+            if (!activeUnitKeys.Contains(key))
+                keysToRemove.Add(key);
+        }
+
+        foreach (var key in keysToRemove)
+        {
+            unitLastUpdateTimes.Remove(key);
         }
     }
 }

@@ -16,3 +16,6 @@ MonoBehaviour:
   itemTemplate: {fileID: 11400000, guid: ddde813dc82944f04928d4fd69f1a1b8, type: 2}
   itemsPerUpdate: 1
   updateInterval: 5
+  aquaSpeedBonus: 1
+  pawSpeedBonus: 2
+  skySpeedBonus: 1.5

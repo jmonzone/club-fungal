@@ -25,7 +25,6 @@ namespace TheFungalNetwork.Editor
 
                 var unitCount = activity.Units?.Count ?? 0;
                 var itemName = resourceComponent.ItemTemplate?.DisplayName ?? "Unknown";
-                var progress = unitCount > 0 ? resourceComponent.Progress : 0f;
 
                 // Show all party units in a grid
                 if (currentRun?.Party != null && currentRun.Party.Count > 0)
@@ -70,6 +69,9 @@ namespace TheFungalNetwork.Editor
 
                         if (isInActivity)
                         {
+                            // Get per-unit progress
+                            var progress = resourceComponent.GetUnitProgress(unit);
+
                             // Track collection state for this unit
                             var stateKey = $"{activity.GetHashCode()}_{unit.GetHashCode()}";
                             if (!_collectionStates.ContainsKey(stateKey))
@@ -120,14 +122,10 @@ namespace TheFungalNetwork.Editor
                             {
                                 GUILayout.Space(12);
                             }
-                        }
 
-                        if (isInActivity)
-                        {
                             // Progress indicator
-                            var unitProgress = progress;
                             var unitProgressRect = EditorGUILayout.GetControlRect(false, 8, GUILayout.Width(90));
-                            EditorGUI.ProgressBar(unitProgressRect, unitProgress, "");
+                            EditorGUI.ProgressBar(unitProgressRect, progress, "");
 
                             // Remove button
                             GUI.backgroundColor = new Color(1f, 0.7f, 0.7f);
