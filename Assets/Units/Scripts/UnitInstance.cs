@@ -49,6 +49,7 @@ public class UnitInstance
 
     [SerializeField] private List<string> friends;
     [SerializeField] private List<UnitMoment> moments;
+    [SerializeField] private Inventory inventory = new Inventory();
 
     public UnitData Data => data;
     public string Id => data.id;
@@ -66,6 +67,7 @@ public class UnitInstance
     public List<UnitMoment> Moments => moments;
 
     public UnitTemplate Template => template;
+    public Inventory Inventory => inventory;
 
     public event UnityAction<float> OnXpChanged;
 
@@ -76,6 +78,7 @@ public class UnitInstance
         this.data = initData;
         friends = new List<string>();
         moments = new List<UnitMoment>();
+        inventory = new Inventory();
     }
 
     public void SetTemplate(UnitTemplate template)

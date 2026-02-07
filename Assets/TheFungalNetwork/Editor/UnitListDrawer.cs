@@ -80,7 +80,8 @@ namespace TheFungalNetwork.Editor
                         new InPartyDisplay(isInParty, jobStyle),
                         new BehaviourDisplay(behaviour, jobStyle),
                         new InteractionDisplay(interaction, controller, jobStyle),
-                        new ActivityDisplay(activity, jobStyle)
+                        new ActivityDisplay(activity, jobStyle),
+                        new InventoryDisplay(unitInstance, jobStyle)
                     };
 
                     // Draw the unit
