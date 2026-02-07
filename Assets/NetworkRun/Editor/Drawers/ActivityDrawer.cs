@@ -149,11 +149,28 @@ namespace TheFungalNetwork.Editor
             string displayName = activity.Name;
             if (hasInspectComponent && currentRun?.CurrentRoom?.Data?.doors != null && inspectComponent?.AssignedDoor != null)
             {
-                displayName = GetDoorDisplayName(currentRun.CurrentRoom.Data.doors, inspectComponent.AssignedDoor, inspectComponent.GetType().Name);
+                displayName = GetDoorDisplayName(currentRun.CurrentRoom.Data.doors, inspectComponent.AssignedDoor, inspectComponent.DisplayName);
             }
             else if (hasUnlockComponent && currentRun?.CurrentRoom?.Data?.doors != null && unlockComponent?.AssignedDoor != null)
             {
-                displayName = GetDoorDisplayName(currentRun.CurrentRoom.Data.doors, unlockComponent.AssignedDoor, unlockComponent.GetType().Name);
+                displayName = GetDoorDisplayName(currentRun.CurrentRoom.Data.doors, unlockComponent.AssignedDoor, unlockComponent.DisplayName);
+            }
+            else if (activity.Template?.Components != null)
+            {
+                foreach (var component in activity.Template.Components)
+                {
+                    var componentType = component.GetType();
+                    var displayNameProperty = componentType.GetProperty("DisplayName");
+                    if (displayNameProperty != null)
+                    {
+                        var componentDisplayName = displayNameProperty.GetValue(component) as string;
+                        if (!string.IsNullOrEmpty(componentDisplayName))
+                        {
+                            displayName = componentDisplayName;
+                            break;
+                        }
+                    }
+                }
             }
 
             ItemDrawer.DrawItem(
@@ -174,11 +191,11 @@ namespace TheFungalNetwork.Editor
                 int doorIndex = doors.IndexOf(assignedDoor);
                 if (doorIndex >= 0)
                 {
-                    return $"Door {doorIndex + 1}: {componentTypeName}";
+                    return $"{componentTypeName} {doorIndex + 1}";
                 }
             }
 
-            return $"Door: {componentTypeName}";
+            return $"{componentTypeName}";
         }
 
         private static void DrawUnit(UnitInstance unit, ActivityInstance activity, RoomTemplate selectedRoom, System.Action onChanged)

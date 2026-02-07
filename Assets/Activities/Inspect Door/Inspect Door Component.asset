@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef69d945126d64e2db222ab469f57552, type: 3}
   m_Name: Inspect Door Component
   m_EditorClassIdentifier: Assembly-CSharp::InspectComponent
+  displayName: Inspect Door
   inspectDuration: 10
   remainingDuration: 0
-  isInitialized: 1
+  isComplete: 0

@@ -2,6 +2,9 @@ using UnityEngine;
 
 public abstract class ActivityComponent : ScriptableObject
 {
+    [SerializeField] protected string displayName;
+    public string DisplayName => displayName;
+
     public virtual void Initialize(NetworkRun networkRun, ActivityInstance activityInstance)
     {
         // Optional initialization hook for components

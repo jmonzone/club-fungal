@@ -517,7 +517,13 @@ namespace TheFungalNetwork.Editor
                 for (int i = 0; i < randomCount; i++)
                 {
                     var randomIndex = Random.Range(0, availableUnits.Count);
-                    party.Add(availableUnits[randomIndex]);
+                    var originalUnit = availableUnits[randomIndex];
+
+                    // Create a copy of the unit instance
+                    var unitCopy = new UnitInstance(originalUnit.Data);
+                    unitCopy.SetTemplate(originalUnit.Template);
+
+                    party.Add(unitCopy);
                     availableUnits.RemoveAt(randomIndex);
                 }
             }
