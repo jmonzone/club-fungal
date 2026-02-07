@@ -44,4 +44,23 @@ public class UnlockComponent : ActivityComponent
             }
         }
     }
+
+    public void CompleteTask(NetworkRun networkRun)
+    {
+        if (resourceCondition?.RequiredItem != null && networkRun?.Inventory != null)
+        {
+            // Remove the required resources from inventory
+            for (int i = 0; i < RequiredAmount; i++)
+            {
+                networkRun.Inventory.RemoveItem(resourceCondition.RequiredItem);
+            }
+
+            // Unlock the door
+            if (assignedDoor != null)
+            {
+                assignedDoor.isLocked = false;
+                Debug.Log($"Door unlocked! Consumed {RequiredAmount}x {resourceCondition.RequiredItem.DisplayName}");
+            }
+        }
+    }
 }

@@ -440,51 +440,6 @@ namespace TheFungalNetwork.Editor
                 };
             }
         }
-
-        private class UnlockInfoDisplayItem : UnitDrawerDisplayItem
-        {
-            public UnlockInfoDisplayItem(NetworkRun currentRun, UnlockComponent unlockComponent, System.Action onChanged)
-            {
-                condition = () => true;
-                color = Color.white;
-                drawAction = () =>
-                {
-                    EditorGUILayout.Space(4);
-
-                    // Show door conditions using the assigned door from the component
-                    var door = unlockComponent.AssignedDoor;
-                    if (door != null && unlockComponent.ResourceCondition != null)
-                    {
-                        var hasEnough = unlockComponent.CurrentResourceCount >= unlockComponent.RequiredAmount;
-                        var resourceName = unlockComponent.ResourceCondition.RequiredItem?.DisplayName ?? "Unknown";
-
-                        // Show Open Door button if enough resources collected, otherwise show progress bar
-                        if (hasEnough)
-                        {
-                            if (GUILayout.Button("🚪 Open Door", GUILayout.Height(30)))
-                            {
-                                // Unlock the door before transitioning
-                                door.isLocked = false;
-                                currentRun.OpenDoorAndTransition(door);
-                                onChanged?.Invoke();
-                            }
-                        }
-                        else
-                        {
-                            // Show progress bar with resource name
-                            var progress = Mathf.Clamp01((float)unlockComponent.CurrentResourceCount / unlockComponent.RequiredAmount);
-                            var rect = EditorGUILayout.GetControlRect(false, 20);
-                            rect.x += 8;
-                            rect.width -= 16;
-
-                            EditorGUI.ProgressBar(rect, progress, $"{resourceName}: {unlockComponent.CurrentResourceCount}/{unlockComponent.RequiredAmount}");
-                        }
-
-                        EditorGUILayout.Space(2);
-                    }
-                };
-            }
-        }
     }
 }
 #endif
