@@ -161,9 +161,31 @@ namespace TheFungalNetwork.Editor
                     EditorGUILayout.EndHorizontal();
                     EditorGUILayout.Space(4);
 
-                    // Show what's being collected
+                    // Show what's being collected with type bonuses considered
                     var totalItems = resourceComponent.ItemsPerUpdate * unitCount;
-                    EditorGUILayout.LabelField($"⏱ Each cycle: {totalItems}x {itemName} ({resourceComponent.UpdateInterval:F1}s)", EditorStyles.miniLabel);
+
+                    if (unitCount > 0)
+                    {
+                        // Calculate average effective interval across all active units
+                        float totalInterval = 0f;
+                        int activeCount = 0;
+
+                        foreach (var unit in activity.Units)
+                        {
+                            if (unit != null)
+                            {
+                                totalInterval += resourceComponent.GetEffectiveInterval(unit);
+                                activeCount++;
+                            }
+                        }
+
+                        float avgInterval = activeCount > 0 ? totalInterval / activeCount : resourceComponent.UpdateInterval;
+                        EditorGUILayout.LabelField($"⏱ Each cycle: {totalItems}x {itemName} (~{avgInterval:F1}s avg)", EditorStyles.miniLabel);
+                    }
+                    else
+                    {
+                        EditorGUILayout.LabelField($"⏱ Each cycle: 0x {itemName} ({resourceComponent.UpdateInterval:F1}s)", EditorStyles.miniLabel);
+                    }
                 }
 
                 EditorGUILayout.Space(2);

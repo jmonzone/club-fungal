@@ -17,7 +17,7 @@ public class ResourceUpdateComponent : ActivityComponent
     public float UpdateInterval => updateInterval;
     public int ItemsPerUpdate => itemsPerUpdate;
 
-    private float GetEffectiveInterval(UnitInstance unit)
+    public float GetEffectiveInterval(UnitInstance unit)
     {
         if (unit?.Species == null || itemTemplate == null)
             return updateInterval;
