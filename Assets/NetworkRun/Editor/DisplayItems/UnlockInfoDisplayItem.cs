@@ -53,34 +53,35 @@ namespace TheFungalNetwork.Editor
                         var remainingNeeded = unlockComponent.RequiredAmount - unlockComponent.CurrentResourceCount;
                         var canContribute = Mathf.Min(inventoryItemCount, remainingNeeded);
 
-                        if (canContribute > 0)
+                        GUI.enabled = canContribute > 0;
+                        GUI.backgroundColor = new Color(0.7f, 1f, 0.7f);
+
+                        var buttonText = canContribute > 0
+                            ? $"✓ Contribute {canContribute}x {resourceName} from Inventory"
+                            : $"Collect {resourceName} to contribute";
+
+                        if (GUILayout.Button(buttonText, GUILayout.Height(30)))
                         {
-                            GUI.backgroundColor = new Color(0.7f, 1f, 0.7f);
-                            if (GUILayout.Button($"✓ Contribute {canContribute}x {resourceName} from Inventory", GUILayout.Height(30)))
+                            // Remove items from network run inventory and contribute to unlock progress
+                            for (int i = 0; i < canContribute; i++)
                             {
-                                // Remove items from network run inventory and contribute to unlock progress
-                                for (int i = 0; i < canContribute; i++)
-                                {
-                                    currentRun.Inventory.RemoveItem(unlockComponent.ResourceCondition.RequiredItem);
-                                }
-                                unlockComponent.ContributeResources(canContribute);
-                                Debug.Log($"Contributed {canContribute}x {resourceName} from network run inventory");
-
-                                // Check if door is now unlocked and open it automatically
-                                if (unlockComponent.IsUnlocked)
-                                {
-                                    unlockComponent.CompleteTask(currentRun);
-                                    currentRun.OpenDoorAndTransition(door);
-                                }
-
-                                onChanged?.Invoke();
+                                currentRun.Inventory.RemoveItem(unlockComponent.ResourceCondition.RequiredItem);
                             }
-                            GUI.backgroundColor = Color.white;
+                            unlockComponent.ContributeResources(canContribute);
+                            Debug.Log($"Contributed {canContribute}x {resourceName} from network run inventory");
+
+                            // Check if door is now unlocked and open it automatically
+                            if (unlockComponent.IsUnlocked)
+                            {
+                                unlockComponent.CompleteTask(currentRun);
+                                currentRun.OpenDoorAndTransition(door);
+                            }
+
+                            onChanged?.Invoke();
                         }
-                        else
-                        {
-                            EditorGUILayout.LabelField($"Collect {resourceName} to contribute", EditorStyles.miniLabel);
-                        }
+
+                        GUI.backgroundColor = Color.white;
+                        GUI.enabled = true;
                     }
 
                     EditorGUILayout.Space(2);
