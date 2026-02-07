@@ -35,8 +35,8 @@ namespace TheFungalNetwork.Editor
                             var doorConditions = LoadAllDoorConditions();
                             var activities = LoadAllActivityReferences();
                             var party = GetRandomParty(unitInstanceService, 3);
-                            var newRun = new NetworkRun(doorConditions, activities, party, unlockTemplate);
-                            onRunStarted?.Invoke(newRun);
+                            // var newRun = new NetworkRun(doorConditions, activities, party, unlockTemplate);
+                            // onRunStarted?.Invoke(newRun);
                         })
                     };
 

@@ -62,12 +62,11 @@ namespace TheFungalNetwork.Editor
 
                         if (GUILayout.Button(buttonText, GUILayout.Height(30)))
                         {
-                            // Remove items from network run inventory and contribute to unlock progress
-                            // for (int i = 0; i < canContribute; i++)
-                            // {
-                            //     currentRun.Inventory.RemoveItem(unlockComponent.ResourceCondition.RequiredItem);
-                            // }
                             unlockComponent.ContributeResources(canContribute);
+
+                            // Remove contributed items from inventory
+                            currentRun.Inventory.RemoveItem(unlockComponent.ResourceCondition.RequiredItem, canContribute);
+
                             Debug.Log($"Contributed {canContribute}x {resourceName} from network run inventory");
 
                             // Check if door is now unlocked and open it automatically

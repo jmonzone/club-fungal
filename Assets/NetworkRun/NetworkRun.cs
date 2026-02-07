@@ -18,7 +18,7 @@ public class NetworkRun
     public List<RoomInstance> VisitedRooms => visitedRooms;
     public List<UnitInstance> Party => party;
 
-    public NetworkRun(List<DoorCondition> doorConditions, List<ActivityReference> activities, List<UnitInstance> partyUnits, UnlockComponent unlockTemplate = null)
+    public NetworkRun(List<DoorCondition> doorConditions, List<ActivityReference> activities, List<UnitInstance> partyUnits, UnlockComponent unlockTemplate)
     {
         inventory = new Inventory();
         this.doorConditions = doorConditions ?? new List<DoorCondition>();

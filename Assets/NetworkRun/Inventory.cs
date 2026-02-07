@@ -37,12 +37,12 @@ public class Inventory
         // Debug.Log($"[Inventory] Added item: {(item != null ? item.DisplayName : "NULL")}. Total unique items: {itemStacks.Count}");
     }
 
-    public void RemoveItem(ItemTemplate item)
+    public void RemoveItem(ItemTemplate item, int count = 1)
     {
         var existingStack = itemStacks.FirstOrDefault(s => s.item == item);
         if (existingStack != null)
         {
-            existingStack.count--;
+            existingStack.count -= count;
             if (existingStack.count <= 0)
             {
                 itemStacks.Remove(existingStack);

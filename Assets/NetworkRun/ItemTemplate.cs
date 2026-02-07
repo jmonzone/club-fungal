@@ -7,9 +7,11 @@ public class ItemTemplate : ScriptableObject
     [SerializeField] private string displayName;
     [SerializeField] private Sprite sprite;
     [SerializeField] private string description;
+    [SerializeField] private float xp;
 
     public string Id => id;
     public string DisplayName => displayName;
     public Sprite Sprite => sprite;
     public string Description => description;
+    public float XP => xp;
 }

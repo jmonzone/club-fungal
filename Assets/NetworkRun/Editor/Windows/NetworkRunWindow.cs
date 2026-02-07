@@ -123,15 +123,7 @@ namespace TheFungalNetwork.Editor
                 EditorGUILayout.Space(10);
                 if (GUILayout.Button("Start New Run", GUILayout.Height(40)))
                 {
-                    selectedRoomIndex = 0;
-                    LoadRoomTemplates();
-                    var doorConditions = LoadAllDoorConditions();
-                    var activities = LoadAllActivityReferences();
-                    var party = GetRandomParty(3);
-
-                    currentRun = new NetworkRun(doorConditions, activities, party, unlockComponentTemplate);
-                    StartRun();
-                    Repaint();
+                    CreateNewRun();
                 }
                 EditorGUILayout.Space(10);
                 EditorGUILayout.EndVertical();
@@ -140,6 +132,18 @@ namespace TheFungalNetwork.Editor
             EditorGUILayout.EndScrollView();
 
             EditorGUILayout.EndVertical();
+        }
+
+        private void CreateNewRun()
+        {
+            selectedRoomIndex = 0;
+            LoadRoomTemplates();
+            var doorConditions = LoadAllDoorConditions();
+            var activities = LoadAllActivityReferences();
+            var party = GetRandomParty(3);
+            currentRun = new NetworkRun(doorConditions, activities, party, unlockComponentTemplate);
+            StartRun();
+            Repaint();
         }
 
         private void DrawPlayPauseButtons()
@@ -178,14 +182,7 @@ namespace TheFungalNetwork.Editor
                 if (EditorUtility.DisplayDialog("Start New Run", "Are you sure? Current run will be lost if not saved.", "Start New", "Cancel"))
                 {
                     StopRun();
-                    selectedRoomIndex = 0;
-                    LoadRoomTemplates();
-                    var doorConditions = LoadAllDoorConditions();
-                    var activities = LoadAllActivityReferences();
-                    var party = GetRandomParty(3);
-                    currentRun = new NetworkRun(doorConditions, activities, party, unlockComponentTemplate);
-                    StartRun();
-                    Repaint();
+                    CreateNewRun();
                 }
             }
 
@@ -333,7 +330,7 @@ namespace TheFungalNetwork.Editor
             var doorConditions = LoadAllDoorConditions();
             var activitiesRefs = LoadAllActivityReferences();
             var party = GetRandomParty(3);
-            currentRun = new NetworkRun(doorConditions, activitiesRefs, party, unlockComponentTemplate);
+            // currentRun = new NetworkRun(doorConditions, activitiesRefs, party, unlockComponentTemplate);
 
             // Restore inventory
             var inventory = new Inventory();
@@ -509,8 +506,8 @@ namespace TheFungalNetwork.Editor
                     var randomIndex = Random.Range(0, availableUnits.Count);
                     var originalUnit = availableUnits[randomIndex];
 
-                    // Create a copy of the unit instance
-                    var unitCopy = new UnitInstance(originalUnit.Data);
+                    // Use service to copy unit with skills preserved
+                    var unitCopy = unitInstanceService.CopyUnit(originalUnit, saveData: false, register: false);
                     unitCopy.SetTemplate(originalUnit.Template);
 
                     party.Add(unitCopy);

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ActivityReference
   sprite: {fileID: 21300000, guid: d11664e5f77424c7ba70ac473125f7af, type: 3}
   activityView: {fileID: 0}
-  primarySkill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+  primarySkill: {fileID: 11400000, guid: 71c6207e188214dfab32f5c23d138e13, type: 2}
   activityControllerPrefab: {fileID: 0}
   components:
   - {fileID: 11400000, guid: 75563fc8a64804b049de33b515a18bd1, type: 2}

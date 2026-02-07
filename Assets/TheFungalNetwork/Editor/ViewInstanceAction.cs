@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace TheFungalNetwork.Editor
 {
     public class ViewInstanceAction : UnitDrawerItemAction
@@ -8,7 +6,10 @@ namespace TheFungalNetwork.Editor
         {
             text = "View Instance";
             emoji = "👁️";
-            action = () => Debug.Log(unitInstance);
+            action = () =>
+            {
+                UnitInstanceInspectorWindow.ShowWindow(unitInstance);
+            };
             condition = () => true;
         }
     }

@@ -45,7 +45,26 @@ public class UnitInstance
 
     [SerializeField] private List<SkillInstance> skills;
 
-    public Dictionary<Skill, SkillInstance> Skills = new Dictionary<Skill, SkillInstance>();
+    // Build dictionary on-demand from serialized list
+    private Dictionary<Skill, SkillInstance> _skillsCache;
+    public Dictionary<Skill, SkillInstance> Skills
+    {
+        get
+        {
+            if (_skillsCache == null && skills != null)
+            {
+                _skillsCache = new Dictionary<Skill, SkillInstance>();
+                foreach (var skill in skills)
+                {
+                    if (skill?.Skill != null)
+                    {
+                        _skillsCache[skill.Skill] = skill;
+                    }
+                }
+            }
+            return _skillsCache;
+        }
+    }
 
     [SerializeField] private List<string> friends;
     [SerializeField] private List<UnitMoment> moments;
@@ -89,10 +108,9 @@ public class UnitInstance
     public void InitializeSkills(List<SkillInstance> skills)
     {
         this.skills = skills;
-        Skills = new Dictionary<Skill, SkillInstance>();
+        _skillsCache = null; // Clear cache so it rebuilds on next access
         foreach (var skill in this.skills)
         {
-            Skills.Add(skill.Skill, skill);
             skill.OnXpChanged += value => OnXpChanged?.Invoke(value);
         }
     }
@@ -100,6 +118,19 @@ public class UnitInstance
     public void InitializeMoments(List<UnitMoment> moments)
     {
         this.moments = moments;
+    }
+
+    public void ClaimItemsToInventory(ItemTemplate item, Inventory targetInventory)
+    {
+        var count = inventory.GetItemCount(item);
+        if (count > 0)
+        {
+            inventory.RemoveItem(item, count);
+            for (int i = 0; i < count; i++)
+            {
+                targetInventory.AddItem(item);
+            }
+        }
     }
 
     public static string GenerateMongoLikeId()
@@ -153,5 +184,5 @@ public class UnitInstance
     {
         return !(left == right);
     }
-
 }
+

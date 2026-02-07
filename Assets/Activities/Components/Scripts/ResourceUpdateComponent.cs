@@ -17,10 +17,10 @@ public class ResourceUpdateComponent : ActivityComponent
     public float UpdateInterval => updateInterval;
     public int ItemsPerUpdate => itemsPerUpdate;
 
-    public float GetEffectiveInterval(UnitInstance unit)
+    public float GetSpeedBonus(UnitInstance unit, ActivityInstance activity = null)
     {
         if (unit?.Species == null || itemTemplate == null)
-            return updateInterval;
+            return 1f;
 
         var unitType = unit.Species.Type;
         var itemId = itemTemplate.Id?.ToLower();
@@ -34,10 +34,29 @@ public class ResourceUpdateComponent : ActivityComponent
         else if (unitType == UnitType.Sky)
             speedBonus = skySpeedBonus; // Reserved for future sky-type resources
 
+        // Add skill level bonus to speed
+        if (activity?.Template?.PrimarySkill != null && unit?.Skills != null)
+        {
+            if (unit.Skills.TryGetValue(activity.Template.PrimarySkill, out var skillInstance))
+            {
+                // Each skill level adds 10% speed bonus
+                speedBonus += skillInstance.Level * 0.1f;
+            }
+        }
+
+        return speedBonus;
+    }
+
+    public float GetEffectiveInterval(UnitInstance unit, ActivityInstance activity = null)
+    {
+        if (unit?.Species == null || itemTemplate == null)
+            return updateInterval;
+
+        var speedBonus = GetSpeedBonus(unit, activity);
         return updateInterval / speedBonus;
     }
 
-    public float GetUnitProgress(UnitInstance unit)
+    public float GetUnitProgress(UnitInstance unit, ActivityInstance activity = null)
     {
         if (unit == null) return 0f;
         var unitKey = unit.GetHashCode();
@@ -47,7 +66,7 @@ public class ResourceUpdateComponent : ActivityComponent
             return 0f;
         }
 
-        var effectiveInterval = GetEffectiveInterval(unit);
+        var effectiveInterval = GetEffectiveInterval(unit, activity);
         var timeSinceLastUpdate = Time.realtimeSinceStartup - unitLastUpdateTimes[unitKey];
         return Mathf.Clamp01(timeSinceLastUpdate / effectiveInterval);
     }
@@ -70,7 +89,7 @@ public class ResourceUpdateComponent : ActivityComponent
                 continue;
             }
 
-            var effectiveInterval = GetEffectiveInterval(unit);
+            var effectiveInterval = GetEffectiveInterval(unit, activityInstance);
             var timeSinceLastUpdate = Time.realtimeSinceStartup - unitLastUpdateTimes[unitKey];
             if (timeSinceLastUpdate >= effectiveInterval)
             {
@@ -78,9 +97,18 @@ public class ResourceUpdateComponent : ActivityComponent
                 {
                     for (int i = 0; i < itemsPerUpdate; i++)
                     {
-                        networkRun.Inventory.AddItem(itemTemplate);
+                        unit.Inventory.AddItem(itemTemplate);
                     }
                     // Debug.Log($"{unit.DisplayName} collected {itemsPerUpdate}x {itemTemplate.DisplayName}");
+                }
+
+                // Add XP to the unit's skill
+                if (activityInstance?.Template?.PrimarySkill != null && unit?.Skills != null)
+                {
+                    if (unit.Skills.TryGetValue(activityInstance.Template.PrimarySkill, out var skillInstance))
+                    {
+                        skillInstance.IncreaseSkillXP(unit, 10);
+                    }
                 }
 
                 unitLastUpdateTimes[unitKey] = Time.realtimeSinceStartup;

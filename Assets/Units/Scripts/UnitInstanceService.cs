@@ -184,6 +184,32 @@ public class UnitInstanceService : GURUService
             }
         }
 
+        // Auto-fill missing skills from skill collection
+        foreach (var unit in units)
+        {
+            var skillsList = unit.Skills != null ? unit.Skills.Values.ToList() : new List<SkillInstance>();
+            var existingSkillIds = skillsList.Select(s => s.Skill.Id).ToHashSet();
+            var missingSkills = skillCollection.Where(skill => !existingSkillIds.Contains(skill.Id)).ToList();
+
+            if (missingSkills.Count > 0)
+            {
+                foreach (var skill in missingSkills)
+                {
+                    SkillInstance skillInstance;
+                    if (skill.Id.ToLower() == "dance")
+                    {
+                        skillInstance = new DanceSkillInstance(unit, skill, 0);
+                    }
+                    else
+                    {
+                        skillInstance = new SkillInstance(unit, skill, 0);
+                    }
+                    skillsList.Add(skillInstance);
+                }
+                unit.InitializeSkills(skillsList);
+            }
+        }
+
         SaveData();
     }
 
@@ -238,30 +264,41 @@ public class UnitInstanceService : GURUService
         return $"{title} {name}";
     }
 
-    public UnitInstance CopyUnit(UnitInstance instance, bool saveData = true)
+    public UnitInstance CopyUnit(UnitInstance instance, bool saveData = true, bool register = true)
     {
         var data = instance.Data;
         data.id = null; // Generate new Id for copy
         var copiedUnit = new UnitInstance(data);
 
+        // Copy skills with their XP values from original unit
         var skills = new List<SkillInstance>();
-
-        foreach (var skill in skillCollection)
+        if (instance.Skills != null && instance.Skills.Count > 0)
         {
-            SkillInstance skillInstance;
-            if (skill.Id.ToLower() == "dance")
+            foreach (var skillEntry in instance.Skills)
             {
-                skillInstance = new DanceSkillInstance(copiedUnit, skill, 0);
+                var skill = skillEntry.Key;
+                var originalSkillInstance = skillEntry.Value;
+                SkillInstance skillInstance;
+                if (skill.Id.ToLower() == "dance")
+                {
+                    skillInstance = new DanceSkillInstance(copiedUnit, skill, originalSkillInstance.XP);
+                }
+                else
+                {
+                    skillInstance = new SkillInstance(copiedUnit, skill, originalSkillInstance.XP);
+                }
+                skills.Add(skillInstance);
             }
-            else
-            {
-                skillInstance = new SkillInstance(copiedUnit, skill, 0);
-            }
-            skills.Add(skillInstance);
         }
 
         copiedUnit.InitializeSkills(skills);
-        return RegisterUnit(copiedUnit, saveData);
+
+        if (register)
+        {
+            return RegisterUnit(copiedUnit, saveData);
+        }
+
+        return copiedUnit;
     }
 
     public (UnitSpecies unit, Element element) GenerateNewUnit(UnitQuery predicate)

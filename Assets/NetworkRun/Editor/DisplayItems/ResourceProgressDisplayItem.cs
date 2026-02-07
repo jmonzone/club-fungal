@@ -1,5 +1,4 @@
 #if UNITY_EDITOR
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,13 +6,7 @@ namespace TheFungalNetwork.Editor
 {
     public class ResourceProgressDisplayItem : UnitDrawerDisplayItem
     {
-        private static Dictionary<string, CollectionState> _collectionStates = new Dictionary<string, CollectionState>();
-
-        private class CollectionState
-        {
-            public float LastProgress;
-            public double LastCollectionTime;
-        }
+        private ResourceUnitCardDrawer _unitCardDrawer = new ResourceUnitCardDrawer();
 
         public ResourceProgressDisplayItem(ResourceUpdateComponent resourceComponent, ActivityInstance activity, NetworkRun currentRun, System.Action onChanged)
         {
@@ -44,116 +37,7 @@ namespace TheFungalNetwork.Editor
                             EditorGUILayout.BeginHorizontal();
                         }
 
-                        var isInActivity = activity.Units != null && activity.Units.Contains(unit);
-
-                        EditorGUILayout.BeginVertical(EditorStyles.helpBox, GUILayout.Width(100), GUILayout.Height(115), GUILayout.ExpandWidth(false));
-
-                        // Unit icon (centered)
-                        var icon = unit.Species?.Sprite?.texture;
-                        if (icon != null)
-                        {
-                            EditorGUILayout.BeginHorizontal();
-                            GUILayout.FlexibleSpace();
-                            GUILayout.Box(icon, GUILayout.Width(40), GUILayout.Height(40));
-                            GUILayout.FlexibleSpace();
-                            EditorGUILayout.EndHorizontal();
-                        }
-                        else
-                        {
-                            GUILayout.Space(40);
-                        }
-
-                        // Unit name
-                        var nameStyle = new GUIStyle(EditorStyles.miniLabel) { alignment = TextAnchor.MiddleCenter, wordWrap = true };
-                        EditorGUILayout.LabelField(unit.DisplayName, nameStyle, GUILayout.Height(16));
-
-                        if (isInActivity)
-                        {
-                            // Get per-unit progress
-                            var progress = resourceComponent.GetUnitProgress(unit);
-
-                            // Track collection state for this unit
-                            var stateKey = $"{activity.GetHashCode()}_{unit.GetHashCode()}";
-                            if (!_collectionStates.ContainsKey(stateKey))
-                            {
-                                _collectionStates[stateKey] = new CollectionState { LastProgress = progress };
-                            }
-                            var state = _collectionStates[stateKey];
-
-                            // Detect collection completion (progress went from high to low)
-                            if (state.LastProgress > 0.8f && progress < 0.2f)
-                            {
-                                state.LastCollectionTime = EditorApplication.timeSinceStartup;
-                            }
-                            state.LastProgress = progress;
-
-                            // Show status text
-                            var timeSinceCollection = EditorApplication.timeSinceStartup - state.LastCollectionTime;
-                            string statusText;
-                            Color statusColor;
-
-                            if (timeSinceCollection < 2.0)
-                            {
-                                statusText = $"+{resourceComponent.ItemsPerUpdate} {itemName}";
-                                statusColor = new Color(0.3f, 1f, 0.3f);
-                            }
-                            else if (progress > 0)
-                            {
-                                statusText = "Collecting...";
-                                statusColor = new Color(0.7f, 0.7f, 1f);
-                            }
-                            else
-                            {
-                                statusText = "";
-                                statusColor = Color.white;
-                            }
-
-                            if (!string.IsNullOrEmpty(statusText))
-                            {
-                                var statusStyle = new GUIStyle(EditorStyles.miniLabel)
-                                {
-                                    alignment = TextAnchor.MiddleCenter,
-                                    normal = { textColor = statusColor },
-                                    fontSize = 9
-                                };
-                                EditorGUILayout.LabelField(statusText, statusStyle, GUILayout.Height(12), GUILayout.Width(90));
-                            }
-                            else
-                            {
-                                GUILayout.Space(12);
-                            }
-
-                            // Progress indicator
-                            var unitProgressRect = EditorGUILayout.GetControlRect(false, 8, GUILayout.Width(90));
-                            EditorGUI.ProgressBar(unitProgressRect, progress, "");
-
-                            // Remove button
-                            GUI.backgroundColor = new Color(1f, 0.7f, 0.7f);
-                            if (GUILayout.Button("Remove", GUILayout.Height(18), GUILayout.Width(90)))
-                            {
-                                activity.RemoveUnit(unit);
-                                UnityEditor.AssetDatabase.SaveAssets();
-                                onChanged?.Invoke();
-                            }
-                            GUI.backgroundColor = Color.white;
-                        }
-                        else
-                        {
-                            GUILayout.Space(20);
-
-                            // Add button
-                            GUI.backgroundColor = new Color(0.7f, 1f, 0.7f);
-                            if (GUILayout.Button("Add", GUILayout.Height(18), GUILayout.Width(90)))
-                            {
-                                var allActivities = currentRun?.CurrentRoom?.Data?.activities;
-                                activity.AddUnit(unit, allActivities);
-                                UnityEditor.AssetDatabase.SaveAssets();
-                                onChanged?.Invoke();
-                            }
-                            GUI.backgroundColor = Color.white;
-                        }
-
-                        EditorGUILayout.EndVertical();
+                        _unitCardDrawer.Draw(unit, activity, resourceComponent, currentRun, onChanged);
 
                         count++;
                     }
@@ -174,7 +58,7 @@ namespace TheFungalNetwork.Editor
                         {
                             if (unit != null)
                             {
-                                totalInterval += resourceComponent.GetEffectiveInterval(unit);
+                                totalInterval += resourceComponent.GetEffectiveInterval(unit, activity);
                                 activeCount++;
                             }
                         }

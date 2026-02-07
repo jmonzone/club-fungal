@@ -53,6 +53,7 @@ public class UnitInstanceServiceEditor : GURUEditor
 
         var initialUnitsField = typeof(UnitInstanceService).GetField("initialUnits", BindingFlags.NonPublic | BindingFlags.Instance);
         var speciesCollectionField = typeof(UnitInstanceService).GetField("speciesCollection", BindingFlags.NonPublic | BindingFlags.Instance);
+        var skillCollectionField = typeof(UnitInstanceService).GetField("skillCollection", BindingFlags.NonPublic | BindingFlags.Instance);
 
         var initialUnits = AssetDatabase.FindAssets("t:UnitTemplate")
             .Select(guid => AssetDatabase.LoadAssetAtPath<UnitTemplate>(AssetDatabase.GUIDToAssetPath(guid)))
@@ -62,10 +63,16 @@ public class UnitInstanceServiceEditor : GURUEditor
             .Select(guid => AssetDatabase.LoadAssetAtPath<UnitSpecies>(AssetDatabase.GUIDToAssetPath(guid)))
             .ToList();
 
+        var skillCollection = AssetDatabase.FindAssets("t:Skill")
+            .Select(guid => AssetDatabase.LoadAssetAtPath<Skill>(AssetDatabase.GUIDToAssetPath(guid)))
+            .Where(skill => skill != null)
+            .ToList();
+
         initialUnitsField.SetValue(service, initialUnits);
         speciesCollectionField.SetValue(service, speciesCollection);
+        skillCollectionField.SetValue(service, skillCollection);
 
-        Debug.Log($"Refreshed collections: {initialUnits.Count} unit templates, {speciesCollection.Count} species");
+        Debug.Log($"Refreshed collections: {initialUnits.Count} unit templates, {speciesCollection.Count} species, {skillCollection.Count} skills");
         EditorUtility.SetDirty(service);
     }
 
@@ -93,6 +100,8 @@ public class UnitInstanceServiceEditor : GURUEditor
 
         // Call base to draw the GURU section
         base.OnInspectorGUI();
+
+        DrawContent();
     }
 
     protected override void DrawContent()
