@@ -12,7 +12,7 @@ namespace TheFungalNetwork.Editor
         private bool isCreatingNewRoom = false;
         private List<RoomTemplate> cachedRoomTemplates;
 
-        public void Draw(List<RoomTemplate> roomTemplates, ref int selectedRoomIndex, ref NetworkRun currentRun, System.Action onTemplatesChanged, System.Action<NetworkRun> onRunStarted)
+        public void Draw(List<RoomTemplate> roomTemplates, ref int selectedRoomIndex, ref NetworkRun currentRun, System.Action onTemplatesChanged, System.Action<NetworkRun> onRunStarted, UnitInstanceService unitInstanceService)
         {
             cachedRoomTemplates = roomTemplates;
             EditorGUILayout.LabelField("Room Selection", EditorStyles.boldLabel);
@@ -34,7 +34,8 @@ namespace TheFungalNetwork.Editor
                             var roomInstance = new RoomInstance(room);
                             var doorConditions = LoadAllDoorConditions();
                             var activities = LoadAllActivityReferences();
-                            var newRun = new NetworkRun(doorConditions, activities);
+                            var party = GetRandomParty(unitInstanceService, 3);
+                            var newRun = new NetworkRun(doorConditions, activities, party);
                             onRunStarted?.Invoke(newRun);
                         })
                     };
@@ -206,6 +207,28 @@ namespace TheFungalNetwork.Editor
                 .Select(guid => AssetDatabase.LoadAssetAtPath<ActivityReference>(AssetDatabase.GUIDToAssetPath(guid)))
                 .Where(activityRef => activityRef != null)
                 .ToList();
+        }
+
+        private List<UnitInstance> GetRandomParty(UnitInstanceService unitInstanceService, int count)
+        {
+            var party = new List<UnitInstance>();
+            if (unitInstanceService?.Instances != null && unitInstanceService.Instances.Count > 0)
+            {
+                // Filter out tree units
+                var availableUnits = unitInstanceService.Instances
+                    .Where(u => u?.Template?.name != null && !u.Template.name.ToLower().Contains("tree"))
+                    .ToList();
+
+                var randomCount = Mathf.Min(count, availableUnits.Count);
+
+                for (int i = 0; i < randomCount; i++)
+                {
+                    var randomIndex = Random.Range(0, availableUnits.Count);
+                    party.Add(availableUnits[randomIndex]);
+                    availableUnits.RemoveAt(randomIndex);
+                }
+            }
+            return party;
         }
     }
 }

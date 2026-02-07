@@ -7,7 +7,7 @@ namespace TheFungalNetwork.Editor
 {
     public class ActivityDrawer
     {
-        public static void DrawList(List<ActivityInstance> activities, RoomTemplate selectedRoom, UnitInstanceService unitInstanceService, System.Action onChanged = null, NetworkRun currentRun = null)
+        public static void DrawList(List<ActivityInstance> activities, RoomTemplate selectedRoom, List<UnitInstance> party, System.Action onChanged = null, NetworkRun currentRun = null)
         {
             if (activities == null || activities.Count == 0)
             {
@@ -19,12 +19,12 @@ namespace TheFungalNetwork.Editor
             {
                 if (activity != null)
                 {
-                    DrawActivity(activity, selectedRoom, unitInstanceService, onChanged, currentRun);
+                    DrawActivity(activity, selectedRoom, party, onChanged, currentRun);
                 }
             }
         }
 
-        private static void DrawActivity(ActivityInstance activity, RoomTemplate selectedRoom, UnitInstanceService unitInstanceService, System.Action onChanged, NetworkRun currentRun = null)
+        private static void DrawActivity(ActivityInstance activity, RoomTemplate selectedRoom, List<UnitInstance> party, System.Action onChanged, NetworkRun currentRun = null)
         {
             var shortcuts = new List<UnitDrawerItemAction>
             {
@@ -85,6 +85,8 @@ namespace TheFungalNetwork.Editor
             InspectComponent inspectComponent = null;
             bool hasUnlockComponent = false;
             UnlockComponent unlockComponent = null;
+            bool hasResourceUpdateComponent = false;
+            ResourceUpdateComponent resourceUpdateComponent = null;
 
             if (activity.Template?.Components != null)
             {
@@ -99,6 +101,11 @@ namespace TheFungalNetwork.Editor
                     {
                         hasUnlockComponent = true;
                         unlockComponent = unlock;
+                    }
+                    else if (component is ResourceUpdateComponent resourceUpdate)
+                    {
+                        hasResourceUpdateComponent = true;
+                        resourceUpdateComponent = resourceUpdate;
                     }
                 }
             }
@@ -117,10 +124,17 @@ namespace TheFungalNetwork.Editor
                 displayItems.Add(unlockInfoItem);
             }
 
-            // Add party units grid as display item
-            if (unitInstanceService != null && unitInstanceService.Instances != null && unitInstanceService.Instances.Count > 0)
+            // If this activity has ResourceUpdateComponent, show collection progress
+            if (hasResourceUpdateComponent && resourceUpdateComponent != null)
             {
-                var partyGridItem = new PartyUnitsGridDisplayItem(activity, selectedRoom, unitInstanceService, onChanged, currentRun);
+                var resourceProgressItem = new ResourceProgressDisplayItem(resourceUpdateComponent, activity);
+                displayItems.Add(resourceProgressItem);
+            }
+
+            // Add party units grid as display item
+            if (party != null && party.Count > 0)
+            {
+                var partyGridItem = new PartyUnitsGridDisplayItem(activity, selectedRoom, party, onChanged, currentRun);
                 displayItems.Add(partyGridItem);
             }
 
@@ -266,7 +280,7 @@ namespace TheFungalNetwork.Editor
 
         private class PartyUnitsGridDisplayItem : UnitDrawerDisplayItem
         {
-            public PartyUnitsGridDisplayItem(ActivityInstance activity, RoomTemplate selectedRoom, UnitInstanceService unitInstanceService, System.Action onChanged, NetworkRun currentRun = null)
+            public PartyUnitsGridDisplayItem(ActivityInstance activity, RoomTemplate selectedRoom, List<UnitInstance> party, System.Action onChanged, NetworkRun currentRun = null)
             {
                 condition = () => true;
                 color = new Color(0.95f, 0.95f, 1f);
@@ -279,7 +293,7 @@ namespace TheFungalNetwork.Editor
                     int count = 0;
                     const int itemsPerRow = 6;
 
-                    foreach (var unit in unitInstanceService.Instances)
+                    foreach (var unit in party)
                     {
                         if (unit == null) continue;
 

@@ -10,16 +10,19 @@ public class NetworkRun
     [SerializeField] private List<DoorCondition> doorConditions;
     [SerializeField] private List<ActivityReference> activities;
     [SerializeField] private List<RoomInstance> visitedRooms;
+    [SerializeField] private List<UnitInstance> party;
 
     public Inventory Inventory => inventory;
     public RoomInstance CurrentRoom => currentRoom;
     public List<RoomInstance> VisitedRooms => visitedRooms;
+    public List<UnitInstance> Party => party;
 
-    public NetworkRun(List<DoorCondition> doorConditions, List<ActivityReference> activities)
+    public NetworkRun(List<DoorCondition> doorConditions, List<ActivityReference> activities, List<UnitInstance> partyUnits)
     {
         inventory = new Inventory();
         this.doorConditions = doorConditions ?? new List<DoorCondition>();
         this.activities = activities ?? new List<ActivityReference>();
+        this.party = partyUnits ?? new List<UnitInstance>();
         visitedRooms = new List<RoomInstance>();
         currentRoom = CreateNewRoomInstance();
         visitedRooms.Add(currentRoom);

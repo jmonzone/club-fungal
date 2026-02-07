@@ -6,10 +6,10 @@ namespace TheFungalNetwork.Editor
 {
     public class PartyDrawer
     {
-        public void Draw(UnitInstanceService unitInstanceService, GameService gameService)
+        public void Draw(System.Collections.Generic.List<UnitInstance> party, GameService gameService)
         {
             EditorGUILayout.LabelField("Party", EditorStyles.boldLabel);
-            UnitListDrawer.DrawList(unitInstanceService.Instances, gameService.UnitControllerService);
+            UnitListDrawer.DrawList(party, gameService.UnitControllerService);
         }
     }
 }

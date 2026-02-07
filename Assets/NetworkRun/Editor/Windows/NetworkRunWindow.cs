@@ -100,7 +100,7 @@ namespace TheFungalNetwork.Editor
                     roomSelectionDrawer.Draw(roomTemplates, ref selectedRoomIndex, ref currentRun, LoadRoomTemplates, (newRun) =>
                     {
                         currentRun = newRun;
-                    });
+                    }, unitInstanceService);
                 }
                 else
                 {
@@ -108,11 +108,11 @@ namespace TheFungalNetwork.Editor
 
                     EditorGUILayout.Space(10);
 
-                    currentRoomDrawer.Draw(currentRun, unitInstanceService);
+                    currentRoomDrawer.Draw(currentRun);
 
                     EditorGUILayout.Space(10);
 
-                    partyDrawer.Draw(unitInstanceService, gameService);
+                    partyDrawer.Draw(currentRun.Party, gameService);
                 }
             }
             else
@@ -125,7 +125,9 @@ namespace TheFungalNetwork.Editor
                     LoadRoomTemplates();
                     var doorConditions = LoadAllDoorConditions();
                     var activities = LoadAllActivityReferences();
-                    currentRun = new NetworkRun(doorConditions, activities);
+                    var party = GetRandomParty(3);
+
+                    currentRun = new NetworkRun(doorConditions, activities, party);
                     StartRun();
                     Repaint();
                 }
@@ -178,7 +180,8 @@ namespace TheFungalNetwork.Editor
                     LoadRoomTemplates();
                     var doorConditions = LoadAllDoorConditions();
                     var activities = LoadAllActivityReferences();
-                    currentRun = new NetworkRun(doorConditions, activities);
+                    var party = GetRandomParty(3);
+                    currentRun = new NetworkRun(doorConditions, activities, party);
                     StartRun();
                     Repaint();
                 }
@@ -339,7 +342,8 @@ namespace TheFungalNetwork.Editor
             var roomInstance = new RoomInstance(roomData);
             var doorConditions = LoadAllDoorConditions();
             var activitiesRefs = LoadAllActivityReferences();
-            currentRun = new NetworkRun(doorConditions, activitiesRefs);
+            var party = GetRandomParty(3);
+            currentRun = new NetworkRun(doorConditions, activitiesRefs, party);
 
             // Restore inventory
             var inventory = new Inventory();
@@ -497,6 +501,29 @@ namespace TheFungalNetwork.Editor
                 .Where(activityRef => activityRef != null)
                 .ToList();
         }
+
+        private List<UnitInstance> GetRandomParty(int count)
+        {
+            var party = new List<UnitInstance>();
+            if (unitInstanceService?.Instances != null && unitInstanceService.Instances.Count > 0)
+            {
+                // Filter out tree units
+                var availableUnits = unitInstanceService.Instances
+                    .Where(u => u?.Template?.name != null && !u.Template.name.ToLower().Contains("tree"))
+                    .ToList();
+
+                var randomCount = Mathf.Min(count, availableUnits.Count);
+
+                for (int i = 0; i < randomCount; i++)
+                {
+                    var randomIndex = Random.Range(0, availableUnits.Count);
+                    party.Add(availableUnits[randomIndex]);
+                    availableUnits.RemoveAt(randomIndex);
+                }
+            }
+            return party;
+        }
     }
 }
+
 #endif

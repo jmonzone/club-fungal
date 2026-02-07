@@ -14,7 +14,7 @@ namespace TheFungalNetwork.Editor
         private ItemTemplate requiredItem;
         private int requiredAmount = 1;
 
-        public void Draw(NetworkRun currentRun, UnitInstanceService unitInstanceService)
+        public void Draw(NetworkRun currentRun)
         {
             if (currentRun == null || currentRun.CurrentRoom == null) return;
 
@@ -36,13 +36,13 @@ namespace TheFungalNetwork.Editor
             {
                 EditorGUILayout.Space(5);
                 EditorGUILayout.LabelField("Activities:", EditorStyles.boldLabel);
-                ActivityDrawer.DrawList(activities, null, unitInstanceService, () => EditorWindow.GetWindow<NetworkRunWindow>().Repaint(), currentRun);
+                ActivityDrawer.DrawList(activities, null, currentRun.Party, () => EditorWindow.GetWindow<NetworkRunWindow>().Repaint(), currentRun);
             }
             else
             {
                 EditorGUILayout.Space(5);
                 EditorGUILayout.LabelField("Activities:", EditorStyles.boldLabel);
-                ActivityDrawer.DrawList(null, null, unitInstanceService, () => EditorWindow.GetWindow<NetworkRunWindow>().Repaint(), currentRun);
+                ActivityDrawer.DrawList(null, null, currentRun.Party, () => EditorWindow.GetWindow<NetworkRunWindow>().Repaint(), currentRun);
             }
 
             EditorGUILayout.Space(5);

@@ -10,6 +10,10 @@ public class ResourceUpdateComponent : ActivityComponent
     private float lastUpdateTime;
 
     public ItemTemplate ItemTemplate => itemTemplate;
+    public float UpdateInterval => updateInterval;
+    public int ItemsPerUpdate => itemsPerUpdate;
+    public float TimeSinceLastUpdate => Time.realtimeSinceStartup - lastUpdateTime;
+    public float Progress => Mathf.Clamp01(TimeSinceLastUpdate / updateInterval);
 
     public override void DoUpdate(NetworkRun networkRun, ActivityInstance activityInstance)
     {
