@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6796dd5d25a8477f92cf93ef4cf29a8, type: 3}
   m_Name: Foraging Component
   m_EditorClassIdentifier: Assembly-CSharp::ResourceUpdateComponent
-  itemTemplate: {fileID: 11400000, guid: 20b1daf91d6764492a8d2376e4644d03, type: 2}
+  itemTemplate: {fileID: 11400000, guid: ddde813dc82944f04928d4fd69f1a1b8, type: 2}
   itemsPerUpdate: 1
   updateInterval: 1

@@ -15,16 +15,28 @@ MonoBehaviour:
   data:
     id: 000000000000
     name: Test Room
+    doors:
+    - isLocked: 1
+      conditions:
+      - {fileID: 11400000, guid: fa9e4cca480244cd0b05064480ccb919, type: 2}
+    - isLocked: 1
+      conditions:
+      - {fileID: 11400000, guid: 7bd788248d1f044d2b7b64748bd0b91c, type: 2}
     activities:
     - template: {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}
       data:
-        id: 8c8f856991d28df643fdb784
+        id: 51978669d290f463aba77894
         name: Dance Activity
         units: []
     - template: {fileID: 11400000, guid: ca1aabf6e3c494667a63065cc6ff3a76, type: 2}
       data:
-        id: 8293856964fbf3406eba1d37
+        id: 519786695152cb49888367cb
         name: Foraging
+        units: []
+    - template: {fileID: 11400000, guid: 19f2abf58fc274306bb41ceb048ec8ff, type: 2}
+      data:
+        id: 519786692f05aa57437843a8
+        name: Fishing
         units:
         - template: {fileID: 11400000, guid: 9f94c43fcb7de4716af0753df9bbdbb3, type: 2}
           data:
@@ -56,35 +68,3 @@ MonoBehaviour:
           - interaction: {fileID: 11400000, guid: 0740db2fd21f44859941442e25af726b,
               type: 2}
             isComplete: 0
-    - template: {fileID: 11400000, guid: 19f2abf58fc274306bb41ceb048ec8ff, type: 2}
-      data:
-        id: 079d8569ad1fa515362b5db2
-        name: Fishing
-        units:
-        - template: {fileID: 11400000, guid: 1c13d7c1ade7f486ca3ed346a8a49b51, type: 2}
-          data:
-            id: player
-            name: player
-            displayName: Player
-            species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
-            job: {fileID: 0}
-            element: 0
-            colorPalette: {fileID: 0}
-            scene: 
-            friendshipLevel: 0
-            friendshipXP: 0
-            friends: []
-            interactions: []
-            skills: []
-          skills:
-          - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
-            level: 1
-            xp: 0
-          - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
-            level: 1
-            xp: 0
-          - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
-            level: 1
-            xp: 0
-          friends: []
-          moments: []

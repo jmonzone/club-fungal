@@ -84,6 +84,9 @@ crashlytics-build.properties
 Assets/.DS_Store
 .DS_Store
 
+# Ignore network run saves
+/Assets/NetworkRunSaves/
+
 # Ignore imports
 Assets/Imports/PolygonNightclubs/
 Assets/Imports/PolygonNightclubs.meta
