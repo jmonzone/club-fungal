@@ -47,7 +47,25 @@ namespace TheFungalNetwork.Editor
         {
             var isInActivity = activity.Units != null && activity.Units.Contains(unit);
 
-            EditorGUILayout.BeginVertical(EditorStyles.helpBox, GUILayout.Width(100), GUILayout.Height(125), GUILayout.ExpandWidth(false));
+            var cardRect = EditorGUILayout.BeginVertical(EditorStyles.helpBox, GUILayout.Width(100), GUILayout.Height(125), GUILayout.ExpandWidth(false));
+
+            // Draw drag handle at top
+            var dragHandleRect = DrawDragHandle(unit);
+
+            // Block drop zone from accepting drops on this card
+            var evt = Event.current;
+            if (cardRect.Contains(evt.mousePosition))
+            {
+                if (evt.type == EventType.DragUpdated)
+                {
+                    DragAndDrop.visualMode = DragAndDropVisualMode.Rejected;
+                    evt.Use();
+                }
+                else if (evt.type == EventType.DragPerform)
+                {
+                    evt.Use();
+                }
+            }
 
             DrawIcon(unit);
             DrawName(unit);
@@ -77,9 +95,56 @@ namespace TheFungalNetwork.Editor
                 DrawStartButton(unit, activity, currentRun, onChanged);
             }
 
-            DrawViewDataButton(unit);
+            if (currentRun.Settings.debugMode)
+            {
+                DrawViewDataButton(unit);
+            }
 
             EditorGUILayout.EndVertical();
+        }
+
+        private Rect DrawDragHandle(UnitInstance unit)
+        {
+            var evt = Event.current;
+
+            // Create drag handle area at top of card
+            var handleRect = EditorGUILayout.BeginHorizontal(GUILayout.Height(14), GUILayout.Width(90));
+
+            GUILayout.FlexibleSpace();
+
+            var handleStyle = new GUIStyle(EditorStyles.miniLabel)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                fontSize = 10,
+                normal = { textColor = new Color(0.5f, 0.5f, 0.5f) }
+            };
+
+            EditorGUILayout.LabelField("⋮⋮", handleStyle, GUILayout.Width(20), GUILayout.Height(14));
+
+            GUILayout.FlexibleSpace();
+
+            EditorGUILayout.EndHorizontal();
+
+            // Get actual rect after layout
+            var actualRect = GUILayoutUtility.GetLastRect();
+
+            // Enable drag from handle only
+            if (evt.type == EventType.MouseDown && actualRect.Contains(evt.mousePosition))
+            {
+                DragAndDrop.PrepareStartDrag();
+                DragAndDrop.objectReferences = new UnityEngine.Object[] { };
+                DragAndDrop.SetGenericData("UnitInstance", unit);
+                DragAndDrop.StartDrag(unit.DisplayName);
+                evt.Use();
+            }
+
+            // Change cursor when hovering over handle
+            if (actualRect.Contains(evt.mousePosition))
+            {
+                EditorGUIUtility.AddCursorRect(actualRect, MouseCursor.MoveArrow);
+            }
+
+            return actualRect;
         }
 
         private void DrawIcon(UnitInstance unit)

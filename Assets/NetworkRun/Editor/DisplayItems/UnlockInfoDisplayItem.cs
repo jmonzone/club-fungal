@@ -35,13 +35,27 @@ namespace TheFungalNetwork.Editor
                     }
                     else
                     {
+                        // Show resource icon and progress bar
+                        EditorGUILayout.BeginHorizontal();
+
+                        // Draw resource icon
+                        var resourceItem = unlockComponent.ResourceCondition.RequiredItem;
+                        if (resourceItem?.Sprite != null)
+                        {
+                            var icon = resourceItem.Sprite.texture;
+                            GUILayout.Box(icon, GUILayout.Width(20), GUILayout.Height(20));
+                        }
+                        else
+                        {
+                            GUILayout.Space(20);
+                        }
+
                         // Show progress bar with resource name
                         var progress = Mathf.Clamp01((float)unlockComponent.CurrentResourceCount / unlockComponent.RequiredAmount);
                         var rect = EditorGUILayout.GetControlRect(false, 20);
-                        rect.x += 8;
-                        rect.width -= 16;
-
                         EditorGUI.ProgressBar(rect, progress, $"{resourceName}: {unlockComponent.CurrentResourceCount}/{unlockComponent.RequiredAmount}");
+
+                        EditorGUILayout.EndHorizontal();
                     }
 
                     EditorGUILayout.Space(4);

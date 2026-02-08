@@ -15,4 +15,4 @@ MonoBehaviour:
   defaultPartySize: 3
   updateInterval: 1
   debugMode: 1
-  speedMultiplier: 7.01
+  speedMultiplier: 1
