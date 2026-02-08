@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fb41b64e1d4d483d94bdf220db4d724, type: 3}
   m_Name: Rest Component
   m_EditorClassIdentifier: Assembly-CSharp::RestActivity
-  displayName: 
   inventory:
     itemStacks: []
     maxCapacity: 0

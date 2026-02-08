@@ -17,7 +17,8 @@ MonoBehaviour:
   activityView: {fileID: 0}
   primarySkill: {fileID: 0}
   activityControllerPrefab: {fileID: 0}
-  components: []
+  components:
+  - {fileID: 11400000, guid: 460d423b551eb4132aa501a2e66844e0, type: 2}
   origin: {x: 0, y: 0, z: 0}
   player: {fileID: 0}
   units: []
