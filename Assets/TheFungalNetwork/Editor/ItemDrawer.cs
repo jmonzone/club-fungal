@@ -14,7 +14,7 @@ namespace TheFungalNetwork.Editor
             Color backgroundColor,
             List<UnitDrawerItemAction> shortcuts,
             List<UnitDrawerItemAction> menuItems,
-            List<UnitDrawerDisplayItem> displayItems = null)
+            List<CardDrawerDisplayItem> displayItems = null)
         {
             EditorGUILayout.BeginHorizontal();
             Color originalBG = GUI.backgroundColor;

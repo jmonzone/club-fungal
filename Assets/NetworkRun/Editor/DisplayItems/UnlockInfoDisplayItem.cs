@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TheFungalNetwork.Editor
 {
-    public class UnlockInfoDisplayItem : UnitDrawerDisplayItem
+    public class UnlockInfoDisplayItem : CardDrawerDisplayItem
     {
         public UnlockInfoDisplayItem(ActivityInstance activity, NetworkRun currentRun, UnlockComponent unlockComponent, System.Action onChanged)
         {

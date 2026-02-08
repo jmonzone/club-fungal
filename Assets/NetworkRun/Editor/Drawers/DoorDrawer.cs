@@ -82,7 +82,7 @@ namespace TheFungalNetwork.Editor
                 }
             }
 
-            var displayItems = new List<UnitDrawerDisplayItem>();
+            var displayItems = new List<CardDrawerDisplayItem>();
 
             if (door.conditions != null && door.conditions.Count > 0)
             {
@@ -121,7 +121,7 @@ namespace TheFungalNetwork.Editor
             );
         }
 
-        private class ConditionsDisplayItem : UnitDrawerDisplayItem
+        private class ConditionsDisplayItem : CardDrawerDisplayItem
         {
             public ConditionsDisplayItem(Door door)
             {
@@ -149,7 +149,7 @@ namespace TheFungalNetwork.Editor
             }
         }
 
-        private class InspectProgressDisplayItem : UnitDrawerDisplayItem
+        private class InspectProgressDisplayItem : CardDrawerDisplayItem
         {
             public InspectProgressDisplayItem(InspectComponent inspectComponent)
             {

@@ -3,7 +3,7 @@ using System;
 
 namespace TheFungalNetwork.Editor
 {
-    public abstract class UnitDrawerDisplayItem
+    public class CardDrawerDisplayItem
     {
         public Func<bool> condition;
         public Color color;

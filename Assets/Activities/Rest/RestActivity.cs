@@ -1,16 +1,19 @@
 using UnityEngine;
 
-public class RestActivity : MonoBehaviour
+[CreateAssetMenu(fileName = "RestActivity", menuName = "Club Fungal/Activities/Components/Rest")]
+public class RestActivity : ActivityComponent
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [SerializeField] private Inventory inventory;
 
-    // Update is called once per frame
-    void Update()
+    public Inventory Inventory => inventory;
+
+    public override void Initialize(NetworkRun networkRun, ActivityInstance activityInstance)
     {
-        
+        base.Initialize(networkRun, activityInstance);
+        inventory = new Inventory();
+    }
+    public override void DoUpdate(NetworkRun networkRun, ActivityInstance activityInstance)
+    {
+        // Rest activity doesn't need to update - it's just a place to manage inventory
     }
 }

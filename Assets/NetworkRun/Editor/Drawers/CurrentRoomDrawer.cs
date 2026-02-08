@@ -35,7 +35,7 @@ namespace TheFungalNetwork.Editor
             EditorGUILayout.Space(5);
             // _partyUnitsDrawer.Draw(currentRun);
 
-            ActivityDrawer.DrawList(roomData.activities, null, currentRun.Party, () => EditorWindow.GetWindow<NetworkRunWindow>().Repaint(), currentRun);
+            ActivityListDrawer.DrawList(roomData.activities, null, currentRun.Party, () => EditorWindow.GetWindow<NetworkRunWindow>().Repaint(), currentRun);
 
 
             EditorGUILayout.Space(5);

@@ -75,7 +75,7 @@ namespace TheFungalNetwork.Editor
                         new ViewGameObjectAction(controller),
                     };
 
-                    var displayItems = new List<UnitDrawerDisplayItem>
+                    var displayItems = new List<CardDrawerDisplayItem>
                     {
                         new InPartyDisplay(isInParty, jobStyle),
                         new BehaviourDisplay(behaviour, jobStyle),

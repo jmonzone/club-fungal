@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace TheFungalNetwork.Editor
 {
-    public class ActivityDisplay : UnitDrawerDisplayItem
+    public class ActivityDisplay : CardDrawerDisplayItem
     {
         public ActivityDisplay(ActivityReference activity, GUIStyle jobStyle)
         {

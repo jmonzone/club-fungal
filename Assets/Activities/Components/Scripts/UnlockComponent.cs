@@ -63,7 +63,6 @@ public class UnlockComponent : ActivityComponent
 
     public void SetDoorAndCondition(Door door, ResourceCondition condition)
     {
-        displayName = $"Unlock Door";
         assignedDoor = door;
         resourceCondition = condition;
         currentResourceCount = 0;

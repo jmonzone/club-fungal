@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace TheFungalNetwork.Editor
 {
-    public class PartyUnitsGridDisplayItem : UnitDrawerDisplayItem
+    public class PartyUnitsGridDisplayItem : CardDrawerDisplayItem
     {
         public PartyUnitsGridDisplayItem(ActivityInstance activity, RoomTemplate selectedRoom, List<UnitInstance> party, System.Action onChanged, NetworkRun currentRun = null, System.Action<ActivityInstance, UnitInstance> onAddUnit = null, System.Action<ActivityInstance, UnitInstance> onRemoveUnit = null)
         {

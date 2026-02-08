@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace TheFungalNetwork.Editor
 {
-    public class InventoryDisplay : UnitDrawerDisplayItem
+    public class InventoryDisplay : CardDrawerDisplayItem
     {
         public InventoryDisplay(UnitInstance unitInstance, GUIStyle jobStyle)
         {

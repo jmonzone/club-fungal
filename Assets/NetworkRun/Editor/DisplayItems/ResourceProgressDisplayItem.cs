@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TheFungalNetwork.Editor
 {
-    public class ResourceProgressDisplayItem : UnitDrawerDisplayItem
+    public class ResourceProgressDisplayItem : CardDrawerDisplayItem
     {
         public ResourceProgressDisplayItem(ResourceUpdateComponent resourceComponent, ActivityInstance activity, NetworkRun currentRun, System.Action onChanged)
         {
