@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NetworkRunSettings
   defaultPartySize: 3
   updateInterval: 1
-  debugMode: 1
+  debugMode: 0
   speedMultiplier: 1

@@ -80,14 +80,21 @@ namespace TheFungalNetwork.Editor
 
             DrawResourceCount(unit, resourceComponent);
             DrawMaxInventory(unit);
-            DrawClaimButton(unit, resourceComponent, currentRun, onChanged);
+
+            if (currentRun.Settings.debugMode)
+            {
+                DrawClaimButton(unit, resourceComponent, currentRun, onChanged);
+            }
 
             DrawDivider();
 
             if (isInActivity)
             {
                 DrawActivityStatus(unit, activity, resourceComponent, currentRun);
-                DrawStopButton(unit, activity, onChanged);
+                if (currentRun.Settings.debugMode)
+                {
+                    DrawStopButton(unit, activity, onChanged);
+                }
             }
             else
             {
@@ -98,6 +105,8 @@ namespace TheFungalNetwork.Editor
             if (currentRun.Settings.debugMode)
             {
                 DrawViewDataButton(unit);
+
+
             }
 
             EditorGUILayout.EndVertical();
