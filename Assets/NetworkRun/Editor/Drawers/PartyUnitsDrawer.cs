@@ -9,7 +9,7 @@ namespace TheFungalNetwork.Editor
     public class PartyUnitsDrawer
     {
         private UnitDropZoneDrawer _dropZoneDrawer = new UnitDropZoneDrawer();
-        private ResourceUnitCardDrawer _unitCardDrawer = new ResourceUnitCardDrawer();
+        private PartyUnitCardDrawer _unitCardDrawer = new PartyUnitCardDrawer();
 
         public void Draw(NetworkRun currentRun)
         {
@@ -71,7 +71,7 @@ namespace TheFungalNetwork.Editor
                                 EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(false));
                             }
 
-                            _unitCardDrawer.DrawAvailableUnit(unit);
+                            _unitCardDrawer.Draw(unit);
                             count++;
                         }
 

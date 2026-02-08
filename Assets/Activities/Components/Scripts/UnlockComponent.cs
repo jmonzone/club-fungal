@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "UnlockComponent", menuName = "Club Fungal/Activities/Components/Unlock")]
 public class UnlockComponent : ActivityComponent
@@ -6,6 +7,11 @@ public class UnlockComponent : ActivityComponent
     private Door assignedDoor;
     private ResourceCondition resourceCondition;
     private int currentResourceCount;
+    private Dictionary<UnitInstance, float> unitProgress = new Dictionary<UnitInstance, float>();
+
+    [Header("Collection Settings")]
+    [SerializeField] private float updateInterval = 5f;
+    [SerializeField] private int itemsPerUpdate = 1;
 
     [Header("Rewards")]
     [SerializeField] private ItemTemplate fishReward;
@@ -18,6 +24,13 @@ public class UnlockComponent : ActivityComponent
     public int CurrentResourceCount => currentResourceCount;
     public int RequiredAmount => resourceCondition?.RequiredAmount ?? 0;
     public bool IsUnlocked => currentResourceCount >= RequiredAmount;
+    public float UpdateInterval => updateInterval;
+    public int ItemsPerUpdate => itemsPerUpdate;
+
+    public float GetUnitProgress(UnitInstance unit)
+    {
+        return unitProgress.ContainsKey(unit) ? unitProgress[unit] : 0f;
+    }
 
     public void ContributeResources(int amount)
     {
@@ -58,17 +71,61 @@ public class UnlockComponent : ActivityComponent
 
     public override void Initialize(NetworkRun networkRun, ActivityInstance activityInstance)
     {
-        // Initialize with zero resources contributed
-        // (resources must be explicitly contributed by units)
+        unitProgress.Clear();
     }
 
     public override void DoUpdate(NetworkRun networkRun, ActivityInstance activityInstance)
     {
-        // Check if we have enough resources to unlock
-        if (currentResourceCount >= RequiredAmount && assignedDoor != null && assignedDoor.isLocked)
+        // Process each unit assigned to this activity
+        if (activityInstance?.Units == null || resourceCondition?.RequiredItem == null) return;
+        if (currentResourceCount >= RequiredAmount) return; // Already have enough
+
+        foreach (var unit in activityInstance.Units)
         {
-            // Door stays locked until player opens it, but we track readiness
-            Debug.Log($"Enough resources collected! {currentResourceCount}/{RequiredAmount} {resourceCondition.RequiredItem.DisplayName}");
+            if (unit?.Inventory == null) continue;
+
+            // Initialize progress for new units
+            if (!unitProgress.ContainsKey(unit))
+            {
+                unitProgress[unit] = 0f;
+            }
+
+            // Check if unit has the required item
+            var unitItemCount = unit.Inventory.GetItemCount(resourceCondition.RequiredItem);
+            if (unitItemCount <= 0) continue;
+
+            // Update progress
+            var deltaTime = networkRun.Settings.speedMultiplier * Time.deltaTime;
+            unitProgress[unit] += deltaTime;
+
+            // Check if ready to contribute
+            if (unitProgress[unit] >= updateInterval)
+            {
+                var remainingNeeded = RequiredAmount - currentResourceCount;
+                var amountToContribute = Mathf.Min(itemsPerUpdate, unitItemCount, remainingNeeded);
+
+                if (amountToContribute > 0)
+                {
+                    // Remove items from unit inventory
+                    for (int i = 0; i < amountToContribute; i++)
+                    {
+                        unit.Inventory.RemoveItem(resourceCondition.RequiredItem);
+                    }
+
+                    // Add to progress
+                    currentResourceCount += amountToContribute;
+                    unitProgress[unit] = 0f;
+
+                    Debug.Log($"{unit.DisplayName} contributed {amountToContribute}x {resourceCondition.RequiredItem.DisplayName}. Progress: {currentResourceCount}/{RequiredAmount}");
+
+                    // Check if we've unlocked
+                    if (currentResourceCount >= RequiredAmount)
+                    {
+                        Debug.Log($"Enough resources collected! {currentResourceCount}/{RequiredAmount} {resourceCondition.RequiredItem.DisplayName}");
+                        break;
+                    }
+                }
+            }
         }
     }
 

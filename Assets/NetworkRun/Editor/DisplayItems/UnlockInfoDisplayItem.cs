@@ -6,7 +6,10 @@ namespace TheFungalNetwork.Editor
 {
     public class UnlockInfoDisplayItem : UnitDrawerDisplayItem
     {
-        public UnlockInfoDisplayItem(NetworkRun currentRun, UnlockComponent unlockComponent, System.Action onChanged)
+        private UnitDropZoneDrawer _dropZoneDrawer = new UnitDropZoneDrawer();
+        private PartyUnitCardDrawer _cardDrawer = new PartyUnitCardDrawer();
+
+        public UnlockInfoDisplayItem(ActivityInstance activity, NetworkRun currentRun, UnlockComponent unlockComponent, System.Action onChanged)
         {
             condition = () => true;
             color = Color.white;
@@ -21,91 +24,175 @@ namespace TheFungalNetwork.Editor
                     var hasEnough = unlockComponent.CurrentResourceCount >= unlockComponent.RequiredAmount;
                     var resourceName = unlockComponent.ResourceCondition.RequiredItem?.DisplayName ?? "Unknown";
 
-                    // Show Open Door button if enough resources collected, otherwise show progress bar
-                    if (hasEnough)
+                    // Show resource progress
+                    EditorGUILayout.BeginHorizontal();
+
+                    // Draw resource icon
+                    var resourceItem = unlockComponent.ResourceCondition.RequiredItem;
+                    if (resourceItem?.Sprite != null)
                     {
-                        // var buttonText = $"🚪 Open Door ({unlockComponent.RequiredAmount}x {resourceName})";
-                        // if (GUILayout.Button(buttonText, GUILayout.Height(30)))
-                        // {
-                        //     // Complete task: remove resources and unlock door
-                        //     unlockComponent.CompleteTask(currentRun);
-                        //     currentRun.OpenDoorAndTransition(door);
-                        //     onChanged?.Invoke();
-                        // }
+                        var icon = resourceItem.Sprite.texture;
+                        GUILayout.Box(icon, GUILayout.Width(20), GUILayout.Height(20));
                     }
                     else
                     {
-                        // Show resource icon and progress bar
-                        EditorGUILayout.BeginHorizontal();
-
-                        // Draw resource icon
-                        var resourceItem = unlockComponent.ResourceCondition.RequiredItem;
-                        if (resourceItem?.Sprite != null)
-                        {
-                            var icon = resourceItem.Sprite.texture;
-                            GUILayout.Box(icon, GUILayout.Width(20), GUILayout.Height(20));
-                        }
-                        else
-                        {
-                            GUILayout.Space(20);
-                        }
-
-                        // Show progress bar with resource name
-                        var progress = Mathf.Clamp01((float)unlockComponent.CurrentResourceCount / unlockComponent.RequiredAmount);
-                        var rect = EditorGUILayout.GetControlRect(false, 20);
-                        EditorGUI.ProgressBar(rect, progress, $"{resourceName}: {unlockComponent.CurrentResourceCount}/{unlockComponent.RequiredAmount}");
-
-                        EditorGUILayout.EndHorizontal();
+                        GUILayout.Space(20);
                     }
+
+                    // Show progress bar with resource name
+                    var progress = Mathf.Clamp01((float)unlockComponent.CurrentResourceCount / unlockComponent.RequiredAmount);
+                    var rect = EditorGUILayout.GetControlRect(false, 20);
+                    EditorGUI.ProgressBar(rect, progress, $"{resourceName}: {unlockComponent.CurrentResourceCount}/{unlockComponent.RequiredAmount}");
+
+                    EditorGUILayout.EndHorizontal();
 
                     EditorGUILayout.Space(4);
 
-                    // Show contribute button for network run inventory
-                    if (!hasEnough)
+                    // Draw unit drop zone
+                    DrawUnitsDropZone(activity, currentRun, unlockComponent, resourceName, onChanged);
+
+                    // Show Open Door button if enough resources collected
+                    if (hasEnough)
                     {
-                        var inventoryItemCount = currentRun.Inventory.GetItemCount(unlockComponent.ResourceCondition.RequiredItem);
-                        var remainingNeeded = unlockComponent.RequiredAmount - unlockComponent.CurrentResourceCount;
-                        var canContribute = Mathf.Min(inventoryItemCount, remainingNeeded);
-
-                        GUI.enabled = canContribute > 0;
+                        EditorGUILayout.Space(4);
                         GUI.backgroundColor = new Color(0.7f, 1f, 0.7f);
-
-                        var buttonText = canContribute > 0
-                            ? $"✓ Contribute {canContribute}x {resourceName} from Inventory"
-                            : $"Collect {resourceName} to contribute";
-
+                        var buttonText = $"🚪 Open Door";
                         if (GUILayout.Button(buttonText, GUILayout.Height(30)))
                         {
-                            unlockComponent.ContributeResources(canContribute);
-
-                            // Remove contributed items from inventory
-                            currentRun.Inventory.RemoveItem(unlockComponent.ResourceCondition.RequiredItem, canContribute);
-
-                            Debug.Log($"Contributed {canContribute}x {resourceName} from network run inventory");
-
-                            // Check if door is now unlocked and open it automatically
-                            if (unlockComponent.IsUnlocked)
-                            {
-                                Debug.Log($"[UnlockInfoDisplayItem] BEFORE CompleteTask - Inventory item count check");
-                                unlockComponent.CompleteTask(currentRun);
-                                Debug.Log($"[UnlockInfoDisplayItem] AFTER CompleteTask - Before transition");
-
-                                currentRun.OpenDoorAndTransition(door);
-
-                                Debug.Log($"[UnlockInfoDisplayItem] AFTER OpenDoorAndTransition - Inventory still same reference: {currentRun.Inventory != null}");
-                            }
-
+                            unlockComponent.CompleteTask(currentRun);
+                            currentRun.OpenDoorAndTransition(door);
                             onChanged?.Invoke();
                         }
-
                         GUI.backgroundColor = Color.white;
-                        GUI.enabled = true;
                     }
 
                     EditorGUILayout.Space(2);
                 }
             };
         }
+
+        private void DrawUnitsDropZone(ActivityInstance activity, NetworkRun currentRun, UnlockComponent unlockComponent, string resourceName, System.Action onChanged)
+        {
+            _dropZoneDrawer.Draw(
+                "🖱️ Drop units here to assign to unlock task",
+                (contentRect) =>
+                {
+                    if (activity.Units != null && activity.Units.Count > 0)
+                    {
+                        var activeHeaderStyle = new GUIStyle(EditorStyles.miniLabel)
+                        {
+                            alignment = TextAnchor.MiddleCenter,
+                            fontStyle = FontStyle.Bold,
+                            normal = { textColor = new Color(0.5f, 1f, 0.5f) }
+                        };
+                        EditorGUILayout.LabelField($"Active Units ({activity.Units.Count})", activeHeaderStyle, GUILayout.Height(14));
+                        EditorGUILayout.Space(2);
+
+                        EditorGUILayout.BeginHorizontal();
+                        int count = 0;
+                        const int itemsPerRow = 3;
+
+                        foreach (var unit in activity.Units)
+                        {
+                            if (unit == null) continue;
+
+                            if (count > 0 && count % itemsPerRow == 0)
+                            {
+                                EditorGUILayout.EndHorizontal();
+                                EditorGUILayout.Space(2);
+                                EditorGUILayout.BeginHorizontal();
+                            }
+
+                            var resourceItem = unlockComponent.ResourceCondition?.RequiredItem;
+                            var hasResource = resourceItem != null && unit.Inventory.GetItemCount(resourceItem) > 0;
+                            var isUnlocked = unlockComponent.IsUnlocked;
+
+                            _cardDrawer.Draw(
+                                unit,
+                                () =>
+                                {
+                                    // Remove button (debug mode)
+                                    if (currentRun.Settings.debugMode)
+                                    {
+                                        GUI.backgroundColor = new Color(1f, 0.7f, 0.7f);
+                                        if (GUILayout.Button("Remove", GUILayout.Height(18), GUILayout.Width(90)))
+                                        {
+                                            activity.RemoveUnit(unit);
+                                            UnityEditor.AssetDatabase.SaveAssets();
+                                            onChanged?.Invoke();
+                                        }
+                                        GUI.backgroundColor = Color.white;
+                                    }
+                                },
+                                (hasResource && !isUnlocked) ? () => unlockComponent.GetUnitProgress(unit) / unlockComponent.UpdateInterval : null,
+                                () =>
+                                {
+                                    // Status with resource info
+                                    if (isUnlocked)
+                                    {
+                                        var statusStyle = new GUIStyle(EditorStyles.miniLabel)
+                                        {
+                                            alignment = TextAnchor.MiddleCenter,
+                                            fontSize = 8,
+                                            normal = { textColor = new Color(1f, 0.85f, 0.3f) }
+                                        };
+                                        EditorGUILayout.LabelField("✓ Task Complete", statusStyle, GUILayout.Height(12), GUILayout.Width(90));
+                                    }
+                                    else if (hasResource)
+                                    {
+                                        var statusStyle = new GUIStyle(EditorStyles.miniLabel)
+                                        {
+                                            alignment = TextAnchor.MiddleCenter,
+                                            fontSize = 8,
+                                            normal = { textColor = new Color(0.7f, 1f, 0.7f) }
+                                        };
+                                        EditorGUILayout.LabelField("Contributing...", statusStyle, GUILayout.Height(12), GUILayout.Width(90));
+                                    }
+                                    else
+                                    {
+                                        var statusStyle = new GUIStyle(EditorStyles.miniLabel)
+                                        {
+                                            alignment = TextAnchor.MiddleCenter,
+                                            fontSize = 8,
+                                            normal = { textColor = new Color(1f, 0.5f, 0.5f) }
+                                        };
+                                        var resourceName = resourceItem?.DisplayName ?? "resource";
+                                        EditorGUILayout.LabelField($"Needs {resourceName}", statusStyle, GUILayout.Height(12), GUILayout.Width(90));
+                                    }
+
+                                    GUILayout.Space(2);
+                                });
+                            count++;
+                        }
+
+                        EditorGUILayout.EndHorizontal();
+                    }
+                    else
+                    {
+                        GUILayout.Space(40);
+                        var emptyStyle = new GUIStyle(EditorStyles.miniLabel)
+                        {
+                            alignment = TextAnchor.MiddleCenter,
+                            fontSize = 10,
+                            normal = { textColor = new Color(0.5f, 0.5f, 0.5f) }
+                        };
+                        EditorGUILayout.LabelField($"⏱ No units assigned. Drag units here with {resourceName} in inventory.", emptyStyle);
+                        GUILayout.Space(40);
+                    }
+                },
+                (draggedUnit) => !(activity.Units != null && activity.Units.Contains(draggedUnit)),
+                (draggedUnit) =>
+                {
+                    var allActivities = currentRun?.CurrentRoom?.Data?.activities;
+                    activity.AddUnit(draggedUnit, allActivities);
+                    UnityEditor.AssetDatabase.SaveAssets();
+                    onChanged?.Invoke();
+                },
+                DragAndDropVisualMode.Copy
+            );
+        }
+
+
     }
 }
 #endif

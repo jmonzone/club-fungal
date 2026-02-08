@@ -117,7 +117,7 @@ namespace TheFungalNetwork.Editor
             // If this is an unlock activity, show resource collection progress
             if (hasUnlockComponent && currentRun?.CurrentRoom?.Data?.doors != null)
             {
-                var unlockInfoItem = new UnlockInfoDisplayItem(currentRun, unlockComponent, onChanged);
+                var unlockInfoItem = new UnlockInfoDisplayItem(activity, currentRun, unlockComponent, onChanged);
                 displayItems.Add(unlockInfoItem);
             }
 
