@@ -16,3 +16,4 @@ MonoBehaviour:
   updateInterval: 1
   debugMode: 0
   speedMultiplier: 1
+  sporesItem: {fileID: 11400000, guid: ddde813dc82944f04928d4fd69f1a1b8, type: 2}

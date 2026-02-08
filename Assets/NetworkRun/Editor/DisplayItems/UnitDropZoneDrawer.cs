@@ -9,10 +9,12 @@ namespace TheFungalNetwork.Editor
     public class UnitDropZoneDrawer
     {
         public void Draw(
-            string label,
-            System.Action<Rect> drawContent,
-            System.Func<UnitInstance, bool> canDrop,
-            System.Action<UnitInstance> onDrop,
+            string label = "🖱️ Drop units here to assign",
+            bool isEmpty = false,
+            string emptyMessage = "No units assigned.",
+            System.Action<Rect> drawContent = null,
+            System.Func<UnitInstance, bool> canDrop = null,
+            System.Action<UnitInstance> onDrop = null,
             DragAndDropVisualMode visualMode = DragAndDropVisualMode.Copy)
         {
             var evt = Event.current;
@@ -39,7 +41,29 @@ namespace TheFungalNetwork.Editor
             // Draw the content inside the drop zone
             EditorGUILayout.BeginHorizontal();
             var contentRect = EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(false));
-            drawContent?.Invoke(contentRect);
+
+            if (isEmpty)
+            {
+                // Draw empty state centered
+                GUILayout.FlexibleSpace();
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.FlexibleSpace();
+                var emptyStyle = new GUIStyle(EditorStyles.miniLabel)
+                {
+                    alignment = TextAnchor.MiddleCenter,
+                    fontSize = 10,
+                    normal = { textColor = new Color(0.5f, 0.5f, 0.5f) }
+                };
+                EditorGUILayout.LabelField(emptyMessage, emptyStyle, GUILayout.Height(60));
+                GUILayout.FlexibleSpace();
+                EditorGUILayout.EndHorizontal();
+                GUILayout.FlexibleSpace();
+            }
+            else
+            {
+                drawContent?.Invoke(contentRect);
+            }
+
             EditorGUILayout.EndVertical();
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();

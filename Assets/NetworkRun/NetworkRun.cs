@@ -405,55 +405,18 @@ public class NetworkRun
 
     public ResourceCondition CreateResourceConditionForDoor(ActivityInstance roomActivityInstance = null)
     {
-        ItemTemplate selectedItem = null;
-
-        // First, try to get item from the provided activity instance (the resource activity for this room)
-        if (roomActivityInstance?.Template?.Components != null)
-        {
-            foreach (var component in roomActivityInstance.Template.Components)
-            {
-                if (component is ResourceUpdateComponent resourceComponent && resourceComponent.ItemTemplate != null)
-                {
-                    selectedItem = resourceComponent.ItemTemplate;
-                    break;
-                }
-            }
-        }
-
-        // Fallback: try to get items from the current room's activities
-        if (selectedItem == null)
-        {
-            var roomItems = GetItemsFromRoomActivities();
-            selectedItem = roomItems.Count > 0
-                ? roomItems[UnityEngine.Random.Range(0, roomItems.Count)]
-                : null;
-        }
-
-        // Final fallback: any available item from all activities
-        if (selectedItem == null)
-        {
-            var availableItems = GetAvailableItemsFromActivities();
-            if (availableItems.Count > 0)
-            {
-                selectedItem = availableItems[UnityEngine.Random.Range(0, availableItems.Count)];
-            }
-        }
+        // Always use spores from settings
+        ItemTemplate selectedItem = settings?.sporesItem;
 
         if (selectedItem != null)
         {
             var resourceCondition = ScriptableObject.CreateInstance<ResourceCondition>();
 
-            // Use reflection to set private fields
-            var requiredItemField = typeof(ResourceCondition).GetField("requiredItem",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var requiredAmountField = typeof(ResourceCondition).GetField("requiredAmount",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
-            requiredItemField?.SetValue(resourceCondition, selectedItem);
-
             // Scale requirement based on number of rooms visited using RuneScape XP formula
             int requiredAmount = CalculateRequiredAmount(visitedRooms.Count + 2);
-            requiredAmountField?.SetValue(resourceCondition, requiredAmount);
+
+            // Initialize with item and amount
+            resourceCondition.Initialize(selectedItem, requiredAmount);
 
             Debug.Log($"Created ResourceCondition requiring {requiredAmount}x {selectedItem.DisplayName}");
             return resourceCondition;

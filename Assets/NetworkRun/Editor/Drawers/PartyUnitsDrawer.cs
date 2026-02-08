@@ -53,8 +53,8 @@ namespace TheFungalNetwork.Editor
 
             // Draw drop zone with available units inside
             _dropZoneDrawer.Draw(
-                "🖱️ Drop units here to remove from activities",
-                (contentRect) =>
+                label: "🖱️ Drop units here to remove from activities",
+                drawContent: (contentRect) =>
                 {
                     if (availableUnits.Count > 0)
                     {
@@ -90,8 +90,8 @@ namespace TheFungalNetwork.Editor
                         GUILayout.Space(20);
                     }
                 },
-                (draggedUnit) => unitsInActivities.Contains(draggedUnit),
-                (draggedUnit) =>
+                canDrop: (draggedUnit) => unitsInActivities.Contains(draggedUnit),
+                onDrop: (draggedUnit) =>
                 {
                     // Remove unit from all activities
                     foreach (var activity in roomData.activities)
@@ -106,7 +106,7 @@ namespace TheFungalNetwork.Editor
 
                     EditorWindow.GetWindow<NetworkRunWindow>()?.Repaint();
                 },
-                DragAndDropVisualMode.Copy
+                visualMode: DragAndDropVisualMode.Copy
             );
 
             EditorGUILayout.EndVertical();

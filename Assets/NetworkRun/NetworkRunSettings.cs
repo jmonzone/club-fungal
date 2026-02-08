@@ -8,5 +8,6 @@ public class NetworkRunSettings : ScriptableObject
     public float updateInterval = 1.0f;
     public bool debugMode = false;
     public float speedMultiplier = 1.0f; // Simulation speed (1.0 = normal, 2.0 = 2x speed, etc.)
+    public ItemTemplate sporesItem; // Item required for door unlocks
     // Add more settings here
 }

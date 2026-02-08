@@ -9,6 +9,12 @@ public class ResourceCondition : DoorCondition
     public ItemTemplate RequiredItem => requiredItem;
     public int RequiredAmount => requiredAmount;
 
+    public void Initialize(ItemTemplate item, int amount)
+    {
+        requiredItem = item;
+        requiredAmount = amount;
+    }
+
     public override bool IsMet(Inventory inventory)
     {
         if (requiredItem == null) return true;

@@ -89,9 +89,17 @@ namespace TheFungalNetwork.Editor
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
             // Show settings connection status
+            EditorGUILayout.BeginHorizontal();
             string settingsStatus = defaultSettings != null ? $"Settings: Connected ({defaultSettings.name})" : "Settings: Not Connected";
             var statusStyle = new GUIStyle(EditorStyles.miniLabel) { fontSize = 10, normal = { textColor = defaultSettings != null ? new Color(0.3f, 0.8f, 0.3f) : new Color(1f, 0.5f, 0.5f) } };
             EditorGUILayout.LabelField(settingsStatus, statusStyle, GUILayout.Height(16));
+
+            if (defaultSettings != null && GUILayout.Button("View", GUILayout.Width(50), GUILayout.Height(16)))
+            {
+                EditorGUIUtility.PingObject(defaultSettings);
+                Selection.activeObject = defaultSettings;
+            }
+            EditorGUILayout.EndHorizontal();
 
             // Debug mode toggle
             if (defaultSettings != null)

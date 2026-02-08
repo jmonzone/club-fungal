@@ -29,80 +29,58 @@ namespace TheFungalNetwork.Editor
 
         private void DrawDropZoneWithUnits(ActivityInstance activity, NetworkRun currentRun, System.Action onChanged, ResourceUpdateComponent resourceComponent, string itemName)
         {
+            var hasUnits = activity.Units != null && activity.Units.Count > 0;
+
             _dropZoneDrawer.Draw(
-                "🖱️ Drop units here to assign to activity",
-                (contentRect) =>
+                isEmpty: !hasUnits,
+                drawContent: (contentRect) =>
                 {
                     // Show only units that are IN this activity
                     var unitCount = activity.Units?.Count ?? 0;
-                    if (activity.Units != null && activity.Units.Count > 0)
+                    EditorGUILayout.BeginHorizontal();
+                    int count = 0;
+                    const int itemsPerRow = 3;
+
+                    foreach (var unit in activity.Units)
                     {
-                        var activeHeaderStyle = new GUIStyle(EditorStyles.miniLabel)
+                        if (unit == null) continue;
+
+                        if (count > 0 && count % itemsPerRow == 0)
                         {
-                            alignment = TextAnchor.MiddleCenter,
-                            fontStyle = FontStyle.Bold,
-                            normal = { textColor = new Color(0.5f, 1f, 0.5f) }
-                        };
-                        EditorGUILayout.LabelField($"Active Units ({activity.Units.Count})", activeHeaderStyle, GUILayout.Height(14));
-                        EditorGUILayout.Space(2);
-
-                        EditorGUILayout.BeginHorizontal();
-                        int count = 0;
-                        const int itemsPerRow = 3;
-
-                        foreach (var unit in activity.Units)
-                        {
-                            if (unit == null) continue;
-
-                            if (count > 0 && count % itemsPerRow == 0)
-                            {
-                                EditorGUILayout.EndHorizontal();
-                                EditorGUILayout.Space(2);
-                                EditorGUILayout.BeginHorizontal();
-                            }
-
-                            _unitCardDrawer.Draw(unit, activity, resourceComponent, currentRun, onChanged);
-
-                            count++;
+                            EditorGUILayout.EndHorizontal();
+                            EditorGUILayout.Space(2);
+                            EditorGUILayout.BeginHorizontal();
                         }
 
-                        EditorGUILayout.EndHorizontal();
-                        EditorGUILayout.Space(4);
+                        _unitCardDrawer.Draw(unit, activity, resourceComponent, currentRun, onChanged);
 
-                        // Show what's being collected with type bonuses considered
-                        var totalItems = resourceComponent.ItemsPerUpdate * unitCount;
-
-                        // Calculate average effective interval across all active units
-                        float totalInterval = 0f;
-                        int activeCount = 0;
-
-                        foreach (var unit in activity.Units)
-                        {
-                            if (unit != null)
-                            {
-                                totalInterval += resourceComponent.GetEffectiveInterval(unit, activity);
-                                activeCount++;
-                            }
-                        }
-
-                        float avgInterval = activeCount > 0 ? totalInterval / activeCount : resourceComponent.UpdateInterval;
-                        EditorGUILayout.LabelField($"⏱ Each cycle: {totalItems}x {itemName} (~{avgInterval:F1}s avg)", EditorStyles.miniLabel);
+                        count++;
                     }
-                    else
+
+                    EditorGUILayout.EndHorizontal();
+                    EditorGUILayout.Space(4);
+
+                    // Show what's being collected with type bonuses considered
+                    var totalItems = resourceComponent.ItemsPerUpdate * unitCount;
+
+                    // Calculate average effective interval across all active units
+                    float totalInterval = 0f;
+                    int activeCount = 0;
+
+                    foreach (var unit in activity.Units)
                     {
-                        GUILayout.Space(40);
-                        var emptyStyle = new GUIStyle(EditorStyles.miniLabel)
+                        if (unit != null)
                         {
-                            alignment = TextAnchor.MiddleCenter,
-                            fontSize = 10,
-                            normal = { textColor = new Color(0.5f, 0.5f, 0.5f) }
-                        };
-                        EditorGUILayout.LabelField("⏱ No units assigned. Drag units here to start.", emptyStyle);
-                        GUILayout.Space(40);
+                            totalInterval += resourceComponent.GetEffectiveInterval(unit, activity);
+                            activeCount++;
+                        }
                     }
+
+                    float avgInterval = activeCount > 0 ? totalInterval / activeCount : resourceComponent.UpdateInterval;
+                    EditorGUILayout.LabelField($"⏱ Each cycle: {totalItems}x {itemName} (~{avgInterval:F1}s avg)", EditorStyles.miniLabel);
                 },
-                (draggedUnit) => !(activity.Units != null && activity.Units.Contains(draggedUnit)),
-                (draggedUnit) =>
+                canDrop: (draggedUnit) => !(activity.Units != null && activity.Units.Contains(draggedUnit)),
+                onDrop: (draggedUnit) =>
                 {
                     // Add unit to activity
                     var allActivities = currentRun?.CurrentRoom?.Data?.activities;
@@ -111,7 +89,7 @@ namespace TheFungalNetwork.Editor
                     UnityEditor.AssetDatabase.SaveAssets();
                     onChanged?.Invoke();
                 },
-                DragAndDropVisualMode.Copy
+                visualMode: DragAndDropVisualMode.Copy
             );
         }
     }
