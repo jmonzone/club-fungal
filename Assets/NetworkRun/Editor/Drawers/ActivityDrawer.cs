@@ -1,13 +1,171 @@
 #if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
 namespace TheFungalNetwork.Editor
 {
+    public abstract class ActivityComponentDrawer
+    {
+        public abstract Type ComponentType { get; }
+        public abstract void DrawUnitCard(UnitInstance unit, ActivityInstance activity, ActivityComponent component, NetworkRun currentRun, System.Action onChanged);
+    }
+
+    public abstract class ActivityComponentDrawer<T> : ActivityComponentDrawer where T : ActivityComponent
+    {
+        public override Type ComponentType => typeof(T);
+
+        public override void DrawUnitCard(UnitInstance unit, ActivityInstance activity, ActivityComponent component, NetworkRun currentRun, System.Action onChanged)
+        {
+            if (component is T typedComponent)
+            {
+                DrawTypedUnitCard(unit, activity, typedComponent, currentRun, onChanged);
+            }
+        }
+
+        protected abstract void DrawTypedUnitCard(UnitInstance unit, ActivityInstance activity, T component, NetworkRun currentRun, System.Action onChanged);
+    }
+
+    public class ResourceUpdateComponentDrawer : ActivityComponentDrawer<ResourceUpdateComponent>
+    {
+        private ResourceUnitCardDrawer _cardDrawer = new ResourceUnitCardDrawer();
+
+        protected override void DrawTypedUnitCard(UnitInstance unit, ActivityInstance activity, ResourceUpdateComponent component, NetworkRun currentRun, System.Action onChanged)
+        {
+            _cardDrawer.Draw(unit, activity, component, currentRun, onChanged);
+        }
+    }
+
+    public class UnlockComponentDrawer : ActivityComponentDrawer<UnlockComponent>
+    {
+        private PartyUnitCardDrawer _cardDrawer = new PartyUnitCardDrawer();
+
+        protected override void DrawTypedUnitCard(UnitInstance unit, ActivityInstance activity, UnlockComponent component, NetworkRun currentRun, System.Action onChanged)
+        {
+            var resourceItem = component.ResourceCondition?.RequiredItem;
+            var hasResource = resourceItem != null && unit.Inventory.GetItemCount(resourceItem) > 0;
+            var isUnlocked = component.IsUnlocked;
+
+            _cardDrawer.Draw(
+                unit,
+                () =>
+                {
+                    // Remove button (debug mode)
+                    if (currentRun.Settings.debugMode)
+                    {
+                        GUI.backgroundColor = new Color(1f, 0.7f, 0.7f);
+                        if (GUILayout.Button("Remove", GUILayout.Height(18), GUILayout.Width(90)))
+                        {
+                            activity.RemoveUnit(unit);
+                            UnityEditor.AssetDatabase.SaveAssets();
+                            onChanged?.Invoke();
+                        }
+                        GUI.backgroundColor = Color.white;
+                    }
+                },
+                (hasResource && !isUnlocked) ? () => component.GetUnitProgress(unit) / component.UpdateInterval : null,
+                () =>
+                {
+                    // Status with resource info
+                    if (isUnlocked)
+                    {
+                        var statusStyle = new GUIStyle(EditorStyles.miniLabel)
+                        {
+                            alignment = TextAnchor.MiddleCenter,
+                            fontSize = 8,
+                            normal = { textColor = new Color(1f, 0.85f, 0.3f) }
+                        };
+                        EditorGUILayout.LabelField("✓ Task Complete", statusStyle, GUILayout.Height(12), GUILayout.Width(90));
+                    }
+                    else if (hasResource)
+                    {
+                        var statusStyle = new GUIStyle(EditorStyles.miniLabel)
+                        {
+                            alignment = TextAnchor.MiddleCenter,
+                            fontSize = 8,
+                            normal = { textColor = new Color(0.7f, 1f, 0.7f) }
+                        };
+                        EditorGUILayout.LabelField("Contributing...", statusStyle, GUILayout.Height(12), GUILayout.Width(90));
+                    }
+                    else
+                    {
+                        var statusStyle = new GUIStyle(EditorStyles.miniLabel)
+                        {
+                            alignment = TextAnchor.MiddleCenter,
+                            fontSize = 8,
+                            normal = { textColor = new Color(1f, 0.5f, 0.5f) }
+                        };
+                        var resourceName = resourceItem?.DisplayName ?? "resource";
+                        EditorGUILayout.LabelField($"Needs {resourceName}", statusStyle, GUILayout.Height(12), GUILayout.Width(90));
+                    }
+
+                    GUILayout.Space(2);
+                });
+        }
+    }
+
+    public class DefaultComponentDrawer : ActivityComponentDrawer<ActivityComponent>
+    {
+        private PartyUnitCardDrawer _cardDrawer = new PartyUnitCardDrawer();
+
+        public override void DrawUnitCard(UnitInstance unit, ActivityInstance activity, ActivityComponent component, NetworkRun currentRun, System.Action onChanged)
+        {
+            // Default drawer works even without a component
+            DrawTypedUnitCard(unit, activity, component, currentRun, onChanged);
+        }
+
+        protected override void DrawTypedUnitCard(UnitInstance unit, ActivityInstance activity, ActivityComponent component, NetworkRun currentRun, System.Action onChanged)
+        {
+            _cardDrawer.Draw(
+                unit,
+                () =>
+                {
+                    // Remove button
+                    if (currentRun?.Settings?.debugMode ?? false)
+                    {
+                        GUI.backgroundColor = new Color(1f, 0.7f, 0.7f);
+                        if (GUILayout.Button("Remove", GUILayout.Height(18), GUILayout.Width(90)))
+                        {
+                            activity.RemoveUnit(unit);
+                            UnityEditor.AssetDatabase.SaveAssets();
+                            onChanged?.Invoke();
+                        }
+                        GUI.backgroundColor = Color.white;
+                    }
+                },
+                null,
+                null);
+        }
+    }
+
     public class ActivityDrawer
     {
+        private static List<ActivityComponentDrawer> _componentDrawers;
+
+        static ActivityDrawer()
+        {
+            // Discover all drawer types using reflection
+            _componentDrawers = new List<ActivityComponentDrawer>();
+
+            var drawerTypes = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(assembly => assembly.GetTypes())
+                .Where(type => !type.IsAbstract && typeof(ActivityComponentDrawer).IsAssignableFrom(type));
+
+            foreach (var drawerType in drawerTypes)
+            {
+                var drawer = (ActivityComponentDrawer)Activator.CreateInstance(drawerType);
+                _componentDrawers.Add(drawer);
+            }
+
+            // Sort to ensure DefaultComponentDrawer is last (fallback)
+            _componentDrawers = _componentDrawers
+                .OrderBy(d => d.ComponentType == typeof(ActivityComponent) ? 1 : 0)
+                .ToList();
+        }
+
         public static void DrawList(List<ActivityInstance> activities, RoomTemplate selectedRoom, List<UnitInstance> party, System.Action onChanged = null, NetworkRun currentRun = null)
         {
             if (activities == null || activities.Count == 0)
@@ -129,6 +287,18 @@ namespace TheFungalNetwork.Editor
                 displayItems.Add(resourceProgressItem);
             }
 
+            // Create unit card drawer function based on components
+            System.Action<UnitInstance> unitCardDrawer = CreateUnitCardDrawer(activity, currentRun, onChanged);
+
+            // Add unified unit drop zone for all activities
+            var unitDropZoneItem = new UnifiedUnitDropZoneDisplayItem(
+                activity,
+                currentRun,
+                onChanged,
+                unitCardDrawer
+            );
+            displayItems.Add(unitDropZoneItem);
+
             // Assign icon after component detection
             Texture icon = null;
             if (hasResourceUpdateComponent && resourceUpdateComponent?.ItemTemplate?.Sprite != null)
@@ -149,6 +319,43 @@ namespace TheFungalNetwork.Editor
                 menuItems: menuItems,
                 displayItems: displayItems
             );
+        }
+
+        private static System.Action<UnitInstance> CreateUnitCardDrawer(
+            ActivityInstance activity,
+            NetworkRun currentRun,
+            System.Action onChanged)
+        {
+            ActivityComponent matchedComponent = null;
+            ActivityComponentDrawer matchedDrawer = null;
+
+            if (activity.Template?.Components != null)
+            {
+                foreach (var component in activity.Template.Components)
+                {
+                    foreach (var drawer in _componentDrawers)
+                    {
+                        if (drawer.ComponentType.IsAssignableFrom(component.GetType()))
+                        {
+                            matchedComponent = component;
+                            matchedDrawer = drawer;
+                            break;
+                        }
+                    }
+                    if (matchedDrawer != null) break;
+                }
+            }
+
+            // If no specific component found, use default drawer (last in list)
+            if (matchedDrawer == null)
+            {
+                matchedDrawer = _componentDrawers.Last();
+            }
+
+            var finalDrawer = matchedDrawer;
+            var finalComponent = matchedComponent;
+
+            return (unit) => finalDrawer.DrawUnitCard(unit, activity, finalComponent, currentRun, onChanged);
         }
 
         private static string GetDoorDisplayName(List<Door> doors, Door assignedDoor, string componentTypeName)
@@ -426,6 +633,66 @@ namespace TheFungalNetwork.Editor
                         EditorGUILayout.LabelField($"  No {requiredItem.DisplayName} to contribute", EditorStyles.miniLabel);
                         GUI.enabled = true;
                     }
+
+                    EditorGUILayout.Space(2);
+                };
+            }
+        }
+
+        private class UnifiedUnitDropZoneDisplayItem : UnitDrawerDisplayItem
+        {
+            private UnitDropZoneDrawer _dropZoneDrawer = new UnitDropZoneDrawer();
+
+            public UnifiedUnitDropZoneDisplayItem(
+                ActivityInstance activity,
+                NetworkRun currentRun,
+                System.Action onChanged,
+                System.Action<UnitInstance> unitCardDrawer)
+            {
+                condition = () => true;
+                color = Color.white;
+                drawAction = () =>
+                {
+                    EditorGUILayout.Space(4);
+
+                    var hasUnits = activity.Units != null && activity.Units.Count > 0;
+
+                    _dropZoneDrawer.Draw(
+                        isEmpty: !hasUnits,
+                        drawContent: (contentRect) =>
+                        {
+                            EditorGUILayout.BeginHorizontal();
+                            int count = 0;
+                            const int itemsPerRow = 3;
+
+                            foreach (var unit in activity.Units)
+                            {
+                                if (unit == null) continue;
+
+                                if (count > 0 && count % itemsPerRow == 0)
+                                {
+                                    EditorGUILayout.EndHorizontal();
+                                    EditorGUILayout.Space(2);
+                                    EditorGUILayout.BeginHorizontal();
+                                }
+
+                                unitCardDrawer(unit);
+
+                                count++;
+                            }
+
+                            EditorGUILayout.EndHorizontal();
+                        },
+                        canDrop: (draggedUnit) => !(activity.Units != null && activity.Units.Contains(draggedUnit)),
+                        onDrop: (draggedUnit) =>
+                        {
+                            var allActivities = currentRun?.CurrentRoom?.Data?.activities;
+                            activity.AddUnit(draggedUnit, allActivities);
+                            UnityEditor.AssetDatabase.SaveAssets();
+                            onChanged?.Invoke();
+                        },
+                        visualMode: DragAndDropVisualMode.Copy
+                    );
 
                     EditorGUILayout.Space(2);
                 };

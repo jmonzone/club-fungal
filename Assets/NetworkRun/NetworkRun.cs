@@ -36,6 +36,9 @@ public class NetworkRun
         currentRoom = CreateNewRoomInstance();
         visitedRooms.Add(currentRoom);
         lastRealTime = UnityEngine.Time.realtimeSinceStartup;
+
+        // Add all party units to rest activity if it exists
+        MovePartyToRestActivity();
     }
 
     public void UpdateSimulationTime()
@@ -67,6 +70,35 @@ public class NetworkRun
             visitedRooms.Add(roomInstance);
         }
         Debug.Log($"Transitioned to room: {currentRoom.Data.name} (Total rooms visited: {visitedRooms.Count})");
+
+        // Add all party units to rest activity in the new room
+        MovePartyToRestActivity();
+    }
+
+    private void MovePartyToRestActivity()
+    {
+        if (currentRoom?.Data?.activities == null || party == null) return;
+
+        ActivityInstance restActivity = null;
+        foreach (var activity in currentRoom.Data.activities)
+        {
+            if (activity?.Template == settings?.restActivity)
+            {
+                restActivity = activity;
+                break;
+            }
+        }
+
+        if (restActivity != null)
+        {
+            foreach (var unit in party)
+            {
+                if (unit != null)
+                {
+                    restActivity.AddUnit(unit, currentRoom.Data.activities);
+                }
+            }
+        }
     }
 
     public bool OpenDoorAndTransition(Door door)

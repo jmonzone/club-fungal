@@ -20,10 +20,9 @@ namespace TheFungalNetwork.Editor
             if (currentRun == null || currentRun.CurrentRoom == null) return;
 
             var roomData = currentRun.CurrentRoom.Data;
-            EditorGUILayout.LabelField("Current Room", EditorStyles.boldLabel);
 
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(roomData.name);
+            EditorGUILayout.LabelField(roomData.name, EditorStyles.boldLabel);
             if (GUILayout.Button("View Room", GUILayout.Width(100)))
             {
                 RoomInstanceWindow.ShowWindow(currentRun.CurrentRoom);
@@ -34,24 +33,13 @@ namespace TheFungalNetwork.Editor
 
             // Draw shared available units zone at the top
             EditorGUILayout.Space(5);
-            _partyUnitsDrawer.Draw(currentRun);
+            // _partyUnitsDrawer.Draw(currentRun);
 
-            var activities = roomData.activities;
-            if (activities != null && activities.Count > 0)
-            {
-                EditorGUILayout.Space(5);
-                EditorGUILayout.LabelField("Activities:", EditorStyles.boldLabel);
-                ActivityDrawer.DrawList(activities, null, currentRun.Party, () => EditorWindow.GetWindow<NetworkRunWindow>().Repaint(), currentRun);
-            }
-            else
-            {
-                EditorGUILayout.Space(5);
-                EditorGUILayout.LabelField("Activities:", EditorStyles.boldLabel);
-                ActivityDrawer.DrawList(null, null, currentRun.Party, () => EditorWindow.GetWindow<NetworkRunWindow>().Repaint(), currentRun);
-            }
+            ActivityDrawer.DrawList(roomData.activities, null, currentRun.Party, () => EditorWindow.GetWindow<NetworkRunWindow>().Repaint(), currentRun);
+
 
             EditorGUILayout.Space(5);
-            if (GUILayout.Button("Add Activity to Room"))
+            if (currentRun.Settings.debugMode && GUILayout.Button("Add Activity to Room"))
             {
                 ShowActivityMenu(roomData);
             }
