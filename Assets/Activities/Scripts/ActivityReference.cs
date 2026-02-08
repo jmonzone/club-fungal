@@ -8,6 +8,7 @@ using UnityEngine.Events;
 public class ActivityReference : ScriptableObject
 {
     [Header("References")]
+    [SerializeField] private string description;
     [SerializeField] private Sprite sprite;
     [SerializeField] private ViewReference activityView;
     [SerializeField] private Skill primarySkill;
@@ -19,6 +20,7 @@ public class ActivityReference : ScriptableObject
     [SerializeField] private ActivityUnit player;
     [SerializeField] private List<ActivityUnit> units = new List<ActivityUnit>();
 
+    public string Description => description;
     public Sprite Sprite => sprite;
     public ViewReference ViewReference => activityView;
     public Skill PrimarySkill => primarySkill;

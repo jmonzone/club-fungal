@@ -74,48 +74,6 @@ public class InspectComponent : ActivityComponent
     {
         if (assignedDoor != null && networkRun != null && activityInstance != null)
         {
-            // Create a new ResourceCondition for the door using NetworkRun's method
-            // This will select a random item from available activities and scale the count using RuneScape formula
-            var resourceCondition = networkRun.CreateResourceConditionForDoor();
-
-            if (resourceCondition != null)
-            {
-                // Keep door locked - it will be unlocked when resources are collected
-
-                // Add the resource condition to the door
-                if (assignedDoor.conditions == null)
-                {
-                    assignedDoor.conditions = new System.Collections.Generic.List<DoorCondition>();
-                }
-                assignedDoor.conditions.Add(resourceCondition);
-
-                Debug.Log($"Inspection completed! Resource condition assigned: {resourceCondition.GetDescription()}. Door remains locked until resources collected.");
-
-                // Create and add UnlockComponent to replace InspectComponent
-                var unlockComponent = ScriptableObject.CreateInstance<UnlockComponent>();
-                unlockComponent.name = "UnlockComponent";
-                unlockComponent.SetDoorAndCondition(assignedDoor, resourceCondition);
-
-                // Replace InspectComponent with UnlockComponent in the activity's template
-                if (activityInstance.Template?.Components != null)
-                {
-                    var componentsField = typeof(ActivityReference).GetField("components",
-                        System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                    var componentsList = componentsField?.GetValue(activityInstance.Template) as System.Collections.Generic.List<ActivityComponent>;
-
-                    if (componentsList != null)
-                    {
-                        // Find and replace this InspectComponent with UnlockComponent
-                        int index = componentsList.IndexOf(this);
-                        if (index >= 0)
-                        {
-                            componentsList[index] = unlockComponent;
-                            unlockComponent.Initialize(networkRun, activityInstance);
-                            Debug.Log($"Replaced InspectComponent with UnlockComponent");
-                        }
-                    }
-                }
-            }
         }
     }
 }

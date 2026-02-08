@@ -31,6 +31,57 @@ public class ActivityInstance
         };
     }
 
+    // Copy constructor - creates a new instance with copied components but original template
+    public ActivityInstance(NetworkRun networkRun, ActivityReference originalTemplate)
+    {
+        // Keep reference to original template
+        this.template = originalTemplate;
+
+        // Create a runtime copy of the activity reference with copied components
+        var activityRefCopy = ScriptableObject.Instantiate(originalTemplate);
+        activityRefCopy.name = originalTemplate.name;
+
+        // Copy all components so each room has independent state
+        if (activityRefCopy.Components != null && activityRefCopy.Components.Count > 0)
+        {
+            var copiedComponents = new List<ActivityComponent>();
+            foreach (var component in activityRefCopy.Components)
+            {
+                if (component != null)
+                {
+                    var componentCopy = ScriptableObject.Instantiate(component);
+                    componentCopy.name = component.name;
+                    copiedComponents.Add(componentCopy);
+                }
+            }
+
+            // Replace the components list with the copied ones
+            var componentsField = typeof(ActivityReference).GetField("components",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            componentsField?.SetValue(activityRefCopy, copiedComponents);
+        }
+
+        // Create activity data
+        data = new ActivityData
+        {
+            id = UnitInstance.GenerateMongoLikeId(),
+            name = originalTemplate.name
+        };
+
+        // Initialize all components
+        if (activityRefCopy.Components != null)
+        {
+            var componentsCopy = new List<ActivityComponent>(activityRefCopy.Components);
+            foreach (var component in componentsCopy)
+            {
+                if (component != null)
+                {
+                    component.Initialize(networkRun, this);
+                }
+            }
+        }
+    }
+
     public void SetTemplate(ActivityReference template)
     {
         this.template = template;

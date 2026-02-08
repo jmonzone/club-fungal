@@ -184,10 +184,9 @@ namespace TheFungalNetwork.Editor
             selectedRoomIndex = 0;
             LoadRoomTemplates();
             var doorConditions = LoadAllDoorConditions();
-            var activities = LoadAllActivityReferences();
             var partySize = defaultSettings != null ? defaultSettings.defaultPartySize : 3;
             var party = GetRandomParty(partySize);
-            currentRun = new NetworkRun(doorConditions, activities, party, unlockComponentTemplate, defaultSettings);
+            currentRun = new NetworkRun(doorConditions, party, unlockComponentTemplate, defaultSettings);
             StartRun();
             Repaint();
         }

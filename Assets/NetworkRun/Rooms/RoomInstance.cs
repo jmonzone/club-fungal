@@ -26,4 +26,15 @@ public class RoomInstance
             activities = new List<ActivityInstance>()
         };
     }
+
+    public RoomInstance(List<Door> doors, List<ActivityInstance> activities)
+    {
+        data = new RoomData
+        {
+            id = Guid.NewGuid().ToString(),
+            name = "Generated Room",
+            doors = doors,
+            activities = activities
+        };
+    }
 }

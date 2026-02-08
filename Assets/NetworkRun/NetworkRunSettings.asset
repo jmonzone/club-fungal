@@ -15,5 +15,10 @@ MonoBehaviour:
   defaultPartySize: 3
   updateInterval: 1
   debugMode: 0
-  speedMultiplier: 1
+  speedMultiplier: 6.25
   sporesItem: {fileID: 11400000, guid: ddde813dc82944f04928d4fd69f1a1b8, type: 2}
+  restActivity: {fileID: 11400000, guid: e222da1a99b954ea2bd6c423a0de45ff, type: 2}
+  sporeActivity: {fileID: 11400000, guid: ca1aabf6e3c494667a63065cc6ff3a76, type: 2}
+  doorActivity: {fileID: 11400000, guid: 72b30ed783e2e46ef9206c5bfbdfbb52, type: 2}
+  resourceActivities:
+  - {fileID: 11400000, guid: ca1aabf6e3c494667a63065cc6ff3a76, type: 2}

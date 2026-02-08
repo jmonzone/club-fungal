@@ -61,6 +61,8 @@ namespace TheFungalNetwork.Editor
                 unit,
                 () =>
                 {
+                    DrawDivider();
+
                     // Extra display items (skill, xp, buttons)
                     DrawSkillLevel(unit, activity);
                     DrawXPProgressBar(unit, activity);

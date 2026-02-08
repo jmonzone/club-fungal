@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd90feebe4523426e82f058687423bef, type: 3}
-  m_Name: Foraging
+  m_Name: Door Activity
   m_EditorClassIdentifier: Assembly-CSharp::ActivityReference
-  sprite: {fileID: 21300000, guid: d11664e5f77424c7ba70ac473125f7af, type: 3}
+  description: 'Shrune Circle: Contribute Spores to Awaken'
+  sprite: {fileID: 21300000, guid: 255b1d665906547088b7e7b060452b87, type: 3}
   activityView: {fileID: 0}
-  primarySkill: {fileID: 11400000, guid: 71c6207e188214dfab32f5c23d138e13, type: 2}
+  primarySkill: {fileID: 11400000, guid: 698cd37da23344a66a7138631f23d9af, type: 2}
   activityControllerPrefab: {fileID: 0}
   components:
-  - {fileID: 11400000, guid: 75563fc8a64804b049de33b515a18bd1, type: 2}
+  - {fileID: 11400000, guid: eb89f24bea56f410d9c7e0f366818575, type: 2}
   origin: {x: 0, y: 0, z: 0}
   player: {fileID: 0}
   units: []

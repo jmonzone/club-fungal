@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -128,48 +129,6 @@ namespace TheFungalNetwork.Editor
                 displayItems.Add(resourceProgressItem);
             }
 
-            // Add party units grid as display item (skip for unlock components)
-            // if (!hasUnlockComponent && party != null && party.Count > 0)
-            // {
-            //     var partyGridItem = new PartyUnitsGridDisplayItem(activity, selectedRoom, party, onChanged, currentRun);
-            //     displayItems.Add(partyGridItem);
-            // }
-
-            // Add unit list as display item (skip for unlock components since they show party in UnlockInfoDisplayItem)
-            // if (!hasUnlockComponent && activity.Units != null && activity.Units.Count > 0)
-            // {
-            //     var unitListItem = new UnitListDisplayItem(activity, selectedRoom, onChanged, hasUnlockComponent ? unlockComponent : null, currentRun);
-            //     displayItems.Add(unitListItem);
-            // }
-
-            // Update display name for inspect or unlock activities
-            string displayName = activity.Name;
-            if (hasInspectComponent && currentRun?.CurrentRoom?.Data?.doors != null && inspectComponent?.AssignedDoor != null)
-            {
-                displayName = GetDoorDisplayName(currentRun.CurrentRoom.Data.doors, inspectComponent.AssignedDoor, inspectComponent.DisplayName);
-            }
-            else if (hasUnlockComponent && currentRun?.CurrentRoom?.Data?.doors != null && unlockComponent?.AssignedDoor != null)
-            {
-                displayName = GetDoorDisplayName(currentRun.CurrentRoom.Data.doors, unlockComponent.AssignedDoor, unlockComponent.DisplayName);
-            }
-            else if (activity.Template?.Components != null)
-            {
-                foreach (var component in activity.Template.Components)
-                {
-                    var componentType = component.GetType();
-                    var displayNameProperty = componentType.GetProperty("DisplayName");
-                    if (displayNameProperty != null)
-                    {
-                        var componentDisplayName = displayNameProperty.GetValue(component) as string;
-                        if (!string.IsNullOrEmpty(componentDisplayName))
-                        {
-                            displayName = componentDisplayName;
-                            break;
-                        }
-                    }
-                }
-            }
-
             // Assign icon after component detection
             Texture icon = null;
             if (hasResourceUpdateComponent && resourceUpdateComponent?.ItemTemplate?.Sprite != null)
@@ -183,7 +142,7 @@ namespace TheFungalNetwork.Editor
 
             ItemDrawer.DrawItem(
                 icon: icon,
-                displayName: displayName,
+                displayName: activity.Template.Description,
                 subtitle: null,
                 backgroundColor: Color.white,
                 shortcuts: shortcuts,
