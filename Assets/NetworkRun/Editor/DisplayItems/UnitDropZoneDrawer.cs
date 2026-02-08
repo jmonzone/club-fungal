@@ -37,9 +37,12 @@ namespace TheFungalNetwork.Editor
             EditorGUILayout.Space(4);
 
             // Draw the content inside the drop zone
-            var contentRect = EditorGUILayout.BeginVertical();
+            EditorGUILayout.BeginHorizontal();
+            var contentRect = EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(false));
             drawContent?.Invoke(contentRect);
             EditorGUILayout.EndVertical();
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.EndVertical();
 

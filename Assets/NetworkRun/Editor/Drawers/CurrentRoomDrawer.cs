@@ -8,7 +8,7 @@ namespace TheFungalNetwork.Editor
 {
     public class CurrentRoomDrawer
     {
-        private UnitDropZoneDrawer _dropZoneDrawer = new UnitDropZoneDrawer();
+        private PartyUnitsDrawer _partyUnitsDrawer = new PartyUnitsDrawer();
         private bool isCreatingDoor = false;
         private bool doorIsLocked = false;
         private bool addResourceCondition = false;
@@ -34,7 +34,7 @@ namespace TheFungalNetwork.Editor
 
             // Draw shared available units zone at the top
             EditorGUILayout.Space(5);
-            DrawAvailableUnitsZone(currentRun);
+            _partyUnitsDrawer.Draw(currentRun);
 
             var activities = roomData.activities;
             if (activities != null && activities.Count > 0)
@@ -214,206 +214,6 @@ namespace TheFungalNetwork.Editor
             requiredAmount = 1;
 
             EditorWindow.GetWindow<NetworkRunWindow>()?.Repaint();
-        }
-
-        private void DrawAvailableUnitsZone(NetworkRun currentRun)
-        {
-            if (currentRun?.Party == null) return;
-
-            var roomData = currentRun.CurrentRoom?.Data;
-            if (roomData?.activities == null) return;
-
-            // Get all units not in any activity
-            var unitsInActivities = new HashSet<UnitInstance>();
-            foreach (var activity in roomData.activities)
-            {
-                if (activity?.Units != null)
-                {
-                    foreach (var unit in activity.Units)
-                    {
-                        if (unit != null) unitsInActivities.Add(unit);
-                    }
-                }
-            }
-
-            var availableUnits = currentRun.Party.Where(u => u != null && !unitsInActivities.Contains(u)).ToList();
-
-            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-
-            var headerStyle = new GUIStyle(EditorStyles.miniLabel)
-            {
-                alignment = TextAnchor.MiddleCenter,
-                fontStyle = FontStyle.Bold,
-                normal = { textColor = new Color(0.7f, 0.7f, 0.7f) }
-            };
-            EditorGUILayout.LabelField("Available Units", headerStyle, GUILayout.Height(14));
-
-            var infoStyle = new GUIStyle(EditorStyles.miniLabel)
-            {
-                alignment = TextAnchor.MiddleCenter,
-                fontSize = 9,
-                normal = { textColor = new Color(0.6f, 0.6f, 0.6f) }
-            };
-            EditorGUILayout.LabelField("Drag units to activity drop zones below", infoStyle, GUILayout.Height(12));
-
-            // Draw drop zone with available units inside
-            _dropZoneDrawer.Draw(
-                "🖱️ Drop units here to remove from activities",
-                (contentRect) =>
-                {
-                    if (availableUnits.Count > 0)
-                    {
-                        EditorGUILayout.BeginHorizontal();
-                        int count = 0;
-                        const int itemsPerRow = 3;
-
-                        foreach (var unit in availableUnits)
-                        {
-                            if (count > 0 && count % itemsPerRow == 0)
-                            {
-                                EditorGUILayout.EndHorizontal();
-                                EditorGUILayout.Space(2);
-                                EditorGUILayout.BeginHorizontal();
-                            }
-
-                            // Draw simplified unit card for available units
-                            DrawAvailableUnitCard(unit);
-                            count++;
-                        }
-
-                        EditorGUILayout.EndHorizontal();
-                    }
-                    else
-                    {
-                        GUILayout.Space(20);
-                        var emptyStyle = new GUIStyle(EditorStyles.miniLabel)
-                        {
-                            alignment = TextAnchor.MiddleCenter,
-                            normal = { textColor = new Color(0.5f, 0.5f, 0.5f) },
-                            fontStyle = FontStyle.Italic
-                        };
-                        EditorGUILayout.LabelField("(All units are assigned to activities)", emptyStyle, GUILayout.Height(20));
-                        GUILayout.Space(20);
-                    }
-                },
-                (draggedUnit) => unitsInActivities.Contains(draggedUnit),
-                (draggedUnit) =>
-                {
-                    // Remove unit from all activities
-                    foreach (var activity in roomData.activities)
-                    {
-                        if (activity?.Units != null && activity.Units.Contains(draggedUnit))
-                        {
-                            activity.RemoveUnit(draggedUnit);
-                            UnityEditor.AssetDatabase.SaveAssets();
-                            break;
-                        }
-                    }
-
-                    EditorWindow.GetWindow<NetworkRunWindow>()?.Repaint();
-                },
-                DragAndDropVisualMode.Copy
-            );
-
-            EditorGUILayout.EndVertical();
-        }
-
-        private void DrawAvailableUnitCard(UnitInstance unit)
-        {
-            var cardRect = EditorGUILayout.BeginVertical(EditorStyles.helpBox, GUILayout.Width(100), GUILayout.Height(80), GUILayout.ExpandWidth(false));
-
-            // Draw drag handle at top
-            DrawAvailableUnitDragHandle(unit);
-
-            // Block drop zone from accepting drops on this card
-            var evt = Event.current;
-            if (cardRect.Contains(evt.mousePosition))
-            {
-                if (evt.type == EventType.DragUpdated)
-                {
-                    DragAndDrop.visualMode = DragAndDropVisualMode.Rejected;
-                    evt.Use();
-                }
-                else if (evt.type == EventType.DragPerform)
-                {
-                    evt.Use();
-                }
-            }
-
-            // Draw icon
-            var icon = unit.Species?.Sprite?.texture;
-            if (icon != null)
-            {
-                EditorGUILayout.BeginHorizontal();
-                GUILayout.FlexibleSpace();
-                GUILayout.Box(icon, GUILayout.Width(40), GUILayout.Height(40));
-                GUILayout.FlexibleSpace();
-                EditorGUILayout.EndHorizontal();
-            }
-            else
-            {
-                GUILayout.Space(40);
-            }
-
-            // Draw name
-            var nameStyle = new GUIStyle(EditorStyles.miniLabel) { alignment = TextAnchor.MiddleCenter, wordWrap = true };
-            EditorGUILayout.LabelField(unit.DisplayName, nameStyle, GUILayout.Height(16));
-
-            // Draw species type
-            if (unit.Species?.Type != null)
-            {
-                var typeStyle = new GUIStyle(EditorStyles.miniLabel)
-                {
-                    alignment = TextAnchor.MiddleCenter,
-                    fontSize = 8,
-                    normal = { textColor = new Color(0.7f, 0.7f, 0.7f) }
-                };
-                EditorGUILayout.LabelField(unit.Species.Type.Id, typeStyle, GUILayout.Height(12));
-            }
-
-            EditorGUILayout.EndVertical();
-        }
-
-        private void DrawAvailableUnitDragHandle(UnitInstance unit)
-        {
-            var evt = Event.current;
-
-            // Create drag handle area at top of card
-            EditorGUILayout.BeginHorizontal(GUILayout.Height(12), GUILayout.Width(90));
-
-            GUILayout.FlexibleSpace();
-
-            var handleStyle = new GUIStyle(EditorStyles.miniLabel)
-            {
-                alignment = TextAnchor.MiddleCenter,
-                fontSize = 10,
-                normal = { textColor = new Color(0.5f, 0.5f, 0.5f) }
-            };
-
-            EditorGUILayout.LabelField("⋮⋮", handleStyle, GUILayout.Width(20), GUILayout.Height(12));
-
-            GUILayout.FlexibleSpace();
-
-            EditorGUILayout.EndHorizontal();
-
-            // Get actual rect after layout
-            var actualRect = GUILayoutUtility.GetLastRect();
-
-            // Enable drag from handle only
-            if (evt.type == EventType.MouseDown && actualRect.Contains(evt.mousePosition))
-            {
-                DragAndDrop.PrepareStartDrag();
-                DragAndDrop.objectReferences = new UnityEngine.Object[] { };
-                DragAndDrop.SetGenericData("UnitInstance", unit);
-                DragAndDrop.StartDrag(unit.DisplayName);
-                evt.Use();
-            }
-
-            // Change cursor when hovering over handle
-            if (actualRect.Contains(evt.mousePosition))
-            {
-                EditorGUIUtility.AddCursorRect(actualRect, MouseCursor.MoveArrow);
-            }
         }
     }
 }

@@ -45,12 +45,29 @@ namespace TheFungalNetwork.Editor
             NetworkRun currentRun,
             System.Action onChanged)
         {
-            var isInActivity = activity.Units != null && activity.Units.Contains(unit);
+            DrawCard(unit, activity, resourceComponent, currentRun, onChanged);
+        }
 
-            var cardRect = EditorGUILayout.BeginVertical(EditorStyles.helpBox, GUILayout.Width(100), GUILayout.Height(125), GUILayout.ExpandWidth(false));
+        public void DrawAvailableUnit(UnitInstance unit)
+        {
+            DrawCard(unit, null, null, null, null);
+        }
+
+        private void DrawCard(
+            UnitInstance unit,
+            ActivityInstance activity,
+            ResourceUpdateComponent resourceComponent,
+            NetworkRun currentRun,
+            System.Action onChanged)
+        {
+            var isInActivity = activity != null && activity.Units != null && activity.Units.Contains(unit);
+            var hasActivityInfo = activity != null && resourceComponent != null;
+            var height = hasActivityInfo ? 125 : 80;
+
+            var cardRect = EditorGUILayout.BeginVertical(EditorStyles.helpBox, GUILayout.Width(100), GUILayout.Height(height), GUILayout.ExpandWidth(false));
 
             // Draw drag handle at top
-            var dragHandleRect = DrawDragHandle(unit);
+            DrawDragHandle(unit);
 
             // Block drop zone from accepting drops on this card
             var evt = Event.current;
@@ -67,49 +84,72 @@ namespace TheFungalNetwork.Editor
                 }
             }
 
+            // Always draw: icon, name, species type
             DrawIcon(unit);
             DrawName(unit);
-            DrawSkillLevel(unit, activity);
-            DrawXPProgressBar(unit, activity);
 
-            if (currentRun.Settings.debugMode)
+            // Draw activity-specific info for resource activities
+            if (hasActivityInfo)
             {
-                DrawSpeedBonus(unit, activity, resourceComponent);
-            }
-            DrawDivider();
+                DrawSkillLevel(unit, activity);
+                DrawXPProgressBar(unit, activity);
 
-            DrawResourceCount(unit, resourceComponent);
-            DrawMaxInventory(unit);
-
-            if (currentRun.Settings.debugMode)
-            {
-                DrawClaimButton(unit, resourceComponent, currentRun, onChanged);
-            }
-
-            DrawDivider();
-
-            if (isInActivity)
-            {
-                DrawActivityStatus(unit, activity, resourceComponent, currentRun);
                 if (currentRun.Settings.debugMode)
                 {
-                    DrawStopButton(unit, activity, onChanged);
+                    DrawSpeedBonus(unit, activity, resourceComponent);
+                }
+                DrawDivider();
+
+                DrawResourceCount(unit, resourceComponent);
+                DrawMaxInventory(unit);
+
+                if (currentRun.Settings.debugMode)
+                {
+                    DrawClaimButton(unit, resourceComponent, currentRun, onChanged);
+                }
+
+                DrawDivider();
+
+                if (isInActivity)
+                {
+                    DrawActivityStatus(unit, activity, resourceComponent, currentRun);
+                    if (currentRun.Settings.debugMode)
+                    {
+                        DrawStopButton(unit, activity, onChanged);
+                    }
+                }
+                else
+                {
+                    GUILayout.Space(10);
+                    DrawStartButton(unit, activity, currentRun, onChanged);
+                }
+
+                if (currentRun.Settings.debugMode)
+                {
+                    DrawViewDataButton(unit);
                 }
             }
             else
             {
-                GUILayout.Space(10);
-                DrawStartButton(unit, activity, currentRun, onChanged);
-            }
-
-            if (currentRun.Settings.debugMode)
-            {
-                DrawViewDataButton(unit);
-
-
+                // Available unit: just show species type
+                DrawSpeciesType(unit);
             }
 
             EditorGUILayout.EndVertical();
+        }
+
+        private void DrawSpeciesType(UnitInstance unit)
+        {
+            if (unit.Species?.Type != null)
+            {
+                var typeStyle = new GUIStyle(EditorStyles.miniLabel)
+                {
+                    alignment = TextAnchor.MiddleCenter,
+                    fontSize = 8,
+                    normal = { textColor = new Color(0.7f, 0.7f, 0.7f) }
+                };
+                EditorGUILayout.LabelField(unit.Species.Type.Id, typeStyle, GUILayout.Height(12), GUILayout.Width(90));
+            }
         }
 
         private Rect DrawDragHandle(UnitInstance unit)
@@ -161,7 +201,7 @@ namespace TheFungalNetwork.Editor
             var icon = unit.Species?.Sprite?.texture;
             if (icon != null)
             {
-                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.BeginHorizontal(GUILayout.Width(90));
                 GUILayout.FlexibleSpace();
                 GUILayout.Box(icon, GUILayout.Width(40), GUILayout.Height(40));
                 GUILayout.FlexibleSpace();
@@ -176,7 +216,7 @@ namespace TheFungalNetwork.Editor
         private void DrawName(UnitInstance unit)
         {
             var nameStyle = new GUIStyle(EditorStyles.miniLabel) { alignment = TextAnchor.MiddleCenter, wordWrap = true };
-            EditorGUILayout.LabelField(unit.DisplayName, nameStyle, GUILayout.Height(16));
+            EditorGUILayout.LabelField(unit.DisplayName, nameStyle, GUILayout.Height(16), GUILayout.Width(90));
         }
 
         private void DrawSkillLevel(UnitInstance unit, ActivityInstance activity)
