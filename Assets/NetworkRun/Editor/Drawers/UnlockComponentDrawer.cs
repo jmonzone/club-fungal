@@ -81,7 +81,8 @@ namespace TheFungalNetwork.Editor
                     }
 
                     GUILayout.Space(2);
-                });
+                },
+                currentRun?.Settings);
         }
     }
 }

@@ -9,15 +9,15 @@ namespace TheFungalNetwork.Editor
     {
 
         // Simple draw for party units (no activity)
-        public void Draw(UnitInstance unit)
+        public void Draw(UnitInstance unit, NetworkRunSettings settings = null)
         {
-            DrawCard(unit, null, null, null);
+            DrawCard(unit, null, null, null, settings);
         }
 
         // Draw with custom display items (for unlock activities, etc.)
-        public void Draw(UnitInstance unit, System.Action extraDisplayItems)
+        public void Draw(UnitInstance unit, System.Action extraDisplayItems, NetworkRunSettings settings = null)
         {
-            DrawCard(unit, extraDisplayItems, null, null);
+            DrawCard(unit, extraDisplayItems, null, null, settings);
         }
 
         // Draw with custom progress and status (for unlock/other activities)
@@ -25,20 +25,22 @@ namespace TheFungalNetwork.Editor
             UnitInstance unit,
             System.Action extraDisplayItems,
             System.Func<float> progressProvider,
-            System.Action statusDisplay)
+            System.Action statusDisplay,
+            NetworkRunSettings settings = null)
         {
-            DrawCard(unit, extraDisplayItems, progressProvider, statusDisplay);
+            DrawCard(unit, extraDisplayItems, progressProvider, statusDisplay, settings);
         }
 
         private void DrawCard(
             UnitInstance unit,
             System.Action extraDisplayItems,
             System.Func<float> progressProvider,
-            System.Action statusDisplay)
+            System.Action statusDisplay,
+            NetworkRunSettings settings)
         {
             var hasExtraDisplayItems = extraDisplayItems != null;
             var hasCustomProgress = progressProvider != null || statusDisplay != null;
-            var height = hasExtraDisplayItems || hasCustomProgress ? 125 : 80;
+            var height = hasExtraDisplayItems || hasCustomProgress ? 145 : 100;
 
             var cardRect = EditorGUILayout.BeginVertical(EditorStyles.helpBox, GUILayout.Width(100), GUILayout.Height(height), GUILayout.ExpandWidth(false));
 
@@ -63,10 +65,16 @@ namespace TheFungalNetwork.Editor
             // Always draw: icon, name
             DrawIcon(unit);
             DrawName(unit);
-            DrawSpeciesType(unit);
 
-            DrawUnitInventory(unit);
-            DrawMaxInventory(unit);
+            // DrawSpeciesType(unit);
+
+            // DrawUnitInventory(unit);
+
+            if (settings == null || settings.showUnitInventoryButton)
+            {
+                DrawViewInventoryButton(unit);
+            }
+            // DrawMaxInventory(unit);
 
             // Draw extra display items if provided
             if (hasExtraDisplayItems)
@@ -77,11 +85,11 @@ namespace TheFungalNetwork.Editor
             // Draw custom progress/status if provided
             if (hasCustomProgress)
             {
-                if (progressProvider != null)
-                {
-                    var progress = progressProvider.Invoke();
-                    DrawProgressBar(progress);
-                }
+                // if (progressProvider != null)
+                // {
+                //     var progress = progressProvider.Invoke();
+                //     DrawProgressBar(progress);
+                // }
                 if (statusDisplay != null)
                 {
                     statusDisplay.Invoke();
@@ -192,6 +200,7 @@ namespace TheFungalNetwork.Editor
 
         private void DrawUnitInventory(UnitInstance unit)
         {
+
             if (unit?.Inventory?.ItemStacks != null && unit.Inventory.ItemStacks.Count > 0)
             {
                 foreach (var itemStack in unit.Inventory.ItemStacks)
@@ -202,17 +211,17 @@ namespace TheFungalNetwork.Editor
                     }
                 }
             }
-            else
-            {
-                var emptyStyle = new GUIStyle(EditorStyles.miniLabel)
-                {
-                    alignment = TextAnchor.MiddleCenter,
-                    fontSize = 8,
-                    fontStyle = FontStyle.Italic,
-                    normal = { textColor = new Color(0.5f, 0.5f, 0.5f) }
-                };
-                EditorGUILayout.LabelField("empty inventory", emptyStyle, GUILayout.Height(14), GUILayout.Width(90));
-            }
+            // else
+            // {
+            //     var emptyStyle = new GUIStyle(EditorStyles.miniLabel)
+            //     {
+            //         alignment = TextAnchor.MiddleCenter,
+            //         fontSize = 8,
+            //         fontStyle = FontStyle.Italic,
+            //         normal = { textColor = new Color(0.5f, 0.5f, 0.5f) }
+            //     };
+            //     EditorGUILayout.LabelField("empty inventory", emptyStyle, GUILayout.Height(14), GUILayout.Width(90));
+            // }
         }
 
         private void DrawMaxInventory(UnitInstance unit)
@@ -221,7 +230,7 @@ namespace TheFungalNetwork.Editor
             {
                 var maxCapacity = unit.Inventory.MaxCapacity;
                 var totalCount = unit.Inventory.TotalItemCount;
-                var capacityText = maxCapacity > 0 ? $"Capacity: {totalCount}/{maxCapacity}" : $"Capacity: {totalCount}/∞";
+                var capacityText = maxCapacity > 0 ? $"Inventory {totalCount}/{maxCapacity}" : $"Inventory {totalCount}/∞";
                 var capacityStyle = new GUIStyle(EditorStyles.miniLabel)
                 {
                     alignment = TextAnchor.MiddleCenter,
@@ -240,6 +249,21 @@ namespace TheFungalNetwork.Editor
         {
             var unitProgressRect = EditorGUILayout.GetControlRect(false, 8, GUILayout.Width(90));
             EditorGUI.ProgressBar(unitProgressRect, progress, "");
+        }
+
+        private void DrawViewInventoryButton(UnitInstance unit)
+        {
+            var buttonStyle = new GUIStyle(GUI.skin.button)
+            {
+                fontSize = 8,
+                alignment = TextAnchor.MiddleCenter
+            };
+            GUI.backgroundColor = new Color(0.85f, 0.85f, 1f);
+            if (GUILayout.Button("View Inventory", buttonStyle, GUILayout.Height(16), GUILayout.Width(90)))
+            {
+                UnitInstanceInspectorWindow.ShowWindow(unit);
+            }
+            GUI.backgroundColor = Color.white;
         }
     }
 }

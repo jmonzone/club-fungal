@@ -81,13 +81,40 @@ namespace TheFungalNetwork.Editor
                 {
                     if (actionItem.condition())
                     {
-                        Color originalBGShortcut = GUI.backgroundColor;
-                        GUI.backgroundColor = actionItem.backgroundColor ?? originalBGShortcut;
-                        if (GUILayout.Button(new GUIContent(actionItem.emoji, actionItem.text), GUILayout.Width(20), GUILayout.Height(20)))
+                        // If action has icon, render as icon+count display instead of button
+                        if (actionItem.icon != null)
                         {
-                            actionItem.action();
+                            EditorGUILayout.BeginVertical(GUILayout.Width(60));
+
+                            // Draw icon
+                            GUILayout.Box(actionItem.icon, GUILayout.Width(32), GUILayout.Height(32));
+
+                            // Draw count label if provided
+                            if (!string.IsNullOrEmpty(actionItem.countLabel))
+                            {
+                                var countStyle = new GUIStyle(EditorStyles.miniLabel)
+                                {
+                                    alignment = TextAnchor.MiddleCenter,
+                                    fontSize = 9,
+                                    fontStyle = FontStyle.Bold,
+                                    normal = { textColor = new Color(0.3f, 0.7f, 0.3f) }
+                                };
+                                EditorGUILayout.LabelField(actionItem.countLabel, countStyle, GUILayout.Width(60));
+                            }
+
+                            EditorGUILayout.EndVertical();
                         }
-                        GUI.backgroundColor = originalBGShortcut;
+                        else
+                        {
+                            // Normal button rendering
+                            Color originalBGShortcut = GUI.backgroundColor;
+                            GUI.backgroundColor = actionItem.backgroundColor ?? originalBGShortcut;
+                            if (GUILayout.Button(new GUIContent(actionItem.emoji, actionItem.text), GUILayout.Width(20), GUILayout.Height(20)))
+                            {
+                                actionItem.action();
+                            }
+                            GUI.backgroundColor = originalBGShortcut;
+                        }
                     }
                 }
             }

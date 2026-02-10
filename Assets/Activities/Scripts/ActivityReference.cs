@@ -118,4 +118,9 @@ public class ActivityReference : ScriptableObject
             unit.SetActivityPosition(unit.Controller.Destination.Destination);
         }
     }
+
+    public void InitializeComponents(List<ActivityComponent> newComponents)
+    {
+        components = newComponents;
+    }
 }

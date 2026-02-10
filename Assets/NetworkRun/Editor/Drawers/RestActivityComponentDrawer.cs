@@ -28,6 +28,17 @@ namespace TheFungalNetwork.Editor
                 unit,
                 () =>
                 {
+                    // Show energy restoration
+                    DrawEnergyProgressBar(unit, currentRun);
+
+                    // View Unit button
+                    GUI.backgroundColor = new Color(0.85f, 0.85f, 1f);
+                    if (GUILayout.Button("View Unit", GUILayout.Height(18), GUILayout.Width(90)))
+                    {
+                        UnitUpgradeWindow.ShowWindow(unit, currentRun);
+                    }
+                    GUI.backgroundColor = Color.white;
+
                     // Remove button (debug mode)
                     if (currentRun.Settings.debugMode)
                     {
@@ -44,8 +55,8 @@ namespace TheFungalNetwork.Editor
                 null,
                 () =>
                 {
-                    // Show transfer buttons
-                    if (component?.Inventory != null && unit?.Inventory != null)
+                    // Show transfer buttons (debug mode)
+                    if (component?.Inventory != null && unit?.Inventory != null && currentRun.Settings.debugMode)
                     {
                         EditorGUILayout.Space(2);
 
@@ -75,7 +86,109 @@ namespace TheFungalNetwork.Editor
 
                         EditorGUILayout.Space(2);
                     }
-                });
+
+                    // Eat Fish button
+                    if (component?.Inventory != null && unit?.Inventory != null)
+                    {
+                        var fishItem = currentRun?.Settings?.fishItem;
+                        if (fishItem != null)
+                        {
+                            var unitFishCount = unit.Inventory.GetItemCount(fishItem);
+                            var storageFishCount = component.Inventory.GetItemCount(fishItem);
+
+                            // Check if any other unit in the activity has fish
+                            var otherUnitHasFish = false;
+                            if (activity?.Units != null)
+                            {
+                                foreach (var otherUnit in activity.Units)
+                                {
+                                    if (otherUnit != null && otherUnit != unit && otherUnit.Inventory.GetItemCount(fishItem) > 0)
+                                    {
+                                        otherUnitHasFish = true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            var hasFish = unitFishCount > 0 || storageFishCount > 0 || otherUnitHasFish;
+
+                            // Only show fish eating option if energy is depleted
+                            if (hasFish && unit.Energy < 100f)
+                            {
+                                GUI.backgroundColor = new Color(1f, 0.9f, 0.6f);
+                                if (GUILayout.Button("🍴 Eat Fish", GUILayout.Height(20), GUILayout.Width(90)))
+                                {
+                                    EatFish(unit, component, fishItem, activity);
+                                    onChanged?.Invoke();
+                                }
+                                GUI.backgroundColor = Color.white;
+                            }
+                            else if (unit.Energy < 100f)
+                            {
+                                GUI.enabled = false;
+                                GUILayout.Button("No Food", GUILayout.Height(20), GUILayout.Width(90));
+                                GUI.enabled = true;
+                            }
+
+                            EditorGUILayout.Space(2);
+                        }
+                    }
+                },
+                currentRun?.Settings);
+        }
+
+        private void DrawEnergyProgressBar(UnitInstance unit, NetworkRun currentRun)
+        {
+            if (unit != null)
+            {
+                EditorGUILayout.Space(2);
+
+                if (unit.Energy >= 100f)
+                {
+                    // Show "ready to go!" when fully rested
+                    var readyStyle = new GUIStyle(EditorStyles.miniLabel)
+                    {
+                        alignment = TextAnchor.MiddleCenter,
+                        fontSize = 9,
+                        fontStyle = FontStyle.Bold,
+                        normal = { textColor = new Color(0.3f, 1f, 0.3f) }
+                    };
+                    EditorGUILayout.LabelField("✓ Ready to go!", readyStyle, GUILayout.Height(18), GUILayout.Width(90));
+                }
+                else
+                {
+                    if (currentRun.Settings.debugMode)
+                    {
+                        // Show progress bar while resting
+                        var energyValue = unit.Energy / 100f;
+                        var progressRect = EditorGUILayout.GetControlRect(false, 8, GUILayout.Width(90));
+
+                        // Color based on energy level (green tones for restoration)
+                        var originalColor = GUI.color;
+                        if (energyValue > 0.5f)
+                            GUI.color = new Color(0.3f, 1f, 0.3f); // Green
+                        else if (energyValue > 0.25f)
+                            GUI.color = new Color(1f, 0.8f, 0.3f); // Yellow
+                        else
+                            GUI.color = new Color(1f, 0.3f, 0.3f); // Red
+
+                        EditorGUI.ProgressBar(progressRect, energyValue, $"Energy: {unit.Energy:F0}%");
+                        GUI.color = originalColor;
+                    }
+
+
+                    // Show resting status
+                    var statusStyle = new GUIStyle(EditorStyles.miniLabel)
+                    {
+                        alignment = TextAnchor.MiddleCenter,
+                        fontSize = 8,
+                        normal = { textColor = new Color(0.5f, 1f, 0.5f) }
+                    };
+                    EditorGUILayout.LabelField("💤 Resting...", statusStyle, GUILayout.Height(10), GUILayout.Width(90));
+                }
+
+                EditorGUILayout.Space(2);
+            }
         }
 
         private void UnloadAllItems(UnitInstance unit, RestActivity restActivity)
@@ -112,6 +225,36 @@ namespace TheFungalNetwork.Editor
                 }
 
                 if (unit.Inventory.IsFull) break;
+            }
+            UnityEditor.AssetDatabase.SaveAssets();
+        }
+
+        private void EatFish(UnitInstance unit, RestActivity restActivity, ItemTemplate fishItem, ActivityInstance activity)
+        {
+            // First try to eat from unit inventory
+            if (unit.Inventory.GetItemCount(fishItem) > 0)
+            {
+                unit.Inventory.RemoveItem(fishItem, 1);
+                Debug.Log($"{unit.DisplayName} ate fish from their inventory");
+            }
+            // Otherwise eat from storage
+            else if (restActivity.Inventory.GetItemCount(fishItem) > 0)
+            {
+                restActivity.Inventory.RemoveItem(fishItem, 1);
+                Debug.Log($"{unit.DisplayName} ate fish from storage");
+            }
+            // Otherwise check other units in the activity
+            else if (activity?.Units != null)
+            {
+                foreach (var otherUnit in activity.Units)
+                {
+                    if (otherUnit != null && otherUnit != unit && otherUnit.Inventory.GetItemCount(fishItem) > 0)
+                    {
+                        otherUnit.Inventory.RemoveItem(fishItem, 1);
+                        Debug.Log($"{unit.DisplayName} ate fish from {otherUnit.DisplayName}'s inventory");
+                        break;
+                    }
+                }
             }
             UnityEditor.AssetDatabase.SaveAssets();
         }
@@ -163,7 +306,7 @@ namespace TheFungalNetwork.Editor
                     }
                     else
                     {
-                        EditorGUILayout.LabelField("Storage is empty", EditorStyles.miniLabel);
+                        // EditorGUILayout.LabelField("Storage is empty", EditorStyles.miniLabel);
                     }
                 }
                 else

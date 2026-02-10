@@ -35,17 +35,20 @@ namespace TheFungalNetwork.Editor
 
         public static void DrawActivity(ActivityInstance activity, RoomTemplate selectedRoom, List<UnitInstance> party, System.Action onChanged, NetworkRun currentRun = null)
         {
-            var shortcuts = new List<UnitDrawerItemAction>
-            {
-                // new ActivityItemAction(
-                //     text: "Add Unit",
-                //     emoji: "➕",
-                //     action: () =>
-                //     {
-                //         ShowAddUnitMenu(activity, selectedRoom, onChanged, currentRun);
-                //     }
-                // )
-            };
+            var shortcuts = new List<UnitDrawerItemAction>();
+            var resourceComponent = GetResourceComponent(activity);
+
+            // var shortcuts = new List<UnitDrawerItemAction>
+            // {
+            // new ActivityItemAction(
+            //     text: "Add Unit",
+            //     emoji: "➕",
+            //     action: () =>
+            //     {
+            //         ShowAddUnitMenu(activity, selectedRoom, onChanged, currentRun);
+            //     }
+            // )
+            // };
 
             var menuItems = new List<UnitDrawerItemAction>
             {
@@ -85,12 +88,30 @@ namespace TheFungalNetwork.Editor
             };
 
             var displayItems = new List<CardDrawerDisplayItem>();
+            var resourceProgressItems = new List<CardDrawerDisplayItem>();
+            ZoneOcclusion zoneOcclusionComponent = null;
 
             // Get display items from component drawers
             if (activity.Template?.Components != null)
             {
+                ZoneOcclusion activeOcclusion = null;
+
                 foreach (var component in activity.Template.Components)
                 {
+                    // Check if this is a ZoneOcclusion component
+                    if (component is ZoneOcclusion occlusion)
+                    {
+                        activeOcclusion = occlusion.IsRevealed ? null : occlusion;
+                        zoneOcclusionComponent = occlusion; // Store for later
+                        continue; // Skip drawing ZoneOcclusion here
+                    }
+
+                    // Skip ALL component display items when occluded
+                    if (activeOcclusion != null)
+                    {
+                        continue; // Skip drawing all occluded components
+                    }
+
                     foreach (var drawer in _componentDrawers)
                     {
                         if (drawer.ComponentType.IsAssignableFrom(component.GetType()))
@@ -98,7 +119,15 @@ namespace TheFungalNetwork.Editor
                             var items = drawer.GetDisplayItems(activity, component, currentRun, onChanged);
                             if (items != null)
                             {
-                                displayItems.AddRange(items);
+                                // Separate resource progress items to add after drop zone
+                                if (component is ResourceUpdateComponent)
+                                {
+                                    resourceProgressItems.AddRange(items);
+                                }
+                                else
+                                {
+                                    displayItems.AddRange(items);
+                                }
                             }
                             break;
                         }
@@ -107,42 +136,105 @@ namespace TheFungalNetwork.Editor
             }
 
             // Show message if no component-specific display items found
-            if (displayItems.Count == 0)
-            {
-                displayItems.Add(new CardDrawerDisplayItem
-                {
-                    condition = () => true,
-                    color = new Color(0.95f, 0.95f, 0.95f),
-                    drawAction = () =>
-                    {
-                        EditorGUILayout.Space(4);
-                        var style = new GUIStyle(EditorStyles.miniLabel)
-                        {
-                            alignment = TextAnchor.MiddleCenter,
-                            normal = { textColor = new Color(0.5f, 0.5f, 0.5f) }
-                        };
-                        EditorGUILayout.LabelField("Basic activity with no special components", style);
-                        EditorGUILayout.Space(4);
-                    }
-                });
-            }
+            // if (displayItems.Count == 0)
+            // {
+            //     displayItems.Add(new CardDrawerDisplayItem
+            //     {
+            //         condition = () => true,
+            //         color = new Color(0.95f, 0.95f, 0.95f),
+            //         drawAction = () =>
+            //         {
+            //             EditorGUILayout.Space(4);
+            //             var style = new GUIStyle(EditorStyles.miniLabel)
+            //             {
+            //                 alignment = TextAnchor.MiddleCenter,
+            //                 normal = { textColor = new Color(0.5f, 0.5f, 0.5f) }
+            //             };
+            //             EditorGUILayout.LabelField("Basic activity with no special components", style);
+            //             EditorGUILayout.Space(4);
+            //         }
+            //     });
+            // }
 
             // Create unit card drawer function based on components
             Action<UnitInstance> unitCardDrawer = CreateUnitCardDrawer(activity, currentRun, onChanged);
 
-            // Add unified unit drop zone for all activities
-            var unitDropZoneItem = new UnifiedUnitDropZoneDisplayItem(
-                activity,
-                currentRun,
-                onChanged,
-                unitCardDrawer
-            );
-            displayItems.Add(unitDropZoneItem);
+            // Add unified unit drop zone only if not occluded
+            if (zoneOcclusionComponent == null || zoneOcclusionComponent.IsRevealed)
+            {
+                var unitDropZoneItem = new UnifiedUnitDropZoneDisplayItem(
+                    activity,
+                    currentRun,
+                    onChanged,
+                    unitCardDrawer
+                );
+
+                displayItems.Add(unitDropZoneItem);
+            }
+
+            // Add resource progress items after drop zone (only if not occluded)
+            if (resourceProgressItems.Count > 0 && (zoneOcclusionComponent == null || zoneOcclusionComponent.IsRevealed))
+            {
+                displayItems.AddRange(resourceProgressItems);
+            }
+
+            // Add ZoneOcclusion display items (shown whether revealed or not)
+            if (zoneOcclusionComponent != null)
+            {
+                foreach (var drawer in _componentDrawers)
+                {
+                    if (drawer.ComponentType.IsAssignableFrom(zoneOcclusionComponent.GetType()))
+                    {
+                        var items = drawer.GetDisplayItems(activity, zoneOcclusionComponent, currentRun, onChanged);
+                        if (items != null)
+                        {
+                            displayItems.AddRange(items);
+                        }
+                        break;
+                    }
+                }
+
+                // Add global inventory contribution button if not revealed
+                if (!zoneOcclusionComponent.IsRevealed && currentRun != null)
+                {
+                    var globalContributeItem = new GlobalInventoryContributeDisplayItem(
+                        zoneOcclusionComponent,
+                        currentRun,
+                        onChanged
+                    );
+                    displayItems.Add(globalContributeItem);
+                }
+            }
+
+            // Set icon - prioritize unrevealed ZoneOcclusion, then use template icon (resource shown as shortcut)
+            Texture icon = activity.Template.Sprite.texture;
+            string displayName = activity.Template.Description;
+            string subtitle = null;
+
+            // Check if there's an unrevealed ZoneOcclusion to override display
+            if (activity.Template?.Components != null)
+            {
+                foreach (var component in activity.Template.Components)
+                {
+                    if (component is ZoneOcclusion occlusion && !occlusion.IsRevealed)
+                    {
+                        if (occlusion.OccludedSprite != null)
+                        {
+                            icon = occlusion.OccludedSprite.texture;
+                        }
+                        if (!string.IsNullOrEmpty(occlusion.OccludedDisplayName))
+                        {
+                            displayName = occlusion.OccludedDisplayName;
+                        }
+                        break; // Only use the first unrevealed occlusion
+                    }
+                }
+            }
 
             ItemDrawer.DrawItem(
-                icon: activity.Template.Sprite.texture,
-                displayName: activity.Template.Description,
-                subtitle: null,
+                icon: icon,
+                displayName: displayName,
+                subtitle: subtitle,
                 backgroundColor: Color.white,
                 shortcuts: shortcuts,
                 menuItems: menuItems,
@@ -160,8 +252,23 @@ namespace TheFungalNetwork.Editor
 
             if (activity.Template?.Components != null)
             {
+                ZoneOcclusion activeOcclusion = null;
+
                 foreach (var component in activity.Template.Components)
                 {
+                    // Check if this is a ZoneOcclusion component
+                    if (component is ZoneOcclusion occlusion)
+                    {
+                        activeOcclusion = occlusion.IsRevealed ? null : occlusion;
+                        continue; // Skip ZoneOcclusion components when finding unit card drawer
+                    }
+
+                    // Skip ALL components after an unrevealed ZoneOcclusion
+                    if (activeOcclusion != null)
+                    {
+                        continue; // Skip all occluded components
+                    }
+
                     foreach (var drawer in _componentDrawers)
                     {
                         if (drawer.ComponentType.IsAssignableFrom(component.GetType()))
@@ -185,6 +292,21 @@ namespace TheFungalNetwork.Editor
             var finalComponent = matchedComponent;
 
             return (unit) => finalDrawer.DrawUnitCard(unit, activity, finalComponent, currentRun, onChanged);
+        }
+
+        private static ResourceUpdateComponent GetResourceComponent(ActivityInstance activity)
+        {
+            if (activity?.Template?.Components != null)
+            {
+                foreach (var component in activity.Template.Components)
+                {
+                    if (component is ResourceUpdateComponent resComp)
+                    {
+                        return resComp;
+                    }
+                }
+            }
+            return null;
         }
 
         private static string GetDoorDisplayName(List<Door> doors, Door assignedDoor, string componentTypeName)
@@ -527,6 +649,57 @@ namespace TheFungalNetwork.Editor
                 };
             }
         }
+
+        private class GlobalInventoryContributeDisplayItem : CardDrawerDisplayItem
+        {
+            public GlobalInventoryContributeDisplayItem(
+                ZoneOcclusion zoneOcclusion,
+                NetworkRun currentRun,
+                System.Action onChanged)
+            {
+                condition = () => true;
+                color = new Color(0.85f, 0.95f, 1f);
+                drawAction = () =>
+                {
+                    EditorGUILayout.Space(4);
+
+                    var requiredItem = zoneOcclusion.RequiredItem;
+                    var globalItemCount = currentRun.Inventory.GetItemCount(requiredItem);
+
+                    if (globalItemCount > 0)
+                    {
+                        GUI.backgroundColor = new Color(0.6f, 0.9f, 1f);
+                        var buttonText = $"🌐 Contribute {globalItemCount}x {requiredItem.DisplayName} from Global Inventory";
+
+                        if (GUILayout.Button(buttonText, GUILayout.Height(28)))
+                        {
+                            var contributed = zoneOcclusion.ContributeFromGlobalInventory(currentRun.Inventory);
+                            if (contributed > 0)
+                            {
+                                Debug.Log($"Contributed {contributed}x {requiredItem.DisplayName} from global inventory");
+                            }
+                            onChanged?.Invoke();
+                        }
+                        GUI.backgroundColor = Color.white;
+                    }
+                    else
+                    {
+                        GUI.enabled = false;
+                        var labelStyle = new GUIStyle(EditorStyles.miniLabel)
+                        {
+                            alignment = TextAnchor.MiddleCenter,
+                            normal = { textColor = new Color(0.5f, 0.5f, 0.5f) }
+                        };
+                        EditorGUILayout.LabelField($"No {requiredItem.DisplayName} in global inventory", labelStyle);
+                        GUI.enabled = true;
+                    }
+
+                    EditorGUILayout.Space(4);
+                };
+            }
+        }
+
+
     }
 }
 #endif

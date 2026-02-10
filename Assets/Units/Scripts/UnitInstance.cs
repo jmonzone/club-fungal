@@ -69,6 +69,8 @@ public class UnitInstance
     [SerializeField] private List<string> friends;
     [SerializeField] private List<UnitMoment> moments;
     [SerializeField] private Inventory inventory = new Inventory();
+    [SerializeField] private float energy = 100f; // Energy level (0-100)
+    [SerializeField] private bool isExhausted = false; // Debuff when energy is depleted
 
     public UnitData Data => data;
     public string Id => data.id;
@@ -87,6 +89,16 @@ public class UnitInstance
 
     public UnitTemplate Template => template;
     public Inventory Inventory => inventory;
+    public float Energy
+    {
+        get => energy;
+        set => energy = Mathf.Clamp(value, 0f, 100f);
+    }
+    public bool IsExhausted
+    {
+        get => isExhausted;
+        set => isExhausted = value;
+    }
 
     public event UnityAction<float> OnXpChanged;
 

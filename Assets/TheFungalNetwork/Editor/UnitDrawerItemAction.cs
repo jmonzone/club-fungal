@@ -29,5 +29,15 @@ namespace TheFungalNetwork.Editor
         /// The background color for the item.
         /// </summary>
         public Color? backgroundColor;
+
+        /// <summary>
+        /// Optional icon to display instead of button. When set, renders as icon+count display.
+        /// </summary>
+        public Texture icon;
+
+        /// <summary>
+        /// Optional count label to display below icon (e.g., "5x").
+        /// </summary>
+        public string countLabel;
     }
 }

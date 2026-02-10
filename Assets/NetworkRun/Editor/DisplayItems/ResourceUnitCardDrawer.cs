@@ -57,60 +57,64 @@ namespace TheFungalNetwork.Editor
                 }
             }
 
+            var collectToGlobal = currentRun?.Settings?.unitsCollectToGlobalInventory ?? false;
+            var shouldShowProgress = isInActivity && (collectToGlobal || (unit?.Inventory == null || !unit.Inventory.IsFull));
+
             _cardDrawer.Draw(
                 unit,
                 () =>
                 {
-                    DrawDivider();
-
-                    // Extra display items (skill, xp, buttons)
-                    DrawSkillLevel(unit, activity);
-                    DrawXPProgressBar(unit, activity);
+                    // Show skill level and XP if setting is enabled
+                    if (currentRun.Settings.showResourceSkillLevel)
+                    {
+                        DrawSkillLevel(unit, activity);
+                        DrawXPProgressBar(unit, activity);
+                    }
 
                     if (currentRun.Settings.debugMode)
                     {
+                        DrawDivider();
+                        DrawEnergyProgressBar(unit);
                         DrawSpeedBonus(unit, activity, resourceComponent);
-                    }
 
-                    if (currentRun.Settings.debugMode)
-                    {
-                        DrawResourceCount(unit, resourceComponent);
-                    }
+                        // Only show inventory and claim button if not collecting to global inventory
+                        if (!currentRun.Settings.unitsCollectToGlobalInventory)
+                        {
+                            DrawResourceCount(unit, resourceComponent);
+                            DrawClaimButton(unit, resourceComponent, currentRun, onChanged);
+                        }
 
-                    if (currentRun.Settings.debugMode)
-                    {
-                        DrawClaimButton(unit, resourceComponent, currentRun, onChanged);
-                    }
+                        DrawDivider();
 
-                    DrawDivider();
 
-                    // Stop/Start buttons
-                    if (isInActivity)
-                    {
-                        if (currentRun.Settings.debugMode)
+                        // Stop/Start buttons
+                        if (isInActivity)
                         {
                             DrawStopButton(unit, activity, onChanged);
                         }
-                    }
-                    else
-                    {
-                        GUILayout.Space(10);
-                        DrawStartButton(unit, activity, currentRun, onChanged);
-                    }
+                        else
+                        {
+                            GUILayout.Space(10);
+                            DrawStartButton(unit, activity, currentRun, onChanged);
+                        }
 
-                    if (currentRun.Settings.debugMode)
-                    {
                         DrawViewDataButton(unit);
                     }
+                    else if (currentRun.Settings.showResourceSkillLevel)
+                    {
+                        // Show minimal divider when only showing skills
+                        DrawDivider();
+                    }
                 },
-                (isInActivity && (unit?.Inventory == null || !unit.Inventory.IsFull)) ? () => progress : null,
+                shouldShowProgress ? () => progress : null,
                 () =>
                 {
                     if (isInActivity)
                     {
                         DrawStatusText(state, progress, resourceComponent, unit, activity);
                     }
-                }
+                },
+                currentRun?.Settings
             );
         }
 
@@ -131,12 +135,43 @@ namespace TheFungalNetwork.Editor
                 }
                 else
                 {
-                    GUILayout.Space(10);
+                    // Skill not found in unit's skills
+                    var errorStyle = new GUIStyle(EditorStyles.miniLabel)
+                    {
+                        alignment = TextAnchor.MiddleCenter,
+                        fontSize = 7,
+                        normal = { textColor = new Color(1f, 0.5f, 0.5f) }
+                    };
+                    EditorGUILayout.LabelField($"⚠ Missing {activity.Template.PrimarySkill.Id}", errorStyle, GUILayout.Height(10), GUILayout.Width(90));
                 }
             }
             else
             {
-                GUILayout.Space(10);
+                // No primary skill or skills dictionary
+                if (activity?.Template?.PrimarySkill == null)
+                {
+                    var errorStyle = new GUIStyle(EditorStyles.miniLabel)
+                    {
+                        alignment = TextAnchor.MiddleCenter,
+                        fontSize = 7,
+                        normal = { textColor = new Color(1f, 0.5f, 0.5f) }
+                    };
+                    EditorGUILayout.LabelField("⚠ No Primary Skill", errorStyle, GUILayout.Height(10), GUILayout.Width(90));
+                }
+                else if (unit?.Skills == null)
+                {
+                    var errorStyle = new GUIStyle(EditorStyles.miniLabel)
+                    {
+                        alignment = TextAnchor.MiddleCenter,
+                        fontSize = 7,
+                        normal = { textColor = new Color(1f, 0.5f, 0.5f) }
+                    };
+                    EditorGUILayout.LabelField("⚠ Skills Not Init", errorStyle, GUILayout.Height(10), GUILayout.Width(90));
+                }
+                else
+                {
+                    GUILayout.Space(10);
+                }
             }
         }
 
@@ -159,8 +194,38 @@ namespace TheFungalNetwork.Editor
                 }
                 else
                 {
-                    GUILayout.Space(4);
+                    // Draw error bar
+                    var progressRect = EditorGUILayout.GetControlRect(false, 4, GUILayout.Width(90));
+                    var originalColor = GUI.color;
+                    GUI.color = new Color(1f, 0.3f, 0.3f);
+                    EditorGUI.ProgressBar(progressRect, 0f, "");
+                    GUI.color = originalColor;
                 }
+            }
+            else
+            {
+                GUILayout.Space(4);
+            }
+        }
+
+        private void DrawEnergyProgressBar(UnitInstance unit)
+        {
+            if (unit != null)
+            {
+                var energyValue = unit.Energy / 100f;
+                var progressRect = EditorGUILayout.GetControlRect(false, 4, GUILayout.Width(90));
+
+                // Color based on energy level
+                var originalColor = GUI.color;
+                if (energyValue > 0.5f)
+                    GUI.color = new Color(0.3f, 1f, 0.3f); // Green
+                else if (energyValue > 0.25f)
+                    GUI.color = new Color(1f, 0.8f, 0.3f); // Yellow
+                else
+                    GUI.color = new Color(1f, 0.3f, 0.3f); // Red
+
+                EditorGUI.ProgressBar(progressRect, energyValue, "");
+                GUI.color = originalColor;
             }
             else
             {
@@ -280,7 +345,6 @@ namespace TheFungalNetwork.Editor
             var item = resourceComponent.ItemTemplate;
             string statusText = null;
             Color statusColor = Color.white;
-            string labelOverride = null;
 
             // Priority 0: Level up message (show for 2 seconds)
             if (timeSinceLevelUp < 2.0)
@@ -305,23 +369,18 @@ namespace TheFungalNetwork.Editor
             // Priority 2: Collection message (show for 2 seconds)
             else if (timeSinceCollection < 2.0)
             {
-                statusText = $"+{resourceComponent.ItemsPerUpdate}";
+                var itemName = item != null ? $" {item.DisplayName ?? item.Id}" : "";
+                statusText = $"+{resourceComponent.ItemsPerUpdate}{itemName}";
                 statusColor = new Color(0.3f, 1f, 0.3f);
-                labelOverride = statusText + (item != null ? $" {item.DisplayName ?? item.Id}" : "");
             }
             // Priority 3: Collecting status
             else if (progress > 0)
             {
                 statusText = "Collecting...";
                 statusColor = new Color(0.7f, 0.7f, 1f);
-                labelOverride = statusText;
             }
 
-            if (!string.IsNullOrEmpty(labelOverride) && item != null)
-            {
-                DrawResourceItem(item, null, labelOverride);
-            }
-            else if (!string.IsNullOrEmpty(statusText))
+            if (!string.IsNullOrEmpty(statusText))
             {
                 var statusStyle = new GUIStyle(EditorStyles.miniLabel)
                 {
@@ -334,6 +393,18 @@ namespace TheFungalNetwork.Editor
             else
             {
                 GUILayout.Space(12);
+            }
+
+            // Show exhausted status separately (always visible when exhausted)
+            if (unit?.IsExhausted == true)
+            {
+                var exhaustedStyle = new GUIStyle(EditorStyles.miniLabel)
+                {
+                    alignment = TextAnchor.MiddleCenter,
+                    normal = { textColor = new Color(1f, 0.4f, 0.4f) },
+                    fontSize = 8
+                };
+                EditorGUILayout.LabelField("⚡ EXHAUSTED", exhaustedStyle, GUILayout.Height(10), GUILayout.Width(90));
             }
         }
     }

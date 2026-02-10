@@ -40,8 +40,7 @@ namespace TheFungalNetwork.Editor
                         GUI.backgroundColor = Color.white;
                     }
                 },
-                null,
-                null);
+                currentRun?.Settings);
         }
     }
 }

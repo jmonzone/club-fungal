@@ -14,6 +14,7 @@ namespace TheFungalNetwork.Editor
         private bool addResourceCondition = false;
         private ItemTemplate requiredItem;
         private int requiredAmount = 1;
+        private int activityColumns = 1; // Number of columns for activity display (1-3)
 
         public void Draw(NetworkRun currentRun)
         {
@@ -35,7 +36,20 @@ namespace TheFungalNetwork.Editor
             EditorGUILayout.Space(5);
             // _partyUnitsDrawer.Draw(currentRun);
 
-            ActivityListDrawer.DrawList(roomData.activities, null, currentRun.Party, () => EditorWindow.GetWindow<NetworkRunWindow>().Repaint(), currentRun);
+            // Column selector
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Columns:", GUILayout.Width(60));
+            if (GUILayout.Toggle(activityColumns == 1, "1", EditorStyles.miniButtonLeft, GUILayout.Width(30)))
+                activityColumns = 1;
+            if (GUILayout.Toggle(activityColumns == 2, "2", EditorStyles.miniButtonMid, GUILayout.Width(30)))
+                activityColumns = 2;
+            if (GUILayout.Toggle(activityColumns == 3, "3", EditorStyles.miniButtonRight, GUILayout.Width(30)))
+                activityColumns = 3;
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.Space(2);
+
+            ActivityListDrawer.DrawList(roomData.activities, null, currentRun.Party, () => EditorWindow.GetWindow<NetworkRunWindow>().Repaint(), currentRun, activityColumns);
 
 
             EditorGUILayout.Space(5);

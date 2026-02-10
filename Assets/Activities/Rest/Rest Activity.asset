@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd90feebe4523426e82f058687423bef, type: 3}
   m_Name: Rest Activity
   m_EditorClassIdentifier: Assembly-CSharp::ActivityReference
-  description: 'Home Base: Restore Energy'
+  description: Home Base
   sprite: {fileID: 21300000, guid: 5ce1b7ca9e372455e838e5cf57a4e2b7, type: 3}
   activityView: {fileID: 0}
   primarySkill: {fileID: 0}

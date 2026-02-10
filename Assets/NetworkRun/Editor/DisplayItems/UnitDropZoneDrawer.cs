@@ -39,8 +39,8 @@ namespace TheFungalNetwork.Editor
             EditorGUILayout.Space(4);
 
             // Draw the content inside the drop zone
-            EditorGUILayout.BeginHorizontal();
-            var contentRect = EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(false));
+            // MinWidth ensures consistent width when empty (matches 1 unit card + spacing)
+            var contentRect = EditorGUILayout.BeginVertical(GUILayout.MinWidth(100), GUILayout.ExpandWidth(true));
 
             if (isEmpty)
             {
@@ -65,8 +65,6 @@ namespace TheFungalNetwork.Editor
             }
 
             EditorGUILayout.EndVertical();
-            GUILayout.FlexibleSpace();
-            EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.EndVertical();
 

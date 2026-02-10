@@ -2,23 +2,27 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+// ActivityInstance represents a runtime activity with independent component state
 [Serializable]
 public class ActivityInstance
 {
     [SerializeField] private ActivityReference template;
     [SerializeField] private ActivityData data;
+    [SerializeField] private List<ActivityComponent> runtimeComponents;
 
     public ActivityData Data => data;
     public string Id => data.id;
     public string Name => data.name;
     public ActivityReference Template => template;
     public List<UnitInstance> Units => data.units;
+    public List<ActivityComponent> RuntimeComponents => runtimeComponents;
 
     public ActivityInstance(ActivityData data)
     {
         var initData = data;
         if (string.IsNullOrEmpty(initData.id)) initData.id = UnitInstance.GenerateMongoLikeId();
         this.data = initData;
+        this.runtimeComponents = new List<ActivityComponent>();
     }
 
     public ActivityInstance(ActivityReference template)
@@ -29,6 +33,7 @@ public class ActivityInstance
             id = UnitInstance.GenerateMongoLikeId(),
             name = template.name
         };
+        this.runtimeComponents = new List<ActivityComponent>();
     }
 
     // Copy constructor - creates a new instance with copied components but original template
@@ -68,11 +73,11 @@ public class ActivityInstance
             name = originalTemplate.name
         };
 
-        // Initialize all components
+        // Store and initialize all runtime components
         if (activityRefCopy.Components != null)
         {
-            var componentsCopy = new List<ActivityComponent>(activityRefCopy.Components);
-            foreach (var component in componentsCopy)
+            runtimeComponents = new List<ActivityComponent>(activityRefCopy.Components);
+            foreach (var component in runtimeComponents)
             {
                 if (component != null)
                 {

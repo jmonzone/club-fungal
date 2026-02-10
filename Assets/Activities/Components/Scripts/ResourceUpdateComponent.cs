@@ -9,6 +9,7 @@ public class ResourceUpdateComponent : ActivityComponent
     [SerializeField] private float updateInterval = 1f;
 
     private Dictionary<int, float> unitLastUpdateTimes = new Dictionary<int, float>();
+    private Dictionary<int, float> unitLastEnergyDepletionTimes = new Dictionary<int, float>();
 
     public ItemTemplate ItemTemplate => itemTemplate;
     public float UpdateInterval => updateInterval;
@@ -34,6 +35,12 @@ public class ResourceUpdateComponent : ActivityComponent
             }
         }
 
+        // Apply exhaustion debuff (halve speed)
+        if (unit.IsExhausted)
+        {
+            speedBonus *= 0.5f;
+        }
+
         return speedBonus;
     }
 
@@ -50,11 +57,16 @@ public class ResourceUpdateComponent : ActivityComponent
     {
         if (unit == null) return 0f;
 
-        // If inventory is full, don't show any progress
-        if (unit.Inventory != null && unit.Inventory.IsFull)
+        // Check if collecting to global inventory
+        var collectToGlobal = networkRun?.Settings?.unitsCollectToGlobalInventory ?? false;
+
+        // If collecting to unit inventory and it's full, don't show progress
+        if (!collectToGlobal && unit.Inventory != null && unit.Inventory.IsFull)
         {
             return 0f;
         }
+
+        // When collecting to global, don't check inventory limits - keep collecting
 
         var unitKey = unit.GetHashCode();
         if (!unitLastUpdateTimes.ContainsKey(unitKey))
@@ -81,22 +93,59 @@ public class ResourceUpdateComponent : ActivityComponent
             if (unit == null) continue;
 
             var unitKey = unit.GetHashCode();
+            var currentTime = networkRun?.SimulationTime ?? Time.realtimeSinceStartup;
+
+            // Initialize timers if not present
             if (!unitLastUpdateTimes.ContainsKey(unitKey))
             {
-                unitLastUpdateTimes[unitKey] = networkRun?.SimulationTime ?? Time.realtimeSinceStartup;
+                unitLastUpdateTimes[unitKey] = currentTime;
+                unitLastEnergyDepletionTimes[unitKey] = currentTime;
                 continue;
             }
 
+            // Check and update exhaustion status FIRST based on current energy (only if energy system is enabled)
+            var useEnergy = networkRun?.Settings?.useEnergySystem ?? true;
+            if (useEnergy)
+            {
+                if (unit.Energy <= 0f)
+                {
+                    unit.IsExhausted = true;
+                }
+                else if (unit.Energy > 20f)
+                {
+                    // Remove exhaustion when energy recovers above 20%
+                    unit.IsExhausted = false;
+                }
+
+                // Deplete energy based on elapsed time since last energy check
+                if (unitLastEnergyDepletionTimes.ContainsKey(unitKey))
+                {
+                    var timeSinceLastEnergyDepletion = currentTime - unitLastEnergyDepletionTimes[unitKey];
+                    var energyDepletion = networkRun?.Settings?.energyDepletionPerUpdate ?? 1f;
+                    unit.Energy -= energyDepletion * (timeSinceLastEnergyDepletion / (networkRun?.Settings?.updateInterval ?? 1f));
+                    unitLastEnergyDepletionTimes[unitKey] = currentTime;
+                }
+            }
+
             var effectiveInterval = GetEffectiveInterval(unit, activityInstance, networkRun);
-            var currentTime = networkRun?.SimulationTime ?? Time.realtimeSinceStartup;
             var timeSinceLastUpdate = currentTime - unitLastUpdateTimes[unitKey];
             if (timeSinceLastUpdate >= effectiveInterval)
             {
-                // Check if unit inventory has space before collecting
-                if (itemTemplate != null && unit.Inventory != null)
+                var collectToGlobal = networkRun?.Settings?.unitsCollectToGlobalInventory ?? false;
+
+                // Check if inventory has space before collecting
+                if (itemTemplate != null)
                 {
-                    // Check if inventory is full
-                    if (unit.Inventory.IsFull)
+                    var targetInventory = collectToGlobal ? networkRun?.Inventory : unit.Inventory;
+
+                    if (targetInventory == null)
+                    {
+                        unitLastUpdateTimes[unitKey] = currentTime;
+                        continue;
+                    }
+
+                    // Only check if inventory is full when collecting to unit inventory
+                    if (!collectToGlobal && targetInventory.IsFull)
                     {
                         // Inventory is full, keep progress at 0% (reset timer to current time)
                         unitLastUpdateTimes[unitKey] = currentTime;
@@ -105,9 +154,9 @@ public class ResourceUpdateComponent : ActivityComponent
 
                     for (int i = 0; i < itemsPerUpdate; i++)
                     {
-                        unit.Inventory.AddItem(itemTemplate);
+                        targetInventory.AddItem(itemTemplate);
                     }
-                    // Debug.Log($"{unit.DisplayName} collected {itemsPerUpdate}x {itemTemplate.DisplayName}");
+                    // Debug.Log($"{unit.DisplayName} collected {itemsPerUpdate}x {itemTemplate.DisplayName} to {(collectToGlobal ? "global" : "unit")} inventory");
                 }
 
                 // Add XP to the unit's skill
@@ -125,10 +174,10 @@ public class ResourceUpdateComponent : ActivityComponent
 
         // Clean up removed units
         var activeUnitKeys = new HashSet<int>();
-        foreach (var unit in activityInstance.Units)
+        foreach (var u in activityInstance.Units)
         {
-            if (unit != null)
-                activeUnitKeys.Add(unit.GetHashCode());
+            if (u != null)
+                activeUnitKeys.Add(u.GetHashCode());
         }
 
         var keysToRemove = new List<int>();
@@ -141,6 +190,7 @@ public class ResourceUpdateComponent : ActivityComponent
         foreach (var key in keysToRemove)
         {
             unitLastUpdateTimes.Remove(key);
+            unitLastEnergyDepletionTimes.Remove(key);
         }
     }
 }
