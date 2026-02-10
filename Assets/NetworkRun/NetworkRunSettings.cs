@@ -32,15 +32,20 @@ public class NetworkRunSettings : ScriptableObject
     public ItemTemplate fishItem; // Food item for resting
     public ZoneOcclusion zoneOcclusionTemplate; // Template for zone occlusion components
     public bool enableZoneOcclusion = true; // Enable/disable zone occlusion for resource activities
-    public int hideResourceComponentsAfterIndex = 0; // Only hide resource components starting from this index (0 = hide all)
+    public int hideZoneAfterIndex = 0; // Only hide resource components starting from this index (0 = hide all)
     public bool enableDoorActivities = true; // Enable/disable door unlock activities
     public bool unitsCollectToGlobalInventory = false; // If true, units add collected resources directly to global inventory instead of their own
     public bool showUnitInventoryButton = true; // Show "View Data" button on unit cards
+    public bool showViewUnitButton = true; // Show "View Unit" button on rest activity unit cards
     public bool showResourceSkillLevel = false; // Show skill level and XP progress on resource unit cards
     public ActivityReference restActivity; // Rest activity
     public ActivityReference sporeActivity; // Rest activity
     public ActivityReference doorActivity; // Door/unlock activity
     public List<ActivityReference> resourceActivities; // Resource-producing activities (filtered)
+
+    [Header("Room Activities")]
+    [Tooltip("Master list of activity templates. All rooms use these activities in the same order.")]
+    public List<ActivityReference> activities = new List<ActivityReference>();
 
     [Header("Skills")]
     [SerializeField] private List<SkillToggle> skills = new List<SkillToggle>(); // Skills that can be toggled on/off
@@ -80,175 +85,70 @@ public class NetworkRunSettings : ScriptableObject
         return skills;
     }
 
-    public ActivityInstance CreateRestActivity(NetworkRun networkRun)
+    /// <summary>
+    /// Get room activities instantiated from the master activities list
+    /// </summary>
+    public List<ActivityInstance> GetRoomActivities(NetworkRun networkRun)
     {
-        if (restActivity == null) return null;
-
-        var restActivityInstance = new ActivityInstance(networkRun, restActivity);
-        Debug.Log($"Added rest activity: {restActivity.name}");
-        return restActivityInstance;
-    }
-
-    public ActivityInstance CreateSporeActivity(NetworkRun networkRun)
-    {
-        if (sporeActivity == null) return null;
-
-        var sporeActivityInstance = new ActivityInstance(networkRun, sporeActivity);
-        Debug.Log($"Added spore activity: {sporeActivity.name}");
-        return sporeActivityInstance;
-    }
-
-    public List<ActivityInstance> CreateDoorActivities(NetworkRun networkRun, List<Door> doors)
-    {
-        var doorActivities = new List<ActivityInstance>();
-        if (!enableDoorActivities || doorActivity == null) return doorActivities;
-
-        foreach (var door in doors)
+        var instances = new List<ActivityInstance>();
+        
+        if (activities != null && activities.Count > 0)
         {
-            var resourceCondition = CreateResourceConditionForDoor(networkRun);
-            if (resourceCondition == null) continue;
-
-            // Add the resource condition to the door
-            if (door.conditions == null)
+            for (int i = 0; i < activities.Count; i++)
             {
-                door.conditions = new List<DoorCondition>();
-            }
-            door.conditions.Add(resourceCondition);
-
-            // Create a runtime copy of the activity reference
-            var unlockRefCopy = Instantiate(doorActivity);
-            unlockRefCopy.name = doorActivity.name;
-
-            // Create UnlockComponent from template or create new instance
-            UnlockComponent unlockComponent;
-            if (networkRun.UnlockComponentTemplate != null)
-            {
-                unlockComponent = Instantiate(networkRun.UnlockComponentTemplate);
-                unlockComponent.name = networkRun.UnlockComponentTemplate.name;
-            }
-            else
-            {
-                unlockComponent = CreateInstance<UnlockComponent>();
-                unlockComponent.name = "UnlockComponent";
-            }
-            unlockComponent.SetDoorAndCondition(door, resourceCondition);
-
-            // Set the components list to just the unlock component
-            var copiedComponents = new List<ActivityComponent> { unlockComponent };
-            unlockRefCopy.InitializeComponents(copiedComponents);
-
-            var unlockInstance = new ActivityInstance(unlockRefCopy);
-            unlockComponent.Initialize(networkRun, unlockInstance);
-
-            doorActivities.Add(unlockInstance);
-            Debug.Log($"Added unlock activity for door: {doorActivity.name}");
-        }
-
-        return doorActivities;
-    }
-
-    public List<ActivityInstance> CreateResourceActivities(NetworkRun networkRun)
-    {
-        if (resourceActivities == null || resourceActivities.Count == 0)
-        {
-            return new List<ActivityInstance>();
-        }
-
-        // Determine how many activities to create (scale with room count, respecting minimum, max at unique activity count)
-        int baseCount = networkRun.VisitedRooms.Count + 1;
-        int activityCount = Mathf.Max(minimumActivities, Mathf.Min(baseCount, resourceActivities.Count));
-        var selectedActivities = new List<ActivityReference>();
-
-        if (activityCount > 0)
-        {
-            // Shuffle indices to randomly select activities
-            var indices = new List<int>();
-            for (int i = 0; i < resourceActivities.Count; i++)
-            {
-                indices.Add(i);
-            }
-
-            for (int i = 0; i < indices.Count; i++)
-            {
-                var temp = indices[i];
-                int randomIndex = UnityEngine.Random.Range(i, indices.Count);
-                indices[i] = indices[randomIndex];
-                indices[randomIndex] = temp;
-            }
-
-            // Take the first activityCount indices and sort them to maintain original order
-            var selectedIndices = new List<int>();
-            for (int i = 0; i < activityCount; i++)
-            {
-                selectedIndices.Add(indices[i]);
-            }
-            selectedIndices.Sort();
-
-            // Get activities in original order
-            for (int i = 0; i < selectedIndices.Count; i++)
-            {
-                selectedActivities.Add(resourceActivities[selectedIndices[i]]);
-            }
-        }
-
-        // Create activity instances for all selected activities
-        var resourceActivityInstances = new List<ActivityInstance>();
-        for (int i = 0; i < selectedActivities.Count; i++)
-        {
-            var activityRef = selectedActivities[i];
-            // Create a runtime copy of the activity reference
-            var activityRefCopy = Instantiate(activityRef);
-            activityRefCopy.name = activityRef.name;
-
-            // Add ZoneOcclusion component if enabled, template exists, and index is >= threshold
-            if (enableZoneOcclusion && zoneOcclusionTemplate != null && sporesItem != null && i >= hideResourceComponentsAfterIndex)
-            {
-                // Copy existing components
-                var existingComponents = new List<ActivityComponent>();
-                if (activityRefCopy.Components != null)
+                var activityRef = activities[i];
+                if (activityRef != null)
                 {
-                    foreach (var comp in activityRefCopy.Components)
+                    // Create a runtime copy of the activity reference
+                    var activityRefCopy = Instantiate(activityRef);
+                    activityRefCopy.name = activityRef.name;
+
+                    // Add ZoneOcclusion component if enabled, template exists, and index is >= threshold
+                    if (enableZoneOcclusion && zoneOcclusionTemplate != null && sporesItem != null && i >= hideZoneAfterIndex)
                     {
-                        if (comp != null)
+                        // Copy existing components
+                        var existingComponents = new List<ActivityComponent>();
+                        if (activityRefCopy.Components != null)
                         {
-                            var compCopy = Instantiate(comp);
-                            compCopy.name = comp.name;
-                            existingComponents.Add(compCopy);
+                            foreach (var comp in activityRefCopy.Components)
+                            {
+                                if (comp != null)
+                                {
+                                    var compCopy = Instantiate(comp);
+                                    compCopy.name = comp.name;
+                                    existingComponents.Add(compCopy);
+                                }
+                            }
                         }
+
+                        // Create ZoneOcclusion component
+                        var zoneOcclusion = Instantiate(zoneOcclusionTemplate);
+                        zoneOcclusion.name = "ZoneOcclusion";
+
+                        // Initialize zone occlusion with the first existing component and room level
+                        // Use +2 offset to match door unlock formula (first room level = 2 = 83 XP = 8 spores)
+                        var nextComponent = existingComponents.Count > 0 ? existingComponents[0] : null;
+                        var roomLevel = (i - hideZoneAfterIndex) + 2;
+                        zoneOcclusion.SetZoneOcclusion(nextComponent, roomLevel);
+
+                        // Build new components list: ZoneOcclusion first, then existing components
+                        var newComponents = new List<ActivityComponent> { zoneOcclusion };
+                        newComponents.AddRange(existingComponents);
+
+                        // Set the components list
+                        activityRefCopy.InitializeComponents(newComponents);
+
+                        Debug.Log($"Added ZoneOcclusion to {activityRef.name} (index {i})");
                     }
+
+                    var instance = new ActivityInstance(networkRun, activityRefCopy);
+                    instances.Add(instance);
                 }
-
-                // Create ZoneOcclusion component
-                var zoneOcclusion = Instantiate(zoneOcclusionTemplate);
-                zoneOcclusion.name = "ZoneOcclusion";
-
-                // Initialize zone occlusion with the first existing component and room level
-                // Use +2 offset to match door unlock formula (first room level = 2 = 83 XP = 8 spores)
-                var nextComponent = existingComponents.Count > 0 ? existingComponents[0] : null;
-                var roomLevel = (i - hideResourceComponentsAfterIndex) + 2;
-                zoneOcclusion.SetZoneOcclusion(nextComponent, roomLevel);
-
-                // Build new components list: ZoneOcclusion first, then existing components
-                var newComponents = new List<ActivityComponent> { zoneOcclusion };
-                newComponents.AddRange(existingComponents);
-
-                // Set the components list
-                activityRefCopy.InitializeComponents(newComponents);
-
-                Debug.Log($"Added ZoneOcclusion to {activityRef.name}");
-            }
-
-            var activityInstance = new ActivityInstance(networkRun, activityRefCopy);
-            if (activityInstance != null)
-            {
-                resourceActivityInstances.Add(activityInstance);
             }
         }
-
-        Debug.Log($"Created {resourceActivityInstances.Count} resource activities for room {networkRun.VisitedRooms.Count + 1}");
-        return resourceActivityInstances;
+        
+        return instances;
     }
-
     private int CalculateRequiredAmount(int roomLevel)
     {
         // RuneScape XP formula: calculate total XP required for this level

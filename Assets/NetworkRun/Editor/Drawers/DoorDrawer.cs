@@ -95,9 +95,9 @@ namespace TheFungalNetwork.Editor
             {
                 foreach (var activity in currentRun.CurrentRoom.Data.activities)
                 {
-                    if (activity?.Template?.Components != null)
+                    if (activity?.RuntimeComponents != null)
                     {
-                        foreach (var component in activity.Template.Components)
+                        foreach (var component in activity.RuntimeComponents)
                         {
                             if (component is InspectComponent inspectComponent)
                             {

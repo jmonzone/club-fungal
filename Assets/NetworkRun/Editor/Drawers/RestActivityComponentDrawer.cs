@@ -32,12 +32,15 @@ namespace TheFungalNetwork.Editor
                     DrawEnergyProgressBar(unit, currentRun);
 
                     // View Unit button
-                    GUI.backgroundColor = new Color(0.85f, 0.85f, 1f);
-                    if (GUILayout.Button("View Unit", GUILayout.Height(18), GUILayout.Width(90)))
+                    if (currentRun.Settings.showViewUnitButton)
                     {
-                        UnitUpgradeWindow.ShowWindow(unit, currentRun);
+                        GUI.backgroundColor = new Color(0.85f, 0.85f, 1f);
+                        if (GUILayout.Button("View Unit", GUILayout.Height(18), GUILayout.Width(90)))
+                        {
+                            UnitUpgradeWindow.ShowWindow(unit, currentRun);
+                        }
+                        GUI.backgroundColor = Color.white;
                     }
-                    GUI.backgroundColor = Color.white;
 
                     // Remove button (debug mode)
                     if (currentRun.Settings.debugMode)

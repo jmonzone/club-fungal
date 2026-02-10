@@ -170,7 +170,8 @@ namespace TheFungalNetwork.Editor
             if (allActivityRefs.Count > 0)
             {
                 var randomActivity = allActivityRefs[UnityEngine.Random.Range(0, allActivityRefs.Count)];
-                activities.Add(new ActivityInstance(randomActivity));
+                // Create instance without NetworkRun for editor context
+                activities.Add(new ActivityInstance(null, randomActivity));
             }
 
             var newRoom = new RoomData

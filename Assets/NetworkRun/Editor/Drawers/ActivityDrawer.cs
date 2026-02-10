@@ -91,12 +91,12 @@ namespace TheFungalNetwork.Editor
             var resourceProgressItems = new List<CardDrawerDisplayItem>();
             ZoneOcclusion zoneOcclusionComponent = null;
 
-            // Get display items from component drawers
-            if (activity.Template?.Components != null)
+            // Get display items from runtime component drawers (use RuntimeComponents instead of Template.Components)
+            if (activity.RuntimeComponents != null)
             {
                 ZoneOcclusion activeOcclusion = null;
 
-                foreach (var component in activity.Template.Components)
+                foreach (var component in activity.RuntimeComponents)
                 {
                     // Check if this is a ZoneOcclusion component
                     if (component is ZoneOcclusion occlusion)
@@ -212,9 +212,9 @@ namespace TheFungalNetwork.Editor
             string subtitle = null;
 
             // Check if there's an unrevealed ZoneOcclusion to override display
-            if (activity.Template?.Components != null)
+            if (activity.RuntimeComponents != null)
             {
-                foreach (var component in activity.Template.Components)
+                foreach (var component in activity.RuntimeComponents)
                 {
                     if (component is ZoneOcclusion occlusion && !occlusion.IsRevealed)
                     {
@@ -250,11 +250,11 @@ namespace TheFungalNetwork.Editor
             ActivityComponent matchedComponent = null;
             ActivityComponentDrawer matchedDrawer = null;
 
-            if (activity.Template?.Components != null)
+            if (activity.RuntimeComponents != null)
             {
                 ZoneOcclusion activeOcclusion = null;
 
-                foreach (var component in activity.Template.Components)
+                foreach (var component in activity.RuntimeComponents)
                 {
                     // Check if this is a ZoneOcclusion component
                     if (component is ZoneOcclusion occlusion)
@@ -296,9 +296,9 @@ namespace TheFungalNetwork.Editor
 
         private static ResourceUpdateComponent GetResourceComponent(ActivityInstance activity)
         {
-            if (activity?.Template?.Components != null)
+            if (activity?.RuntimeComponents != null)
             {
-                foreach (var component in activity.Template.Components)
+                foreach (var component in activity.RuntimeComponents)
                 {
                     if (component is ResourceUpdateComponent resComp)
                     {

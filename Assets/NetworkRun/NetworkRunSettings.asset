@@ -15,7 +15,7 @@ MonoBehaviour:
   defaultPartySize: 1
   updateInterval: 1
   debugMode: 0
-  speedMultiplier: 1
+  speedMultiplier: 6
   minimumActivities: 2
   useEnergySystem: 0
   energyDepletionPerUpdate: 1
@@ -25,10 +25,11 @@ MonoBehaviour:
   zoneOcclusionTemplate: {fileID: 11400000, guid: f0d1de32675c648398a75ea496a6d330,
     type: 2}
   enableZoneOcclusion: 1
-  hideResourceComponentsAfterIndex: 1
+  hideZoneAfterIndex: 2
   enableDoorActivities: 0
   unitsCollectToGlobalInventory: 1
   showUnitInventoryButton: 0
+  showViewUnitButton: 0
   showResourceSkillLevel: 1
   restActivity: {fileID: 11400000, guid: e222da1a99b954ea2bd6c423a0de45ff, type: 2}
   sporeActivity: {fileID: 11400000, guid: ca1aabf6e3c494667a63065cc6ff3a76, type: 2}
@@ -36,6 +37,11 @@ MonoBehaviour:
   resourceActivities:
   - {fileID: 11400000, guid: ca1aabf6e3c494667a63065cc6ff3a76, type: 2}
   - {fileID: 11400000, guid: 19f2abf58fc274306bb41ceb048ec8ff, type: 2}
+  activities:
+  - {fileID: 11400000, guid: e222da1a99b954ea2bd6c423a0de45ff, type: 2}
+  - {fileID: 11400000, guid: ca1aabf6e3c494667a63065cc6ff3a76, type: 2}
+  - {fileID: 11400000, guid: 19f2abf58fc274306bb41ceb048ec8ff, type: 2}
+  - {fileID: 11400000, guid: 2cfe383145efb491c9cdab1872bf6dfe, type: 2}
   skills:
   - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
     enabled: 0

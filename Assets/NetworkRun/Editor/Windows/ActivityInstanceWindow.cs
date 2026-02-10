@@ -68,11 +68,11 @@ namespace TheFungalNetwork.Editor
             }
 
             EditorGUILayout.Space(10);
-            EditorGUILayout.LabelField($"Components ({activityInstance.Template?.Components?.Count ?? 0})", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField($"Components ({activityInstance.RuntimeComponents?.Count ?? 0})", EditorStyles.boldLabel);
 
-            if (activityInstance.Template?.Components != null && activityInstance.Template.Components.Count > 0)
+            if (activityInstance.RuntimeComponents != null && activityInstance.RuntimeComponents.Count > 0)
             {
-                foreach (var component in activityInstance.Template.Components)
+                foreach (var component in activityInstance.RuntimeComponents)
                 {
                     if (component != null)
                     {

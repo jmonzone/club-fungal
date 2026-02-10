@@ -58,7 +58,7 @@ namespace TheFungalNetwork.Editor
                         var buttonText = $"🔮 Reveal Zone";
                         if (GUILayout.Button(buttonText, GUILayout.Height(30)))
                         {
-                            zoneOcclusion.RevealZone();
+                            // zoneOcclusion.RevealZone();
                             onChanged?.Invoke();
                         }
                         GUI.backgroundColor = Color.white;

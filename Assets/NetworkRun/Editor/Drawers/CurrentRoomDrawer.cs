@@ -55,11 +55,11 @@ namespace TheFungalNetwork.Editor
             EditorGUILayout.Space(5);
             if (currentRun.Settings.debugMode && GUILayout.Button("Add Activity to Room"))
             {
-                ShowActivityMenu(roomData);
+                ShowActivityMenu(roomData, currentRun);
             }
         }
 
-        private void ShowActivityMenu(RoomData roomData)
+        private void ShowActivityMenu(RoomData roomData, NetworkRun currentRun)
         {
             var menu = new GenericMenu();
             var allActivities = AssetDatabase.FindAssets("t:ActivityReference")
@@ -75,7 +75,7 @@ namespace TheFungalNetwork.Editor
             {
                 foreach (var activity in allActivities)
                 {
-                    menu.AddItem(new GUIContent(activity.name), false, () => AddActivityToRoom(roomData, activity));
+                    menu.AddItem(new GUIContent(activity.name), false, () => AddActivityToRoom(roomData, activity, currentRun));
                 }
 
                 menu.AddSeparator("");
@@ -90,14 +90,32 @@ namespace TheFungalNetwork.Editor
             ActivityCreationWindow.ShowWindow(roomData);
         }
 
-        private void AddActivityToRoom(RoomData roomData, ActivityReference activity)
+        private void AddActivityToRoom(RoomData roomData, ActivityReference activity, NetworkRun currentRun)
         {
+            // Add to settings.activities
+            if (currentRun?.Settings != null)
+            {
+                if (currentRun.Settings.activities == null)
+                {
+                    currentRun.Settings.activities = new List<ActivityReference>();
+                }
+                
+                if (!currentRun.Settings.activities.Contains(activity))
+                {
+                    currentRun.Settings.activities.Add(activity);
+                    UnityEditor.EditorUtility.SetDirty(currentRun.Settings);
+                    AssetDatabase.SaveAssets();
+                    Debug.Log($"Added {activity.name} to settings.activities");
+                }
+            }
+            
+            // Also add to room
             if (roomData.activities == null)
             {
                 roomData.activities = new List<ActivityInstance>();
             }
 
-            var activityInstance = new ActivityInstance(activity);
+            var activityInstance = new ActivityInstance(currentRun, activity);
             roomData.activities.Add(activityInstance);
         }
 

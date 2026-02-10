@@ -337,7 +337,8 @@ namespace TheFungalNetwork.Editor
                     if (activityAssets.Count > 0)
                     {
                         var activityRef = activityAssets[0];
-                        var activityInstance = new ActivityInstance(activityRef);
+                        // Create instance without NetworkRun during load (will be initialized when run starts)
+                        var activityInstance = new ActivityInstance(null, activityRef);
 
                         if (savedActivity.unitIds != null)
                         {

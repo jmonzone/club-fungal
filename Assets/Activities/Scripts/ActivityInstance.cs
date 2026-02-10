@@ -17,26 +17,7 @@ public class ActivityInstance
     public List<UnitInstance> Units => data.units;
     public List<ActivityComponent> RuntimeComponents => runtimeComponents;
 
-    public ActivityInstance(ActivityData data)
-    {
-        var initData = data;
-        if (string.IsNullOrEmpty(initData.id)) initData.id = UnitInstance.GenerateMongoLikeId();
-        this.data = initData;
-        this.runtimeComponents = new List<ActivityComponent>();
-    }
-
-    public ActivityInstance(ActivityReference template)
-    {
-        this.template = template;
-        data = new ActivityData
-        {
-            id = UnitInstance.GenerateMongoLikeId(),
-            name = template.name
-        };
-        this.runtimeComponents = new List<ActivityComponent>();
-    }
-
-    // Copy constructor - creates a new instance with copied components but original template
+    // Constructor - creates a new instance with copied components
     public ActivityInstance(NetworkRun networkRun, ActivityReference originalTemplate)
     {
         // Keep reference to original template
@@ -64,6 +45,9 @@ public class ActivityInstance
             var componentsField = typeof(ActivityReference).GetField("components",
                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             componentsField?.SetValue(activityRefCopy, copiedComponents);
+            
+            // Store runtime components
+            runtimeComponents = copiedComponents;
         }
 
         // Create activity data
@@ -72,11 +56,10 @@ public class ActivityInstance
             id = UnitInstance.GenerateMongoLikeId(),
             name = originalTemplate.name
         };
-
-        // Store and initialize all runtime components
-        if (activityRefCopy.Components != null)
+        
+        // Initialize runtime components
+        if (runtimeComponents != null && runtimeComponents.Count > 0)
         {
-            runtimeComponents = new List<ActivityComponent>(activityRefCopy.Components);
             foreach (var component in runtimeComponents)
             {
                 if (component != null)
@@ -85,11 +68,6 @@ public class ActivityInstance
                 }
             }
         }
-    }
-
-    public void SetTemplate(ActivityReference template)
-    {
-        this.template = template;
     }
 
     public void AddUnit(UnitInstance unit, List<ActivityInstance> allActivities = null)
@@ -136,9 +114,9 @@ public class ActivityInstance
 
     public void Update(NetworkRun networkRun)
     {
-        if (template?.Components != null)
+        if (runtimeComponents != null)
         {
-            foreach (var component in template.Components)
+            foreach (var component in runtimeComponents)
             {
                 if (component != null)
                 {

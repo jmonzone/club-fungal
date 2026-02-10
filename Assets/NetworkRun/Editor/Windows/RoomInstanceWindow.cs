@@ -76,6 +76,27 @@ namespace TheFungalNetwork.Editor
                         EditorGUILayout.BeginVertical(EditorStyles.helpBox);
                         EditorGUILayout.LabelField($"Name: {activity.Name}");
                         EditorGUILayout.LabelField($"ID: {activity.Id}");
+                        
+                        if (activity.RuntimeComponents != null && activity.RuntimeComponents.Count > 0)
+                        {
+                            EditorGUILayout.Space(3);
+                            EditorGUILayout.LabelField($"Components ({activity.RuntimeComponents.Count}):", EditorStyles.miniLabel);
+                            EditorGUI.indentLevel++;
+                            foreach (var component in activity.RuntimeComponents)
+                            {
+                                if (component != null)
+                                {
+                                    string componentInfo = component.GetType().Name;
+                                    if (component is ZoneOcclusion zo)
+                                    {
+                                        componentInfo += $" (IsRevealed: {zo.IsRevealed}, Progress: {zo.CurrentResourceCount}/{zo.RequiredAmount})";
+                                    }
+                                    EditorGUILayout.LabelField($"• {componentInfo}", EditorStyles.miniLabel);
+                                }
+                            }
+                            EditorGUI.indentLevel--;
+                        }
+                        
                         EditorGUILayout.EndVertical();
                         EditorGUILayout.Space(5);
                     }

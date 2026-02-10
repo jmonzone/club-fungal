@@ -78,6 +78,7 @@ public class NetworkRun
     private void MovePartyToRestActivity()
     {
         if (currentRoom?.Data?.activities == null || party == null) return;
+        if (currentRoom.Data.activities.Count == 0) return;
 
         ActivityInstance restActivity = null;
         foreach (var activity in currentRoom.Data.activities)
@@ -87,6 +88,12 @@ public class NetworkRun
                 restActivity = activity;
                 break;
             }
+        }
+
+        // If no rest activity found, use the first available activity
+        if (restActivity == null)
+        {
+            restActivity = currentRoom.Data.activities[0];
         }
 
         if (restActivity != null)
@@ -132,19 +139,14 @@ public class NetworkRun
 
         var activityInstances = new List<ActivityInstance>();
 
-        // Add rest activity if configured
-        var restActivity = settings.CreateRestActivity(this);
-        if (restActivity != null)
+        // Use master activities list if defined
+        if (settings.activities != null && settings.activities.Count > 0)
         {
-            activityInstances.Add(restActivity);
+            activityInstances = settings.GetRoomActivities(this);
         }
 
-        // Add resource activities
-        var resourceActivities = settings.CreateResourceActivities(this);
-        activityInstances.AddRange(resourceActivities);
-
-        // Create doors
-        var doors = new List<Door> {
+        // Create default door
+        var defaultDoors = new List<Door> {
             new Door
             {
                 isLocked = true,
@@ -153,11 +155,7 @@ public class NetworkRun
             }
         };
 
-        // Add door/unlock activities
-        var doorActivities = settings.CreateDoorActivities(this, doors);
-        activityInstances.AddRange(doorActivities);
-
-        return new RoomInstance(doors, activityInstances);
+        return new RoomInstance(defaultDoors, activityInstances);
     }
 
 }

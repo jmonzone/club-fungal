@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public class ZoneOcclusion : ActivityComponent
 {
     private ActivityComponent hiddenZoneComponent;
-    private int currentResourceCount;
-    private bool isRevealed = false;
+    [SerializeField] private int currentResourceCount;
+    [SerializeField] private bool isRevealed = false;
     private Dictionary<UnitInstance, float> unitProgress = new Dictionary<UnitInstance, float>();
 
     [Header("Collection Settings")]
@@ -20,7 +20,7 @@ public class ZoneOcclusion : ActivityComponent
 
     public int CurrentResourceCount => currentResourceCount;
 
-    private int requiredAmount;
+    [SerializeField] private int requiredAmount;
     public int RequiredAmount => requiredAmount;
     public bool IsRevealed => isRevealed;
     public float UpdateInterval => updateInterval;
