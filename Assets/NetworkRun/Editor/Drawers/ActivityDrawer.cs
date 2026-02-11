@@ -208,16 +208,7 @@ namespace TheFungalNetwork.Editor
                 var useUnitInventory = currentRun?.Settings?.zoneContributionMode == ResourceCollectionMode.UnitInventory;
                 canShowDropZone = canShowDropZone && useUnitInventory;
             }
-            else if (zoneOcclusionComponent == null || zoneOcclusionComponent.IsRevealed)
-            {
-                // No zone occlusion or already revealed - show dropzone as normal
-                canShowDropZone = canShowDropZone;
-            }
-            else
-            {
-                // Zone occlusion present but mode not set - don't show
-                canShowDropZone = false;
-            }
+            // Otherwise keep canShowDropZone as is (show for revealed zones or no zones)
 
             if (canShowDropZone)
             {

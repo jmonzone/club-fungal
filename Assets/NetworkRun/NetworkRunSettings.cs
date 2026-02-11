@@ -60,6 +60,7 @@ public class NetworkRunSettings : ScriptableObject
     public bool showAllHiddenZones = false; // If true, show all hidden zones at once. If false, only show one hidden zone at a time
     public bool enableDoorActivities = true; // Enable/disable door unlock activities
     public ResourceCollectionMode resourceCollectionMode = ResourceCollectionMode.UnitInventory; // Where collected resources go
+    public bool showUnitInventoryItems = true; // Show unit inventory items on unit cards
     public bool showUnitInventoryButton = true; // Show "View Data" button on unit cards
     public bool showViewUnitButton = true; // Show "View Unit" button on rest activity unit cards
     public bool showResourceSkillLevel = false; // Show skill level and XP progress on resource unit cards

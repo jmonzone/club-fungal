@@ -68,7 +68,10 @@ namespace TheFungalNetwork.Editor
 
             // DrawSpeciesType(unit);
 
-            // DrawUnitInventory(unit);
+            if (settings == null || settings.showUnitInventoryItems)
+            {
+                DrawUnitInventory(unit);
+            }
 
             if (settings == null || settings.showUnitInventoryButton)
             {

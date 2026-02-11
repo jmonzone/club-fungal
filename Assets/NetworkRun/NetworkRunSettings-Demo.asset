@@ -47,7 +47,8 @@ MonoBehaviour:
   showAllHiddenZones: 0
   enableDoorActivities: 0
   resourceCollectionMode: 0
-  showUnitInventoryButton: 1
+  showUnitInventoryItems: 1
+  showUnitInventoryButton: 0
   showViewUnitButton: 0
   showResourceSkillLevel: 1
   restActivity: {fileID: 11400000, guid: e222da1a99b954ea2bd6c423a0de45ff, type: 2}
