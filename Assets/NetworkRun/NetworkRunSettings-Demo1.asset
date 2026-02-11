@@ -28,7 +28,7 @@ MonoBehaviour:
   hideZoneAfterIndex: 2
   zoneRevealCostScale: 1
   zoneContributionMode: 0
-  showAllHiddenZones: 0
+  showAllHiddenZones: 1
   enableDoorActivities: 0
   resourceCollectionMode: 0
   showUnitInventoryItems: 1

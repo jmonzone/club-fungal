@@ -6,9 +6,12 @@ using UnityEngine;
 [Serializable]
 public class CostOverride
 {
-    public int index; // Level/index (0-based)
+    [Tooltip("0 = first item, 1 = second item, 2 = third item, etc.")]
+    public int index; // Logical 0-based index (0 = first item)
     [Tooltip("Cost override. Set to -1 to use formula, or >= 0 to override.")]
     public int cost = -1;
+    [Tooltip("Optional additional resource cost (e.g., fish, wood). Leave empty for primary resource only.")]
+    public ResourceCost additionalCost; // Additional resource requirement
 }
 
 /// <summary>
@@ -58,12 +61,16 @@ public class ResourceScalingConfig : ScriptableObject
     /// <summary>
     /// Get the cost for a specific index/level, using smooth interpolation between overrides
     /// </summary>
+    /// <param name="index">Logical 0-based index (0 = first item, 1 = second item, etc.)</param>
     public int GetCost(int index)
     {
+        // Convert logical index to formula level (first item = level 2, second = level 3, etc.)
+        int formulaLevel = index + 2;
+
         // If no overrides, use formula with scale
         if (costOverrides == null || costOverrides.Count == 0)
         {
-            var baseCost = CalculateRequiredAmount(index);
+            var baseCost = CalculateRequiredAmount(formulaLevel);
             return Mathf.Max(minimumCost, Mathf.CeilToInt(baseCost * costScale));
         }
 
@@ -78,11 +85,15 @@ public class ResourceScalingConfig : ScriptableObject
         }
 
         // Find the two closest override points to interpolate between
+        // Only consider overrides with actual cost values (cost >= 0)
         CostOverride lowerBound = null;
         CostOverride upperBound = null;
 
         foreach (var o in sortedOverrides)
         {
+            // Skip overrides that don't have explicit costs (cost = -1 means use formula)
+            if (o.cost < 0) continue;
+
             if (o.index < index)
             {
                 lowerBound = o;
@@ -97,8 +108,9 @@ public class ResourceScalingConfig : ScriptableObject
         // Case 1: Before the first override - scale based on first override
         if (lowerBound == null && upperBound != null)
         {
-            var baseCost = CalculateRequiredAmount(index);
-            var upperBaseCost = CalculateRequiredAmount(upperBound.index);
+            var baseCost = CalculateRequiredAmount(formulaLevel);
+            var upperFormulaLevel = upperBound.index + 2;
+            var upperBaseCost = CalculateRequiredAmount(upperFormulaLevel);
 
             // Calculate scale factor from the upper bound
             var scaleFactor = (float)upperBound.cost / upperBaseCost;
@@ -108,8 +120,9 @@ public class ResourceScalingConfig : ScriptableObject
         // Case 2: After the last override - scale based on last override
         if (lowerBound != null && upperBound == null)
         {
-            var baseCost = CalculateRequiredAmount(index);
-            var lowerBaseCost = CalculateRequiredAmount(lowerBound.index);
+            var baseCost = CalculateRequiredAmount(formulaLevel);
+            var lowerFormulaLevel = lowerBound.index + 2;
+            var lowerBaseCost = CalculateRequiredAmount(lowerFormulaLevel);
 
             // Calculate scale factor from the lower bound
             var scaleFactor = (float)lowerBound.cost / lowerBaseCost;
@@ -119,9 +132,11 @@ public class ResourceScalingConfig : ScriptableObject
         // Case 3: Between two overrides - interpolate smoothly
         if (lowerBound != null && upperBound != null)
         {
-            var currentBaseCost = CalculateRequiredAmount(index);
-            var lowerBaseCost = CalculateRequiredAmount(lowerBound.index);
-            var upperBaseCost = CalculateRequiredAmount(upperBound.index);
+            var currentBaseCost = CalculateRequiredAmount(formulaLevel);
+            var lowerFormulaLevel = lowerBound.index + 2;
+            var lowerBaseCost = CalculateRequiredAmount(lowerFormulaLevel);
+            var upperFormulaLevel = upperBound.index + 2;
+            var upperBaseCost = CalculateRequiredAmount(upperFormulaLevel);
 
             // Calculate how far we are between the two bounds (in base cost space)
             var progressInBaseCost = (float)(currentBaseCost - lowerBaseCost) / (upperBaseCost - lowerBaseCost);
@@ -133,7 +148,19 @@ public class ResourceScalingConfig : ScriptableObject
         }
 
         // Fallback to formula with global scale
-        var fallbackBaseCost = CalculateRequiredAmount(index);
+        var fallbackBaseCost = CalculateRequiredAmount(formulaLevel);
         return Mathf.Max(minimumCost, Mathf.CeilToInt(fallbackBaseCost * costScale));
+    }
+
+    /// <summary>
+    /// Get additional resource cost for a specific index (if any)
+    /// </summary>
+    /// <param name="index">Logical 0-based index (0 = first item, 1 = second item, etc.)</param>
+    public ResourceCost GetAdditionalResourceCost(int index)
+    {
+        if (costOverrides == null) return null;
+
+        var exactOverride = costOverrides.FirstOrDefault(o => o.index == index);
+        return exactOverride?.additionalCost;
     }
 }

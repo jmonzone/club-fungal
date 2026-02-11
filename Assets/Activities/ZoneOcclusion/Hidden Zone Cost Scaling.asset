@@ -14,4 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ResourceScalingConfig
   costScale: 1
   minimumCost: 1
-  costOverrides: []
+  firstItemFree: 0
+  costOverrides:
+  - index: 2
+    cost: -1
+    additionalCost:
+      item: {fileID: 11400000, guid: 20b1daf91d6764492a8d2376e4644d03, type: 2}
+      amount: 8

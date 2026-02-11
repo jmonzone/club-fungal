@@ -41,9 +41,26 @@ public class ResourceContributionHandler
     public int CurrentResourceCount => currentResourceCount;
     public int AdditionalResourceCount => additionalResourceCount;
     public ItemTemplate RequiredItem => requiredItem;
-    public ResourceCost AdditionalResourceCost => additionalResourceCost;
+    public ResourceCost AdditionalResourceCost
+    {
+        get
+        {
+            // Get from scaling config if available
+            if (scalingConfig != null)
+            {
+                return scalingConfig.GetAdditionalResourceCost(LogicalIndex);
+            }
+            // Fallback to stored value
+            return additionalResourceCost;
+        }
+    }
     public float UpdateInterval => updateInterval;
     public int ItemsPerUpdate => itemsPerUpdate;
+
+    /// <summary>
+    /// Get logical 0-based index for cost overrides (0 = first item, 1 = second item, etc.)
+    /// </summary>
+    private int LogicalIndex => currentIndex - initialIndex;
 
     public int RequiredAmount
     {
@@ -64,7 +81,7 @@ public class ResourceContributionHandler
             // Use scaling config if available
             if (scalingConfig != null)
             {
-                return scalingConfig.GetCost(currentIndex);
+                return scalingConfig.GetCost(LogicalIndex);
             }
 
             // Fallback to NetworkRunSettings zone cost if no scaling config
@@ -91,11 +108,13 @@ public class ResourceContributionHandler
         additionalResourceCount = 0;
         // Add 2 to contextIndex to start at level 2 (cost 8) for first item, level 3 (cost 17) for second, etc.
         this.currentIndex = contextIndex + 2;
-        this.initialIndex = this.currentIndex; // Track initial value to detect "first item"
+        // initialIndex should always be 2 (the starting formula level) for proper LogicalIndex calculation
+        this.initialIndex = 2;
         this.hasUsedFreeItem = false; // Reset free item flag
         this.settings = settings;
         this.scalingConfig = scalingConfig;
-        this.additionalResourceCost = null; // No longer using additional resource costs from settings
+        // additionalResourceCost now comes from scalingConfig dynamically
+        this.additionalResourceCost = null;
 
         // Use spores as default if requiredItem not already set in component asset
         if (requiredItem == null)
