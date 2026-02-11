@@ -2,6 +2,17 @@ using UnityEngine;
 using System.Collections.Generic;
 
 /// <summary>
+/// Status of a unit's contribution to a resource-based activity
+/// </summary>
+public enum ContributionStatus
+{
+    Complete,          // Requirements met or task complete
+    Contributing,      // Unit has resources and is actively contributing
+    NeedsResource,     // Unit lacks the required resource
+    WaitingForReveal   // Requirements met but waiting for manual reveal/trigger
+}
+
+/// <summary>
 /// Handles resource contribution tracking for activities that require resources to unlock/trigger functionality.
 /// Used by both ZoneOcclusion and SummonUnitComponent.
 /// </summary>
@@ -60,6 +71,21 @@ public class ResourceContributionHandler
         this.cachedRequiredAmount = settings?.GetZoneCost(contextIndex) ?? 0;
         this.additionalResourceCost = settings?.GetAdditionalResourceCost(contextIndex);
         this.requiredItem = settings?.sporesItem; // Set the primary resource item
+        unitProgress.Clear();
+    }
+
+    /// <summary>
+    /// Initialize with explicit required item and amount (for UnlockComponent, etc.)
+    /// </summary>
+    public void InitializeWithItem(ItemTemplate item, int amount)
+    {
+        currentResourceCount = 0;
+        additionalResourceCount = 0;
+        this.requiredItem = item;
+        this.cachedRequiredAmount = amount;
+        this.additionalResourceCost = null;
+        this.contextIndex = -1;
+        this.settings = null;
         unitProgress.Clear();
     }
 
@@ -252,5 +278,106 @@ public class ResourceContributionHandler
         }
 
         return anyContributed;
+    }
+
+    /// <summary>
+    /// Get the contribution status for a unit
+    /// </summary>
+    public ContributionStatus GetUnitStatus(UnitInstance unit, bool isComplete, bool useUnitInventory)
+    {
+        // If already complete, show complete status
+        if (isComplete)
+        {
+            return ContributionStatus.Complete;
+        }
+
+        // If requirements are met, show waiting status
+        if (RequirementsMet())
+        {
+            return ContributionStatus.WaitingForReveal;
+        }
+
+        // Only check unit inventory in unit inventory mode
+        if (useUnitInventory)
+        {
+            var hasResource = requiredItem != null && unit?.Inventory != null && unit.Inventory.GetItemCount(requiredItem) > 0;
+            return hasResource ? ContributionStatus.Contributing : ContributionStatus.NeedsResource;
+        }
+
+        // In global inventory mode, no per-unit status
+        return ContributionStatus.NeedsResource;
+    }
+
+    /// <summary>
+    /// Check if a unit has the required resource
+    /// </summary>
+    public bool UnitHasResource(UnitInstance unit)
+    {
+        return requiredItem != null && unit?.Inventory != null && unit.Inventory.GetItemCount(requiredItem) > 0;
+    }
+
+    /// <summary>
+    /// Check if a contribute button should be shown for a unit
+    /// </summary>
+    public bool ShouldShowContributeButton(UnitInstance unit, bool isComplete, bool useUnitInventory)
+    {
+        return !isComplete && useUnitInventory && UnitHasResource(unit) && !RequirementsMet();
+    }
+
+    /// <summary>
+    /// Check if a progress bar should be shown for a unit
+    /// </summary>
+    public bool ShouldShowProgress(UnitInstance unit, bool isComplete, bool useUnitInventory)
+    {
+        return UnitHasResource(unit) && !isComplete && useUnitInventory && !RequirementsMet();
+    }
+
+    /// <summary>
+    /// Get normalized progress value (0-1) for progress bar
+    /// </summary>
+    public float GetNormalizedProgress(UnitInstance unit)
+    {
+        return GetUnitProgress(unit) / updateInterval;
+    }
+
+    /// <summary>
+    /// Get display text for status labels
+    /// </summary>
+    public string GetStatusText(ContributionStatus status)
+    {
+        switch (status)
+        {
+            case ContributionStatus.Complete:
+                return "✓ Task Complete";
+            case ContributionStatus.Contributing:
+                return "Contributing...";
+            case ContributionStatus.WaitingForReveal:
+                return "✓ Ready to reveal";
+            case ContributionStatus.NeedsResource:
+                var resourceName = requiredItem?.DisplayName ?? "resource";
+                return $"Needs {resourceName}";
+            default:
+                return "";
+        }
+    }
+
+    /// <summary>
+    /// Get color for status text
+    /// </summary>
+    public Color GetStatusColor(ContributionStatus status)
+    {
+        switch (status)
+        {
+            case ContributionStatus.Complete:
+                return new Color(1f, 0.85f, 0.3f); // Gold
+            case ContributionStatus.Contributing:
+                return new Color(0.7f, 1f, 0.7f); // Light green
+            case ContributionStatus.WaitingForReveal:
+                return new Color(0.5f, 1f, 0.5f); // Bright green
+            case ContributionStatus.NeedsResource:
+                return new Color(1f, 0.5f, 0.5f); // Light red
+            default:
+                return Color.white;
+        }
     }
 }

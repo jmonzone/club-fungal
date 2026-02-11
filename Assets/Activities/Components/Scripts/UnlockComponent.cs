@@ -6,8 +6,7 @@ public class UnlockComponent : ActivityComponent
 {
     private Door assignedDoor;
     private ResourceCondition resourceCondition;
-    private int currentResourceCount;
-    private Dictionary<UnitInstance, float> unitProgress = new Dictionary<UnitInstance, float>();
+    private ResourceContributionHandler contributionHandler = new ResourceContributionHandler();
 
     [Header("Collection Settings")]
     [SerializeField] private float updateInterval = 5f;
@@ -24,56 +23,60 @@ public class UnlockComponent : ActivityComponent
 
     public Door AssignedDoor => assignedDoor;
     public ResourceCondition ResourceCondition => resourceCondition;
-    public int CurrentResourceCount => currentResourceCount;
+    public int CurrentResourceCount => contributionHandler.CurrentResourceCount;
     public int RequiredAmount => resourceCondition?.RequiredAmount ?? 0;
-    public bool IsUnlocked => currentResourceCount >= RequiredAmount;
-    public float UpdateInterval => updateInterval;
-    public int ItemsPerUpdate => itemsPerUpdate;
+    public bool IsUnlocked => CurrentResourceCount >= RequiredAmount;
+    public float UpdateInterval => contributionHandler.UpdateInterval;
+    public int ItemsPerUpdate => contributionHandler.ItemsPerUpdate;
+    public ItemTemplate RequiredItem => resourceCondition?.RequiredItem;
 
     public float GetUnitProgress(UnitInstance unit)
     {
-        return unitProgress.ContainsKey(unit) ? unitProgress[unit] : 0f;
+        return contributionHandler.GetUnitProgress(unit);
+    }
+
+    public ResourceContributionHandler GetContributionHandler()
+    {
+        return contributionHandler;
     }
 
     public void ContributeResources(int amount)
     {
-        currentResourceCount += amount;
-        Debug.Log($"Contributed {amount} resources. Progress: {currentResourceCount}/{RequiredAmount}");
+        // Manual contribution method for compatibility
+        for (int i = 0; i < amount; i++)
+        {
+            contributionHandler.ContributeFromUnit(null); // Legacy support
+        }
     }
 
     public void ContributeFromUnit(UnitInstance unit)
     {
-        if (resourceCondition?.RequiredItem != null && unit?.Inventory != null)
-        {
-            var unitItemCount = unit.Inventory.GetItemCount(resourceCondition.RequiredItem);
-            var remainingNeeded = RequiredAmount - currentResourceCount;
-            var amountToContribute = Mathf.Min(unitItemCount, remainingNeeded);
-
-            if (amountToContribute > 0)
-            {
-                // Remove items from unit inventory (only what's needed)
-                for (int i = 0; i < amountToContribute; i++)
-                {
-                    unit.Inventory.RemoveItem(resourceCondition.RequiredItem);
-                }
-
-                // Add to progress
-                currentResourceCount += amountToContribute;
-                Debug.Log($"{unit.DisplayName} contributed {amountToContribute}x {resourceCondition.RequiredItem.DisplayName}. Progress: {currentResourceCount}/{RequiredAmount}");
-            }
-        }
+        contributionHandler.ContributeFromUnit(unit);
     }
 
     public void SetDoorAndCondition(Door door, ResourceCondition condition)
     {
         assignedDoor = door;
         resourceCondition = condition;
-        currentResourceCount = 0;
+
+        // Initialize contribution handler with the required item and amount
+        if (condition?.RequiredItem != null)
+        {
+            contributionHandler.InitializeWithItem(condition.RequiredItem, condition.RequiredAmount);
+        }
+        else
+        {
+            contributionHandler.Reset();
+        }
     }
 
     protected override void OnInitialize()
     {
-        unitProgress.Clear();
+        // Initialize contribution handler if we have resource condition
+        if (resourceCondition?.RequiredItem != null)
+        {
+            contributionHandler.InitializeWithItem(resourceCondition.RequiredItem, resourceCondition.RequiredAmount);
+        }
 
         // Calculate scaled reward amounts based on room level using RuneScape formula
         int roomLevel = networkRun?.VisitedRooms?.Count ?? 1;
@@ -103,70 +106,24 @@ public class UnlockComponent : ActivityComponent
 
     public override void DoUpdate(NetworkRun networkRun, ActivityInstance activityInstance)
     {
-        // Process each unit assigned to this activity
-        if (activityInstance?.Units == null || resourceCondition?.RequiredItem == null) return;
-        if (currentResourceCount >= RequiredAmount) return; // Already have enough
+        // If already unlocked, nothing to do
+        if (IsUnlocked) return;
 
-        foreach (var unit in activityInstance.Units)
-        {
-            if (unit?.Inventory == null) continue;
-
-            // Initialize progress for new units
-            if (!unitProgress.ContainsKey(unit))
-            {
-                unitProgress[unit] = 0f;
-            }
-
-            // Check if unit has the required item
-            var unitItemCount = unit.Inventory.GetItemCount(resourceCondition.RequiredItem);
-            if (unitItemCount <= 0) continue;
-
-            // Update progress
-            var deltaTime = networkRun.Settings.speedMultiplier * Time.deltaTime;
-            unitProgress[unit] += deltaTime;
-
-            // Check if ready to contribute
-            if (unitProgress[unit] >= updateInterval)
-            {
-                var remainingNeeded = RequiredAmount - currentResourceCount;
-                var amountToContribute = Mathf.Min(itemsPerUpdate, unitItemCount, remainingNeeded);
-
-                if (amountToContribute > 0)
-                {
-                    // Remove items from unit inventory
-                    for (int i = 0; i < amountToContribute; i++)
-                    {
-                        unit.Inventory.RemoveItem(resourceCondition.RequiredItem);
-                    }
-
-                    // Add to progress
-                    currentResourceCount += amountToContribute;
-                    unitProgress[unit] = 0f;
-
-                    Debug.Log($"{unit.DisplayName} contributed {amountToContribute}x {resourceCondition.RequiredItem.DisplayName}. Progress: {currentResourceCount}/{RequiredAmount}");
-
-                    // Check if we've unlocked
-                    if (currentResourceCount >= RequiredAmount)
-                    {
-                        Debug.Log($"Enough resources collected! {currentResourceCount}/{RequiredAmount} {resourceCondition.RequiredItem.DisplayName}");
-                        break;
-                    }
-                }
-            }
-        }
+        // Process automatic contributions from unit inventories
+        contributionHandler.ProcessAutomaticContributions(networkRun, activityInstance?.Units);
     }
 
     public void CompleteTask(NetworkRun networkRun)
     {
         Debug.Log($"[UnlockComponent] CompleteTask called");
         Debug.Log($"[UnlockComponent] assignedDoor: {(assignedDoor != null ? "not null" : "NULL")}");
-        Debug.Log($"[UnlockComponent] currentResourceCount: {currentResourceCount}, RequiredAmount: {RequiredAmount}");
+        Debug.Log($"[UnlockComponent] currentResourceCount: {CurrentResourceCount}, RequiredAmount: {RequiredAmount}");
 
         // Unlock the door (resources already contributed)
-        if (assignedDoor != null && currentResourceCount >= RequiredAmount)
+        if (assignedDoor != null && IsUnlocked)
         {
             assignedDoor.isLocked = false;
-            Debug.Log($"Door unlocked! Used {currentResourceCount}x {resourceCondition.RequiredItem.DisplayName}");
+            Debug.Log($"Door unlocked! Used {CurrentResourceCount}x {resourceCondition.RequiredItem.DisplayName}");
 
             // Grant rewards
             Debug.Log($"[UnlockComponent] Checking rewards - networkRun: {(networkRun != null ? "not null" : "NULL")}, Inventory: {(networkRun?.Inventory != null ? "not null" : "NULL")}");
@@ -225,7 +182,7 @@ public class UnlockComponent : ActivityComponent
         }
         else
         {
-            Debug.LogWarning($"[UnlockComponent] CompleteTask conditions NOT met - door null: {assignedDoor == null}, insufficient resources: {currentResourceCount < RequiredAmount}");
+            Debug.LogWarning($"[UnlockComponent] CompleteTask conditions NOT met - door null: {assignedDoor == null}, insufficient resources: {!IsUnlocked}");
         }
     }
 }

@@ -9,6 +9,7 @@ public class SummonUnitComponent : ActivityComponent
 
     [Header("Summon Settings")]
     [SerializeField] private UnitInstanceService unitInstanceService;
+    [SerializeField] private List<UnitSpecies> speciesToSummon = new List<UnitSpecies>(); // Species to create, empty = random
     [SerializeField] private int maxSummons = -1; // -1 = unlimited
 
     // Expose contribution handler properties
@@ -22,10 +23,16 @@ public class SummonUnitComponent : ActivityComponent
     public List<UnitInstance> SummonedUnits => summonedUnits;
     public int SummonedCount => summonedUnits?.Count ?? 0;
     public int MaxSummons => maxSummons;
+    public List<UnitSpecies> SpeciesToSummon => speciesToSummon;
 
     public float GetUnitProgress(UnitInstance unit)
     {
         return contributionHandler.GetUnitProgress(unit);
+    }
+
+    public ResourceContributionHandler GetContributionHandler()
+    {
+        return contributionHandler;
     }
 
     public bool CanSummon()
@@ -47,7 +54,7 @@ public class SummonUnitComponent : ActivityComponent
         return contributionHandler.ContributeFromGlobalInventory(globalInventory);
     }
 
-    public UnitInstance SummonUnit(NetworkRun networkRun)
+    public UnitInstance SummonUnit(NetworkRun networkRun, ActivityInstance activityInstance = null)
     {
         if (!CanSummon())
         {
@@ -55,8 +62,18 @@ public class SummonUnitComponent : ActivityComponent
             return null;
         }
 
-        // Create random unit (query = null means any unit)
-        var newUnit = unitInstanceService.CreateUnit(null);
+        // Create unit based on specified species list (empty = random)
+        UnitInstanceService.UnitQuery query = null;
+        UnitSpecies selectedSpecies = null;
+
+        if (speciesToSummon != null && speciesToSummon.Count > 0)
+        {
+            // Randomly select from the list
+            selectedSpecies = speciesToSummon[Random.Range(0, speciesToSummon.Count)];
+            query = (species => species == selectedSpecies);
+        }
+
+        var newUnit = unitInstanceService.CreateUnit(query);
         summonedUnits.Add(newUnit);
 
         // Add to party
@@ -65,10 +82,17 @@ public class SummonUnitComponent : ActivityComponent
             networkRun.Party.Add(newUnit);
         }
 
+        // Add to this summon activity
+        if (activityInstance != null)
+        {
+            activityInstance.AddUnit(newUnit);
+        }
+
         // Reset contribution progress for next summon
         contributionHandler.Reset();
 
-        Debug.Log($"[SummonUnit] Summoned {newUnit.DisplayName}! Total summoned: {summonedUnits.Count}");
+        var speciesName = selectedSpecies != null ? selectedSpecies.name : "random species";
+        Debug.Log($"[SummonUnit] Summoned {newUnit.DisplayName} ({speciesName})! Total summoned: {summonedUnits.Count}");
         return newUnit;
     }
 

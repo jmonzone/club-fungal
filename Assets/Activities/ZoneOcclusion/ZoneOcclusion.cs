@@ -54,6 +54,11 @@ public class ZoneOcclusion : ActivityComponent
         return contributionHandler.GetUnitProgress(unit);
     }
 
+    public ResourceContributionHandler GetContributionHandler()
+    {
+        return contributionHandler;
+    }
+
     /// <summary>
     /// Sets the zone occlusion configuration with settings reference for dynamic cost updates
     /// </summary>

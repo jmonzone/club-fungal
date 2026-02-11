@@ -8,6 +8,7 @@ namespace TheFungalNetwork.Editor
     public class SummonUnitComponentDrawer : ActivityComponentDrawer<SummonUnitComponent>
     {
         private PartyUnitCardDrawer _cardDrawer = new PartyUnitCardDrawer();
+        private ResourceContributionHandlerDrawer _contributionDrawer = new ResourceContributionHandlerDrawer();
 
         public override List<CardDrawerDisplayItem> GetDisplayItems(ActivityInstance activity, ActivityComponent component, NetworkRun currentRun, System.Action onChanged)
         {
@@ -23,88 +24,20 @@ namespace TheFungalNetwork.Editor
 
         protected override void DrawTypedUnitCard(UnitInstance unit, ActivityInstance activity, SummonUnitComponent component, NetworkRun currentRun, System.Action onChanged)
         {
-            var resourceItem = component.RequiredItem;
-            var hasResource = resourceItem != null && unit.Inventory.GetItemCount(resourceItem) > 0;
+            var handler = component.GetContributionHandler();
             var useUnitInventory = currentRun?.Settings?.zoneContributionMode == ResourceCollectionMode.UnitInventory;
-
-            // Check if requirements are satisfied
-            var primarySatisfied = component.CurrentResourceCount >= component.RequiredAmount;
-            var additionalSatisfied = component.AdditionalResourceCost == null ||
-                                     component.AdditionalResourceCount >= component.AdditionalResourceCost.Amount;
-            var requirementsMet = primarySatisfied && additionalSatisfied;
 
             _cardDrawer.Draw(
                 unit,
                 () =>
                 {
-                    // Show contribute button in unit inventory mode (only if requirements not yet met)
-                    if (useUnitInventory && hasResource && !requirementsMet)
-                    {
-                        GUI.backgroundColor = new Color(0.7f, 1f, 0.7f);
-                        var buttonText = $"✓ Contribute {resourceItem.DisplayName}";
-                        if (GUILayout.Button(buttonText, GUILayout.Height(20), GUILayout.Width(90)))
-                        {
-                            component.ContributeFromUnit(unit);
-                            onChanged?.Invoke();
-                        }
-                        GUI.backgroundColor = Color.white;
-                        GUILayout.Space(2);
-                    }
-
-                    // Remove button (debug mode)
-                    if (currentRun.Settings.debugMode)
-                    {
-                        GUI.backgroundColor = new Color(1f, 0.7f, 0.7f);
-                        if (GUILayout.Button("Remove", GUILayout.Height(18), GUILayout.Width(90)))
-                        {
-                            activity.RemoveUnit(unit);
-                            UnityEditor.AssetDatabase.SaveAssets();
-                            onChanged?.Invoke();
-                        }
-                        GUI.backgroundColor = Color.white;
-                    }
+                    _contributionDrawer.DrawContributeButton(handler, unit, false, useUnitInventory, onChanged);
+                    _contributionDrawer.DrawRemoveButton(activity, unit, currentRun?.Settings, onChanged);
                 },
-                (hasResource && useUnitInventory && !requirementsMet) ? () => component.GetUnitProgress(unit) / component.UpdateInterval : null,
+                _contributionDrawer.GetProgressProvider(handler, unit, false, useUnitInventory),
                 () =>
                 {
-                    // Only show status if using unit inventory mode
-                    if (useUnitInventory)
-                    {
-                        if (requirementsMet)
-                        {
-                            // Show ready status when requirements met
-                            var statusStyle = new GUIStyle(EditorStyles.miniLabel)
-                            {
-                                alignment = TextAnchor.MiddleCenter,
-                                fontSize = 8,
-                                normal = { textColor = new Color(0.6f, 1f, 0.6f) },
-                                fontStyle = FontStyle.Bold
-                            };
-                            EditorGUILayout.LabelField("✓ Ready to summon", statusStyle);
-                        }
-                        else if (hasResource)
-                        {
-                            // Show contributing status
-                            var statusStyle = new GUIStyle(EditorStyles.miniLabel)
-                            {
-                                alignment = TextAnchor.MiddleCenter,
-                                fontSize = 8,
-                                normal = { textColor = new Color(1f, 1f, 0.7f) }
-                            };
-                            EditorGUILayout.LabelField($"Contributing {resourceItem.DisplayName}...", statusStyle);
-                        }
-                        else
-                        {
-                            // Show waiting status
-                            var statusStyle = new GUIStyle(EditorStyles.miniLabel)
-                            {
-                                alignment = TextAnchor.MiddleCenter,
-                                fontSize = 8,
-                                normal = { textColor = new Color(0.7f, 0.7f, 0.7f) }
-                            };
-                            EditorGUILayout.LabelField($"Needs {resourceItem?.DisplayName ?? "resources"}", statusStyle);
-                        }
-                    }
+                    _contributionDrawer.DrawStatusLabel(handler, unit, false, useUnitInventory);
                 }
             );
         }
@@ -188,28 +121,39 @@ namespace TheFungalNetwork.Editor
                         alignment = TextAnchor.MiddleCenter,
                         normal = { textColor = new Color(0.6f, 1f, 0.6f) }
                     };
-                    EditorGUILayout.LabelField($"✓ Ready to summon! ({component.SummonedCount} summoned)", statusStyle);
+                    EditorGUILayout.LabelField("✓ Ready to summon!", statusStyle);
                 }
-                else if (!canSummon && !requirementsMet)
+                else if (!canSummon && requirementsMet)
                 {
                     var statusStyle = new GUIStyle(EditorStyles.boldLabel)
                     {
                         alignment = TextAnchor.MiddleCenter,
                         normal = { textColor = new Color(1f, 0.6f, 0.6f) }
                     };
-                    EditorGUILayout.LabelField("Max summons reached", statusStyle);
+                    EditorGUILayout.LabelField($"Max summons reached ({component.SummonedCount}/{component.MaxSummons})", statusStyle);
+                }
+                else if (!requirementsMet)
+                {
+                    var statusStyle = new GUIStyle(EditorStyles.boldLabel)
+                    {
+                        alignment = TextAnchor.MiddleCenter,
+                        normal = { textColor = new Color(0.8f, 0.8f, 0.8f) }
+                    };
+                    EditorGUILayout.LabelField($"Collecting resources... ({component.SummonedCount} summoned)", statusStyle);
                 }
 
-                // Manual summon button (global inventory mode)
-                if (useGlobalInventory && canSummon && requirementsMet)
+                EditorGUILayout.Space(4);
+
+                // Manual summon button (works in both modes)
+                if (canSummon && requirementsMet)
                 {
                     GUI.backgroundColor = new Color(0.6f, 1f, 0.6f);
-                    if (GUILayout.Button("🧙 Summon Unit", GUILayout.Height(24)))
+                    if (GUILayout.Button("🧙 Summon Unit", GUILayout.Height(28)))
                     {
-                        var newUnit = component.SummonUnit(currentRun);
+                        var newUnit = component.SummonUnit(currentRun, activity);
                         if (newUnit != null)
                         {
-                            Debug.Log($"Summoned new unit: {newUnit.DisplayName}!");
+                            Debug.Log($"[SummonUnit] Summoned {newUnit.DisplayName} to party! Total summoned: {component.SummonedCount}");
                         }
                         onChanged?.Invoke();
                     }

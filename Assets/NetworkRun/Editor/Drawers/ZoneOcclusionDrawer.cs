@@ -8,6 +8,7 @@ namespace TheFungalNetwork.Editor
     public class ZoneOcclusionDrawer : ActivityComponentDrawer<ZoneOcclusion>
     {
         private PartyUnitCardDrawer _cardDrawer = new PartyUnitCardDrawer();
+        private ResourceContributionHandlerDrawer _contributionDrawer = new ResourceContributionHandlerDrawer();
 
         public override List<CardDrawerDisplayItem> GetDisplayItems(ActivityInstance activity, ActivityComponent component, NetworkRun currentRun, System.Action onChanged)
         {
@@ -23,88 +24,23 @@ namespace TheFungalNetwork.Editor
 
         protected override void DrawTypedUnitCard(UnitInstance unit, ActivityInstance activity, ZoneOcclusion component, NetworkRun currentRun, System.Action onChanged)
         {
-            var resourceItem = component.RequiredItem;
-            var hasResource = resourceItem != null && unit.Inventory.GetItemCount(resourceItem) > 0;
+            var handler = component.GetContributionHandler();
             var isRevealed = component.IsRevealed;
             var useUnitInventory = currentRun?.Settings?.zoneContributionMode == ResourceCollectionMode.UnitInventory;
-
-            // Check if requirements are satisfied
-            var primarySatisfied = component.CurrentResourceCount >= component.RequiredAmount;
-            var additionalSatisfied = component.AdditionalResourceCost == null ||
-                                     component.AdditionalResourceCount >= component.AdditionalResourceCost.Amount;
-            var requirementsMet = primarySatisfied && additionalSatisfied;
 
             _cardDrawer.Draw(
                 unit,
                 () =>
                 {
-                    // Show contribute button in unit inventory mode (only if requirements not yet met)
-                    if (!isRevealed && useUnitInventory && hasResource && !requirementsMet)
-                    {
-                        GUI.backgroundColor = new Color(0.7f, 1f, 0.7f);
-                        var buttonText = $"✓ Contribute {resourceItem.DisplayName}";
-                        if (GUILayout.Button(buttonText, GUILayout.Height(20), GUILayout.Width(90)))
-                        {
-                            component.ContributeFromUnit(unit);
-                            onChanged?.Invoke();
-                        }
-                        GUI.backgroundColor = Color.white;
-                        GUILayout.Space(2);
-                    }
-
-                    // Remove button (debug mode)
-                    if (currentRun.Settings.debugMode)
-                    {
-                        GUI.backgroundColor = new Color(1f, 0.7f, 0.7f);
-                        if (GUILayout.Button("Remove", GUILayout.Height(18), GUILayout.Width(90)))
-                        {
-                            activity.RemoveUnit(unit);
-                            UnityEditor.AssetDatabase.SaveAssets();
-                            onChanged?.Invoke();
-                        }
-                        GUI.backgroundColor = Color.white;
-                    }
+                    _contributionDrawer.DrawContributeButton(handler, unit, isRevealed, useUnitInventory, onChanged);
+                    _contributionDrawer.DrawRemoveButton(activity, unit, currentRun?.Settings, onChanged);
                 },
-                (hasResource && !isRevealed && useUnitInventory && !requirementsMet) ? () => component.GetUnitProgress(unit) / component.UpdateInterval : null,
+                _contributionDrawer.GetProgressProvider(handler, unit, isRevealed, useUnitInventory),
                 () =>
                 {
-                    // Only show status if zone is not revealed and using unit inventory mode
-                    if (!isRevealed && useUnitInventory)
+                    if (!isRevealed)
                     {
-                        if (requirementsMet)
-                        {
-                            // Show ready status when requirements met
-                            var statusStyle = new GUIStyle(EditorStyles.miniLabel)
-                            {
-                                alignment = TextAnchor.MiddleCenter,
-                                fontSize = 8,
-                                normal = { textColor = new Color(0.5f, 1f, 0.5f) }
-                            };
-                            EditorGUILayout.LabelField("✓ Ready to reveal", statusStyle, GUILayout.Height(12), GUILayout.Width(90));
-                        }
-                        else if (hasResource)
-                        {
-                            var statusStyle = new GUIStyle(EditorStyles.miniLabel)
-                            {
-                                alignment = TextAnchor.MiddleCenter,
-                                fontSize = 8,
-                                normal = { textColor = new Color(0.7f, 1f, 0.7f) }
-                            };
-                            EditorGUILayout.LabelField("Contributing...", statusStyle, GUILayout.Height(12), GUILayout.Width(90));
-                        }
-                        else
-                        {
-                            var statusStyle = new GUIStyle(EditorStyles.miniLabel)
-                            {
-                                alignment = TextAnchor.MiddleCenter,
-                                fontSize = 8,
-                                normal = { textColor = new Color(1f, 0.5f, 0.5f) }
-                            };
-                            var resourceName = resourceItem?.DisplayName ?? "resource";
-                            EditorGUILayout.LabelField($"Needs {resourceName}", statusStyle, GUILayout.Height(12), GUILayout.Width(90));
-                        }
-
-                        GUILayout.Space(2);
+                        _contributionDrawer.DrawStatusLabel(handler, unit, isRevealed, useUnitInventory);
                     }
                 },
                 currentRun?.Settings);

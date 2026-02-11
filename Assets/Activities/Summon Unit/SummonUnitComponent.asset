@@ -12,3 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9847ae516bfe149989cbf41a01ed2ae7, type: 3}
   m_Name: SummonUnitComponent
   m_EditorClassIdentifier: Assembly-CSharp::SummonUnitComponent
+  contributionHandler:
+    currentResourceCount: 0
+    additionalResourceCount: 0
+    cachedRequiredAmount: 0
+    contextIndex: -1
+    settings: {fileID: 0}
+    updateInterval: 5
+    itemsPerUpdate: 1
+    requiredItem: {fileID: 0}
+    additionalResourceCost:
+      item: {fileID: 0}
+      amount: 0
+  summonedUnits: []
+  unitInstanceService: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2,
+    type: 2}
+  maxSummons: -1
