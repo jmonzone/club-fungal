@@ -40,7 +40,7 @@ namespace TheFungalNetwork.Editor
                         GUILayout.Space(20);
                     }
 
-                    // Show progress bar with resource name
+                    // Show progress bar with resource name (dynamically updates with overrides)
                     var progress = Mathf.Clamp01((float)zoneOcclusion.CurrentResourceCount / zoneOcclusion.RequiredAmount);
                     var rect = EditorGUILayout.GetControlRect(false, 20);
                     EditorGUI.ProgressBar(rect, progress, $"{resourceName}: {zoneOcclusion.CurrentResourceCount}/{zoneOcclusion.RequiredAmount}");
@@ -58,7 +58,7 @@ namespace TheFungalNetwork.Editor
                         var buttonText = $"🔮 Reveal Zone";
                         if (GUILayout.Button(buttonText, GUILayout.Height(30)))
                         {
-                            // zoneOcclusion.RevealZone();
+                            zoneOcclusion.RevealZone();
                             onChanged?.Invoke();
                         }
                         GUI.backgroundColor = Color.white;

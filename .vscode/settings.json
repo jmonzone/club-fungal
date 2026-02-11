@@ -66,5 +66,5 @@
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj"
     },
-    "dotnet.defaultSolution": "club-fungal.sln"
+    "dotnet.defaultSolution": "club-fungal.slnx"
 }

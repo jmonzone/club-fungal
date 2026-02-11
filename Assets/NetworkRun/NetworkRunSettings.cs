@@ -4,6 +4,19 @@ using System.Linq;
 using UnityEngine;
 
 [Serializable]
+public class ZoneCostOverride
+{
+    public int zoneIndex; // Zone index (0-based, relative to hideZoneAfterIndex)
+    public int cost; // Required cost to reveal this zone
+
+    public ZoneCostOverride(int index, int cost)
+    {
+        this.zoneIndex = index;
+        this.cost = cost;
+    }
+}
+
+[Serializable]
 public class SkillToggle
 {
     public Skill skill;
@@ -33,6 +46,14 @@ public class NetworkRunSettings : ScriptableObject
     public ZoneOcclusion zoneOcclusionTemplate; // Template for zone occlusion components
     public bool enableZoneOcclusion = true; // Enable/disable zone occlusion for resource activities
     public int hideZoneAfterIndex = 0; // Only hide resource components starting from this index (0 = hide all)
+    [Range(0.1f, 10f)]
+    public float zoneRevealCostScale = 1f; // Multiplier for zone reveal costs (1.0 = normal, 0.5 = half cost, 2.0 = double cost)
+
+    [Header("Zone Cost Overrides")]
+    [Tooltip("Explicit costs for specific zone indices. Overrides formula calculation. Use for fine-tuning specific zones.")]
+    public List<ZoneCostOverride> zoneCostOverrides = new List<ZoneCostOverride>();
+
+    public bool showAllHiddenZones = false; // If true, show all hidden zones at once. If false, only show one hidden zone at a time
     public bool enableDoorActivities = true; // Enable/disable door unlock activities
     public bool unitsCollectToGlobalInventory = false; // If true, units add collected resources directly to global inventory instead of their own
     public bool showUnitInventoryButton = true; // Show "View Data" button on unit cards
@@ -95,7 +116,7 @@ public class NetworkRunSettings : ScriptableObject
     public List<ActivityInstance> GetRoomActivities(NetworkRun networkRun)
     {
         var instances = new List<ActivityInstance>();
-        
+
         if (activities != null && activities.Count > 0)
         {
             for (int i = 0; i < activities.Count; i++)
@@ -129,13 +150,14 @@ public class NetworkRunSettings : ScriptableObject
                         var zoneOcclusion = Instantiate(zoneOcclusionTemplate);
                         zoneOcclusion.name = "ZoneOcclusion";
 
-                        // Initialize zone occlusion with the first existing component and room level
+                        // Initialize zone occlusion with the first existing component and calculated cost
                         // Use +2 offset to match door unlock formula (first room level = 2 = 83 XP = 8 spores)
                         var nextComponent = existingComponents.Count > 0 ? existingComponents[0] : null;
-                        var roomLevel = (i - hideZoneAfterIndex) + 2;
-                        zoneOcclusion.SetZoneOcclusion(nextComponent, roomLevel);
+                        var zoneIndex = i - hideZoneAfterIndex; // 0-based zone index
 
-                        // Build new components list: ZoneOcclusion first, then existing components
+                        zoneOcclusion.SetZoneOcclusion(nextComponent, zoneIndex, this);
+
+                        // Build new components list with ZoneOcclusion first, followed by existing components
                         var newComponents = new List<ActivityComponent> { zoneOcclusion };
                         newComponents.AddRange(existingComponents);
 
@@ -150,10 +172,14 @@ public class NetworkRunSettings : ScriptableObject
                 }
             }
         }
-        
+
         return instances;
     }
-    private int CalculateRequiredAmount(int roomLevel)
+
+    /// <summary>
+    /// Calculate required amount using RuneScape XP formula
+    /// </summary>
+    public int CalculateRequiredAmount(int roomLevel)
     {
         // RuneScape XP formula: calculate total XP required for this level
         // Then divide by 10 and floor to get the requirement (first level = 8, matching "8xp floor")
@@ -171,6 +197,100 @@ public class NetworkRunSettings : ScriptableObject
 
         // Ensure minimum of 1
         return Mathf.Max(1, requirement);
+    }
+
+    /// <summary>
+    /// Get the cost for a specific zone index, using smooth interpolation between overrides
+    /// </summary>
+    public int GetZoneCost(int zoneIndex)
+    {
+        // If no overrides, use formula with global scale
+        if (zoneCostOverrides == null || zoneCostOverrides.Count == 0)
+        {
+            var roomLevel = zoneIndex + 2;
+            var baseCost = CalculateRequiredAmount(roomLevel);
+            return Mathf.CeilToInt(baseCost * zoneRevealCostScale);
+        }
+
+        // Sort overrides by zone index for interpolation
+        var sortedOverrides = zoneCostOverrides.OrderBy(o => o.zoneIndex).ToList();
+
+        // Check if this zone has an explicit override
+        var exactOverride = sortedOverrides.FirstOrDefault(o => o.zoneIndex == zoneIndex);
+        if (exactOverride != null)
+        {
+            return exactOverride.cost;
+        }
+
+        // Find the two closest override points to interpolate between
+        ZoneCostOverride lowerBound = null;
+        ZoneCostOverride upperBound = null;
+
+        foreach (var o in sortedOverrides)
+        {
+            if (o.zoneIndex < zoneIndex)
+            {
+                lowerBound = o;
+            }
+            else if (o.zoneIndex > zoneIndex && upperBound == null)
+            {
+                upperBound = o;
+                break;
+            }
+        }
+
+        // Case 1: Before the first override - scale based on first override
+        if (lowerBound == null && upperBound != null)
+        {
+            var roomLevel = zoneIndex + 2;
+            var baseCost = CalculateRequiredAmount(roomLevel);
+            var upperRoomLevel = upperBound.zoneIndex + 2;
+            var upperBaseCost = CalculateRequiredAmount(upperRoomLevel);
+
+            // Calculate scale factor from the upper bound
+            var scaleFactor = (float)upperBound.cost / upperBaseCost;
+            return Mathf.CeilToInt(baseCost * scaleFactor);
+        }
+
+        // Case 2: After the last override - scale based on last override
+        if (lowerBound != null && upperBound == null)
+        {
+            var roomLevel = zoneIndex + 2;
+            var baseCost = CalculateRequiredAmount(roomLevel);
+            var lowerRoomLevel = lowerBound.zoneIndex + 2;
+            var lowerBaseCost = CalculateRequiredAmount(lowerRoomLevel);
+
+            // Calculate scale factor from the lower bound
+            var scaleFactor = (float)lowerBound.cost / lowerBaseCost;
+            return Mathf.CeilToInt(baseCost * scaleFactor);
+        }
+
+        // Case 3: Between two overrides - interpolate smoothly
+        if (lowerBound != null && upperBound != null)
+        {
+            // Calculate base costs for interpolation reference points
+            var currentRoomLevel = zoneIndex + 2;
+            var currentBaseCost = CalculateRequiredAmount(currentRoomLevel);
+
+            var lowerRoomLevel = lowerBound.zoneIndex + 2;
+            var lowerBaseCost = CalculateRequiredAmount(lowerRoomLevel);
+
+            var upperRoomLevel = upperBound.zoneIndex + 2;
+            var upperBaseCost = CalculateRequiredAmount(upperRoomLevel);
+
+            // Calculate how far we are between the two bounds (in base cost space)
+            var progressInBaseCost = (float)(currentBaseCost - lowerBaseCost) / (upperBaseCost - lowerBaseCost);
+            progressInBaseCost = Mathf.Clamp01(progressInBaseCost);
+
+            // Interpolate between the override values
+            var interpolatedCost = Mathf.Lerp(lowerBound.cost, upperBound.cost, progressInBaseCost);
+            return Mathf.CeilToInt(interpolatedCost);
+        }
+
+        // Fallback to formula with global scale (shouldn't reach here)
+        var fallbackRoomLevel = zoneIndex + 2;
+        var fallbackBaseCost = CalculateRequiredAmount(fallbackRoomLevel);
+        return Mathf.CeilToInt(fallbackBaseCost * zoneRevealCostScale);
     }
 
     public ResourceCondition CreateResourceConditionForDoor(NetworkRun networkRun)

@@ -8,6 +8,11 @@ public class ZoneOcclusion : ActivityComponent
     [SerializeField] private int currentResourceCount;
     [SerializeField] private bool isRevealed = false;
     private Dictionary<UnitInstance, float> unitProgress = new Dictionary<UnitInstance, float>();
+    
+    // Dynamic cost calculation
+    private NetworkRunSettings settings;
+    private int zoneIndex = -1;
+    [SerializeField] private int cachedRequiredAmount;
 
     [Header("Collection Settings")]
     [SerializeField] private float updateInterval = 5f;
@@ -20,8 +25,20 @@ public class ZoneOcclusion : ActivityComponent
 
     public int CurrentResourceCount => currentResourceCount;
 
-    [SerializeField] private int requiredAmount;
-    public int RequiredAmount => requiredAmount;
+    public int RequiredAmount
+    {
+        get
+        {
+            // Dynamically calculate from settings if available
+            if (settings != null && zoneIndex >= 0)
+            {
+                return settings.GetZoneCost(zoneIndex);
+            }
+            // Fall back to cached value
+            return cachedRequiredAmount;
+        }
+    }
+    
     public bool IsRevealed => isRevealed;
     public float UpdateInterval => updateInterval;
     public int ItemsPerUpdate => itemsPerUpdate;
@@ -34,14 +51,19 @@ public class ZoneOcclusion : ActivityComponent
         return unitProgress.ContainsKey(unit) ? unitProgress[unit] : 0f;
     }
 
-    public void SetZoneOcclusion(ActivityComponent nextComponent, int numberOfRooms)
+    /// <summary>
+    /// Sets the zone occlusion configuration with settings reference for dynamic cost updates
+    /// </summary>
+    public void SetZoneOcclusion(ActivityComponent nextComponent, int zoneIndex, NetworkRunSettings settings)
     {
         hiddenZoneComponent = nextComponent;
         currentResourceCount = 0;
         isRevealed = false;
-        requiredAmount = CalculateRequiredAmount(numberOfRooms);
+        this.zoneIndex = zoneIndex;
+        this.settings = settings;
+        this.cachedRequiredAmount = settings?.GetZoneCost(zoneIndex) ?? 0;
 
-        Debug.Log($"[ZoneOcclusion] Zone hidden. Requires {RequiredAmount}x {requiredItem?.DisplayName} to reveal.");
+        Debug.Log($"[ZoneOcclusion] Zone {zoneIndex} hidden. Requires {RequiredAmount}x {requiredItem?.DisplayName} to reveal.");
     }
 
     public void ContributeFromUnit(UnitInstance unit)
@@ -103,29 +125,6 @@ public class ZoneOcclusion : ActivityComponent
     protected override void OnInitialize()
     {
         unitProgress.Clear();
-    }
-
-    private int CalculateRequiredAmount(int roomLevel)
-    {
-        // RuneScape XP formula: calculate total XP required for this level
-        // Then divide by 10 and floor to get the requirement
-        // Match door unlock formula (first room with level 2 = 83 XP = 8 spores)
-        float totalXP = 0f;
-
-        for (int level = 1; level < roomLevel; level++)
-        {
-            totalXP += Mathf.Floor(level + 300f * Mathf.Pow(2f, level / 7f));
-        }
-
-        totalXP = Mathf.Floor(totalXP / 4f);
-
-        // Divide by 10 and floor to get the requirement amount
-        int requirement = Mathf.FloorToInt(totalXP / 10f);
-
-        // Ensure minimum of 1
-        int result = Mathf.Max(1, requirement);
-        Debug.Log($"[ZoneOcclusion] CalculateRequiredAmount: roomLevel={roomLevel}, totalXP={totalXP}, requirement={requirement}, result={result}");
-        return result;
     }
 
     public override void DoUpdate(NetworkRun networkRun, ActivityInstance activityInstance)

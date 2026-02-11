@@ -22,7 +22,9 @@ namespace TheFungalNetwork.Editor
         private List<RoomTemplate> roomTemplates;
         private int selectedRoomIndex = 0;
         private NetworkRun currentRun;
-        private NetworkRunSettings defaultSettings;
+        private List<NetworkRunSettings> availableSettings;
+        private int selectedSettingsIndex = 0;
+        private NetworkRunSettings selectedSettings;
 
         private RoomSelectionDrawer roomSelectionDrawer;
         private CurrentRoomDrawer currentRoomDrawer;
@@ -42,8 +44,8 @@ namespace TheFungalNetwork.Editor
             unlockComponentTemplate = GURUStyler.LoadAsset<UnlockComponent>("UnlockComponent");
             LoadRoomTemplates();
 
-            // Load default settings asset
-            defaultSettings = AssetDatabase.LoadAssetAtPath<NetworkRunSettings>("Assets/NetworkRun/NetworkRunSettings.asset");
+            // Load all available settings assets
+            LoadAvailableSettings();
 
             roomSelectionDrawer = new RoomSelectionDrawer();
             currentRoomDrawer = new CurrentRoomDrawer();
@@ -60,12 +62,32 @@ namespace TheFungalNetwork.Editor
             }
         }
 
+        void OnInspectorUpdate()
+        {
+            // Repaint when inspector values change (e.g., settings modifications)
+            // This ensures zone cost overrides update immediately
+            Repaint();
+        }
+
         private void LoadRoomTemplates()
         {
             roomTemplates = AssetDatabase.FindAssets("t:RoomTemplate")
                 .Select(guid => AssetDatabase.LoadAssetAtPath<RoomTemplate>(AssetDatabase.GUIDToAssetPath(guid)))
                 .Where(template => template != null)
                 .ToList();
+        }
+
+        private void LoadAvailableSettings()
+        {
+            availableSettings = AssetDatabase.FindAssets("t:NetworkRunSettings")
+                .Select(guid => AssetDatabase.LoadAssetAtPath<NetworkRunSettings>(AssetDatabase.GUIDToAssetPath(guid)))
+                .Where(settings => settings != null)
+                .ToList();
+
+            if (availableSettings.Count > 0)
+            {
+                selectedSettings = availableSettings[0];
+            }
         }
 
         void OnGUI()
@@ -88,43 +110,55 @@ namespace TheFungalNetwork.Editor
             EditorGUI.EndDisabledGroup();
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
-            // Show settings connection status
-            EditorGUILayout.BeginHorizontal();
-            string settingsStatus = defaultSettings != null ? $"Settings: Connected ({defaultSettings.name})" : "Settings: Not Connected";
-            var statusStyle = new GUIStyle(EditorStyles.miniLabel) { fontSize = 10, normal = { textColor = defaultSettings != null ? new Color(0.3f, 0.8f, 0.3f) : new Color(1f, 0.5f, 0.5f) } };
-            EditorGUILayout.LabelField(settingsStatus, statusStyle, GUILayout.Height(16));
-
-            if (defaultSettings != null && GUILayout.Button("View", GUILayout.Width(50), GUILayout.Height(16)))
+            // Settings selector
+            if (availableSettings != null && availableSettings.Count > 0)
             {
-                EditorGUIUtility.PingObject(defaultSettings);
-                Selection.activeObject = defaultSettings;
-            }
-            EditorGUILayout.EndHorizontal();
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("Settings:", GUILayout.Width(60));
 
-            // Debug mode toggle
-            if (defaultSettings != null)
-            {
+                var settingsNames = availableSettings.Select(s => s != null ? s.name : "null").ToArray();
                 EditorGUI.BeginChangeCheck();
-                bool debugMode = EditorGUILayout.ToggleLeft("Debug Mode", defaultSettings.debugMode, GUILayout.Width(120));
+                selectedSettingsIndex = EditorGUILayout.Popup(selectedSettingsIndex, settingsNames);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    Undo.RecordObject(defaultSettings, "Toggle Debug Mode");
-                    defaultSettings.debugMode = debugMode;
+                    if (selectedSettingsIndex >= 0 && selectedSettingsIndex < availableSettings.Count)
+                    {
+                        selectedSettings = availableSettings[selectedSettingsIndex];
+                    }
+                }
+
+                if (selectedSettings != null && GUILayout.Button("View", GUILayout.Width(50)))
+                {
+                    EditorGUIUtility.PingObject(selectedSettings);
+                    Selection.activeObject = selectedSettings;
+                }
+                EditorGUILayout.EndHorizontal();
+            }
+
+            // Debug mode toggle
+            if (selectedSettings != null)
+            {
+                EditorGUI.BeginChangeCheck();
+                bool debugMode = EditorGUILayout.ToggleLeft("Debug Mode", selectedSettings.debugMode, GUILayout.Width(120));
+                if (EditorGUI.EndChangeCheck())
+                {
+                    Undo.RecordObject(selectedSettings, "Toggle Debug Mode");
+                    selectedSettings.debugMode = debugMode;
                     if (!debugMode)
                     {
-                        defaultSettings.speedMultiplier = 1f;
+                        selectedSettings.speedMultiplier = 1f;
                     }
-                    EditorUtility.SetDirty(defaultSettings);
+                    EditorUtility.SetDirty(selectedSettings);
                 }
 
                 // Speed multiplier slider
                 EditorGUI.BeginChangeCheck();
-                float speedMultiplier = EditorGUILayout.Slider("Speed", defaultSettings.speedMultiplier, 0.1f, 10f);
+                float speedMultiplier = EditorGUILayout.Slider("Speed", selectedSettings.speedMultiplier, 0.1f, 10f);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    Undo.RecordObject(defaultSettings, "Change Speed Multiplier");
-                    defaultSettings.speedMultiplier = speedMultiplier;
-                    EditorUtility.SetDirty(defaultSettings);
+                    Undo.RecordObject(selectedSettings, "Change Speed Multiplier");
+                    selectedSettings.speedMultiplier = speedMultiplier;
+                    EditorUtility.SetDirty(selectedSettings);
                 }
             }
 
@@ -184,9 +218,9 @@ namespace TheFungalNetwork.Editor
             selectedRoomIndex = 0;
             LoadRoomTemplates();
             var doorConditions = LoadAllDoorConditions();
-            var partySize = defaultSettings != null ? defaultSettings.defaultPartySize : 3;
+            var partySize = selectedSettings != null ? selectedSettings.defaultPartySize : 3;
             var party = GetRandomParty(partySize);
-            currentRun = new NetworkRun(doorConditions, party, unlockComponentTemplate, defaultSettings);
+            currentRun = new NetworkRun(doorConditions, party, unlockComponentTemplate, selectedSettings);
             StartRun();
             Repaint();
         }

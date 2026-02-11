@@ -15,25 +15,26 @@ namespace TheFungalNetwork.Editor
                 return;
             }
 
-            // Filter activities: show all revealed zones, but only the first unrevealed zone
+            // Filter activities: show all revealed zones, but only the first unrevealed zone (unless showAllHiddenZones is true)
             // As zones are revealed, the next unrevealed zone automatically becomes visible
             var visibleActivities = new List<ActivityInstance>();
             bool foundUnrevealedZone = false;
+            var showAllHidden = currentRun?.Settings?.showAllHiddenZones ?? false;
 
-            Debug.Log($"[ActivityListDrawer] ========== Processing {activities.Count} activities ==========");
+            Debug.Log($"[ActivityListDrawer] ========== Processing {activities.Count} activities (showAllHidden={showAllHidden}) ==========");
 
             for (int i = 0; i < activities.Count; i++)
             {
                 var activity = activities[i];
-                
+
                 if (activity == null)
                 {
                     Debug.LogWarning($"[ActivityListDrawer] Activity at index {i} is NULL");
                     continue;
                 }
-                
+
                 Debug.Log($"[ActivityListDrawer] [{i}] Activity: '{activity.Name}', RuntimeComponents: {activity.RuntimeComponents?.Count ?? 0}");
-                
+
                 // Check if this activity has a zone occlusion component
                 ZoneOcclusion zoneOcclusion = null;
                 if (activity.RuntimeComponents != null)
@@ -42,7 +43,7 @@ namespace TheFungalNetwork.Editor
                     {
                         var component = activity.RuntimeComponents[j];
                         Debug.Log($"[ActivityListDrawer] [{i}] Component {j}: {component?.GetType().Name ?? "NULL"}");
-                        
+
                         if (component is ZoneOcclusion zo)
                         {
                             zoneOcclusion = zo;
@@ -50,13 +51,13 @@ namespace TheFungalNetwork.Editor
                         }
                     }
                 }
-                
+
                 bool isZoneUnrevealed = zoneOcclusion != null && !zoneOcclusion.IsRevealed;
 
                 if (isZoneUnrevealed)
                 {
-                    // Only show the first unrevealed zone (subsequent ones stay hidden until this is revealed)
-                    if (!foundUnrevealedZone)
+                    // Show unrevealed zones based on settings
+                    if (showAllHidden || !foundUnrevealedZone)
                     {
                         visibleActivities.Add(activity);
                         foundUnrevealedZone = true;
@@ -74,7 +75,7 @@ namespace TheFungalNetwork.Editor
                     Debug.Log($"[ActivityListDrawer] [{i}] ✓ ADDED visible activity: {activity.Name}");
                 }
             }
-            
+
             Debug.Log($"[ActivityListDrawer] ========== Final visibleActivities count: {visibleActivities.Count} ==========");
 
             // Clamp columns to 1-3

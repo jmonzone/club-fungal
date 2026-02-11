@@ -10,6 +10,7 @@ public class ResourceUpdateComponent : ActivityComponent
 
     private Dictionary<int, float> unitLastUpdateTimes = new Dictionary<int, float>();
     private Dictionary<int, float> unitLastEnergyDepletionTimes = new Dictionary<int, float>();
+    private Dictionary<int, float> unitLastManualCollectionTimes = new Dictionary<int, float>();
 
     public ItemTemplate ItemTemplate => itemTemplate;
     public float UpdateInterval => updateInterval;
@@ -79,6 +80,100 @@ public class ResourceUpdateComponent : ActivityComponent
         var currentTime = networkRun?.SimulationTime ?? Time.realtimeSinceStartup;
         var timeSinceLastUpdate = currentTime - unitLastUpdateTimes[unitKey];
         return Mathf.Clamp01(timeSinceLastUpdate / effectiveInterval);
+    }
+
+    /// <summary>
+    /// Performs the collection of items and XP gain for a unit.
+    /// </summary>
+    private void PerformCollection(UnitInstance unit, Inventory targetInventory, ActivityInstance activityInstance)
+    {
+        if (itemTemplate == null || targetInventory == null) return;
+
+        // Collect items
+        for (int i = 0; i < itemsPerUpdate; i++)
+        {
+            targetInventory.AddItem(itemTemplate);
+        }
+
+        // Add XP
+        if (activityInstance?.Template?.PrimarySkill != null && unit?.Skills != null)
+        {
+            if (unit.Skills.TryGetValue(activityInstance.Template.PrimarySkill, out var skillInstance))
+            {
+                skillInstance.IncreaseSkillXP(unit, 10);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Attempts to manually collect resources for a unit. Returns true if successful.
+    /// </summary>
+    public bool TryManualCollect(UnitInstance unit, NetworkRun networkRun, ActivityInstance activityInstance, out float cooldownRemaining)
+    {
+        cooldownRemaining = 0f;
+
+        if (unit == null || itemTemplate == null)
+        {
+            return false;
+        }
+
+        var unitKey = unit.GetHashCode();
+        var currentTime = networkRun?.SimulationTime ?? Time.realtimeSinceStartup;
+        var effectiveInterval = GetEffectiveInterval(unit, activityInstance, networkRun);
+
+        // Check cooldown
+        if (unitLastManualCollectionTimes.ContainsKey(unitKey))
+        {
+            var timeSinceLastManualCollection = currentTime - unitLastManualCollectionTimes[unitKey];
+            if (timeSinceLastManualCollection < effectiveInterval)
+            {
+                cooldownRemaining = effectiveInterval - timeSinceLastManualCollection;
+                return false;
+            }
+        }
+
+        var collectToGlobal = networkRun?.Settings?.unitsCollectToGlobalInventory ?? false;
+        var targetInventory = collectToGlobal ? networkRun?.Inventory : unit.Inventory;
+
+        if (targetInventory == null)
+        {
+            return false;
+        }
+
+        // Check if inventory is full when collecting to unit inventory
+        if (!collectToGlobal && targetInventory.IsFull)
+        {
+            return false;
+        }
+
+        // Perform collection
+        PerformCollection(unit, targetInventory, activityInstance);
+
+        // Update cooldown timer
+        unitLastManualCollectionTimes[unitKey] = currentTime;
+
+        Debug.Log($"{unit.DisplayName} manually collected {itemsPerUpdate}x {itemTemplate.DisplayName}");
+        return true;
+    }
+
+    /// <summary>
+    /// Gets the remaining cooldown time for manual collection. Returns 0 if ready.
+    /// </summary>
+    public float GetManualCollectCooldown(UnitInstance unit, ActivityInstance activityInstance, NetworkRun networkRun)
+    {
+        if (unit == null) return 0f;
+
+        var unitKey = unit.GetHashCode();
+        if (!unitLastManualCollectionTimes.ContainsKey(unitKey))
+        {
+            return 0f;
+        }
+
+        var currentTime = networkRun?.SimulationTime ?? Time.realtimeSinceStartup;
+        var effectiveInterval = GetEffectiveInterval(unit, activityInstance, networkRun);
+        var timeSinceLastManualCollection = currentTime - unitLastManualCollectionTimes[unitKey];
+
+        return Mathf.Max(0f, effectiveInterval - timeSinceLastManualCollection);
     }
 
     public override void DoUpdate(NetworkRun networkRun, ActivityInstance activityInstance)
@@ -152,20 +247,9 @@ public class ResourceUpdateComponent : ActivityComponent
                         continue;
                     }
 
-                    for (int i = 0; i < itemsPerUpdate; i++)
-                    {
-                        targetInventory.AddItem(itemTemplate);
-                    }
+                    // Perform collection
+                    PerformCollection(unit, targetInventory, activityInstance);
                     // Debug.Log($"{unit.DisplayName} collected {itemsPerUpdate}x {itemTemplate.DisplayName} to {(collectToGlobal ? "global" : "unit")} inventory");
-                }
-
-                // Add XP to the unit's skill
-                if (activityInstance?.Template?.PrimarySkill != null && unit?.Skills != null)
-                {
-                    if (unit.Skills.TryGetValue(activityInstance.Template.PrimarySkill, out var skillInstance))
-                    {
-                        skillInstance.IncreaseSkillXP(unit, 10);
-                    }
                 }
 
                 unitLastUpdateTimes[unitKey] = networkRun?.SimulationTime ?? Time.realtimeSinceStartup;
@@ -191,6 +275,7 @@ public class ResourceUpdateComponent : ActivityComponent
         {
             unitLastUpdateTimes.Remove(key);
             unitLastEnergyDepletionTimes.Remove(key);
+            unitLastManualCollectionTimes.Remove(key);
         }
     }
 }

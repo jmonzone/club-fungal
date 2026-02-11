@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67a5beef93c584273a484a04a6155fe5, type: 3}
-  m_Name: NetworkRunSettings
+  m_Name: NetworkRunSettings-Demo
   m_EditorClassIdentifier: Assembly-CSharp::NetworkRunSettings
   defaultPartySize: 1
   updateInterval: 1
   debugMode: 0
-  speedMultiplier: 6
+  speedMultiplier: 1
   minimumActivities: 2
   useEnergySystem: 0
   energyDepletionPerUpdate: 1
@@ -25,7 +25,7 @@ MonoBehaviour:
   zoneOcclusionTemplate: {fileID: 11400000, guid: f0d1de32675c648398a75ea496a6d330,
     type: 2}
   enableZoneOcclusion: 1
-  hideZoneAfterIndex: 4
+  hideZoneAfterIndex: 2
   enableDoorActivities: 0
   unitsCollectToGlobalInventory: 1
   showUnitInventoryButton: 0

@@ -84,6 +84,9 @@ namespace TheFungalNetwork.Editor
                             DrawClaimButton(unit, resourceComponent, currentRun, onChanged);
                         }
 
+                        // Manual collect button (always available)
+                        DrawManualCollectButton(unit, activity, resourceComponent, currentRun, onChanged);
+
                         DrawDivider();
 
 
@@ -100,10 +103,22 @@ namespace TheFungalNetwork.Editor
 
                         DrawViewDataButton(unit);
                     }
-                    else if (currentRun.Settings.showResourceSkillLevel)
+                    else
                     {
-                        // Show minimal divider when only showing skills
-                        DrawDivider();
+                        // Non-debug mode - show manual collect button if in activity
+                        if (isInActivity)
+                        {
+                            if (currentRun.Settings.showResourceSkillLevel)
+                            {
+                                DrawDivider();
+                            }
+                            DrawManualCollectButton(unit, activity, resourceComponent, currentRun, onChanged);
+                        }
+                        else if (currentRun.Settings.showResourceSkillLevel)
+                        {
+                            // Show minimal divider when only showing skills
+                            DrawDivider();
+                        }
                     }
                 },
                 shouldShowProgress ? () => progress : null,
@@ -291,6 +306,40 @@ namespace TheFungalNetwork.Editor
             {
                 GUI.enabled = false;
                 GUILayout.Button("Claim", GUILayout.Height(16), GUILayout.Width(90));
+                GUI.enabled = true;
+            }
+        }
+
+        private void DrawManualCollectButton(UnitInstance unit, ActivityInstance activity, ResourceUpdateComponent resourceComponent, NetworkRun currentRun, System.Action onChanged)
+        {
+            var cooldown = resourceComponent.GetManualCollectCooldown(unit, activity, currentRun);
+            var isOnCooldown = cooldown > 0f;
+            var collectToGlobal = currentRun?.Settings?.unitsCollectToGlobalInventory ?? false;
+            var targetInventory = collectToGlobal ? currentRun?.Inventory : unit?.Inventory;
+            var isInventoryFull = !collectToGlobal && targetInventory != null && targetInventory.IsFull;
+
+            var buttonText = isOnCooldown ? $"Collect ({cooldown:F1}s)" : "⚡ Collect";
+
+            if (isInventoryFull)
+            {
+                GUI.enabled = false;
+                GUI.backgroundColor = new Color(1f, 0.5f, 0.5f);
+                GUILayout.Button("Inventory Full", GUILayout.Height(18), GUILayout.Width(90));
+                GUI.backgroundColor = Color.white;
+                GUI.enabled = true;
+            }
+            else
+            {
+                GUI.enabled = !isOnCooldown;
+                GUI.backgroundColor = isOnCooldown ? new Color(0.6f, 0.6f, 0.6f) : new Color(1f, 0.85f, 0.3f);
+                if (GUILayout.Button(buttonText, GUILayout.Height(18), GUILayout.Width(90)))
+                {
+                    if (resourceComponent.TryManualCollect(unit, currentRun, activity, out float _))
+                    {
+                        onChanged?.Invoke();
+                    }
+                }
+                GUI.backgroundColor = Color.white;
                 GUI.enabled = true;
             }
         }
