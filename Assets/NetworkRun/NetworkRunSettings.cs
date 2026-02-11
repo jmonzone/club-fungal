@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public enum ResourceCollectionMode
+{
+    UnitInventory,      // Resources go to individual unit inventories
+    GlobalInventory     // Resources go directly to global inventory
+}
+
 [Serializable]
 public class ZoneCostOverride
 {
@@ -45,6 +51,7 @@ public class NetworkRunSettings : ScriptableObject
     public int hideZoneAfterIndex = 0; // Only hide resource components starting from this index (0 = hide all)
     [Range(0.1f, 10f)]
     public float zoneRevealCostScale = 1f; // Multiplier for zone reveal costs (1.0 = normal, 0.5 = half cost, 2.0 = double cost)
+    public ResourceCollectionMode zoneContributionMode = ResourceCollectionMode.UnitInventory; // Where zone reveal contributions come from
 
     [Header("Zone Cost Overrides")]
     [Tooltip("Explicit costs for specific zone indices. Overrides formula calculation. Use for fine-tuning specific zones.")]
@@ -52,7 +59,7 @@ public class NetworkRunSettings : ScriptableObject
 
     public bool showAllHiddenZones = false; // If true, show all hidden zones at once. If false, only show one hidden zone at a time
     public bool enableDoorActivities = true; // Enable/disable door unlock activities
-    public bool unitsCollectToGlobalInventory = false; // If true, units add collected resources directly to global inventory instead of their own
+    public ResourceCollectionMode resourceCollectionMode = ResourceCollectionMode.UnitInventory; // Where collected resources go
     public bool showUnitInventoryButton = true; // Show "View Data" button on unit cards
     public bool showViewUnitButton = true; // Show "View Unit" button on rest activity unit cards
     public bool showResourceSkillLevel = false; // Show skill level and XP progress on resource unit cards

@@ -57,7 +57,7 @@ namespace TheFungalNetwork.Editor
                 }
             }
 
-            var collectToGlobal = currentRun?.Settings?.unitsCollectToGlobalInventory ?? false;
+            var collectToGlobal = currentRun?.Settings?.resourceCollectionMode == ResourceCollectionMode.GlobalInventory;
             var shouldShowProgress = isInActivity && (collectToGlobal || (unit?.Inventory == null || !unit.Inventory.IsFull));
 
             _cardDrawer.Draw(
@@ -78,7 +78,7 @@ namespace TheFungalNetwork.Editor
                         DrawSpeedBonus(unit, activity, resourceComponent);
 
                         // Only show inventory and claim button if not collecting to global inventory
-                        if (!currentRun.Settings.unitsCollectToGlobalInventory)
+                        if (currentRun.Settings.resourceCollectionMode == ResourceCollectionMode.UnitInventory)
                         {
                             DrawResourceCount(unit, resourceComponent);
                             DrawClaimButton(unit, resourceComponent, currentRun, onChanged);
@@ -314,7 +314,7 @@ namespace TheFungalNetwork.Editor
         {
             var cooldown = resourceComponent.GetManualCollectCooldown(unit, activity, currentRun);
             var isOnCooldown = cooldown > 0f;
-            var collectToGlobal = currentRun?.Settings?.unitsCollectToGlobalInventory ?? false;
+            var collectToGlobal = currentRun?.Settings?.resourceCollectionMode == ResourceCollectionMode.GlobalInventory;
             var targetInventory = collectToGlobal ? currentRun?.Inventory : unit?.Inventory;
             var isInventoryFull = !collectToGlobal && targetInventory != null && targetInventory.IsFull;
 

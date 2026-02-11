@@ -12,7 +12,7 @@ namespace TheFungalNetwork.Editor
             color = Color.white;
             drawAction = () =>
             {
-                var collectToGlobal = currentRun?.Settings?.unitsCollectToGlobalInventory ?? false;
+                var collectToGlobal = currentRun?.Settings?.resourceCollectionMode == ResourceCollectionMode.GlobalInventory;
 
                 EditorGUILayout.Space(4);
 

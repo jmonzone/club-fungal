@@ -27,6 +27,7 @@ MonoBehaviour:
   enableZoneOcclusion: 1
   hideZoneAfterIndex: 2
   zoneRevealCostScale: 1
+  zoneContributionMode: 0
   zoneCostOverrides:
   - zoneIndex: 0
     cost: 8
@@ -45,8 +46,8 @@ MonoBehaviour:
       amount: 0
   showAllHiddenZones: 0
   enableDoorActivities: 0
-  unitsCollectToGlobalInventory: 1
-  showUnitInventoryButton: 0
+  resourceCollectionMode: 0
+  showUnitInventoryButton: 1
   showViewUnitButton: 0
   showResourceSkillLevel: 1
   restActivity: {fileID: 11400000, guid: e222da1a99b954ea2bd6c423a0de45ff, type: 2}

@@ -182,7 +182,16 @@ public class ZoneOcclusion : ActivityComponent
         // Don't process if already revealed
         if (isRevealed) return;
 
-        // Process each unit assigned to this activity
+        // Check contribution mode from settings
+        var useGlobalInventory = networkRun?.Settings?.zoneContributionMode == ResourceCollectionMode.GlobalInventory;
+
+        // Global inventory mode uses manual contributions only (via button clicks)
+        if (useGlobalInventory)
+        {
+            return;
+        }
+
+        // Automatic contributions from unit inventories
         if (activityInstance?.Units == null) return;
 
         foreach (var unit in activityInstance.Units)

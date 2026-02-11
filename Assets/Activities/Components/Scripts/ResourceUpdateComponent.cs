@@ -59,7 +59,7 @@ public class ResourceUpdateComponent : ActivityComponent
         if (unit == null) return 0f;
 
         // Check if collecting to global inventory
-        var collectToGlobal = networkRun?.Settings?.unitsCollectToGlobalInventory ?? false;
+        var collectToGlobal = networkRun?.Settings?.resourceCollectionMode == ResourceCollectionMode.GlobalInventory;
 
         // If collecting to unit inventory and it's full, don't show progress
         if (!collectToGlobal && unit.Inventory != null && unit.Inventory.IsFull)
@@ -132,7 +132,7 @@ public class ResourceUpdateComponent : ActivityComponent
             }
         }
 
-        var collectToGlobal = networkRun?.Settings?.unitsCollectToGlobalInventory ?? false;
+        var collectToGlobal = networkRun?.Settings?.resourceCollectionMode == ResourceCollectionMode.GlobalInventory;
         var targetInventory = collectToGlobal ? networkRun?.Inventory : unit.Inventory;
 
         if (targetInventory == null)
@@ -226,7 +226,7 @@ public class ResourceUpdateComponent : ActivityComponent
             var timeSinceLastUpdate = currentTime - unitLastUpdateTimes[unitKey];
             if (timeSinceLastUpdate >= effectiveInterval)
             {
-                var collectToGlobal = networkRun?.Settings?.unitsCollectToGlobalInventory ?? false;
+                var collectToGlobal = networkRun?.Settings?.resourceCollectionMode == ResourceCollectionMode.GlobalInventory;
 
                 // Check if inventory has space before collecting
                 if (itemTemplate != null)
