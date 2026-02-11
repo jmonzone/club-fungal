@@ -159,8 +159,8 @@ namespace TheFungalNetwork.Editor
             // Create unit card drawer function based on components
             Action<UnitInstance> unitCardDrawer = CreateUnitCardDrawer(activity, currentRun, onChanged);
 
-            // Add unified unit drop zone only if not occluded
-            if (zoneOcclusionComponent == null || zoneOcclusionComponent.IsRevealed)
+            // Add unified unit drop zone only if activity can contain units and not occluded
+            if (activity.Template?.CanContainUnits == true && (zoneOcclusionComponent == null || zoneOcclusionComponent.IsRevealed))
             {
                 var unitDropZoneItem = new UnifiedUnitDropZoneDisplayItem(
                     activity,

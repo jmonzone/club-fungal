@@ -19,6 +19,7 @@ MonoBehaviour:
   activityControllerPrefab: {fileID: 0}
   components:
   - {fileID: 11400000, guid: b1fe8a2fb15c14b84a77caab8d4347a2, type: 2}
+  canContainUnits: 1
   origin: {x: 0, y: 0, z: 0}
   player: {fileID: 0}
   units: []

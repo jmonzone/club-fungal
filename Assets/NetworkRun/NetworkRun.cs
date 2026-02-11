@@ -27,11 +27,12 @@ public class NetworkRun
 
     public NetworkRun(List<DoorCondition> doorConditions, List<UnitInstance> partyUnits, UnlockComponent unlockTemplate, NetworkRunSettings settings = null)
     {
-        inventory = new Inventory();
+        inventory = new Inventory(settings?.initialInventory);
         this.doorConditions = doorConditions ?? new List<DoorCondition>();
         this.party = partyUnits ?? new List<UnitInstance>();
         this.unlockComponentTemplate = unlockTemplate;
         this.settings = settings;
+        
         visitedRooms = new List<RoomInstance>();
         currentRoom = CreateNewRoomInstance();
         visitedRooms.Add(currentRoom);

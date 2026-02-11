@@ -6,10 +6,15 @@ public abstract class ActivityComponent : ScriptableObject
     protected ActivityInstance activityInstance;
 
 
-    public virtual void Initialize(NetworkRun networkRun, ActivityInstance activityInstance)
+    public void Initialize(NetworkRun networkRun, ActivityInstance activityInstance)
     {
         this.networkRun = networkRun;
         this.activityInstance = activityInstance;
+        OnInitialize();
+    }
+
+    protected virtual void OnInitialize()
+    {
         // Optional initialization hook for components
     }
 

@@ -100,7 +100,7 @@ public class ZoneOcclusion : ActivityComponent
         return 0;
     }
 
-    public override void Initialize(NetworkRun networkRun, ActivityInstance activityInstance)
+    protected override void OnInitialize()
     {
         unitProgress.Clear();
     }

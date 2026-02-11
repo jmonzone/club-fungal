@@ -25,7 +25,7 @@ MonoBehaviour:
   zoneOcclusionTemplate: {fileID: 11400000, guid: f0d1de32675c648398a75ea496a6d330,
     type: 2}
   enableZoneOcclusion: 1
-  hideZoneAfterIndex: 2
+  hideZoneAfterIndex: 4
   enableDoorActivities: 0
   unitsCollectToGlobalInventory: 1
   showUnitInventoryButton: 0

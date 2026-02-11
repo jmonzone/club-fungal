@@ -50,6 +50,10 @@ public class NetworkRunSettings : ScriptableObject
     [Header("Skills")]
     [SerializeField] private List<SkillToggle> skills = new List<SkillToggle>(); // Skills that can be toggled on/off
 
+    [Header("Initial Inventory")]
+    [Tooltip("Items to add to the global inventory when starting a new network run.")]
+    public List<Inventory.ItemStack> initialInventory = new List<Inventory.ItemStack>();
+
     // Add more settings here
 
     /// <summary>

@@ -14,6 +14,21 @@ public class Inventory
         this.maxCapacity = maxCapacity;
     }
 
+    public Inventory(List<ItemStack> initialItems, int maxCapacity = 10)
+    {
+        this.maxCapacity = maxCapacity;
+        if (initialItems != null)
+        {
+            foreach (var itemStack in initialItems)
+            {
+                if (itemStack?.item != null && itemStack.count > 0)
+                {
+                    AddItem(itemStack.item, itemStack.count);
+                }
+            }
+        }
+    }
+
     [Serializable]
     public class ItemStack
     {
@@ -34,14 +49,19 @@ public class Inventory
 
     public void AddItem(ItemTemplate item)
     {
+        AddItem(item, 1);
+    }
+
+    public void AddItem(ItemTemplate item, int count)
+    {
         var existingStack = itemStacks.FirstOrDefault(s => s.item == item);
         if (existingStack != null)
         {
-            existingStack.count++;
+            existingStack.count += count;
         }
         else
         {
-            itemStacks.Add(new ItemStack(item, 1));
+            itemStacks.Add(new ItemStack(item, count));
         }
         // Debug.Log($"[Inventory] Added item: {(item != null ? item.DisplayName : "NULL")}. Total unique items: {itemStacks.Count}");
     }

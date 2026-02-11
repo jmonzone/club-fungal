@@ -12,3 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d430a8dac47ea4a2a92392f184cd8cfa, type: 3}
   m_Name: UpgradeActivityComponent
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeActivityComponent
+  upgrades:
+  - {fileID: 11400000, guid: 9c5b40bdd94ee4d398e42b23b72b614c, type: 2}
+  - {fileID: 11400000, guid: ed52a056ce05047db81304433d56fb39, type: 2}
+  upgradeInstances: []
+  resourceCost: {fileID: 11400000, guid: 20b1daf91d6764492a8d2376e4644d03, type: 2}

@@ -21,7 +21,7 @@ public class InspectComponent : ActivityComponent
         assignedDoor = door;
     }
 
-    public override void Initialize(NetworkRun networkRun, ActivityInstance activityInstance)
+    protected override void OnInitialize()
     {
         if (autoCompleteOnInitialize)
         {

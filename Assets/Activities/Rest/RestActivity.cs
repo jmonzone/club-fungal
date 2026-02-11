@@ -9,11 +9,11 @@ public class RestActivity : ActivityComponent
 
     public Inventory Inventory => inventory;
 
-    public override void Initialize(NetworkRun networkRun, ActivityInstance activityInstance)
+    protected override void OnInitialize()
     {
-        base.Initialize(networkRun, activityInstance);
         inventory = new Inventory();
     }
+    
     public override void DoUpdate(NetworkRun networkRun, ActivityInstance activityInstance)
     {
         if (activityInstance.Units == null || activityInstance.Units.Count == 0)

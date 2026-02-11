@@ -14,6 +14,7 @@ public class ActivityReference : ScriptableObject
     [SerializeField] private Skill primarySkill;
     [SerializeField] private ActivityController activityControllerPrefab;
     [SerializeField] private List<ActivityComponent> components = new List<ActivityComponent>();
+    [SerializeField] private bool canContainUnits = true;
 
     [Header("Runtime")]
     [SerializeField] private Vector3 origin;
@@ -25,6 +26,7 @@ public class ActivityReference : ScriptableObject
     public ViewReference ViewReference => activityView;
     public Skill PrimarySkill => primarySkill;
     public List<ActivityComponent> Components => components;
+    public bool CanContainUnits => canContainUnits;
 
     public Vector3 Origin => origin;
     public bool PlayerIsActive => player;
