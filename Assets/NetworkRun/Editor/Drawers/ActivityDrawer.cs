@@ -200,7 +200,26 @@ namespace TheFungalNetwork.Editor
             }
 
             // Add unified unit drop zone only if activity can contain units, not occluded, and no custom drop zone
-            if (!hasCustomDropZone && activity.Template?.CanContainUnits == true && (zoneOcclusionComponent == null || zoneOcclusionComponent.IsRevealed))
+            // For zone occlusion: show dropzone if using UnitInventory mode (even when not revealed)
+            bool canShowDropZone = !hasCustomDropZone && activity.Template?.CanContainUnits == true;
+            if (zoneOcclusionComponent != null && !zoneOcclusionComponent.IsRevealed)
+            {
+                // Zone occlusion present and not revealed - check contribution mode
+                var useUnitInventory = currentRun?.Settings?.zoneContributionMode == ResourceCollectionMode.UnitInventory;
+                canShowDropZone = canShowDropZone && useUnitInventory;
+            }
+            else if (zoneOcclusionComponent == null || zoneOcclusionComponent.IsRevealed)
+            {
+                // No zone occlusion or already revealed - show dropzone as normal
+                canShowDropZone = canShowDropZone;
+            }
+            else
+            {
+                // Zone occlusion present but mode not set - don't show
+                canShowDropZone = false;
+            }
+
+            if (canShowDropZone)
             {
                 var unitDropZoneItem = new UnifiedUnitDropZoneDisplayItem(
                     activity,
@@ -235,15 +254,19 @@ namespace TheFungalNetwork.Editor
                     }
                 }
 
-                // Add global inventory contribution button if not revealed
+                // Add global inventory contribution button if not revealed and using GlobalInventory mode
                 if (!zoneOcclusionComponent.IsRevealed && currentRun != null)
                 {
-                    var globalContributeItem = new GlobalInventoryContributeDisplayItem(
-                        zoneOcclusionComponent,
-                        currentRun,
-                        onChanged
-                    );
-                    displayItems.Add(globalContributeItem);
+                    var useGlobalInventory = currentRun?.Settings?.zoneContributionMode == ResourceCollectionMode.GlobalInventory;
+                    if (useGlobalInventory)
+                    {
+                        var globalContributeItem = new GlobalInventoryContributeDisplayItem(
+                            zoneOcclusionComponent,
+                            currentRun,
+                            onChanged
+                        );
+                        displayItems.Add(globalContributeItem);
+                    }
                 }
             }
 

@@ -26,11 +26,26 @@ namespace TheFungalNetwork.Editor
             var resourceItem = component.RequiredItem;
             var hasResource = resourceItem != null && unit.Inventory.GetItemCount(resourceItem) > 0;
             var isRevealed = component.IsRevealed;
+            var useUnitInventory = currentRun?.Settings?.zoneContributionMode == ResourceCollectionMode.UnitInventory;
 
             _cardDrawer.Draw(
                 unit,
                 () =>
                 {
+                    // Show contribute button in unit inventory mode
+                    if (!isRevealed && useUnitInventory && hasResource)
+                    {
+                        GUI.backgroundColor = new Color(0.7f, 1f, 0.7f);
+                        var buttonText = $"✓ Contribute {resourceItem.DisplayName}";
+                        if (GUILayout.Button(buttonText, GUILayout.Height(20), GUILayout.Width(90)))
+                        {
+                            component.ContributeFromUnit(unit);
+                            onChanged?.Invoke();
+                        }
+                        GUI.backgroundColor = Color.white;
+                        GUILayout.Space(2);
+                    }
+
                     // Remove button (debug mode)
                     if (currentRun.Settings.debugMode)
                     {
@@ -44,11 +59,11 @@ namespace TheFungalNetwork.Editor
                         GUI.backgroundColor = Color.white;
                     }
                 },
-                (hasResource && !isRevealed) ? () => component.GetUnitProgress(unit) / component.UpdateInterval : null,
+                (hasResource && !isRevealed && useUnitInventory) ? () => component.GetUnitProgress(unit) / component.UpdateInterval : null,
                 () =>
                 {
-                    // Only show status if zone is not revealed
-                    if (!isRevealed)
+                    // Only show status if zone is not revealed and using unit inventory mode
+                    if (!isRevealed && useUnitInventory)
                     {
                         if (hasResource)
                         {
