@@ -4,55 +4,54 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "ZoneOcclusion", menuName = "Club Fungal/Activities/Components/ZoneOcclusion")]
 public class ZoneOcclusion : ActivityComponent
 {
-    private ActivityComponent hiddenZoneComponent;
-    [SerializeField] private int currentResourceCount;
+    [SerializeField] private ActivityComponent hiddenZoneComponent;
     [SerializeField] private bool isRevealed = false;
-    private Dictionary<UnitInstance, float> unitProgress = new Dictionary<UnitInstance, float>();
-    
-    // Dynamic cost calculation
-    private NetworkRunSettings settings;
-    private int zoneIndex = -1;
-    [SerializeField] private int cachedRequiredAmount;
-
-    [Header("Collection Settings")]
-    [SerializeField] private float updateInterval = 5f;
-    [SerializeField] private int itemsPerUpdate = 1;
+    [SerializeField] private ResourceContributionHandler contributionHandler = new ResourceContributionHandler();
 
     [Header("Occlusion Settings")]
-    [SerializeField] private ItemTemplate requiredItem; // Spores by default
-    [SerializeField] private ResourceCost additionalResourceCost; // Optional additional resource requirement
-    [SerializeField] private int additionalResourceCount; // Progress toward additional resource requirement
     [SerializeField] private Sprite occludedSprite; // Icon to show when zone is hidden
     [SerializeField] private string occludedDisplayName = "Hidden Zone"; // Name to show when zone is hidden
 
-    public int CurrentResourceCount => currentResourceCount;
-    public ResourceCost AdditionalResourceCost => additionalResourceCost;
-    public int AdditionalResourceCount => additionalResourceCount;
-
-    public int RequiredAmount
-    {
-        get
-        {
-            // Dynamically calculate from settings if available
-            if (settings != null && zoneIndex >= 0)
-            {
-                return settings.GetZoneCost(zoneIndex);
-            }
-            // Fall back to cached value
-            return cachedRequiredAmount;
-        }
-    }
-    
+    // Expose contribution handler properties
+    public int CurrentResourceCount => contributionHandler.CurrentResourceCount;
+    public ResourceCost AdditionalResourceCost => contributionHandler.AdditionalResourceCost;
+    public int AdditionalResourceCount => contributionHandler.AdditionalResourceCount;
+    public int RequiredAmount => contributionHandler.RequiredAmount;
     public bool IsRevealed => isRevealed;
-    public float UpdateInterval => updateInterval;
-    public int ItemsPerUpdate => itemsPerUpdate;
-    public ItemTemplate RequiredItem => requiredItem;
+    public float UpdateInterval => contributionHandler.UpdateInterval;
+    public int ItemsPerUpdate => contributionHandler.ItemsPerUpdate;
+    public ItemTemplate RequiredItem => contributionHandler.RequiredItem;
     public Sprite OccludedSprite => occludedSprite;
     public string OccludedDisplayName => occludedDisplayName;
+    public ActivityComponent HiddenComponent => hiddenZoneComponent;
+
+    public override void RemapReferences(Dictionary<ActivityComponent, ActivityComponent> originalToCopy)
+    {
+        if (hiddenZoneComponent != null && originalToCopy.TryGetValue(hiddenZoneComponent, out var remapped))
+        {
+            hiddenZoneComponent = remapped;
+        }
+    }
+
+    public override bool ShouldUpdate()
+    {
+        // ZoneOcclusion updates when hidden, skips when revealed
+        return !isRevealed;
+    }
+
+    public override ActivityComponent[] GetControlledComponents()
+    {
+        // When zone is hidden, we control the hidden component (it shouldn't update)
+        if (!isRevealed && hiddenZoneComponent != null)
+        {
+            return new ActivityComponent[] { hiddenZoneComponent };
+        }
+        return null;
+    }
 
     public float GetUnitProgress(UnitInstance unit)
     {
-        return unitProgress.ContainsKey(unit) ? unitProgress[unit] : 0f;
+        return contributionHandler.GetUnitProgress(unit);
     }
 
     /// <summary>
@@ -61,120 +60,41 @@ public class ZoneOcclusion : ActivityComponent
     public void SetZoneOcclusion(ActivityComponent nextComponent, int zoneIndex, NetworkRunSettings settings)
     {
         hiddenZoneComponent = nextComponent;
-        currentResourceCount = 0;
-        additionalResourceCount = 0;
         isRevealed = false;
-        this.zoneIndex = zoneIndex;
-        this.settings = settings;
-        this.cachedRequiredAmount = settings?.GetZoneCost(zoneIndex) ?? 0;
-        this.additionalResourceCost = settings?.GetAdditionalResourceCost(zoneIndex);
+        contributionHandler.Initialize(zoneIndex, settings);
 
-        var costText = $"{RequiredAmount}x {requiredItem?.DisplayName}";
-        if (additionalResourceCost != null && additionalResourceCost.Item != null)
+        var costText = $"{RequiredAmount}x {RequiredItem?.DisplayName}";
+        if (AdditionalResourceCost != null && AdditionalResourceCost.Item != null)
         {
-            costText += $" + {additionalResourceCost.Amount}x {additionalResourceCost.Item.DisplayName}";
+            costText += $" + {AdditionalResourceCost.Amount}x {AdditionalResourceCost.Item.DisplayName}";
         }
         Debug.Log($"[ZoneOcclusion] Zone {zoneIndex} hidden. Requires {costText} to reveal.");
     }
 
     public void ContributeFromUnit(UnitInstance unit)
     {
-        if (unit?.Inventory == null || isRevealed) return;
-
-        // Contribute primary resource (spores)
-        if (requiredItem != null)
-        {
-            var unitItemCount = unit.Inventory.GetItemCount(requiredItem);
-            var remainingNeeded = RequiredAmount - currentResourceCount;
-            var amountToContribute = Mathf.Min(unitItemCount, remainingNeeded);
-
-            if (amountToContribute > 0)
-            {
-                for (int i = 0; i < amountToContribute; i++)
-                {
-                    unit.Inventory.RemoveItem(requiredItem);
-                }
-                currentResourceCount += amountToContribute;
-                Debug.Log($"{unit.DisplayName} contributed {amountToContribute}x {requiredItem.DisplayName}. Progress: {currentResourceCount}/{RequiredAmount}");
-            }
-        }
-
-        // Contribute additional resource (if any)
-        if (additionalResourceCost != null && additionalResourceCost.Item != null)
-        {
-            var unitItemCount = unit.Inventory.GetItemCount(additionalResourceCost.Item);
-            var remainingNeeded = additionalResourceCost.Amount - additionalResourceCount;
-            var amountToContribute = Mathf.Min(unitItemCount, remainingNeeded);
-
-            if (amountToContribute > 0)
-            {
-                for (int i = 0; i < amountToContribute; i++)
-                {
-                    unit.Inventory.RemoveItem(additionalResourceCost.Item);
-                }
-                additionalResourceCount += amountToContribute;
-                Debug.Log($"{unit.DisplayName} contributed {amountToContribute}x {additionalResourceCost.Item.DisplayName}. Progress: {additionalResourceCount}/{additionalResourceCost.Amount}");
-            }
-        }
+        if (isRevealed) return;
+        contributionHandler.ContributeFromUnit(unit);
     }
 
     public int ContributeFromGlobalInventory(Inventory globalInventory)
     {
-        if (globalInventory == null || isRevealed) return 0;
-
-        int totalContributed = 0;
-
-        // Contribute primary resource (spores)
-        if (requiredItem != null)
-        {
-            var globalItemCount = globalInventory.GetItemCount(requiredItem);
-            var remainingNeeded = RequiredAmount - currentResourceCount;
-            var amountToContribute = Mathf.Min(globalItemCount, remainingNeeded);
-
-            if (amountToContribute > 0)
-            {
-                for (int i = 0; i < amountToContribute; i++)
-                {
-                    globalInventory.RemoveItem(requiredItem);
-                }
-                currentResourceCount += amountToContribute;
-                totalContributed += amountToContribute;
-                Debug.Log($"Contributed {amountToContribute}x {requiredItem.DisplayName} from global inventory. Progress: {currentResourceCount}/{RequiredAmount}");
-            }
-        }
-
-        // Contribute additional resource (if any)
-        if (additionalResourceCost != null && additionalResourceCost.Item != null)
-        {
-            var globalItemCount = globalInventory.GetItemCount(additionalResourceCost.Item);
-            var remainingNeeded = additionalResourceCost.Amount - additionalResourceCount;
-            var amountToContribute = Mathf.Min(globalItemCount, remainingNeeded);
-
-            if (amountToContribute > 0)
-            {
-                for (int i = 0; i < amountToContribute; i++)
-                {
-                    globalInventory.RemoveItem(additionalResourceCost.Item);
-                }
-                additionalResourceCount += amountToContribute;
-                totalContributed += amountToContribute;
-                Debug.Log($"Contributed {amountToContribute}x {additionalResourceCost.Item.DisplayName} from global inventory. Progress: {additionalResourceCount}/{additionalResourceCost.Amount}");
-            }
-        }
-
-        // Don't automatically reveal - require manual button click
-        return totalContributed;
+        if (isRevealed) return 0;
+        return contributionHandler.ContributeFromGlobalInventory(globalInventory);
     }
 
     protected override void OnInitialize()
     {
-        unitProgress.Clear();
+        contributionHandler.Reset();
     }
 
     public override void DoUpdate(NetworkRun networkRun, ActivityInstance activityInstance)
     {
-        // Don't process if already revealed
-        if (isRevealed) return;
+        // If zone is revealed, the hidden component will update itself (no proxy needed)
+        if (isRevealed)
+        {
+            return;
+        }
 
         // Check contribution mode from settings
         var useGlobalInventory = networkRun?.Settings?.zoneContributionMode == ResourceCollectionMode.GlobalInventory;
@@ -186,88 +106,18 @@ public class ZoneOcclusion : ActivityComponent
         }
 
         // Automatic contributions from unit inventories
-        if (activityInstance?.Units == null) return;
-
-        foreach (var unit in activityInstance.Units)
-        {
-            if (unit?.Inventory == null) continue;
-
-            // Initialize progress for new units
-            if (!unitProgress.ContainsKey(unit))
-            {
-                unitProgress[unit] = 0f;
-            }
-
-            // Update progress
-            var deltaTime = networkRun.Settings.speedMultiplier * Time.deltaTime;
-            unitProgress[unit] += deltaTime;
-
-            // Check if ready to contribute
-            if (unitProgress[unit] >= updateInterval)
-            {
-                bool contributed = false;
-
-                // Contribute primary resource (spores)
-                if (requiredItem != null && currentResourceCount < RequiredAmount)
-                {
-                    var unitItemCount = unit.Inventory.GetItemCount(requiredItem);
-                    var remainingNeeded = RequiredAmount - currentResourceCount;
-                    var amountToContribute = Mathf.Min(itemsPerUpdate, unitItemCount, remainingNeeded);
-
-                    if (amountToContribute > 0)
-                    {
-                        for (int i = 0; i < amountToContribute; i++)
-                        {
-                            unit.Inventory.RemoveItem(requiredItem);
-                        }
-                        currentResourceCount += amountToContribute;
-                        contributed = true;
-                        Debug.Log($"{unit.DisplayName} contributed {amountToContribute}x {requiredItem.DisplayName}. Progress: {currentResourceCount}/{RequiredAmount}");
-                    }
-                }
-
-                // Contribute additional resource (if any)
-                if (additionalResourceCost != null && additionalResourceCost.Item != null && additionalResourceCount < additionalResourceCost.Amount)
-                {
-                    var unitItemCount = unit.Inventory.GetItemCount(additionalResourceCost.Item);
-                    var remainingNeeded = additionalResourceCost.Amount - additionalResourceCount;
-                    var amountToContribute = Mathf.Min(itemsPerUpdate, unitItemCount, remainingNeeded);
-
-                    if (amountToContribute > 0)
-                    {
-                        for (int i = 0; i < amountToContribute; i++)
-                        {
-                            unit.Inventory.RemoveItem(additionalResourceCost.Item);
-                        }
-                        additionalResourceCount += amountToContribute;
-                        contributed = true;
-                        Debug.Log($"{unit.DisplayName} contributed {amountToContribute}x {additionalResourceCost.Item.DisplayName}. Progress: {additionalResourceCount}/{additionalResourceCost.Amount}");
-                    }
-                }
-
-                if (contributed)
-                {
-                    unitProgress[unit] = 0f;
-
-                    // Don't automatically reveal - require manual button click
-                    // Just reset progress after contributing
-                }
-            }
-        }
+        contributionHandler.ProcessAutomaticContributions(networkRun, activityInstance?.Units);
     }
 
     public void RevealZone()
     {
-        bool primaryComplete = currentResourceCount >= RequiredAmount;
-        bool additionalComplete = additionalResourceCost == null || additionalResourceCount >= additionalResourceCost.Amount;
-
-        if (!isRevealed && primaryComplete && additionalComplete)
+        if (!isRevealed && contributionHandler.RequirementsMet())
         {
             isRevealed = true;
-            var costText = $"{currentResourceCount}x {requiredItem?.DisplayName}";
-            if (additionalResourceCost != null && additionalResourceCost.Item != null)
+            var costText = $"{CurrentResourceCount}x {RequiredItem?.DisplayName}";
+            if (AdditionalResourceCost != null && AdditionalResourceCost.Item != null)
             {
-                costText += $" + {additionalResourceCount}x {additionalResourceCost.Item.DisplayName}";
+                costText += $" + {AdditionalResourceCount}x {AdditionalResourceCost.Item.DisplayName}";
             }
             Debug.Log($"[ZoneOcclusion] Zone revealed! Used {costText}");
         }

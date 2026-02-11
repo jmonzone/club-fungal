@@ -41,7 +41,9 @@ namespace TheFungalNetwork.Editor
                         GUILayout.Space(20);
                     }
 
-                    var progress = Mathf.Clamp01((float)zoneOcclusion.CurrentResourceCount / zoneOcclusion.RequiredAmount);
+                    var progress = zoneOcclusion.RequiredAmount > 0
+                        ? Mathf.Clamp01((float)zoneOcclusion.CurrentResourceCount / zoneOcclusion.RequiredAmount)
+                        : 0f;
                     var rect = EditorGUILayout.GetControlRect(false, 20);
                     var resourceName = resourceItem?.DisplayName ?? "Unknown";
                     EditorGUI.ProgressBar(rect, progress, $"{resourceName}: {zoneOcclusion.CurrentResourceCount}/{zoneOcclusion.RequiredAmount}");
@@ -65,7 +67,9 @@ namespace TheFungalNetwork.Editor
                             GUILayout.Space(20);
                         }
 
-                        var additionalProgress = Mathf.Clamp01((float)zoneOcclusion.AdditionalResourceCount / zoneOcclusion.AdditionalResourceCost.Amount);
+                        var additionalProgress = zoneOcclusion.AdditionalResourceCost.Amount > 0
+                            ? Mathf.Clamp01((float)zoneOcclusion.AdditionalResourceCount / zoneOcclusion.AdditionalResourceCost.Amount)
+                            : 0f;
                         var additionalRect = EditorGUILayout.GetControlRect(false, 20);
                         var additionalName = additionalItem?.DisplayName ?? "Unknown";
                         EditorGUI.ProgressBar(additionalRect, additionalProgress, $"{additionalName}: {zoneOcclusion.AdditionalResourceCount}/{zoneOcclusion.AdditionalResourceCost.Amount}");

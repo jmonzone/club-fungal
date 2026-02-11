@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67a5beef93c584273a484a04a6155fe5, type: 3}
-  m_Name: NetworkRunSettings-Demo
+  m_Name: NetworkRunSettings-Demo2
   m_EditorClassIdentifier: Assembly-CSharp::NetworkRunSettings
   defaultPartySize: 1
   updateInterval: 1
@@ -25,7 +25,7 @@ MonoBehaviour:
   zoneOcclusionTemplate: {fileID: 11400000, guid: f0d1de32675c648398a75ea496a6d330,
     type: 2}
   enableZoneOcclusion: 1
-  hideZoneAfterIndex: 2
+  hideZoneAfterIndex: 1
   zoneRevealCostScale: 1
   zoneContributionMode: 0
   zoneCostOverrides:
@@ -34,7 +34,7 @@ MonoBehaviour:
     resourceCost:
       item: {fileID: 0}
       amount: 0
-  - zoneIndex: 1
+  - zoneIndex: 2
     cost: -1
     resourceCost:
       item: {fileID: 11400000, guid: 20b1daf91d6764492a8d2376e4644d03, type: 2}

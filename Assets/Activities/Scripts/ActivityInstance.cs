@@ -31,6 +31,8 @@ public class ActivityInstance
         if (activityRefCopy.Components != null && activityRefCopy.Components.Count > 0)
         {
             var copiedComponents = new List<ActivityComponent>();
+            var originalToCopy = new Dictionary<ActivityComponent, ActivityComponent>();
+
             foreach (var component in activityRefCopy.Components)
             {
                 if (component != null)
@@ -38,14 +40,21 @@ public class ActivityInstance
                     var componentCopy = ScriptableObject.Instantiate(component);
                     componentCopy.name = component.name;
                     copiedComponents.Add(componentCopy);
+                    originalToCopy[component] = componentCopy;
                 }
+            }
+
+            // Allow components to remap their internal references
+            foreach (var component in copiedComponents)
+            {
+                component.RemapReferences(originalToCopy);
             }
 
             // Replace the components list with the copied ones
             var componentsField = typeof(ActivityReference).GetField("components",
                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             componentsField?.SetValue(activityRefCopy, copiedComponents);
-            
+
             // Store runtime components
             runtimeComponents = copiedComponents;
         }
@@ -56,7 +65,7 @@ public class ActivityInstance
             id = UnitInstance.GenerateMongoLikeId(),
             name = originalTemplate.name
         };
-        
+
         // Initialize runtime components
         if (runtimeComponents != null && runtimeComponents.Count > 0)
         {
@@ -116,9 +125,29 @@ public class ActivityInstance
     {
         if (runtimeComponents != null)
         {
+            // Build set of controlled components that should not update
+            var controlledComponents = new HashSet<ActivityComponent>();
             foreach (var component in runtimeComponents)
             {
                 if (component != null)
+                {
+                    var controlled = component.GetControlledComponents();
+                    if (controlled != null)
+                    {
+                        foreach (var controlledComponent in controlled)
+                        {
+                            controlledComponents.Add(controlledComponent);
+                        }
+                    }
+                }
+            }
+
+            // Update components that should update and are not controlled
+            foreach (var component in runtimeComponents)
+            {
+                if (component != null &&
+                    component.ShouldUpdate() &&
+                    !controlledComponents.Contains(component))
                 {
                     component.DoUpdate(networkRun, this);
                 }

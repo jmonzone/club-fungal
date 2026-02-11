@@ -162,7 +162,7 @@ public class NetworkRunSettings : ScriptableObject
 
                         zoneOcclusion.SetZoneOcclusion(nextComponent, zoneIndex, this);
 
-                        // Build new components list with ZoneOcclusion first, followed by existing components
+                        // Build new components list with ZoneOcclusion first, followed by all existing components
                         var newComponents = new List<ActivityComponent> { zoneOcclusion };
                         newComponents.AddRange(existingComponents);
 
