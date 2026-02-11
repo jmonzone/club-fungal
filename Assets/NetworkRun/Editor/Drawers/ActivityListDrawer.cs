@@ -21,19 +21,14 @@ namespace TheFungalNetwork.Editor
             bool foundUnrevealedZone = false;
             var showAllHidden = currentRun?.Settings?.showAllHiddenZones ?? false;
 
-            Debug.Log($"[ActivityListDrawer] ========== Processing {activities.Count} activities (showAllHidden={showAllHidden}) ==========");
-
             for (int i = 0; i < activities.Count; i++)
             {
                 var activity = activities[i];
 
                 if (activity == null)
                 {
-                    Debug.LogWarning($"[ActivityListDrawer] Activity at index {i} is NULL");
                     continue;
                 }
-
-                Debug.Log($"[ActivityListDrawer] [{i}] Activity: '{activity.Name}', RuntimeComponents: {activity.RuntimeComponents?.Count ?? 0}");
 
                 // Check if this activity has a zone occlusion component
                 ZoneOcclusion zoneOcclusion = null;
@@ -42,12 +37,10 @@ namespace TheFungalNetwork.Editor
                     for (int j = 0; j < activity.RuntimeComponents.Count; j++)
                     {
                         var component = activity.RuntimeComponents[j];
-                        Debug.Log($"[ActivityListDrawer] [{i}] Component {j}: {component?.GetType().Name ?? "NULL"}");
 
                         if (component is ZoneOcclusion zo)
                         {
                             zoneOcclusion = zo;
-                            Debug.Log($"[ActivityListDrawer] [{i}] Found ZoneOcclusion: IsRevealed={zo.IsRevealed}, Progress={zo.CurrentResourceCount}/{zo.RequiredAmount}");
                         }
                     }
                 }
@@ -61,22 +54,14 @@ namespace TheFungalNetwork.Editor
                     {
                         visibleActivities.Add(activity);
                         foundUnrevealedZone = true;
-                        Debug.Log($"[ActivityListDrawer] [{i}] ✓ ADDED unrevealed zone: {activity.Name}");
-                    }
-                    else
-                    {
-                        Debug.Log($"[ActivityListDrawer] [{i}] ✗ SKIPPED unrevealed zone (already found one): {activity.Name}");
                     }
                 }
                 else
                 {
                     // Always show: activities without occlusion + revealed zones
                     visibleActivities.Add(activity);
-                    Debug.Log($"[ActivityListDrawer] [{i}] ✓ ADDED visible activity: {activity.Name}");
                 }
             }
-
-            Debug.Log($"[ActivityListDrawer] ========== Final visibleActivities count: {visibleActivities.Count} ==========");
 
             // Clamp columns to 1-3
             columns = Mathf.Clamp(columns, 1, 3);
