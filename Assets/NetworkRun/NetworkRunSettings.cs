@@ -7,13 +7,10 @@ using UnityEngine;
 public class ZoneCostOverride
 {
     public int zoneIndex; // Zone index (0-based, relative to hideZoneAfterIndex)
-    public int cost; // Required cost to reveal this zone
-
-    public ZoneCostOverride(int index, int cost)
-    {
-        this.zoneIndex = index;
-        this.cost = cost;
-    }
+    [Tooltip("Spore cost override. Set to -1 to use formula, or >= 0 to override.")]
+    public int cost = -1; // Required cost to reveal this zone (-1 = use formula)
+    [Tooltip("Optional additional resource cost (e.g., fish, wood). Leave empty for spores only.")]
+    public ResourceCost resourceCost; // Additional resource requirement
 }
 
 [Serializable]
@@ -215,9 +212,9 @@ public class NetworkRunSettings : ScriptableObject
         // Sort overrides by zone index for interpolation
         var sortedOverrides = zoneCostOverrides.OrderBy(o => o.zoneIndex).ToList();
 
-        // Check if this zone has an explicit override
+        // Check if this zone has an explicit override with cost >= 0
         var exactOverride = sortedOverrides.FirstOrDefault(o => o.zoneIndex == zoneIndex);
-        if (exactOverride != null)
+        if (exactOverride != null && exactOverride.cost >= 0)
         {
             return exactOverride.cost;
         }
@@ -291,6 +288,17 @@ public class NetworkRunSettings : ScriptableObject
         var fallbackRoomLevel = zoneIndex + 2;
         var fallbackBaseCost = CalculateRequiredAmount(fallbackRoomLevel);
         return Mathf.CeilToInt(fallbackBaseCost * zoneRevealCostScale);
+    }
+
+    /// <summary>
+    /// Get additional resource cost for a zone (if any)
+    /// </summary>
+    public ResourceCost GetAdditionalResourceCost(int zoneIndex)
+    {
+        if (zoneCostOverrides == null) return null;
+
+        var exactOverride = zoneCostOverrides.FirstOrDefault(o => o.zoneIndex == zoneIndex);
+        return exactOverride?.resourceCost;
     }
 
     public ResourceCondition CreateResourceConditionForDoor(NetworkRun networkRun)

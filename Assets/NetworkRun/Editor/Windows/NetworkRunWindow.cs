@@ -62,13 +62,6 @@ namespace TheFungalNetwork.Editor
             }
         }
 
-        void OnInspectorUpdate()
-        {
-            // Repaint when inspector values change (e.g., settings modifications)
-            // This ensures zone cost overrides update immediately
-            Repaint();
-        }
-
         private void LoadRoomTemplates()
         {
             roomTemplates = AssetDatabase.FindAssets("t:RoomTemplate")

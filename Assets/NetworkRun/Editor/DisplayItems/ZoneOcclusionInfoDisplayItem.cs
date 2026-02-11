@@ -22,13 +22,14 @@ namespace TheFungalNetwork.Editor
 
                 if (zoneOcclusion != null && zoneOcclusion.RequiredItem != null)
                 {
-                    var hasEnough = zoneOcclusion.CurrentResourceCount >= zoneOcclusion.RequiredAmount;
-                    var resourceName = zoneOcclusion.RequiredItem?.DisplayName ?? "Unknown";
+                    var primaryEnough = zoneOcclusion.CurrentResourceCount >= zoneOcclusion.RequiredAmount;
+                    var additionalEnough = zoneOcclusion.AdditionalResourceCost == null ||
+                                           zoneOcclusion.AdditionalResourceCount >= zoneOcclusion.AdditionalResourceCost.Amount;
+                    var hasEnough = primaryEnough && additionalEnough;
 
-                    // Show resource progress
+                    // Show primary resource progress (spores)
                     EditorGUILayout.BeginHorizontal();
 
-                    // Draw resource icon
                     var resourceItem = zoneOcclusion.RequiredItem;
                     if (resourceItem?.Sprite != null)
                     {
@@ -40,12 +41,37 @@ namespace TheFungalNetwork.Editor
                         GUILayout.Space(20);
                     }
 
-                    // Show progress bar with resource name (dynamically updates with overrides)
                     var progress = Mathf.Clamp01((float)zoneOcclusion.CurrentResourceCount / zoneOcclusion.RequiredAmount);
                     var rect = EditorGUILayout.GetControlRect(false, 20);
+                    var resourceName = resourceItem?.DisplayName ?? "Unknown";
                     EditorGUI.ProgressBar(rect, progress, $"{resourceName}: {zoneOcclusion.CurrentResourceCount}/{zoneOcclusion.RequiredAmount}");
 
                     EditorGUILayout.EndHorizontal();
+
+                    // Show additional resource progress (if any)
+                    if (zoneOcclusion.AdditionalResourceCost != null && zoneOcclusion.AdditionalResourceCost.Item != null)
+                    {
+                        EditorGUILayout.Space(2);
+                        EditorGUILayout.BeginHorizontal();
+
+                        var additionalItem = zoneOcclusion.AdditionalResourceCost.Item;
+                        if (additionalItem?.Sprite != null)
+                        {
+                            var icon = additionalItem.Sprite.texture;
+                            GUILayout.Box(icon, GUILayout.Width(20), GUILayout.Height(20));
+                        }
+                        else
+                        {
+                            GUILayout.Space(20);
+                        }
+
+                        var additionalProgress = Mathf.Clamp01((float)zoneOcclusion.AdditionalResourceCount / zoneOcclusion.AdditionalResourceCost.Amount);
+                        var additionalRect = EditorGUILayout.GetControlRect(false, 20);
+                        var additionalName = additionalItem?.DisplayName ?? "Unknown";
+                        EditorGUI.ProgressBar(additionalRect, additionalProgress, $"{additionalName}: {zoneOcclusion.AdditionalResourceCount}/{zoneOcclusion.AdditionalResourceCost.Amount}");
+
+                        EditorGUILayout.EndHorizontal();
+                    }
 
                     EditorGUILayout.Space(4);
 

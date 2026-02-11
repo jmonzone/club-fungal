@@ -25,7 +25,25 @@ MonoBehaviour:
   zoneOcclusionTemplate: {fileID: 11400000, guid: f0d1de32675c648398a75ea496a6d330,
     type: 2}
   enableZoneOcclusion: 1
-  hideZoneAfterIndex: 4
+  hideZoneAfterIndex: 0
+  zoneRevealCostScale: 1
+  zoneCostOverrides:
+  - zoneIndex: 0
+    cost: 8
+    resourceCost:
+      item: {fileID: 0}
+      amount: 0
+  - zoneIndex: 1
+    cost: -1
+    resourceCost:
+      item: {fileID: 11400000, guid: 20b1daf91d6764492a8d2376e4644d03, type: 2}
+      amount: 8
+  - zoneIndex: 3
+    cost: 100
+    resourceCost:
+      item: {fileID: 0}
+      amount: 0
+  showAllHiddenZones: 1
   enableDoorActivities: 0
   unitsCollectToGlobalInventory: 1
   showUnitInventoryButton: 0
@@ -42,7 +60,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ca1aabf6e3c494667a63065cc6ff3a76, type: 2}
   - {fileID: 11400000, guid: 19f2abf58fc274306bb41ceb048ec8ff, type: 2}
   - {fileID: 11400000, guid: 2cfe383145efb491c9cdab1872bf6dfe, type: 2}
-  - {fileID: 0}
   - {fileID: 11400000, guid: 9835e6bfec4a34373a261704c1417436, type: 2}
   skills:
   - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
@@ -57,6 +74,4 @@ MonoBehaviour:
     enabled: 0
   - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
     enabled: 0
-  initialInventory:
-  - item: {fileID: 11400000, guid: 20b1daf91d6764492a8d2376e4644d03, type: 2}
-    count: 30
+  initialInventory: []
