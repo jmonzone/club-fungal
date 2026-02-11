@@ -10,6 +10,7 @@ public class SummonUnitComponent : ActivityComponent
     [Header("Summon Settings")]
     [SerializeField] private UnitInstanceService unitInstanceService;
     [SerializeField] private List<UnitSpecies> speciesToSummon = new List<UnitSpecies>(); // Species to create, empty = random
+    [SerializeField] private ResourceScalingConfig scalingConfig; // Cost scaling configuration
     [SerializeField] private int maxSummons = -1; // -1 = unlimited
 
     // Expose contribution handler properties
@@ -88,22 +89,27 @@ public class SummonUnitComponent : ActivityComponent
             activityInstance.AddUnit(newUnit);
         }
 
-        // Reset contribution progress for next summon
+        // Reset contribution progress and scale for next summon
         contributionHandler.Reset();
 
+        // Update index for next summon using RuneScape scaling
+        // Count + 2 because we start at level 2 (1st=lvl2, 2nd=lvl3, etc)
+        contributionHandler.UpdateIndex(summonedUnits.Count + 2);
+
         var speciesName = selectedSpecies != null ? selectedSpecies.name : "random species";
-        Debug.Log($"[SummonUnit] Summoned {newUnit.DisplayName} ({speciesName})! Total summoned: {summonedUnits.Count}");
+        Debug.Log($"[SummonUnit] Summoned {newUnit.DisplayName} ({speciesName})! Total summoned: {summonedUnits.Count}. Next summon requires {RequiredAmount} resources.");
         return newUnit;
     }
 
     protected override void OnInitialize()
     {
-        // Initialize contribution handler with settings from networkRun
+        summonedUnits.Clear();
+
+        // Initialize contribution handler with settings and scaling config
         if (networkRun?.Settings != null)
         {
-            contributionHandler.Initialize(0, networkRun.Settings); // Use 0 as context index
+            contributionHandler.Initialize(0, networkRun.Settings, scalingConfig);
         }
-        summonedUnits.Clear();
     }
 
     public override void DoUpdate(NetworkRun networkRun, ActivityInstance activityInstance)

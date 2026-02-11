@@ -21,8 +21,9 @@ public class ResourceContributionHandler
 {
     [SerializeField] private int currentResourceCount;
     [SerializeField] private int additionalResourceCount;
-    [SerializeField] private int cachedRequiredAmount;
-    [SerializeField] private int contextIndex = -1; // Zone index or other context identifier
+    [SerializeField] private int currentIndex = 0; // Current level/index for scaling
+    [SerializeField] private int fixedAmount = -1; // If >= 0, use this instead of scaling (-1 = use scaling)
+    [SerializeField] private ResourceScalingConfig scalingConfig;
     [SerializeField] private NetworkRunSettings settings;
 
     private Dictionary<UnitInstance, float> unitProgress = new Dictionary<UnitInstance, float>();
@@ -46,11 +47,25 @@ public class ResourceContributionHandler
     {
         get
         {
-            if (settings != null && contextIndex >= 0)
+            // Use fixed amount if set
+            if (fixedAmount >= 0)
             {
-                return settings.GetZoneCost(contextIndex);
+                return fixedAmount;
             }
-            return cachedRequiredAmount;
+
+            // Use scaling config if available
+            if (scalingConfig != null)
+            {
+                return scalingConfig.GetCost(currentIndex);
+            }
+
+            // Fallback to NetworkRunSettings zone cost if no scaling config
+            if (settings != null && currentIndex >= 0)
+            {
+                return settings.GetZoneCost(currentIndex);
+            }
+
+            return 1; // Minimum default
         }
     }
 
@@ -62,14 +77,15 @@ public class ResourceContributionHandler
     /// <summary>
     /// Initialize the contribution handler with settings and context
     /// </summary>
-    public void Initialize(int contextIndex, NetworkRunSettings settings)
+    public void Initialize(int contextIndex, NetworkRunSettings settings, ResourceScalingConfig scalingConfig = null)
     {
         currentResourceCount = 0;
         additionalResourceCount = 0;
-        this.contextIndex = contextIndex;
+        // Add 2 to contextIndex to start at level 2 (cost 8) for first item, level 3 (cost 17) for second, etc.
+        this.currentIndex = contextIndex + 2;
         this.settings = settings;
-        this.cachedRequiredAmount = settings?.GetZoneCost(contextIndex) ?? 0;
-        this.additionalResourceCost = settings?.GetAdditionalResourceCost(contextIndex);
+        this.scalingConfig = scalingConfig;
+        this.additionalResourceCost = null; // No longer using additional resource costs from settings
 
         // Use spores as default if requiredItem not already set in component asset
         if (requiredItem == null)
@@ -81,16 +97,33 @@ public class ResourceContributionHandler
     }
 
     /// <summary>
-    /// Initialize with explicit required item and amount (for UnlockComponent, etc.)
+    /// Initialize with explicit required item and scaling config
     /// </summary>
-    public void InitializeWithItem(ItemTemplate item, int amount)
+    public void InitializeWithItem(ItemTemplate item, int startIndex = 0, ResourceScalingConfig scalingConfig = null)
     {
         currentResourceCount = 0;
         additionalResourceCount = 0;
         this.requiredItem = item;
-        this.cachedRequiredAmount = amount;
+        this.currentIndex = startIndex;
+        this.scalingConfig = scalingConfig;
+        this.fixedAmount = -1; // Use scaling
         this.additionalResourceCost = null;
-        this.contextIndex = -1;
+        this.settings = null;
+        unitProgress.Clear();
+    }
+
+    /// <summary>
+    /// Initialize with a fixed cost amount (no scaling)
+    /// </summary>
+    public void InitializeWithFixedCost(ItemTemplate item, int amount)
+    {
+        currentResourceCount = 0;
+        additionalResourceCount = 0;
+        this.requiredItem = item;
+        this.fixedAmount = amount;
+        this.scalingConfig = null;
+        this.currentIndex = 0;
+        this.additionalResourceCost = null;
         this.settings = null;
         unitProgress.Clear();
     }
@@ -103,6 +136,14 @@ public class ResourceContributionHandler
         unitProgress.Clear();
         currentResourceCount = 0;
         additionalResourceCount = 0;
+    }
+
+    /// <summary>
+    /// Update the current index (level) for dynamic scaling
+    /// </summary>
+    public void UpdateIndex(int index)
+    {
+        this.currentIndex = index;
     }
 
     /// <summary>

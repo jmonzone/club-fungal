@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9847ae516bfe149989cbf41a01ed2ae7, type: 3}
-  m_Name: SummonUnitComponent
+  m_Name: Summon Unit Component
   m_EditorClassIdentifier: Assembly-CSharp::SummonUnitComponent
   contributionHandler:
     currentResourceCount: 0
     additionalResourceCount: 0
-    cachedRequiredAmount: 0
-    contextIndex: -1
+    currentIndex: 0
+    fixedAmount: -1
+    scalingConfig: {fileID: 0}
     settings: {fileID: 0}
     updateInterval: 5
     itemsPerUpdate: 1
-    requiredItem: {fileID: 11400000, guid: 20b1daf91d6764492a8d2376e4644d03, type: 2}
+    requiredItem: {fileID: 11400000, guid: ddde813dc82944f04928d4fd69f1a1b8, type: 2}
     additionalResourceCost:
       item: {fileID: 0}
       amount: 0
@@ -32,4 +33,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
   - {fileID: 11400000, guid: 84acf7738ffbc4db09e660e7ce20b7a1, type: 2}
   - {fileID: 11400000, guid: a0789f36ed7f54fe7bb95cee622eeb16, type: 2}
+  scalingConfig: {fileID: 11400000, guid: 0388414e118774d408e9ae8711a35824, type: 2}
   maxSummons: -1

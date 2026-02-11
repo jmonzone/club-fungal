@@ -59,10 +59,10 @@ public class UnlockComponent : ActivityComponent
         assignedDoor = door;
         resourceCondition = condition;
 
-        // Initialize contribution handler with the required item and amount
+        // Initialize contribution handler with the required item and fixed amount
         if (condition?.RequiredItem != null)
         {
-            contributionHandler.InitializeWithItem(condition.RequiredItem, condition.RequiredAmount);
+            contributionHandler.InitializeWithFixedCost(condition.RequiredItem, condition.RequiredAmount);
         }
         else
         {
@@ -75,7 +75,7 @@ public class UnlockComponent : ActivityComponent
         // Initialize contribution handler if we have resource condition
         if (resourceCondition?.RequiredItem != null)
         {
-            contributionHandler.InitializeWithItem(resourceCondition.RequiredItem, resourceCondition.RequiredAmount);
+            contributionHandler.InitializeWithFixedCost(resourceCondition.RequiredItem, resourceCondition.RequiredAmount);
         }
 
         // Calculate scaled reward amounts based on room level using RuneScape formula

@@ -28,22 +28,6 @@ MonoBehaviour:
   hideZoneAfterIndex: 2
   zoneRevealCostScale: 1
   zoneContributionMode: 0
-  zoneCostOverrides:
-  - zoneIndex: 0
-    cost: 8
-    resourceCost:
-      item: {fileID: 0}
-      amount: 0
-  - zoneIndex: 2
-    cost: -1
-    resourceCost:
-      item: {fileID: 11400000, guid: 20b1daf91d6764492a8d2376e4644d03, type: 2}
-      amount: 8
-  - zoneIndex: 3
-    cost: 100
-    resourceCost:
-      item: {fileID: 0}
-      amount: 0
   showAllHiddenZones: 0
   enableDoorActivities: 0
   resourceCollectionMode: 0

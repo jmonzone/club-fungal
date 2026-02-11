@@ -11,6 +11,7 @@ public class ZoneOcclusion : ActivityComponent
     [Header("Occlusion Settings")]
     [SerializeField] private Sprite occludedSprite; // Icon to show when zone is hidden
     [SerializeField] private string occludedDisplayName = "Hidden Zone"; // Name to show when zone is hidden
+    [SerializeField] private ResourceScalingConfig scalingConfig; // Optional: override zone cost scaling
 
     // Expose contribution handler properties
     public int CurrentResourceCount => contributionHandler.CurrentResourceCount;
@@ -66,7 +67,7 @@ public class ZoneOcclusion : ActivityComponent
     {
         hiddenZoneComponent = nextComponent;
         isRevealed = false;
-        contributionHandler.Initialize(zoneIndex, settings);
+        contributionHandler.Initialize(zoneIndex, settings, scalingConfig);
 
         var costText = $"{RequiredAmount}x {RequiredItem?.DisplayName}";
         if (AdditionalResourceCost != null && AdditionalResourceCost.Item != null)
