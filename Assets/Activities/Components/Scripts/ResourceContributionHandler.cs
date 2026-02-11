@@ -70,7 +70,13 @@ public class ResourceContributionHandler
         this.settings = settings;
         this.cachedRequiredAmount = settings?.GetZoneCost(contextIndex) ?? 0;
         this.additionalResourceCost = settings?.GetAdditionalResourceCost(contextIndex);
-        this.requiredItem = settings?.sporesItem; // Set the primary resource item
+
+        // Use spores as default if requiredItem not already set in component asset
+        if (requiredItem == null)
+        {
+            this.requiredItem = settings?.sporesItem;
+        }
+
         unitProgress.Clear();
     }
 

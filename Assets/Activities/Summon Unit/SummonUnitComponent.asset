@@ -20,11 +20,16 @@ MonoBehaviour:
     settings: {fileID: 0}
     updateInterval: 5
     itemsPerUpdate: 1
-    requiredItem: {fileID: 0}
+    requiredItem: {fileID: 11400000, guid: 20b1daf91d6764492a8d2376e4644d03, type: 2}
     additionalResourceCost:
       item: {fileID: 0}
       amount: 0
   summonedUnits: []
   unitInstanceService: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2,
     type: 2}
+  speciesToSummon:
+  - {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
+  - {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
+  - {fileID: 11400000, guid: 84acf7738ffbc4db09e660e7ce20b7a1, type: 2}
+  - {fileID: 11400000, guid: a0789f36ed7f54fe7bb95cee622eeb16, type: 2}
   maxSummons: -1
