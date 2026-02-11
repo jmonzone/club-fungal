@@ -159,14 +159,55 @@ namespace TheFungalNetwork.Editor
             // Create unit card drawer function based on components
             Action<UnitInstance> unitCardDrawer = CreateUnitCardDrawer(activity, currentRun, onChanged);
 
-            // Add unified unit drop zone only if activity can contain units and not occluded
-            if (activity.Template?.CanContainUnits == true && (zoneOcclusionComponent == null || zoneOcclusionComponent.IsRevealed))
+            // Check if any component provides a custom drop zone
+            bool hasCustomDropZone = false;
+            foreach (var component in activity.RuntimeComponents)
+            {
+                foreach (var drawer in _componentDrawers)
+                {
+                    if (drawer.ComponentType.IsAssignableFrom(component.GetType()))
+                    {
+                        if (drawer.ProvidesCustomDropZone(activity, component))
+                        {
+                            hasCustomDropZone = true;
+                            break;
+                        }
+                    }
+                }
+                if (hasCustomDropZone) break;
+            }
+
+            // Get custom drop zone label from component drawers (only if not providing custom drop zone)
+            string customDropZoneLabel = null;
+            if (!hasCustomDropZone)
+            {
+                foreach (var component in activity.RuntimeComponents)
+                {
+                    foreach (var drawer in _componentDrawers)
+                    {
+                        if (drawer.ComponentType.IsAssignableFrom(component.GetType()))
+                        {
+                            var label = drawer.GetDropZoneLabel(activity, component);
+                            if (!string.IsNullOrEmpty(label))
+                            {
+                                customDropZoneLabel = label;
+                                break;
+                            }
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(customDropZoneLabel)) break;
+                }
+            }
+
+            // Add unified unit drop zone only if activity can contain units, not occluded, and no custom drop zone
+            if (!hasCustomDropZone && activity.Template?.CanContainUnits == true && (zoneOcclusionComponent == null || zoneOcclusionComponent.IsRevealed))
             {
                 var unitDropZoneItem = new UnifiedUnitDropZoneDisplayItem(
                     activity,
                     currentRun,
                     onChanged,
-                    unitCardDrawer
+                    unitCardDrawer,
+                    customDropZoneLabel
                 );
 
                 displayItems.Add(unitDropZoneItem);
@@ -598,7 +639,8 @@ namespace TheFungalNetwork.Editor
                 ActivityInstance activity,
                 NetworkRun currentRun,
                 System.Action onChanged,
-                System.Action<UnitInstance> unitCardDrawer)
+                System.Action<UnitInstance> unitCardDrawer,
+                string customLabel = null)
             {
                 condition = () => true;
                 color = Color.white;
@@ -609,6 +651,7 @@ namespace TheFungalNetwork.Editor
                     var hasUnits = activity.Units != null && activity.Units.Count > 0;
 
                     _dropZoneDrawer.Draw(
+                        label: customLabel ?? "🖱️ Drop units here to assign",
                         isEmpty: !hasUnits,
                         drawContent: (contentRect) =>
                         {

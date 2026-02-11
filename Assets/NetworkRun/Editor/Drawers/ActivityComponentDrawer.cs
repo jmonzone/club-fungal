@@ -13,6 +13,16 @@ namespace TheFungalNetwork.Editor
             return null;
         }
 
+        public virtual string GetDropZoneLabel(ActivityInstance activity, ActivityComponent component)
+        {
+            return null; // Return null to use default label
+        }
+
+        public virtual bool ProvidesCustomDropZone(ActivityInstance activity, ActivityComponent component)
+        {
+            return false; // Return true if component drawer handles its own drop zone
+        }
+
     }
 
     public abstract class ActivityComponentDrawer<T> : ActivityComponentDrawer where T : ActivityComponent

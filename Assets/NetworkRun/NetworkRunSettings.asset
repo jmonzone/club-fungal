@@ -55,3 +55,6 @@ MonoBehaviour:
     enabled: 0
   - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
     enabled: 0
+  initialInventory:
+  - item: {fileID: 11400000, guid: 20b1daf91d6764492a8d2376e4644d03, type: 2}
+    count: 30

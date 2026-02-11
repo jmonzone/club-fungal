@@ -40,7 +40,7 @@ namespace TheFungalNetwork.Editor
 
             // Draw the content inside the drop zone
             // MinWidth ensures consistent width when empty (matches 1 unit card + spacing)
-            var contentRect = EditorGUILayout.BeginVertical(GUILayout.MinWidth(100), GUILayout.ExpandWidth(true));
+            var contentRect = EditorGUILayout.BeginVertical();
 
             if (isEmpty)
             {

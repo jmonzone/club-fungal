@@ -8,6 +8,12 @@ namespace TheFungalNetwork.Editor
     public class UpgradeActivityComponentDrawer : ActivityComponentDrawer<UpgradeActivityComponent>
     {
         private PartyUnitCardDrawer _cardDrawer = new PartyUnitCardDrawer();
+        private UnitDropZoneDrawer _dropZoneDrawer = new UnitDropZoneDrawer();
+
+        public override bool ProvidesCustomDropZone(ActivityInstance activity, ActivityComponent component)
+        {
+            return true;
+        }
 
         public override List<CardDrawerDisplayItem> GetDisplayItems(ActivityInstance activity, ActivityComponent component, NetworkRun currentRun, System.Action onChanged)
         {
@@ -15,7 +21,7 @@ namespace TheFungalNetwork.Editor
             {
                 return new List<CardDrawerDisplayItem>
                 {
-                    new UpgradesGridDisplayItem(upgradeComponent.UpgradeInstances, currentRun)
+                    new UpgradeWithDropZoneDisplayItem(activity, upgradeComponent, currentRun, onChanged, _cardDrawer, _dropZoneDrawer)
                 };
             }
             return null;
@@ -44,29 +50,102 @@ namespace TheFungalNetwork.Editor
         }
     }
 
-    public class UpgradesGridDisplayItem : CardDrawerDisplayItem
+    public class UpgradeWithDropZoneDisplayItem : CardDrawerDisplayItem
     {
-        public UpgradesGridDisplayItem(List<UpgradeInstance> upgradeInstances, NetworkRun currentRun)
+        public UpgradeWithDropZoneDisplayItem(
+            ActivityInstance activity, 
+            UpgradeActivityComponent upgradeComponent, 
+            NetworkRun currentRun, 
+            System.Action onChanged,
+            PartyUnitCardDrawer cardDrawer,
+            UnitDropZoneDrawer dropZoneDrawer)
         {
             condition = () => true;
-            color = new Color(0.9f, 0.95f, 1f);
+            color = Color.white;
             drawAction = () =>
             {
                 EditorGUILayout.BeginHorizontal();
                 
-                foreach (var upgradeInstance in upgradeInstances)
-                {
-                    if (upgradeInstance?.Template != null)
+                // Draw drop zone on the left (sized for one unit card)
+                EditorGUILayout.BeginVertical(GUILayout.Width(100), GUILayout.MaxWidth(100));
+                
+                var hasUnits = activity.Units != null && activity.Units.Count > 0;
+                
+                dropZoneDrawer.Draw(
+                    label: "🖱️ Drop ONE unit",
+                    isEmpty: !hasUnits,
+                    drawContent: (contentRect) =>
                     {
-                        DrawUpgradeItem(upgradeInstance, currentRun);
+                        if (hasUnits && activity.Units.Count > 0)
+                        {
+                            // Center align the unit card
+                            EditorGUILayout.BeginHorizontal();
+                            GUILayout.FlexibleSpace();
+                            
+                            var unit = activity.Units[0];
+                            cardDrawer.Draw(
+                                unit,
+                                () =>
+                                {
+                                    if (currentRun?.Settings?.debugMode ?? false)
+                                    {
+                                        GUI.backgroundColor = new Color(1f, 0.7f, 0.7f);
+                                        if (GUILayout.Button("Remove", GUILayout.Height(18), GUILayout.Width(90)))
+                                        {
+                                            activity.RemoveUnit(unit);
+                                            UnityEditor.AssetDatabase.SaveAssets();
+                                            onChanged?.Invoke();
+                                        }
+                                        GUI.backgroundColor = Color.white;
+                                    }
+                                },
+                                currentRun?.Settings);
+                            
+                            GUILayout.FlexibleSpace();
+                            EditorGUILayout.EndHorizontal();
+                        }
+                    },
+                    canDrop: (draggedUnit) =>
+                    {
+                        // Only allow drop if activity is empty or doesn't already contain this unit
+                        return activity.Units == null || activity.Units.Count == 0 || !activity.Units.Contains(draggedUnit);
+                    },
+                    onDrop: (draggedUnit) =>
+                    {
+                        var allActivities = currentRun?.CurrentRoom?.Data?.activities;
+                        activity.AddUnit(draggedUnit, allActivities);
+                        UnityEditor.AssetDatabase.SaveAssets();
+                        onChanged?.Invoke();
+                    },
+                    visualMode: DragAndDropVisualMode.Copy
+                );
+                
+                EditorGUILayout.EndVertical();
+                
+                EditorGUILayout.Space(8);
+                
+                // Draw upgrades on the right (only if has units)
+                if (hasUnits)
+                {
+                    EditorGUILayout.BeginVertical();
+                    
+                    foreach (var upgradeInstance in upgradeComponent.UpgradeInstances)
+                    {
+                        if (upgradeInstance?.Template != null)
+                        {
+                            DrawUpgradeItem(upgradeInstance, currentRun, onChanged);
+                            EditorGUILayout.Space(4);
+                        }
                     }
+                    
+                    EditorGUILayout.EndVertical();
                 }
                 
                 EditorGUILayout.EndHorizontal();
             };
         }
         
-        private void DrawUpgradeItem(UpgradeInstance upgradeInstance, NetworkRun currentRun)
+        private void DrawUpgradeItem(UpgradeInstance upgradeInstance, NetworkRun currentRun, System.Action onChanged)
         {
             var upgrade = upgradeInstance.Template;
             
@@ -144,8 +223,9 @@ namespace TheFungalNetwork.Editor
                         if (GUILayout.Button(buttonContent, GUILayout.Height(24), GUILayout.Width(80)))
                         {
                             upgradeInstance.Purchase(currentRun, null);
+                            onChanged?.Invoke();
                         }
-                        
+
                         GUI.backgroundColor = Color.white;
                         GUI.enabled = true;
                         
