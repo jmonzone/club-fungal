@@ -187,7 +187,8 @@ public class ResourceContributionHandler
     public bool RequirementsMet()
     {
         var primarySatisfied = currentResourceCount >= RequiredAmount;
-        var additionalSatisfied = additionalResourceCost == null || additionalResourceCount >= additionalResourceCost.Amount;
+        var additionalCost = AdditionalResourceCost;
+        var additionalSatisfied = additionalCost == null || additionalResourceCount >= additionalCost.Amount;
         return primarySatisfied && additionalSatisfied;
     }
 
@@ -198,8 +199,8 @@ public class ResourceContributionHandler
     {
         if (unit?.Inventory == null) return;
 
-        // Contribute primary resource
-        if (requiredItem != null)
+        // Prioritize primary resource if unit has it and it's not complete
+        if (requiredItem != null && currentResourceCount < RequiredAmount)
         {
             var unitItemCount = unit.Inventory.GetItemCount(requiredItem);
             var remainingNeeded = RequiredAmount - currentResourceCount;
@@ -213,24 +214,26 @@ public class ResourceContributionHandler
                 }
                 currentResourceCount += amountToContribute;
                 Debug.Log($"{unit.DisplayName} contributed {amountToContribute}x {requiredItem.DisplayName}. Progress: {currentResourceCount}/{RequiredAmount}");
+                return; // Only contribute one resource type at a time
             }
         }
 
-        // Contribute additional resource (if any)
-        if (additionalResourceCost != null && additionalResourceCost.Item != null)
+        // Contribute additional resource if primary is done or unit doesn't have primary resource
+        var additionalCost = AdditionalResourceCost;
+        if (additionalCost != null && additionalCost.Item != null && additionalResourceCount < additionalCost.Amount)
         {
-            var unitItemCount = unit.Inventory.GetItemCount(additionalResourceCost.Item);
-            var remainingNeeded = additionalResourceCost.Amount - additionalResourceCount;
+            var unitItemCount = unit.Inventory.GetItemCount(additionalCost.Item);
+            var remainingNeeded = additionalCost.Amount - additionalResourceCount;
             var amountToContribute = Mathf.Min(unitItemCount, remainingNeeded);
 
             if (amountToContribute > 0)
             {
                 for (int i = 0; i < amountToContribute; i++)
                 {
-                    unit.Inventory.RemoveItem(additionalResourceCost.Item);
+                    unit.Inventory.RemoveItem(additionalCost.Item);
                 }
                 additionalResourceCount += amountToContribute;
-                Debug.Log($"{unit.DisplayName} contributed {amountToContribute}x {additionalResourceCost.Item.DisplayName}. Progress: {additionalResourceCount}/{additionalResourceCost.Amount}");
+                Debug.Log($"{unit.DisplayName} contributed {amountToContribute}x {additionalCost.Item.DisplayName}. Progress: {additionalResourceCount}/{additionalCost.Amount}");
             }
         }
     }
@@ -244,8 +247,8 @@ public class ResourceContributionHandler
 
         int totalContributed = 0;
 
-        // Contribute primary resource
-        if (requiredItem != null)
+        // Prioritize primary resource if not complete
+        if (requiredItem != null && currentResourceCount < RequiredAmount)
         {
             var globalItemCount = globalInventory.GetItemCount(requiredItem);
             var remainingNeeded = RequiredAmount - currentResourceCount;
@@ -260,25 +263,27 @@ public class ResourceContributionHandler
                 currentResourceCount += amountToContribute;
                 totalContributed += amountToContribute;
                 Debug.Log($"Contributed {amountToContribute}x {requiredItem.DisplayName} from global inventory. Progress: {currentResourceCount}/{RequiredAmount}");
+                return totalContributed; // Only contribute one resource type at a time
             }
         }
 
-        // Contribute additional resource (if any)
-        if (additionalResourceCost != null && additionalResourceCost.Item != null)
+        // Contribute additional resource if primary is done or global inventory doesn't have primary resource
+        var additionalCost = AdditionalResourceCost;
+        if (additionalCost != null && additionalCost.Item != null && additionalResourceCount < additionalCost.Amount)
         {
-            var globalItemCount = globalInventory.GetItemCount(additionalResourceCost.Item);
-            var remainingNeeded = additionalResourceCost.Amount - additionalResourceCount;
+            var globalItemCount = globalInventory.GetItemCount(additionalCost.Item);
+            var remainingNeeded = additionalCost.Amount - additionalResourceCount;
             var amountToContribute = Mathf.Min(globalItemCount, remainingNeeded);
 
             if (amountToContribute > 0)
             {
                 for (int i = 0; i < amountToContribute; i++)
                 {
-                    globalInventory.RemoveItem(additionalResourceCost.Item);
+                    globalInventory.RemoveItem(additionalCost.Item);
                 }
                 additionalResourceCount += amountToContribute;
                 totalContributed += amountToContribute;
-                Debug.Log($"Contributed {amountToContribute}x {additionalResourceCost.Item.DisplayName} from global inventory. Progress: {additionalResourceCount}/{additionalResourceCost.Amount}");
+                Debug.Log($"Contributed {amountToContribute}x {additionalCost.Item.DisplayName} from global inventory. Progress: {additionalResourceCount}/{additionalCost.Amount}");
             }
         }
 
@@ -319,7 +324,7 @@ public class ResourceContributionHandler
             {
                 bool contributed = false;
 
-                // Contribute primary resource
+                // Prioritize primary resource if unit has it and it's not complete
                 if (requiredItem != null && currentResourceCount < RequiredAmount)
                 {
                     var unitItemCount = unit.Inventory.GetItemCount(requiredItem);
@@ -338,22 +343,26 @@ public class ResourceContributionHandler
                     }
                 }
 
-                // Contribute additional resource (if any)
-                if (additionalResourceCost != null && additionalResourceCost.Item != null && additionalResourceCount < additionalResourceCost.Amount)
+                // Contribute additional resource if primary is done or unit doesn't have primary resource
+                if (!contributed)
                 {
-                    var unitItemCount = unit.Inventory.GetItemCount(additionalResourceCost.Item);
-                    var remainingNeeded = additionalResourceCost.Amount - additionalResourceCount;
-                    var amountToContribute = Mathf.Min(itemsPerUpdate, unitItemCount, remainingNeeded);
-
-                    if (amountToContribute > 0)
+                    var additionalCost = AdditionalResourceCost;
+                    if (additionalCost != null && additionalCost.Item != null && additionalResourceCount < additionalCost.Amount)
                     {
-                        for (int i = 0; i < amountToContribute; i++)
+                        var unitItemCount = unit.Inventory.GetItemCount(additionalCost.Item);
+                        var remainingNeeded = additionalCost.Amount - additionalResourceCount;
+                        var amountToContribute = Mathf.Min(itemsPerUpdate, unitItemCount, remainingNeeded);
+
+                        if (amountToContribute > 0)
                         {
-                            unit.Inventory.RemoveItem(additionalResourceCost.Item);
+                            for (int i = 0; i < amountToContribute; i++)
+                            {
+                                unit.Inventory.RemoveItem(additionalCost.Item);
+                            }
+                            additionalResourceCount += amountToContribute;
+                            contributed = true;
+                            Debug.Log($"{unit.DisplayName} contributed {amountToContribute}x {additionalCost.Item.DisplayName}. Progress: {additionalResourceCount}/{additionalCost.Amount}");
                         }
-                        additionalResourceCount += amountToContribute;
-                        contributed = true;
-                        Debug.Log($"{unit.DisplayName} contributed {amountToContribute}x {additionalResourceCost.Item.DisplayName}. Progress: {additionalResourceCount}/{additionalResourceCost.Amount}");
                     }
                 }
 
@@ -388,8 +397,13 @@ public class ResourceContributionHandler
         // Only check unit inventory in unit inventory mode
         if (useUnitInventory)
         {
-            var hasResource = requiredItem != null && unit?.Inventory != null && unit.Inventory.GetItemCount(requiredItem) > 0;
-            return hasResource ? ContributionStatus.Contributing : ContributionStatus.NeedsResource;
+            // Check if unit has either primary or additional resource
+            var hasPrimary = requiredItem != null && currentResourceCount < RequiredAmount && unit?.Inventory != null && unit.Inventory.GetItemCount(requiredItem) > 0;
+            var additionalCost = AdditionalResourceCost;
+            var hasAdditional = additionalCost != null && additionalCost.Item != null &&
+                               additionalResourceCount < additionalCost.Amount &&
+                               unit?.Inventory != null && unit.Inventory.GetItemCount(additionalCost.Item) > 0;
+            return (hasPrimary || hasAdditional) ? ContributionStatus.Contributing : ContributionStatus.NeedsResource;
         }
 
         // In global inventory mode, no per-unit status
@@ -401,7 +415,18 @@ public class ResourceContributionHandler
     /// </summary>
     public bool UnitHasResource(UnitInstance unit)
     {
-        return requiredItem != null && unit?.Inventory != null && unit.Inventory.GetItemCount(requiredItem) > 0;
+        if (unit?.Inventory == null) return false;
+
+        // Check if unit has primary resource (and it's still needed)
+        var hasPrimary = requiredItem != null && currentResourceCount < RequiredAmount && unit.Inventory.GetItemCount(requiredItem) > 0;
+        if (hasPrimary) return true;
+
+        // Check if unit has additional resource (and it's still needed)
+        var additionalCost = AdditionalResourceCost;
+        var hasAdditional = additionalCost != null && additionalCost.Item != null &&
+                           additionalResourceCount < additionalCost.Amount &&
+                           unit.Inventory.GetItemCount(additionalCost.Item) > 0;
+        return hasAdditional;
     }
 
     /// <summary>
@@ -452,8 +477,21 @@ public class ResourceContributionHandler
             case ContributionStatus.WaitingForReveal:
                 return "✓ Ready to reveal";
             case ContributionStatus.NeedsResource:
-                var resourceName = requiredItem?.DisplayName ?? "resource";
-                return $"Needs {resourceName}";
+                // Show which resource is needed based on current progress
+                if (currentResourceCount < RequiredAmount)
+                {
+                    var resourceName = requiredItem?.DisplayName ?? "resource";
+                    return $"Needs {resourceName}";
+                }
+                else
+                {
+                    var additionalCost = AdditionalResourceCost;
+                    if (additionalCost != null && additionalCost.Item != null)
+                    {
+                        return $"Needs {additionalCost.Item.DisplayName}";
+                    }
+                }
+                return "Needs resource";
             default:
                 return "";
         }

@@ -25,26 +25,10 @@ MonoBehaviour:
   zoneOcclusionTemplate: {fileID: 11400000, guid: f0d1de32675c648398a75ea496a6d330,
     type: 2}
   enableZoneOcclusion: 1
-  hideZoneAfterIndex: 1
+  hideZoneAfterIndex: 4
   zoneRevealCostScale: 1
   zoneContributionMode: 0
-  zoneCostOverrides:
-  - zoneIndex: 0
-    cost: 8
-    resourceCost:
-      item: {fileID: 0}
-      amount: 0
-  - zoneIndex: 2
-    cost: -1
-    resourceCost:
-      item: {fileID: 11400000, guid: 20b1daf91d6764492a8d2376e4644d03, type: 2}
-      amount: 8
-  - zoneIndex: 3
-    cost: 100
-    resourceCost:
-      item: {fileID: 0}
-      amount: 0
-  showAllHiddenZones: 0
+  showAllHiddenZones: 1
   enableDoorActivities: 0
   resourceCollectionMode: 0
   showUnitInventoryItems: 1

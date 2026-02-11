@@ -161,8 +161,23 @@ namespace TheFungalNetwork.Editor
 
             // Check if any component provides a custom drop zone
             bool hasCustomDropZone = false;
+            ZoneOcclusion checkOcclusion = null;
+
             foreach (var component in activity.RuntimeComponents)
             {
+                // Track active occlusion state
+                if (component is ZoneOcclusion occlusion)
+                {
+                    checkOcclusion = occlusion.IsRevealed ? null : occlusion;
+                    continue;
+                }
+
+                // Skip occluded components when checking for custom drop zones
+                if (checkOcclusion != null)
+                {
+                    continue;
+                }
+
                 foreach (var drawer in _componentDrawers)
                 {
                     if (drawer.ComponentType.IsAssignableFrom(component.GetType()))

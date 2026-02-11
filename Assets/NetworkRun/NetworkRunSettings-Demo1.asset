@@ -15,7 +15,7 @@ MonoBehaviour:
   defaultPartySize: 1
   updateInterval: 1
   debugMode: 0
-  speedMultiplier: 5.93
+  speedMultiplier: 10
   minimumActivities: 2
   useEnergySystem: 0
   energyDepletionPerUpdate: 1
