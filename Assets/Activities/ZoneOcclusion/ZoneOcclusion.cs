@@ -162,13 +162,7 @@ public class ZoneOcclusion : ActivityComponent
             }
         }
 
-        // Check if we've revealed the zone
-        if (currentResourceCount >= RequiredAmount && 
-            (additionalResourceCost == null || additionalResourceCount >= additionalResourceCost.Amount))
-        {
-            RevealZone();
-        }
-
+        // Don't automatically reveal - require manual button click
         return totalContributed;
     }
 
@@ -255,13 +249,8 @@ public class ZoneOcclusion : ActivityComponent
                 {
                     unitProgress[unit] = 0f;
 
-                    // Check if we've revealed the zone (both primary and additional resources must be complete)
-                    if (currentResourceCount >= RequiredAmount && 
-                        (additionalResourceCost == null || additionalResourceCount >= additionalResourceCost.Amount))
-                    {
-                        RevealZone();
-                        break;
-                    }
+                    // Don't automatically reveal - require manual button click
+                    // Just reset progress after contributing
                 }
             }
         }

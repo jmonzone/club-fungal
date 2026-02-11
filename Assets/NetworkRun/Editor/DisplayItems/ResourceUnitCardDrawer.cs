@@ -322,11 +322,11 @@ namespace TheFungalNetwork.Editor
 
             if (isInventoryFull)
             {
-                GUI.enabled = false;
-                GUI.backgroundColor = new Color(1f, 0.5f, 0.5f);
-                GUILayout.Button("Inventory Full", GUILayout.Height(18), GUILayout.Width(90));
-                GUI.backgroundColor = Color.white;
-                GUI.enabled = true;
+                // GUI.enabled = false;
+                // GUI.backgroundColor = new Color(1f, 0.5f, 0.5f);
+                // GUILayout.Button("Inventory Full", GUILayout.Height(18), GUILayout.Width(90));
+                // GUI.backgroundColor = Color.white;
+                // GUI.enabled = true;
             }
             else
             {

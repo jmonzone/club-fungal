@@ -16,8 +16,8 @@ namespace TheFungalNetwork.Editor
 
                 EditorGUILayout.Space(4);
 
-                // Show resource icon and inventory count
-                if (resourceComponent.ItemTemplate?.Sprite != null)
+                // Show resource icon and inventory count only when collecting to global inventory
+                if (collectToGlobal && resourceComponent.ItemTemplate?.Sprite != null)
                 {
                     EditorGUILayout.BeginHorizontal();
 
@@ -28,22 +28,12 @@ namespace TheFungalNetwork.Editor
 
                     EditorGUILayout.BeginVertical();
 
-                    // Calculate total resources collected
+                    // Calculate total resources collected in global inventory
                     int resourceCount = 0;
 
-                    if (collectToGlobal && currentRun?.Inventory != null)
+                    if (currentRun?.Inventory != null)
                     {
                         resourceCount = currentRun.Inventory.GetItemCount(resourceComponent.ItemTemplate);
-                    }
-                    else if (activity.Units != null)
-                    {
-                        foreach (var unit in activity.Units)
-                        {
-                            if (unit?.Inventory != null)
-                            {
-                                resourceCount += unit.Inventory.GetItemCount(resourceComponent.ItemTemplate);
-                            }
-                        }
                     }
 
                     var countStyle = new GUIStyle(EditorStyles.boldLabel)
@@ -62,24 +52,27 @@ namespace TheFungalNetwork.Editor
                 var unitCount = activity.Units?.Count ?? 0;
                 var itemName = resourceComponent.ItemTemplate?.DisplayName ?? "Unknown";
 
-                // Show what's being collected with type bonuses considered
-                var totalItems = resourceComponent.ItemsPerUpdate * unitCount;
-
-                // Calculate average effective interval across all active units
-                float totalInterval = 0f;
-                int activeCount = 0;
-
-                foreach (var unit in activity.Units)
+                // Show what's being collected with type bonuses considered (debug mode only)
+                if (currentRun?.Settings?.debugMode == true)
                 {
-                    if (unit != null)
-                    {
-                        totalInterval += resourceComponent.GetEffectiveInterval(unit, activity);
-                        activeCount++;
-                    }
-                }
+                    var totalItems = resourceComponent.ItemsPerUpdate * unitCount;
 
-                float avgInterval = activeCount > 0 ? totalInterval / activeCount : resourceComponent.UpdateInterval;
-                EditorGUILayout.LabelField($"⏱ Each cycle: {totalItems}x {itemName} (~{avgInterval:F1}s avg)", EditorStyles.miniLabel);
+                    // Calculate average effective interval across all active units
+                    float totalInterval = 0f;
+                    int activeCount = 0;
+
+                    foreach (var unit in activity.Units)
+                    {
+                        if (unit != null)
+                        {
+                            totalInterval += resourceComponent.GetEffectiveInterval(unit, activity);
+                            activeCount++;
+                        }
+                    }
+
+                    float avgInterval = activeCount > 0 ? totalInterval / activeCount : resourceComponent.UpdateInterval;
+                    EditorGUILayout.LabelField($"⏱ Each cycle: {totalItems}x {itemName} (~{avgInterval:F1}s avg)", EditorStyles.miniLabel);
+                }
 
                 // Show total collected
                 if (collectToGlobal && currentRun?.Inventory != null)
@@ -92,9 +85,9 @@ namespace TheFungalNetwork.Editor
                     // };
                     // EditorGUILayout.LabelField($"📦 Total collected: {globalCount}x {itemName}", countStyle);
                 }
-                else if (!collectToGlobal && activity.Units != null)
+                else if (!collectToGlobal && activity.Units != null && currentRun?.Settings?.debugMode == true)
                 {
-                    // Show total across all units in activity
+                    // Show total across all units in activity (debug mode only)
                     int totalInUnits = 0;
                     foreach (var unit in activity.Units)
                     {

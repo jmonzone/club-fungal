@@ -28,12 +28,18 @@ namespace TheFungalNetwork.Editor
             var isRevealed = component.IsRevealed;
             var useUnitInventory = currentRun?.Settings?.zoneContributionMode == ResourceCollectionMode.UnitInventory;
 
+            // Check if requirements are satisfied
+            var primarySatisfied = component.CurrentResourceCount >= component.RequiredAmount;
+            var additionalSatisfied = component.AdditionalResourceCost == null ||
+                                     component.AdditionalResourceCount >= component.AdditionalResourceCost.Amount;
+            var requirementsMet = primarySatisfied && additionalSatisfied;
+
             _cardDrawer.Draw(
                 unit,
                 () =>
                 {
-                    // Show contribute button in unit inventory mode
-                    if (!isRevealed && useUnitInventory && hasResource)
+                    // Show contribute button in unit inventory mode (only if requirements not yet met)
+                    if (!isRevealed && useUnitInventory && hasResource && !requirementsMet)
                     {
                         GUI.backgroundColor = new Color(0.7f, 1f, 0.7f);
                         var buttonText = $"✓ Contribute {resourceItem.DisplayName}";
@@ -59,13 +65,24 @@ namespace TheFungalNetwork.Editor
                         GUI.backgroundColor = Color.white;
                     }
                 },
-                (hasResource && !isRevealed && useUnitInventory) ? () => component.GetUnitProgress(unit) / component.UpdateInterval : null,
+                (hasResource && !isRevealed && useUnitInventory && !requirementsMet) ? () => component.GetUnitProgress(unit) / component.UpdateInterval : null,
                 () =>
                 {
                     // Only show status if zone is not revealed and using unit inventory mode
                     if (!isRevealed && useUnitInventory)
                     {
-                        if (hasResource)
+                        if (requirementsMet)
+                        {
+                            // Show ready status when requirements met
+                            var statusStyle = new GUIStyle(EditorStyles.miniLabel)
+                            {
+                                alignment = TextAnchor.MiddleCenter,
+                                fontSize = 8,
+                                normal = { textColor = new Color(0.5f, 1f, 0.5f) }
+                            };
+                            EditorGUILayout.LabelField("✓ Ready to reveal", statusStyle, GUILayout.Height(12), GUILayout.Width(90));
+                        }
+                        else if (hasResource)
                         {
                             var statusStyle = new GUIStyle(EditorStyles.miniLabel)
                             {
