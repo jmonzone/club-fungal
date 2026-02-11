@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d430a8dac47ea4a2a92392f184cd8cfa, type: 3}
-  m_Name: UpgradeActivityComponent
+  m_Name: Upgrade Activity Component
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeActivityComponent
   upgrades:
   - {fileID: 11400000, guid: 9c5b40bdd94ee4d398e42b23b72b614c, type: 2}

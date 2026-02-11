@@ -912,10 +912,70 @@ namespace TheFungalNetwork.Editor
         {
             var className = GetComponentClassName(newComponentTypeName);
             var menuPath = newComponentTypeName;
+            var assetFileName = newComponentTypeName.EndsWith("Component") ? newComponentTypeName : newComponentTypeName + " Component";
+            
+            // Use reflection to generate method overrides based on ActivityComponent's actual shape
+            var baseType = typeof(ActivityComponent);
+            var methodOverrides = new System.Text.StringBuilder();
+            
+            // Find all abstract and virtual methods that need implementation
+            var methods = baseType.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            
+            foreach (var method in methods)
+            {
+                // Skip if not abstract or virtual
+                if (!method.IsAbstract && !method.IsVirtual) continue;
+                
+                // Skip sealed methods (like Initialize)
+                if (method.IsFinal) continue;
+                
+                // Skip property getters/setters
+                if (method.IsSpecialName) continue;
+                
+                // Skip methods from System.Object
+                if (method.DeclaringType == typeof(object) || method.DeclaringType == typeof(UnityEngine.Object) || method.DeclaringType == typeof(UnityEngine.ScriptableObject)) continue;
+                
+                // Build method signature
+                var parameters = method.GetParameters();
+                var paramStrings = new System.Collections.Generic.List<string>();
+                var paramNames = new System.Collections.Generic.List<string>();
+                
+                foreach (var param in parameters)
+                {
+                    var paramType = param.ParameterType.Name;
+                    var paramName = param.Name;
+                    paramStrings.Add($"{paramType} {paramName}");
+                    paramNames.Add(paramName);
+                }
+                
+                var accessModifier = method.IsPublic ? "public" : "protected";
+                var methodSignature = $"{accessModifier} override void {method.Name}({string.Join(", ", paramStrings)})";
+                
+                // Generate method body based on method name
+                var methodBody = "";
+                if (method.Name.Contains("Initialize") || method.Name.Contains("OnInitialize"))
+                {
+                    methodBody = $"        // Initialize your component here\n        Debug.Log($\"{className} initialized\");";
+                }
+                else if (method.Name.Contains("Update") || method.Name.Contains("DoUpdate"))
+                {
+                    methodBody = "        // Update logic called during network run\n        // Example: Process units, update resources, etc.";
+                }
+                else
+                {
+                    methodBody = $"        // TODO: Implement {method.Name}";
+                }
+                
+                methodOverrides.AppendLine($"    {methodSignature}");
+                methodOverrides.AppendLine("    {");
+                methodOverrides.AppendLine(methodBody);
+                methodOverrides.AppendLine("    }");
+                methodOverrides.AppendLine();
+            }
             
             return $@"using UnityEngine;
 
-[CreateAssetMenu(fileName = ""{className}"", menuName = ""Club Fungal/Activities/Components/{menuPath}"")]
+[CreateAssetMenu(fileName = ""{assetFileName}"", menuName = ""Club Fungal/Activities/Components/{menuPath}"")]
 public class {className} : ActivityComponent
 {{
     // Add your component fields here
@@ -923,17 +983,7 @@ public class {className} : ActivityComponent
     // [SerializeField] private float updateInterval = 1f;
     // [SerializeField] private int value = 1;
 
-    public override void Initialize(NetworkRun networkRun, ActivityInstance activityInstance)
-    {{
-        // Initialize your component here
-        Debug.Log($""{className} initialized"");
-    }}
-
-    public override void DoUpdate(NetworkRun networkRun, ActivityInstance activityInstance)
-    {{
-        // Update logic called during network run
-        // Example: Process units, update resources, etc.
-    }}
+{methodOverrides.ToString().TrimEnd()}
 }}
 ";
         }

@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd90feebe4523426e82f058687423bef, type: 3}
-  m_Name: Foraging Activity
+  m_Name: Summon Unit
   m_EditorClassIdentifier: Assembly-CSharp::ActivityReference
-  description: Collect Mushrooms
-  sprite: {fileID: 21300000, guid: d11664e5f77424c7ba70ac473125f7af, type: 3}
+  description: Summon Units
+  sprite: {fileID: 21300000, guid: 6272cfce850894d66aeaa64c2a5ba7df, type: 3}
   activityView: {fileID: 0}
-  primarySkill: {fileID: 11400000, guid: 71c6207e188214dfab32f5c23d138e13, type: 2}
+  primarySkill: {fileID: 0}
   activityControllerPrefab: {fileID: 0}
   components:
-  - {fileID: 11400000, guid: 75563fc8a64804b049de33b515a18bd1, type: 2}
+  - {fileID: 11400000, guid: 16d4f0a25cb6d4163b6f9eb629427547, type: 2}
   canContainUnits: 1
   origin: {x: 0, y: 0, z: 0}
   player: {fileID: 0}

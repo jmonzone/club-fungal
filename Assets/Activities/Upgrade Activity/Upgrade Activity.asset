@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd90feebe4523426e82f058687423bef, type: 3}
   m_Name: Upgrade Activity
   m_EditorClassIdentifier: Assembly-CSharp::ActivityReference
-  description: Upgrade Zone
+  description: Upgrade Units
   sprite: {fileID: 21300000, guid: 160665d22651a437d93eace34980892e, type: 3}
   activityView: {fileID: 0}
   primarySkill: {fileID: 0}
