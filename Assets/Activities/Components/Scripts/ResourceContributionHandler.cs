@@ -22,6 +22,8 @@ public class ResourceContributionHandler
     [SerializeField] private int currentResourceCount;
     [SerializeField] private int additionalResourceCount;
     [SerializeField] private int currentIndex = 0; // Current level/index for scaling
+    [SerializeField] private int initialIndex = 0; // Starting index to detect "first item"
+    [SerializeField] private bool hasUsedFreeItem = false; // Track if free item has been claimed
     [SerializeField] private int fixedAmount = -1; // If >= 0, use this instead of scaling (-1 = use scaling)
     [SerializeField] private ResourceScalingConfig scalingConfig;
     [SerializeField] private NetworkRunSettings settings;
@@ -51,6 +53,12 @@ public class ResourceContributionHandler
             if (fixedAmount >= 0)
             {
                 return fixedAmount;
+            }
+
+            // Check if first item is free (scaling config with firstItemFree enabled and not yet used)
+            if (scalingConfig != null && scalingConfig.firstItemFree && !hasUsedFreeItem)
+            {
+                return 0;
             }
 
             // Use scaling config if available
@@ -83,6 +91,8 @@ public class ResourceContributionHandler
         additionalResourceCount = 0;
         // Add 2 to contextIndex to start at level 2 (cost 8) for first item, level 3 (cost 17) for second, etc.
         this.currentIndex = contextIndex + 2;
+        this.initialIndex = this.currentIndex; // Track initial value to detect "first item"
+        this.hasUsedFreeItem = false; // Reset free item flag
         this.settings = settings;
         this.scalingConfig = scalingConfig;
         this.additionalResourceCost = null; // No longer using additional resource costs from settings
@@ -105,6 +115,7 @@ public class ResourceContributionHandler
         additionalResourceCount = 0;
         this.requiredItem = item;
         this.currentIndex = startIndex;
+        this.initialIndex = startIndex; // Track initial value to detect "first item"
         this.scalingConfig = scalingConfig;
         this.fixedAmount = -1; // Use scaling
         this.additionalResourceCost = null;
@@ -144,6 +155,11 @@ public class ResourceContributionHandler
     public void UpdateIndex(int index)
     {
         this.currentIndex = index;
+        // Mark free item as used once we move away from initial state
+        if (scalingConfig != null && scalingConfig.firstItemFree && !hasUsedFreeItem)
+        {
+            hasUsedFreeItem = true;
+        }
     }
 
     /// <summary>
@@ -255,6 +271,12 @@ public class ResourceContributionHandler
     /// </summary>
     public bool ProcessAutomaticContributions(NetworkRun networkRun, List<UnitInstance> units)
     {
+        // Skip automatic contributions for free items (RequiredAmount == 0)
+        if (RequiredAmount == 0)
+        {
+            return false;
+        }
+
         if (units == null) return false;
 
         bool anyContributed = false;
@@ -368,6 +390,11 @@ public class ResourceContributionHandler
     /// </summary>
     public bool ShouldShowContributeButton(UnitInstance unit, bool isComplete, bool useUnitInventory)
     {
+        // Don't show contribute button for free items
+        if (RequiredAmount == 0)
+        {
+            return false;
+        }
         return !isComplete && useUnitInventory && UnitHasResource(unit) && !RequirementsMet();
     }
 
@@ -376,6 +403,11 @@ public class ResourceContributionHandler
     /// </summary>
     public bool ShouldShowProgress(UnitInstance unit, bool isComplete, bool useUnitInventory)
     {
+        // Don't show progress for free items
+        if (RequiredAmount == 0)
+        {
+            return false;
+        }
         return UnitHasResource(unit) && !isComplete && useUnitInventory && !RequirementsMet();
     }
 

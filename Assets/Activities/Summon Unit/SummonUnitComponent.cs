@@ -42,6 +42,13 @@ public class SummonUnitComponent : ActivityComponent
         {
             return false;
         }
+
+        // Free items (RequiredAmount == 0) are always claimable
+        if (contributionHandler.RequiredAmount == 0)
+        {
+            return true;
+        }
+
         return contributionHandler.RequirementsMet();
     }
 
@@ -92,9 +99,17 @@ public class SummonUnitComponent : ActivityComponent
         // Reset contribution progress and scale for next summon
         contributionHandler.Reset();
 
-        // Update index for next summon using RuneScape scaling
-        // Count + 2 because we start at level 2 (1st=lvl2, 2nd=lvl3, etc)
-        contributionHandler.UpdateIndex(summonedUnits.Count + 2);
+        // Update index for next summon
+        // If firstItemFree: 1st=free, 2nd=lvl2(8), 3rd=lvl3(17), formula: count+1
+        // Without: 1st=lvl2(8), 2nd=lvl3(17), 3rd=lvl4(25), formula: count+2
+        if (scalingConfig != null && scalingConfig.firstItemFree)
+        {
+            contributionHandler.UpdateIndex(summonedUnits.Count + 1);
+        }
+        else
+        {
+            contributionHandler.UpdateIndex(summonedUnits.Count + 2);
+        }
 
         var speciesName = selectedSpecies != null ? selectedSpecies.name : "random species";
         Debug.Log($"[SummonUnit] Summoned {newUnit.DisplayName} ({speciesName})! Total summoned: {summonedUnits.Count}. Next summon requires {RequiredAmount} resources.");
@@ -105,7 +120,7 @@ public class SummonUnitComponent : ActivityComponent
     {
         summonedUnits.Clear();
 
-        // Initialize contribution handler with settings and scaling config
+        // Initialize with scaling config (firstItemFree in config determines if first summon is free)
         if (networkRun?.Settings != null)
         {
             contributionHandler.Initialize(0, networkRun.Settings, scalingConfig);

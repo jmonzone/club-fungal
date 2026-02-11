@@ -26,6 +26,9 @@ public class ResourceScalingConfig : ScriptableObject
     [Tooltip("Minimum cost value (after all calculations)")]
     public int minimumCost = 1;
 
+    [Tooltip("If true, the first item/action is free (cost 0)")]
+    public bool firstItemFree = false;
+
     [Header("Cost Overrides")]
     [Tooltip("Explicit costs for specific indices. Overrides formula calculation.")]
     public List<CostOverride> costOverrides = new List<CostOverride>();
