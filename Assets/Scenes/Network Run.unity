@@ -30125,6 +30125,11 @@ PrefabInstance:
       objectReference: {fileID: 670716376}
     - target: {fileID: 1978737160216740394, guid: 82279fc98484043e4839c80d41b5326a,
         type: 3}
+      propertyPath: enablePan
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1978737160216740394, guid: 82279fc98484043e4839c80d41b5326a,
+        type: 3}
       propertyPath: enableOrbit
       value: 0
       objectReference: {fileID: 0}
@@ -43112,7 +43117,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1900733815
 Transform:
   m_ObjectHideFlags: 0
@@ -49129,16 +49134,16 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_UseGeometry: 0
-  m_DefaultArea: 4
-  m_GenerateLinks: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 1
   m_IgnoreNavMeshAgent: 1
   m_IgnoreNavMeshObstacle: 1
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.083333336
-  m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 423bbf50adce84b41bc89e9b99ca9e25, type: 2}
+  m_VoxelSize: 0.07
+  m_MinRegionArea: 0
+  m_NavMeshData: {fileID: 23800000, guid: ca8e70b626c0b49ce8093ed089114683, type: 2}
   m_BuildHeightMesh: 0
 --- !u!1001 &4466988688691127936
 PrefabInstance:
@@ -51763,7 +51768,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -0.05, z: 0}
-  m_LocalScale: {x: 10, y: 0.1, z: 10}
+  m_LocalScale: {x: 50, y: 0.1, z: 50}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 139337443}

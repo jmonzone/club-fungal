@@ -84,8 +84,9 @@ public class UnitControllerService : GURUService
             _ => fungalPrefab,
         };
 
-#if UNITY_EDITOR
         UnitController unitController;
+
+#if UNITY_EDITOR
         unitController = PrefabUtility.InstantiatePrefab(unitPrefab, parent) as UnitController;
 #else
         unitController = Instantiate(unitPrefab, parent);
