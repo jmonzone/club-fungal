@@ -23,14 +23,14 @@ public class InteractionController : MonoBehaviour
     [SerializeField] private ViewReference homeView;
     [SerializeField] private VirtualJoystick virtualJoystick;
     [SerializeField] private CameraRotationController cameraRotationController;
+    [SerializeField] private ClickSelectionComponent clickSelectionComponent;
 
     [Header("Runtime")]
     [SerializeField] private Transform selected;
 
     private Camera mainCamera;
 
-    private Vector3 startInput;
-    private bool isDragging = false;
+    // Click logic moved to ClickSelectionComponent
 
     public event UnityAction<Transform> OnEntitySelected;
     public event UnityAction<Vector3> OnGroundSelected;
@@ -49,6 +49,13 @@ public class InteractionController : MonoBehaviour
         {
             cameraRotationController.SetCanOrbit(true);
         };
+
+        if (!clickSelectionComponent) clickSelectionComponent = GetComponent<ClickSelectionComponent>();
+        if (clickSelectionComponent)
+        {
+            clickSelectionComponent.OnInteractableClicked.AddListener(HandleClickInteractable);
+            clickSelectionComponent.OnGroundClicked.AddListener(HandleClickGround);
+        }
     }
 
     private float raycastMaxDistance = 100f;
@@ -79,48 +86,21 @@ public class InteractionController : MonoBehaviour
             // interactable.OnProximityChanged(true);
             previousInteractables.Add(interactable);
         }
+        // Click logic handled by ClickSelectionComponent
+    }
 
+    private void HandleClickInteractable(IInteractable interactable)
+    {
+        playerReference.SetTargetInteractable(interactable);
+        OnEntitySelected?.Invoke(interactable.Transform);
+        selected = interactable.Transform;
+    }
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            startInput = Input.mousePosition;
-            isDragging = false;
-        }
-
-        if (Input.GetMouseButton(0))
-        {
-            var inputDelta = Input.mousePosition - startInput;
-            if (inputDelta.magnitude > 0.1f) isDragging = true;
-        }
-
-        if (Input.GetMouseButtonUp(0) && !isDragging)
-        {
-            Vector3 inputPos = Input.mousePosition;
-
-            Ray ray = mainCamera.ScreenPointToRay(inputPos);
-            RaycastHit hit;
-
-            if (Physics.SphereCast(ray, 0.001f, out hit, 1000f, interactableMask))
-            {
-                var interactable = hit.transform.GetComponentInParent<IInteractable>();
-                if (interactable != null)
-                {
-                    playerReference.SetTargetInteractable(interactable);
-                    OnEntitySelected?.Invoke(interactable.Transform);
-
-                    selected = interactable.Transform;
-                    return;
-                }
-            }
-
-            if (Physics.Raycast(ray, out hit, raycastMaxDistance, groundMask))
-            {
-                playerReference.SetTargetPosition(hit.point);
-                OnGroundSelected?.Invoke(hit.point);
-
-                selected = null;
-            }
-        }
+    private void HandleClickGround(Vector3 point)
+    {
+        playerReference.SetTargetPosition(point);
+        OnGroundSelected?.Invoke(point);
+        selected = null;
     }
 
     public void Unselect()

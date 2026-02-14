@@ -2,8 +2,16 @@ using UnityEngine;
 
 public class CameraPanComponent : MonoBehaviour
 {
+    public enum PanAxisMode
+    {
+        XY,
+        XZ
+    }
+
     [Header("Pan Settings")]
     public float panSpeed = 0.5f;
+    [Header("Pan Axis Mode")]
+    public PanAxisMode panAxisMode = PanAxisMode.XY;
     public float panSmoothTime = 0.12f;
     public float driftDamping = 0.92f;
 
@@ -33,7 +41,15 @@ public class CameraPanComponent : MonoBehaviour
     public void AddPan(Vector2 delta)
     {
         Vector3 right = transform.right;
-        Vector3 up = Vector3.up;
-        driftVelocity += (right * delta.x + up * delta.y) * panSpeed;
+        if (panAxisMode == PanAxisMode.XY)
+        {
+            Vector3 up = Vector3.up;
+            driftVelocity += (right * delta.x + up * delta.y) * panSpeed;
+        }
+        else // XZ
+        {
+            Vector3 forward = Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
+            driftVelocity += (right * delta.x + forward * delta.y) * panSpeed;
+        }
     }
 }
