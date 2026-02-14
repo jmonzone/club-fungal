@@ -7,6 +7,7 @@ public class UnitForage : UnitBehaviour
 {
     [Header("References")]
     [SerializeField] private SporeReference sporeReference;
+    [SerializeField] private UnitForageService forageService;
 
     [Header("Runtime")]
     [SerializeField] private SporeController targetSpore;
@@ -20,31 +21,19 @@ public class UnitForage : UnitBehaviour
         base.Awake();
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
-
-        Controller.OnBehaviourChanged += OnBehaviourChanged;
-    }
-
-    private void OnBehaviourChanged()
-    {
-        // If no longer in default behaviour and we have a target, request to start foraging
-        if (targetSpore && Controller.IsDefaultBehaviour)
-        {
-            InvokeOnBehaviourRequest();
-        }
     }
 
     public void SetTargetSpore(SporeController spore)
     {
-        bool hadTarget = targetSpore != null;
         targetSpore = spore;
 
-        // If we got a new target and we're in default behaviour, request to start foraging
-        if (targetSpore != null && Controller.IsDefaultBehaviour)
+        // If we got a new target, request to start foraging
+        if (targetSpore != null)
         {
             InvokeOnBehaviourRequest();
         }
         // If we lost our target while foraging, stop the behaviour
-        else if (targetSpore == null && !Controller.IsDefaultBehaviour && IsActive)
+        else if (IsActive)
         {
             StopBehaviour();
         }
@@ -77,6 +66,18 @@ public class UnitForage : UnitBehaviour
         base.StopBehaviour();
         agent.isStopped = true;
         StopAllCoroutines();
+    }
+
+    public override int GetPriority()
+    {
+        // If we don't have a target, request assignment from service
+        if (targetSpore == null && forageService != null)
+        {
+            forageService.RequestAssignment(this);
+        }
+
+        // High priority if we have a target spore
+        return targetSpore != null ? 100 : 0;
     }
 
 }

@@ -12,6 +12,7 @@ public class NetworkRunPartyTether : MonoBehaviour
 
     private Camera mainCamera;
     private float nextCheckTime;
+    private Vector3 partyCenterGround;
 
     private void Awake()
     {
@@ -36,7 +37,13 @@ public class NetworkRunPartyTether : MonoBehaviour
         if (!Physics.Raycast(ray, out RaycastHit hit, 1000f, groundMask))
             return;
 
-        Vector3 groundCenter = hit.point;
+        partyCenterGround = hit.point;
+
+        // Inject data into NetworkRunService
+        if (networkRunService != null)
+        {
+            networkRunService.SetPartyTetherData(partyCenterGround, maxDistance);
+        }
 
         // Check each party member's distance
         int index = 0;
@@ -45,27 +52,20 @@ public class NetworkRunPartyTether : MonoBehaviour
             var controller = unitControllerService.Controllers.Find(c => c.Instance == unitInstance);
             if (controller == null) continue;
 
-            float distance = Vector3.Distance(controller.transform.position, groundCenter);
+            float distance = Vector3.Distance(controller.transform.position, partyCenterGround);
             if (distance > maxDistance)
             {
                 // Calculate spread position in a circle around ground center
                 float angle = (index * 360f / networkRunService.Party.Unit.Count) * Mathf.Deg2Rad;
                 Vector3 offset = new Vector3(Mathf.Cos(angle) * spreadRadius, 0, Mathf.Sin(angle) * spreadRadius);
-                Vector3 spreadPosition = groundCenter + offset;
+                Vector3 spreadPosition = partyCenterGround + offset;
 
-                if (distance > teleportDistance)
+                // Use return behavior for both walking and teleporting
+                var returnBehaviour = controller.GetComponent<UnitReturnToParty>();
+                if (returnBehaviour != null)
                 {
-                    // Too far - teleport immediately
-                    controller.Teleport(spreadPosition, controller.transform.parent);
-                }
-                else
-                {
-                    // Within range - make them walk back using return behavior
-                    var returnBehaviour = controller.GetComponent<UnitReturnToParty>();
-                    if (returnBehaviour != null)
-                    {
-                        returnBehaviour.SetReturnPosition(spreadPosition);
-                    }
+                    bool shouldTeleport = distance > teleportDistance;
+                    returnBehaviour.SetReturnPosition(spreadPosition, shouldTeleport);
                 }
             }
 

@@ -7,6 +7,7 @@ public class UnitForageService : GURUService
 {
     [SerializeField] private SporeReference sporeReference;
     [SerializeField] private UnitControllerService unitControllerService;
+    [SerializeField] private NetworkRunService networkRunService;
 
     private List<UnitForage> activeForagers = new List<UnitForage>();
     private Dictionary<SporeController, UnitForage> sporeAssignments = new Dictionary<SporeController, UnitForage>();
@@ -50,7 +51,11 @@ public class UnitForageService : GURUService
 
     private void ReassignSpores()
     {
-        if (sporeReference == null) return;
+        if (sporeReference == null || networkRunService == null)
+            return;
+
+        Vector3 partyCenterGround = networkRunService.PartyCenterGround;
+        float maxAssignmentDistance = networkRunService.MaxTetherDistance;
 
         // Refresh forager list to remove destroyed objects
         activeForagers.RemoveAll(f => f == null);
@@ -61,9 +66,14 @@ public class UnitForageService : GURUService
         // Track which foragers have been assigned
         var assignedForagers = new HashSet<UnitForage>();
 
-        // For each spore, find the closest non-busy forager
+        // For each spore within range, find the closest non-busy forager
         foreach (var spore in sporeReference.SporeControllers)
         {
+            // Only assign spores within party tether range
+            float sporeDistanceFromCenter = Vector3.Distance(spore.transform.position, partyCenterGround);
+            if (sporeDistanceFromCenter > maxAssignmentDistance)
+                continue;
+
             UnitForage closestForager = null;
             float closestDistance = float.MaxValue;
 
@@ -94,5 +104,14 @@ public class UnitForageService : GURUService
             var assignedSpore = sporeAssignments.FirstOrDefault(kvp => kvp.Value == forager).Key;
             forager.SetTargetSpore(assignedSpore);
         }
+    }
+
+    public void RequestAssignment(UnitForage forager)
+    {
+        if (!activeForagers.Contains(forager))
+        {
+            activeForagers.Add(forager);
+        }
+        ReassignSpores();
     }
 }

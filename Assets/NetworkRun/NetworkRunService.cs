@@ -32,13 +32,23 @@ public class NetworkRunService : GURUService
     [SerializeField] private float spawnSpacing = 2f;
 
     private Transform spawnParent;
+    private Vector3 partyCenterGround;
+    private float maxTetherDistance;
 
     public Inventory Inventory => inventory;
     public Party Party => party;
+    public Vector3 PartyCenterGround => partyCenterGround;
+    public float MaxTetherDistance => maxTetherDistance;
 
     public void SetSpawnParent(Transform parent)
     {
         spawnParent = parent;
+    }
+
+    public void SetPartyTetherData(Vector3 centerGround, float maxDistance)
+    {
+        partyCenterGround = centerGround;
+        maxTetherDistance = maxDistance;
     }
 
     protected override void OnInitialize()

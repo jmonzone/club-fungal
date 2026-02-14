@@ -130,7 +130,7 @@ public class UnitController : MonoBehaviour, IInteractable
     {
         if (currentBehaviour)
         {
-            currentBehaviour.OnBehaviourComplete -= ApplyDefaultBehaviour;
+            currentBehaviour.OnBehaviourComplete -= HandleBehaviourCompleteFallback;
             currentBehaviour.StopBehaviour();
         }
 
@@ -138,11 +138,39 @@ public class UnitController : MonoBehaviour, IInteractable
 
         if (currentBehaviour)
         {
-            currentBehaviour.OnBehaviourComplete += ApplyDefaultBehaviour;
+            currentBehaviour.OnBehaviourComplete += HandleBehaviourCompleteFallback;
             currentBehaviour.StartBehaviour();
         }
 
         OnBehaviourChanged?.Invoke();
+    }
+
+    private void HandleBehaviourCompleteFallback()
+    {
+        // Determine the next appropriate behavior
+        var nextBehaviour = DetermineNextBehaviour();
+        ApplyBehaviour(nextBehaviour);
+    }
+
+    protected virtual UnitBehaviour DetermineNextBehaviour()
+    {
+        // Get all behaviors and find the one with highest priority
+        var allBehaviours = GetComponents<UnitBehaviour>();
+        UnitBehaviour bestBehaviour = defaultBehaviour;
+        int highestPriority = 0;
+
+        foreach (var behaviour in allBehaviours)
+        {
+            int priority = behaviour.GetPriority();
+            if (priority > highestPriority)
+            {
+                highestPriority = priority;
+                bestBehaviour = behaviour;
+            }
+        }
+
+        // If no behavior has priority, return default
+        return bestBehaviour ?? defaultBehaviour;
     }
 
     public virtual void Initialize(UnitInstance instance)

@@ -12,12 +12,18 @@ public class UnitReturnToParty : UnitBehaviour
         navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
-    public void SetReturnPosition(Vector3 position)
+    public void SetReturnPosition(Vector3 position, bool shouldTeleport = false)
     {
         returnPosition = position;
 
-        if (Controller.IsDefaultBehaviour)
+        if (shouldTeleport)
         {
+            // Teleport immediately
+            Controller.Teleport(returnPosition, Controller.transform.parent);
+        }
+        else if (Controller.IsDefaultBehaviour)
+        {
+            // Walk back by requesting behavior
             InvokeOnBehaviourRequest();
         }
     }
@@ -56,5 +62,12 @@ public class UnitReturnToParty : UnitBehaviour
         {
             navMeshAgent.isStopped = true;
         }
+    }
+
+    public override int GetPriority()
+    {
+        // Return to party is triggered externally via SetReturnPosition
+        // Priority system doesn't apply - behavior is invoked directly when needed
+        return 0;
     }
 }

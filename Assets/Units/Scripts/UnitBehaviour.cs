@@ -59,4 +59,13 @@ public abstract class UnitBehaviour : MonoBehaviour
     {
         OnBehaviourRequest?.Invoke();
     }
+
+    /// <summary>
+    /// Returns the priority of this behavior. Higher values = higher priority.
+    /// Return 0 if this behavior should not be active.
+    /// </summary>
+    public virtual int GetPriority()
+    {
+        return 0;
+    }
 }
