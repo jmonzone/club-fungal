@@ -7,11 +7,9 @@ public class NetworkRunPartyTether : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private float maxDistance = 10f;
     [SerializeField] private float teleportDistance = 20f;
-    [SerializeField] private float checkInterval = 0.5f;
     [SerializeField] private float spreadRadius = 2f;
 
     private Camera mainCamera;
-    private float nextCheckTime;
     private Vector3 partyCenterGround;
 
     private void Awake()
@@ -21,9 +19,6 @@ public class NetworkRunPartyTether : MonoBehaviour
 
     private void Update()
     {
-        if (Time.time < nextCheckTime) return;
-        nextCheckTime = Time.time + checkInterval;
-
         CheckAndTetherUnits();
     }
 
@@ -70,6 +65,37 @@ public class NetworkRunPartyTether : MonoBehaviour
             }
 
             index++;
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (partyCenterGround == Vector3.zero) return;
+
+        // Draw max distance circle (yellow)
+        Gizmos.color = Color.yellow;
+        DrawCircle(partyCenterGround, maxDistance, 64);
+
+        // Draw teleport distance circle (red)
+        Gizmos.color = Color.red;
+        DrawCircle(partyCenterGround, teleportDistance, 64);
+
+        // Draw center point
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(partyCenterGround, 0.5f);
+    }
+
+    private void DrawCircle(Vector3 center, float radius, int segments)
+    {
+        float angleStep = 360f / segments;
+        Vector3 prevPoint = center + new Vector3(radius, 0, 0);
+
+        for (int i = 1; i <= segments; i++)
+        {
+            float angle = i * angleStep * Mathf.Deg2Rad;
+            Vector3 newPoint = center + new Vector3(Mathf.Cos(angle) * radius, 0, Mathf.Sin(angle) * radius);
+            Gizmos.DrawLine(prevPoint, newPoint);
+            prevPoint = newPoint;
         }
     }
 }
