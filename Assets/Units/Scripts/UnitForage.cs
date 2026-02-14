@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
@@ -22,36 +21,32 @@ public class UnitForage : UnitBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
 
-        Controller.OnBehaviourChanged += UpdateTargets;
+        Controller.OnBehaviourChanged += OnBehaviourChanged;
     }
 
-    private void OnEnable()
+    private void OnBehaviourChanged()
     {
-        sporeReference.OnSporeControllersChanged += UpdateTargets;
-        UpdateTargets();
-    }
-
-    private void OnDisable()
-    {
-        sporeReference.OnSporeControllersChanged -= UpdateTargets;
-    }
-
-    private void UpdateTargets()
-    {
-        // Find closest spore
-        targetSpore = null;
-        foreach (var s in sporeReference.SporeControllers)
+        // If no longer in default behaviour and we have a target, request to start foraging
+        if (targetSpore && Controller.IsDefaultBehaviour)
         {
-            if (targetSpore == null || Vector3.Distance(transform.position, s.transform.position) < Vector3.Distance(transform.position, targetSpore.transform.position))
-                targetSpore = s;
+            InvokeOnBehaviourRequest();
         }
+    }
 
-        if (targetSpore)
+    public void SetTargetSpore(SporeController spore)
+    {
+        bool hadTarget = targetSpore != null;
+        targetSpore = spore;
+
+        // If we got a new target and we're in default behaviour, request to start foraging
+        if (targetSpore != null && Controller.IsDefaultBehaviour)
         {
-            if (Controller.IsDefaultBehaviour)
-            {
-                InvokeOnBehaviourRequest();
-            }
+            InvokeOnBehaviourRequest();
+        }
+        // If we lost our target while foraging, stop the behaviour
+        else if (targetSpore == null && !Controller.IsDefaultBehaviour && IsActive)
+        {
+            StopBehaviour();
         }
     }
 
