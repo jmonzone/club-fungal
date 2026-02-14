@@ -41097,7 +41097,7 @@ Transform:
   m_GameObject: {fileID: 1765451364}
   serializedVersion: 2
   m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 0, y: 12.020815, z: -9.192389}
+  m_LocalPosition: {x: 0, y: 12.020815, z: -13.192389}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -42706,6 +42706,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1851915126}
   - component: {fileID: 1851915127}
+  - component: {fileID: 1851915129}
+  - component: {fileID: 1851915128}
   m_Layer: 0
   m_Name: Interaction Controller
   m_TagString: Untagged
@@ -42735,7 +42737,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1851915123}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 20519c1f0f2b8418dbf21113c22e27d3, type: 3}
   m_Name: 
@@ -42751,6 +42753,47 @@ MonoBehaviour:
   homeView: {fileID: 11400000, guid: 76e524d331f5b4a15b8b9df9fff47b4d, type: 2}
   virtualJoystick: {fileID: 1610164947}
   cameraRotationController: {fileID: 1345016155}
+  clickSelectionComponent: {fileID: 1851915128}
+  selected: {fileID: 0}
+--- !u!114 &1851915128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851915123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5fd4214823f9460cb1642d5d7c03d6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClickSelectionComponent
+  mainCamera: {fileID: 1765451369}
+  interactableMask:
+    serializedVersion: 2
+    m_Bits: 256
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 64
+  raycastMaxDistance: 100
+  OnInteractableClicked:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGroundClicked:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1851915129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851915123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 833d5bd3a3e5b45ef9151f6307aaee58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DirectInteractableSelector
+  clickSelection: {fileID: 1851915128}
   selected: {fileID: 0}
 --- !u!1 &1858841102
 GameObject:
@@ -46852,7 +46895,7 @@ Transform:
   m_GameObject: {fileID: 8668372441766908413}
   serializedVersion: 2
   m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

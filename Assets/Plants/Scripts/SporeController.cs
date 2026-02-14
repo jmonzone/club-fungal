@@ -25,13 +25,13 @@ public class SporeController : MonoBehaviour
         OnCollect?.Invoke();
     }
 
-    public void LaunchSpore(Vector3 peak, Vector3 landing)
+    public void LaunchSpore(Vector3 peak, Vector3 landing, UnityAction onPeakAction = null, UnityAction onLandAction = null)
     {
         sporeReference.RegisterSpore(this);
-        StartCoroutine(AnimateSpore(peak, landing));
+        StartCoroutine(AnimateSpore(peak, landing, onPeakAction, onLandAction));
     }
 
-    private IEnumerator AnimateSpore(Vector3 peak, Vector3 landing)
+    private IEnumerator AnimateSpore(Vector3 peak, Vector3 landing, UnityAction onPeakAction = null, UnityAction onLandAction = null)
     {
         Vector3 start = transform.position;
         float t = 0;
@@ -48,6 +48,9 @@ public class SporeController : MonoBehaviour
             yield return null;
         }
 
+        transform.position = peak;
+        onPeakAction?.Invoke();
+
         // Drift down with side sway like feather
         t = 0;
         while (t < driftDownDuration)
@@ -63,5 +66,6 @@ public class SporeController : MonoBehaviour
         }
 
         transform.position = landing;
+        onLandAction?.Invoke();
     }
 }

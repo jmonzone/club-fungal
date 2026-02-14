@@ -68,6 +68,8 @@ MonoBehaviour:
   spawnPoint: {fileID: 4661330487296328533}
   dJTableReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
   scaleTransform: {fileID: 8110878824461284166}
+  sporeItem: {fileID: 11400000, guid: ddde813dc82944f04928d4fd69f1a1b8, type: 2}
+  networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
   emissionStep: 8
   launchHeight: 2
   bounceScale: 1.2

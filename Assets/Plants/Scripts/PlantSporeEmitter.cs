@@ -48,6 +48,13 @@ public class ObjectPool<T> where T : Component
 }
 
 
+public enum SporeEmissionBehaviour
+{
+    UnitSpore,
+    Direct,
+    Target
+}
+
 public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget
 {
     [Header("References")]
@@ -55,8 +62,12 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private DJTableReference dJTableReference;
     [SerializeField] private Transform scaleTransform;
+    [SerializeField] private ItemTemplate sporeItem;
+    [SerializeField] private NetworkRunService networkRunService;
+    [SerializeField] private Transform target;
 
     [Header("Settings")]
+    [SerializeField] private SporeEmissionBehaviour emissionBehaviour = SporeEmissionBehaviour.UnitSpore;
     [SerializeField] private int emissionStep = 8;
     [SerializeField] private float launchHeight = 2f;
     [SerializeField] private float bounceScale = 1.2f;
@@ -67,6 +78,7 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget
 
     private Vector3 startScale;
     private ObjectPool<SporeController> sporePool;
+    private UnityAction onSporeReachedTarget;
 
     private void Awake()
     {
@@ -79,19 +91,38 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget
 
     void IInteractable.Select(UnitController source)
     {
-        if (source)
+        switch (emissionBehaviour)
         {
-            UnitSpore sporeBehaviour = source.GetComponent<UnitSpore>();
-            sporeBehaviour.SetEmitter(this);
-            source.SetBehaviour(sporeBehaviour);
-        }
-        else
-        {
-            EmitSpore();
+            case SporeEmissionBehaviour.UnitSpore:
+                if (source)
+                {
+                    UnitSpore sporeBehaviour = source.GetComponent<UnitSpore>();
+                    sporeBehaviour.SetEmitter(this);
+                    source.SetBehaviour(sporeBehaviour);
+                }
+                break;
+
+            case SporeEmissionBehaviour.Direct:
+                EmitSpore(spore =>
+                {
+                    networkRunService.Inventory.AddItem(sporeItem, 1);
+                    spore.gameObject.SetActive(false);
+                });
+                break;
+
+            case SporeEmissionBehaviour.Target:
+                EmitSpore(null, () => onSporeReachedTarget?.Invoke());
+                break;
         }
     }
 
-    public void EmitSpore()
+    public void SetTarget(Transform newTarget, UnityAction onSporeReachedTarget = null)
+    {
+        target = newTarget;
+        this.onSporeReachedTarget = onSporeReachedTarget;
+    }
+
+    public void EmitSpore(UnityAction<SporeController> onPeakAction = null, UnityAction onLandAction = null)
     {
         StopAllCoroutines();
         StartCoroutine(BounceAnimation());
@@ -101,9 +132,9 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget
         spore.transform.rotation = Quaternion.identity;
 
         Vector3 peak = spawnPoint.position + Vector3.up * launchHeight;
-        Vector3 landingSpot = FindLandingSpot();
+        Vector3 landingSpot = target ? target.position : FindLandingSpot();
 
-        spore.LaunchSpore(peak, landingSpot);
+        spore.LaunchSpore(peak, landingSpot, () => onPeakAction?.Invoke(spore), onLandAction);
     }
 
     private IEnumerator BounceAnimation()
@@ -146,6 +177,6 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget
 
     void INoteTarget.OnHit(DJTrack track)
     {
-        EmitSpore();
+        EmitSpore(null, () => onSporeReachedTarget?.Invoke());
     }
 }
