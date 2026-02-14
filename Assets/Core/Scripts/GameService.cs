@@ -22,7 +22,6 @@ public class GameService : GURUService
     [SerializeField] private List<GURUService> services;
     [SerializeField] private PartyReference partyReference;
     [SerializeField] private StoryReference partyLogReference;
-    [SerializeField] private SporeReference sporeReference;
     [SerializeField] private GlyphCollection glyphCollection;
     [SerializeField] private DJTableReference djReference;
 
@@ -64,7 +63,6 @@ public class GameService : GURUService
 
         partyReference.Initialize();
         partyLogReference.Initialize();
-        sporeReference.Initialize();
         glyphCollection.Initialize();
         djReference.Initialize();
     }

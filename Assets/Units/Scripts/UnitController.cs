@@ -15,6 +15,10 @@ public class UnitController : MonoBehaviour, IInteractable
 
     public UnitDestination Destination => destination;
     public UnitDialogue Dialogue => dialogue;
+
+    [Header("Behaviour System")]
+    [SerializeField] private bool allowBehaviourChanges = true;
+
     [Header("Runtime")]
     [SerializeField] private UnitInstance instance;
     [SerializeField] private UnitBehaviour currentBehaviour;
@@ -56,6 +60,7 @@ public class UnitController : MonoBehaviour, IInteractable
     public event UnityAction OnInitialized;
     public event UnityAction OnNavMeshAgentReady;
     public event UnityAction OnBehaviourChanged;
+    public event UnityAction OnBehaviourCompleted;
 
     private void OnValidate()
     {
@@ -128,6 +133,8 @@ public class UnitController : MonoBehaviour, IInteractable
 
     protected void ApplyBehaviour(UnitBehaviour behaviour)
     {
+        if (!allowBehaviourChanges && currentBehaviour) return;
+
         if (currentBehaviour)
         {
             currentBehaviour.OnBehaviourComplete -= HandleBehaviourCompleteFallback;
@@ -147,6 +154,8 @@ public class UnitController : MonoBehaviour, IInteractable
 
     private void HandleBehaviourCompleteFallback()
     {
+        OnBehaviourCompleted?.Invoke();
+
         // Determine the next appropriate behavior
         var nextBehaviour = DetermineNextBehaviour();
         ApplyBehaviour(nextBehaviour);

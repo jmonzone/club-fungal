@@ -1,52 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using System.Collections.Generic;
 using UnityEngine.Events;
-
-public class ObjectPool<T> where T : Component
-{
-    private T prefab;
-    private Transform parent;
-    private Queue<T> pool = new Queue<T>();
-
-    public ObjectPool(T prefab, int initialSize = 10, Transform parent = null, UnityAction<T> initialize = null)
-    {
-        this.prefab = prefab;
-        this.parent = parent;
-
-        // Pre-instantiate objects
-        for (int i = 0; i < initialSize; i++)
-        {
-            T obj = Object.Instantiate(prefab, parent);
-            obj.gameObject.SetActive(false);
-            pool.Enqueue(obj);
-            initialize?.Invoke(obj);
-        }
-    }
-
-    public T Get()
-    {
-        if (pool.Count > 0)
-        {
-            T obj = pool.Dequeue();
-            obj.gameObject.SetActive(true);
-            return obj;
-        }
-        else
-        {
-            T obj = Object.Instantiate(prefab, parent);
-            return obj;
-        }
-    }
-
-    public void Return(T obj)
-    {
-        obj.gameObject.SetActive(false);
-        pool.Enqueue(obj);
-    }
-}
-
 
 public enum SporeEmissionBehaviour
 {
@@ -56,7 +11,7 @@ public enum SporeEmissionBehaviour
     Fall,
 }
 
-public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget
+public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IForageTarget
 {
     [Header("References")]
     [SerializeField] private SporeController sporePrefab;
@@ -77,6 +32,14 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget
     public int EmissionStep => emissionStep;
     Transform ITarget.Transform => transform;
 
+    // IForageTarget implementation
+    bool IForageTarget.IsAvailable => gameObject.activeInHierarchy;
+
+    void IForageTarget.OnForaged(UnitController forager)
+    {
+        Select(forager);
+    }
+
     private Vector3 startScale;
     private ObjectPool<SporeController> sporePool;
     private UnityAction onSporeReachedTarget;
@@ -90,7 +53,7 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget
         });
     }
 
-    void IInteractable.Select(UnitController source)
+    public void Select(UnitController source)
     {
         switch (emissionBehaviour)
         {

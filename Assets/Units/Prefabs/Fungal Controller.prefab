@@ -145,6 +145,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1460368080851433977}
   - component: {fileID: 4106141727428995005}
+  - component: {fileID: 4498668648670840017}
   - component: {fileID: 6701783708521320235}
   - component: {fileID: 4509796270662811225}
   - component: {fileID: 7313902277107358435}
@@ -201,8 +202,9 @@ MonoBehaviour:
   renderRoot: {fileID: 0}
   destination: {fileID: 8649680259317709286}
   dialogue: {fileID: 0}
-  defaultBehaviour: {fileID: 3042677307364813546}
+  defaultBehaviour: {fileID: 4498668648670840017}
   defaultInteraction: {fileID: 11400000, guid: cd6893964a6274906b52bbbf6b56f4d8, type: 2}
+  allowBehaviourChanges: 0
   instance:
     template: {fileID: 0}
     data:
@@ -231,6 +233,25 @@ MonoBehaviour:
   targetLookPosition: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
   dialogueCamera: {fileID: 2897206226710500820}
+--- !u!114 &4498668648670840017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5390423667600184729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c79696ca56e94425817a546167e214d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkRunBehaviour
+  isActive: 0
+  scanRadius: 10
+  scanInterval: 1
+  inspectPriority: 0.7
+  collectPriority: 0.8
+  foragePriority: 0.9
+  networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
 --- !u!195 &6701783708521320235
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -354,9 +375,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  sporeReference: {fileID: 11400000, guid: aada144c7ab1b4304a84a13d3ddc010c, type: 2}
   forageService: {fileID: 11400000, guid: f917411f3aeff4ed29a58299b9e9b579, type: 2}
-  targetSpore: {fileID: 0}
+  targetObject: {fileID: 0}
 --- !u!114 &7222236572253189186
 MonoBehaviour:
   m_ObjectHideFlags: 0

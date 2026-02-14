@@ -5,38 +5,73 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Services/Unit Forage Service")]
 public class UnitForageService : GURUService
 {
-    [SerializeField] private SporeReference sporeReference;
     [SerializeField] private UnitControllerService unitControllerService;
     [SerializeField] private NetworkRunService networkRunService;
 
     private List<UnitForage> activeForagers = new List<UnitForage>();
-    private Dictionary<SporeController, UnitForage> sporeAssignments = new Dictionary<SporeController, UnitForage>();
+    private List<MonoBehaviour> forageables = new List<MonoBehaviour>();
+    private Dictionary<IForageTarget, UnitForage> targetAssignments = new Dictionary<IForageTarget, UnitForage>();
 
     protected override void OnInitialize()
     {
-        if (sporeReference != null)
-        {
-            sporeReference.OnSporeControllersChanged += ReassignSpores;
-        }
+        forageables = new List<MonoBehaviour>();
+
         if (unitControllerService != null)
         {
             unitControllerService.OnUnitSummoned += OnUnitSummoned;
         }
     }
 
+    public override void OnSceneLoaded()
+    {
+        base.OnSceneLoaded();
+        DiscoverForageables();
+    }
+
+    private void DiscoverForageables()
+    {
+        forageables.Clear();
+
+        // Find all IForageTarget components in the scene
+        // Don't filter by distance here - let ReassignTargets() handle dynamic filtering as party moves
+        var allForageables = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None);
+        foreach (var component in allForageables)
+        {
+            if (component is IForageTarget)
+            {
+                forageables.Add(component);
+            }
+        }
+
+        ReassignTargets();
+    }
+
     private void OnDisable()
     {
-        if (sporeReference != null)
-        {
-            sporeReference.OnSporeControllersChanged -= ReassignSpores;
-        }
         if (unitControllerService != null)
         {
             unitControllerService.OnUnitSummoned -= OnUnitSummoned;
         }
 
         activeForagers.Clear();
-        sporeAssignments.Clear();
+        forageables.Clear();
+        targetAssignments.Clear();
+    }
+
+    private List<IForageTarget> GetAllForageables()
+    {
+        var result = new List<IForageTarget>();
+        forageables.RemoveAll(f => f == null); // Clean up destroyed objects
+
+        foreach (var forageable in forageables)
+        {
+            if (forageable is IForageTarget target)
+            {
+                result.Add(target);
+            }
+        }
+
+        return result;
     }
 
     private void OnUnitSummoned(UnitController controller)
@@ -45,13 +80,19 @@ public class UnitForageService : GURUService
         if (forager != null && !activeForagers.Contains(forager))
         {
             activeForagers.Add(forager);
-            ReassignSpores();
+            controller.OnBehaviourCompleted += () => OnUnitBehaviourChanged(controller);
+            ReassignTargets();
         }
     }
 
-    private void ReassignSpores()
+    private void OnUnitBehaviourChanged(UnitController controller)
     {
-        if (sporeReference == null || networkRunService == null)
+        ReassignTargets();
+    }
+
+    private void ReassignTargets()
+    {
+        if (networkRunService == null)
             return;
 
         Vector3 partyCenterGround = networkRunService.PartyCenterGround;
@@ -61,17 +102,22 @@ public class UnitForageService : GURUService
         activeForagers.RemoveAll(f => f == null);
 
         // Clear old assignments
-        sporeAssignments.Clear();
+        targetAssignments.Clear();
+
+        // Get all forageable targets
+        var allTargets = GetAllForageables();
 
         // Track which foragers have been assigned
         var assignedForagers = new HashSet<UnitForage>();
 
-        // For each spore within range, find the closest non-busy forager
-        foreach (var spore in sporeReference.SporeControllers)
+        // For each target within range, find the closest non-busy forager
+        foreach (var target in allTargets)
         {
-            // Only assign spores within party tether range
-            float sporeDistanceFromCenter = Vector3.Distance(spore.transform.position, partyCenterGround);
-            if (sporeDistanceFromCenter > maxAssignmentDistance)
+            if (!target.IsAvailable) continue;
+
+            // Only assign targets within party tether range
+            float targetDistanceFromCenter = Vector3.Distance(target.Transform.position, partyCenterGround);
+            if (targetDistanceFromCenter > maxAssignmentDistance)
                 continue;
 
             UnitForage closestForager = null;
@@ -82,7 +128,7 @@ public class UnitForageService : GURUService
                 // Skip foragers that already have an assignment
                 if (assignedForagers.Contains(forager)) continue;
 
-                float distance = Vector3.Distance(spore.transform.position, forager.transform.position);
+                float distance = Vector3.Distance(target.Transform.position, forager.transform.position);
                 if (distance < closestDistance)
                 {
                     closestDistance = distance;
@@ -90,10 +136,10 @@ public class UnitForageService : GURUService
                 }
             }
 
-            // Assign spore to the closest available forager
+            // Assign target to the closest available forager
             if (closestForager != null)
             {
-                sporeAssignments[spore] = closestForager;
+                targetAssignments[target] = closestForager;
                 assignedForagers.Add(closestForager);
             }
         }
@@ -101,17 +147,11 @@ public class UnitForageService : GURUService
         // Update all foragers with their assignments
         foreach (var forager in activeForagers)
         {
-            var assignedSpore = sporeAssignments.FirstOrDefault(kvp => kvp.Value == forager).Key;
-            forager.SetTargetSpore(assignedSpore);
+            var assignedTarget = targetAssignments.FirstOrDefault(kvp => kvp.Value == forager).Key;
+            if (assignedTarget != null)
+            {
+                forager.SetTarget(assignedTarget);
+            }
         }
-    }
-
-    public void RequestAssignment(UnitForage forager)
-    {
-        if (!activeForagers.Contains(forager))
-        {
-            activeForagers.Add(forager);
-        }
-        ReassignSpores();
     }
 }

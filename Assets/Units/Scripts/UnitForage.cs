@@ -5,16 +5,8 @@ using UnityEngine.AI;
 
 public class UnitForage : UnitBehaviour
 {
-    [Header("References")]
-    [SerializeField] private SporeReference sporeReference;
-    [SerializeField] private UnitForageService forageService;
-
-    [Header("Runtime")]
-    [SerializeField] private SporeController targetSpore;
-
     private NavMeshAgent agent;
-
-    public SporeController TargetSpore => targetSpore;
+    private IForageTarget target;
 
     protected override void Awake()
     {
@@ -23,26 +15,15 @@ public class UnitForage : UnitBehaviour
         agent.updateRotation = false;
     }
 
-    public void SetTargetSpore(SporeController spore)
+    public void SetTarget(IForageTarget forageTarget)
     {
-        targetSpore = spore;
-
-        // If we got a new target, request to start foraging
-        if (targetSpore != null)
-        {
-            InvokeOnBehaviourRequest();
-        }
-        // If we lost our target while foraging, stop the behaviour
-        else if (IsActive)
-        {
-            StopBehaviour();
-        }
+        target = forageTarget;
     }
 
 
     protected override void OnBehaviourStart()
     {
-        if (targetSpore)
+        if (target != null)
         {
             agent.isStopped = false;
             StartCoroutine(ForagingBehaviour());
@@ -51,12 +32,23 @@ public class UnitForage : UnitBehaviour
 
     private IEnumerator ForagingBehaviour()
     {
-        while (targetSpore)
+        while (target != null && target.IsAvailable)
         {
-            agent.SetDestination(targetSpore.transform.position);
-            Controller.SetLookPosition(targetSpore.transform.position);
+            agent.SetDestination(target.Transform.position);
+            Controller.SetLookPosition(target.Transform.position);
+
+            // Check if we've reached the target
+            if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+            {
+                target.OnForaged(Controller);
+                target = null;
+                break;
+            }
+
             yield return null;
         }
+
+        target = null;
 
         StopBehaviour();
     }
@@ -70,14 +62,8 @@ public class UnitForage : UnitBehaviour
 
     public override int GetPriority()
     {
-        // If we don't have a target, request assignment from service
-        if (targetSpore == null && forageService != null)
-        {
-            forageService.RequestAssignment(this);
-        }
-
-        // High priority if we have a target spore
-        return targetSpore != null ? 100 : 0;
+        // Service assigns targets proactively when behavior changes
+        return target != null ? 100 : 0;
     }
 
 }
