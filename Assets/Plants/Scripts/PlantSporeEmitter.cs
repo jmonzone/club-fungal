@@ -52,7 +52,8 @@ public enum SporeEmissionBehaviour
 {
     UnitSpore,
     Direct,
-    Target
+    Target,
+    Fall,
 }
 
 public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget

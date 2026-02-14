@@ -17005,7 +17005,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03142a55305b8462db797eaf3d020e48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkRunIslandManager
-  treeTransform: {fileID: 126577481}
+  treeController: {fileID: 0}
   sporeCountText: {fileID: 741901514965368980}
 --- !u!1 &650498013
 GameObject:
@@ -20058,7 +20058,6 @@ GameObject:
   - component: {fileID: 857557284}
   - component: {fileID: 857557287}
   - component: {fileID: 857557286}
-  - component: {fileID: 857557285}
   m_Layer: 6
   m_Name: Sphere
   m_TagString: Untagged
@@ -20081,27 +20080,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 434751487}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &857557285
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 857557283}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &857557286
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -20109,7 +20087,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 857557283}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -21383,7 +21361,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkRunManager
   networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
-  spawnParent: {fileID: 0}
+  spawnParent: {fileID: 857557284}
 --- !u!1 &931160570
 GameObject:
   m_ObjectHideFlags: 0
@@ -53686,7 +53664,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03142a55305b8462db797eaf3d020e48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkRunIslandManager
-  treeTransform: {fileID: 890591930}
+  treeController: {fileID: 0}
   sporeCountText: {fileID: 741901514965368980}
 --- !u!114 &6633036235981430208
 MonoBehaviour:
@@ -53709,6 +53687,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3539291306099124273}
+  - component: {fileID: 6935670112341898770}
   m_Layer: 5
   m_Name: Spore Count
   m_TagString: Untagged
@@ -53716,6 +53695,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &6935670112341898770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6935670112341898769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07a186cceb0af4ea2989d2d489a7d972, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SporeCountUI
+  inventory: {fileID: 11400000, guid: e9c2fc38b99d8404f8495af08b4889fc, type: 2}
+  mushroomCountText: {fileID: 741901514965368980}
 --- !u!222 &7254032060644461645
 CanvasRenderer:
   m_ObjectHideFlags: 0

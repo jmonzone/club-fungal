@@ -3,22 +3,18 @@ using TMPro;
 
 public class NetworkRunIslandManager : MonoBehaviour
 {
-    [SerializeField] private Transform treeTransform;
+    [SerializeField] private TreeController treeController;
     [SerializeField] private TextMeshProUGUI sporeCountText;
-
-    private TreeController treeController;
 
     private void Awake()
     {
-        treeController = treeTransform.GetComponent<TreeController>();
-        var plantSporeEmitters = GetComponentsInChildren<PlantSporeEmitter>();
-
-        foreach (var emitter in plantSporeEmitters)
-        {
-            emitter.SetTarget(treeTransform, OnSporeEmitted);
-        }
-
         UpdateSporeCountText();
+
+        var plantSporeEmitter = GetComponentInChildren<PlantSporeEmitter>();
+        // if (plantSporeEmitter != null)
+        // {
+        //     plantSporeEmitter.OnSporeEmitted += OnSporeEmitted;
+        // }
     }
 
     private void OnSporeEmitted()

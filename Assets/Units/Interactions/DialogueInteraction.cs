@@ -15,6 +15,8 @@ public class DialogueInteraction : UnitInteraction
 
     public override void StartInteraction(UnitController source, UnitController target, UnityAction onComplete)
     {
+        if (!source) return;
+
         this.source = source;
         this.target = target;
 
