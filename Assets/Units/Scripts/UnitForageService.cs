@@ -58,35 +58,41 @@ public class UnitForageService : GURUService
         // Clear old assignments
         sporeAssignments.Clear();
 
-        // Get available spores
-        var availableSpores = new List<SporeController>(sporeReference.SporeControllers);
+        // Track which foragers have been assigned
+        var assignedForagers = new HashSet<UnitForage>();
 
-        // Assign spores to foragers based on proximity
-        foreach (var forager in activeForagers)
+        // For each spore, find the closest non-busy forager
+        foreach (var spore in sporeReference.SporeControllers)
         {
-            SporeController closestSpore = null;
+            UnitForage closestForager = null;
             float closestDistance = float.MaxValue;
 
-            foreach (var spore in availableSpores)
+            foreach (var forager in activeForagers)
             {
-                float distance = Vector3.Distance(forager.transform.position, spore.transform.position);
+                // Skip foragers that already have an assignment
+                if (assignedForagers.Contains(forager)) continue;
+
+                float distance = Vector3.Distance(spore.transform.position, forager.transform.position);
                 if (distance < closestDistance)
                 {
                     closestDistance = distance;
-                    closestSpore = spore;
+                    closestForager = forager;
                 }
             }
 
-            if (closestSpore != null)
+            // Assign spore to the closest available forager
+            if (closestForager != null)
             {
-                sporeAssignments[closestSpore] = forager;
-                availableSpores.Remove(closestSpore);
-                forager.SetTargetSpore(closestSpore);
+                sporeAssignments[spore] = closestForager;
+                assignedForagers.Add(closestForager);
             }
-            else
-            {
-                forager.SetTargetSpore(null);
-            }
+        }
+
+        // Update all foragers with their assignments
+        foreach (var forager in activeForagers)
+        {
+            var assignedSpore = sporeAssignments.FirstOrDefault(kvp => kvp.Value == forager).Key;
+            forager.SetTargetSpore(assignedSpore);
         }
     }
 }
