@@ -26,6 +26,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bb09c959525894035a6335dd29940cec, type: 2}
   - {fileID: 11400000, guid: e9cb4948b4ecc4139a051939aec61d2b, type: 2}
   - {fileID: 11400000, guid: e9cb4948b4ecc4139a051939aec61d2b, type: 2}
+  - {fileID: 11400000, guid: f917411f3aeff4ed29a58299b9e9b579, type: 2}
   partyReference: {fileID: 11400000, guid: d2092e9896dc047a3939198bb6a0204c, type: 2}
   partyLogReference: {fileID: 11400000, guid: ccd6553192cde4616980b916ffb4faa7, type: 2}
   sporeReference: {fileID: 11400000, guid: aada144c7ab1b4304a84a13d3ddc010c, type: 2}

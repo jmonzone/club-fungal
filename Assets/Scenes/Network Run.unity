@@ -21325,6 +21325,7 @@ GameObject:
   m_Component:
   - component: {fileID: 925300557}
   - component: {fileID: 925300558}
+  - component: {fileID: 925300559}
   m_Layer: 0
   m_Name: NetworkRunManager
   m_TagString: Untagged
@@ -21362,6 +21363,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NetworkRunManager
   networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
   spawnParent: {fileID: 857557284}
+--- !u!114 &925300559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 925300556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fadf00e17bd1646c2a425cbd44c5ba74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkRunPartyTether
+  networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
+  unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
+    type: 2}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 64
+  maxDistance: 10
+  checkInterval: 0.5
 --- !u!1 &931160570
 GameObject:
   m_ObjectHideFlags: 0

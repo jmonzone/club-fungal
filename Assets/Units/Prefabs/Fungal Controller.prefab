@@ -161,6 +161,7 @@ GameObject:
   - component: {fileID: 8272772892265704648}
   - component: {fileID: 3445689529040859860}
   - component: {fileID: 2753700914627426309}
+  - component: {fileID: 6597411002312729148}
   m_Layer: 8
   m_Name: Fungal Controller
   m_TagString: Untagged
@@ -198,11 +199,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderRoot: {fileID: 0}
-  destination: {fileID: 0}
+  destination: {fileID: 8649680259317709286}
   dialogue: {fileID: 0}
   defaultBehaviour: {fileID: 3042677307364813546}
   defaultInteraction: {fileID: 11400000, guid: cd6893964a6274906b52bbbf6b56f4d8, type: 2}
-  instance: {fileID: 0}
+  instance:
+    template: {fileID: 0}
+    data:
+      id: 
+      name: 
+      displayName: 
+      species: {fileID: 0}
+      job: {fileID: 0}
+      element: 0
+      colorPalette: {fileID: 0}
+      scene: 
+      friendshipLevel: 0
+      friendshipXP: 0
+      friends: []
+      interactions: []
+      skills: []
+    skills: []
+    friends: []
+    moments: []
+    inventory:
+      itemStacks: []
+      maxCapacity: 0
+    energy: 0
+    isExhausted: 0
   currentBehaviour: {fileID: 0}
   targetLookPosition: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
@@ -269,12 +293,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  isPaused: 0
   baseSpeed: 2
   wanderRadius: 10
   minIdleTime: 3
   maxIdleTime: 20
-  isIdle: 0
 --- !u!114 &2272465958897182757
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -288,10 +310,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  isPaused: 0
   target: {fileID: 0}
   leader: {fileID: 0}
   followers: []
+  navMeshAgent: {fileID: 6701783708521320235}
 --- !u!114 &8649680259317709286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,7 +354,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  isPaused: 0
   sporeReference: {fileID: 11400000, guid: aada144c7ab1b4304a84a13d3ddc010c, type: 2}
   targetSpore: {fileID: 0}
 --- !u!114 &7222236572253189186
@@ -348,7 +369,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  isPaused: 0
   djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
   playlist:
   - {fileID: 11400000, guid: eb7ab907c1d584cb7bb9935d2c347147, type: 2}
@@ -464,7 +484,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  isPaused: 0
   originalCache: {fileID: 0}
   colorPalette: {fileID: 0}
   primaryColor: {r: 0, g: 0, b: 0, a: 0}
@@ -517,7 +536,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  isPaused: 0
   activityReference: {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}
   djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
   baseDanceAnimation: Bounce
@@ -534,7 +552,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  isPaused: 0
   activityReference: {fileID: 11400000, guid: 20234f3cd19d34d52ba858ad98b27405, type: 2}
   sporeOffset: {x: 0, y: 0.1, z: 0.4}
 --- !u!114 &2753700914627426309
@@ -550,8 +567,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShruneReadingUnit
   isActive: 0
-  isPaused: 0
   activityReference: {fileID: 11400000, guid: 6acca8bf6674942fc809a4d20308a3af, type: 2}
+--- !u!114 &6597411002312729148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5390423667600184729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab873a65198554df18321377221db527, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitReturnToParty
+  isActive: 0
 --- !u!1001 &1899791931242643327
 PrefabInstance:
   m_ObjectHideFlags: 0
