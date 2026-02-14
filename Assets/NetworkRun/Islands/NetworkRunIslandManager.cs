@@ -1,8 +1,11 @@
 using UnityEngine;
+using TMPro;
 
 public class NetworkRunIslandManager : MonoBehaviour
 {
     [SerializeField] private Transform treeTransform;
+    [SerializeField] private TextMeshProUGUI sporeCountText;
+
     private TreeController treeController;
 
     private void Awake()
@@ -14,6 +17,8 @@ public class NetworkRunIslandManager : MonoBehaviour
         {
             emitter.SetTarget(treeTransform, OnSporeEmitted);
         }
+
+        UpdateSporeCountText();
     }
 
     private void OnSporeEmitted()
@@ -21,6 +26,15 @@ public class NetworkRunIslandManager : MonoBehaviour
         if (treeController != null)
         {
             treeController.AddSpore();
+            UpdateSporeCountText();
+        }
+    }
+
+    private void UpdateSporeCountText()
+    {
+        if (sporeCountText != null && treeController != null)
+        {
+            sporeCountText.text = $"{treeController.SporeCount}";
         }
     }
 }

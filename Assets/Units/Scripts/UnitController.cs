@@ -64,7 +64,7 @@ public class UnitController : MonoBehaviour, IInteractable
 
     protected virtual void Awake()
     {
-        targetLookPosition = transform.position + renderRoot.forward;
+        if (renderRoot) targetLookPosition = transform.position + renderRoot.forward;
 
         var allBehaviours = GetComponents<UnitBehaviour>();
         foreach (var behaviour in allBehaviours)
@@ -108,6 +108,8 @@ public class UnitController : MonoBehaviour, IInteractable
     protected virtual void Update()
     {
         if (target) targetLookPosition = target.transform.position;
+
+        if (!renderRoot) return;
 
         Vector3 direction = targetLookPosition - renderRoot.position;
         direction.y = 0f;
