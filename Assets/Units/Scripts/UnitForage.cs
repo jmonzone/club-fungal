@@ -28,33 +28,29 @@ public class UnitForage : UnitBehaviour
 
     protected override void OnBehaviourStart()
     {
-        if (target != null)
-        {
-            agent.isStopped = false;
-            StartCoroutine(ForagingBehaviour());
-        }
+        agent.isStopped = false;
+        StartCoroutine(ForagingBehaviour());
     }
 
     private IEnumerator ForagingBehaviour()
     {
         Debug.Log("Starting foraging behavior towards target: " + target.Transform.name);
-        while (target != null)
+        while (true)
         {
-            Controller.Destination.SetDestination(target.Transform.position);
-            Controller.SetLookPosition(target.Transform.position);
-
-            if (Vector3.Distance(transform.position, target.Transform.position) <= 2f)
+            if (target != null)
             {
-                Debug.Log("Reached forage target: " + target.Transform.name);
-                target.OnForaged(Controller);
-                // break;
+                Controller.Destination.SetDestination(target.Transform.position);
+                Controller.SetLookPosition(target.Transform.position);
+
+                if (Vector3.Distance(transform.position, target.Transform.position) <= 2f)
+                {
+                    Debug.Log("Reached forage target: " + target.Transform.name);
+                    target.OnForaged(Controller);
+                    yield return new WaitForSeconds(Random.Range(0.5f, 1.5f)); // small delay after foraging
+                }
             }
             yield return null;
         }
-
-        Debug.Log("Foraging complete");
-
-        StopBehaviour();
     }
 
     public override void StopBehaviour()

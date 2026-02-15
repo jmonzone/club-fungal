@@ -87,49 +87,59 @@ public class UnitForageService : GURUService
         // Refresh forager list to remove destroyed objects
         activeForagers.RemoveAll(f => f == null);
 
-        // Clear old assignments
-        targetAssignments.Clear();
+        // Track which targets have been assigned to avoid duplicates when possible
+        var assignedTargets = new HashSet<IForageTarget>();
 
-        // Track which foragers have been assigned
-        var assignedForagers = new HashSet<UnitForage>();
-
-        // For each target within range, find the closest non-busy forager
-        foreach (var target in forageTargets)
+        // For each forager, assign them to their closest available target
+        foreach (var forager in activeForagers)
         {
-            // Only assign targets within party tether range
-            float targetDistanceFromCenter = Vector3.Distance(target.Transform.position, partyCenterGround);
-            if (targetDistanceFromCenter > maxAssignmentDistance)
-                continue;
-
-            UnitForage closestForager = null;
+            IForageTarget closestTarget = null;
             float closestDistance = float.MaxValue;
 
-            foreach (var forager in activeForagers)
+            // First pass: try to find closest unassigned target
+            foreach (var target in forageTargets)
             {
-                // Skip foragers that already have an assignment
-                if (assignedForagers.Contains(forager)) continue;
+                if (assignedTargets.Contains(target)) continue;
+
+                // Only consider targets within party tether range
+                float targetDistanceFromCenter = Vector3.Distance(target.Transform.position, partyCenterGround);
+                if (targetDistanceFromCenter > maxAssignmentDistance)
+                    continue;
 
                 float distance = Vector3.Distance(target.Transform.position, forager.transform.position);
                 if (distance < closestDistance)
                 {
                     closestDistance = distance;
-                    closestForager = forager;
+                    closestTarget = target;
                 }
             }
 
-            // Assign target to the closest available forager
-            if (closestForager != null)
+            // If no unassigned target found, fall back to any closest target (allows sharing)
+            if (closestTarget == null)
             {
-                targetAssignments[target] = closestForager;
-                assignedForagers.Add(closestForager);
-            }
-        }
+                closestDistance = float.MaxValue;
+                foreach (var target in forageTargets)
+                {
+                    // Only consider targets within party tether range
+                    float targetDistanceFromCenter = Vector3.Distance(target.Transform.position, partyCenterGround);
+                    if (targetDistanceFromCenter > maxAssignmentDistance)
+                        continue;
 
-        // Update all foragers with their assignments
-        foreach (var forager in activeForagers)
-        {
-            var assignedTarget = targetAssignments.FirstOrDefault(kvp => kvp.Value == forager).Key;
-            forager.SetTarget(assignedTarget);
+                    float distance = Vector3.Distance(target.Transform.position, forager.transform.position);
+                    if (distance < closestDistance)
+                    {
+                        closestDistance = distance;
+                        closestTarget = target;
+                    }
+                }
+            }
+
+            // Assign the target and mark it as assigned
+            forager.SetTarget(closestTarget);
+            if (closestTarget != null)
+            {
+                assignedTargets.Add(closestTarget);
+            }
         }
     }
 }
