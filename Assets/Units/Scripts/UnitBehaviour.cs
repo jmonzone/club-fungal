@@ -57,6 +57,7 @@ public abstract class UnitBehaviour : MonoBehaviour
 
     protected void InvokeOnBehaviourRequest()
     {
+        if (isActive) return;
         OnBehaviourRequest?.Invoke();
     }
 

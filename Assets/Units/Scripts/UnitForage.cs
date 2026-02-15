@@ -1,4 +1,5 @@
 using System.Collections;
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -26,8 +27,8 @@ public class UnitForage : UnitBehaviour
     {
         Debug.Log("Setting forage target: " + target?.Transform.name ?? "None");
         this.target = target;
+        if (target != null) InvokeOnBehaviourRequest();
     }
-
 
     protected override void OnBehaviourStart()
     {
