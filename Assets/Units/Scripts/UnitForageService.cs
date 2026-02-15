@@ -1,42 +1,67 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 [CreateAssetMenu(menuName = "Services/Unit Forage Service")]
 public class UnitForageService : GURUService
 {
-    [SerializeField] private SporeReference sporeReference;
     [SerializeField] private UnitControllerService unitControllerService;
     [SerializeField] private NetworkRunService networkRunService;
 
     private List<UnitForage> activeForagers = new List<UnitForage>();
-    private Dictionary<SporeController, UnitForage> sporeAssignments = new Dictionary<SporeController, UnitForage>();
+    private Dictionary<IForageTarget, UnitForage> targetAssignments = new Dictionary<IForageTarget, UnitForage>();
+    private List<IForageTarget> forageTargets = new List<IForageTarget>();
+
+    public event UnityAction OnTargetsChanged;
 
     protected override void OnInitialize()
     {
-        if (sporeReference != null)
-        {
-            sporeReference.OnSporeControllersChanged += ReassignSpores;
-        }
+        forageTargets = new List<IForageTarget>();
+
         if (unitControllerService != null)
         {
             unitControllerService.OnUnitSummoned += OnUnitSummoned;
         }
     }
 
+    public override void OnSceneLoaded()
+    {
+        base.OnSceneLoaded();
+
+        // Find all forage targets in scene
+        var plantsInScene = FindObjectsOfType<PlantSporeEmitter>();
+        foreach (var plant in plantsInScene)
+        {
+            RegisterTarget(plant);
+        }
+    }
+
     private void OnDisable()
     {
-        if (sporeReference != null)
-        {
-            sporeReference.OnSporeControllersChanged -= ReassignSpores;
-        }
         if (unitControllerService != null)
         {
             unitControllerService.OnUnitSummoned -= OnUnitSummoned;
         }
 
         activeForagers.Clear();
-        sporeAssignments.Clear();
+        targetAssignments.Clear();
+        forageTargets.Clear();
+    }
+
+    public void RegisterTarget(IForageTarget target)
+    {
+        Debug.Log("Registering forage target: " + target.Transform.name);
+        forageTargets.Add(target);
+        OnTargetsChanged?.Invoke();
+        ReassignSpores();
+    }
+
+    public void RemoveTarget(IForageTarget target)
+    {
+        forageTargets.Remove(target);
+        OnTargetsChanged?.Invoke();
+        ReassignSpores();
     }
 
     private void OnUnitSummoned(UnitController controller)
@@ -52,10 +77,10 @@ public class UnitForageService : GURUService
 
     private void ReassignSpores()
     {
-        if (sporeReference == null || networkRunService == null)
+        if (networkRunService == null)
             return;
 
-        Debug.Log("Reassigning spores to foragers...");
+        Debug.Log($"Reassigning targets to foragers... foragetargets: {forageTargets.Count}, activeForagers: {activeForagers.Count}");
         Vector3 partyCenterGround = networkRunService.PartyCenterGround;
         float maxAssignmentDistance = networkRunService.MaxTetherDistance;
 
@@ -63,17 +88,17 @@ public class UnitForageService : GURUService
         activeForagers.RemoveAll(f => f == null);
 
         // Clear old assignments
-        sporeAssignments.Clear();
+        targetAssignments.Clear();
 
         // Track which foragers have been assigned
         var assignedForagers = new HashSet<UnitForage>();
 
-        // For each spore within range, find the closest non-busy forager
-        foreach (var spore in sporeReference.SporeControllers)
+        // For each target within range, find the closest non-busy forager
+        foreach (var target in forageTargets)
         {
-            // Only assign spores within party tether range
-            float sporeDistanceFromCenter = Vector3.Distance(spore.transform.position, partyCenterGround);
-            if (sporeDistanceFromCenter > maxAssignmentDistance)
+            // Only assign targets within party tether range
+            float targetDistanceFromCenter = Vector3.Distance(target.Transform.position, partyCenterGround);
+            if (targetDistanceFromCenter > maxAssignmentDistance)
                 continue;
 
             UnitForage closestForager = null;
@@ -84,7 +109,7 @@ public class UnitForageService : GURUService
                 // Skip foragers that already have an assignment
                 if (assignedForagers.Contains(forager)) continue;
 
-                float distance = Vector3.Distance(spore.transform.position, forager.transform.position);
+                float distance = Vector3.Distance(target.Transform.position, forager.transform.position);
                 if (distance < closestDistance)
                 {
                     closestDistance = distance;
@@ -92,10 +117,10 @@ public class UnitForageService : GURUService
                 }
             }
 
-            // Assign spore to the closest available forager
+            // Assign target to the closest available forager
             if (closestForager != null)
             {
-                sporeAssignments[spore] = closestForager;
+                targetAssignments[target] = closestForager;
                 assignedForagers.Add(closestForager);
             }
         }
@@ -103,8 +128,8 @@ public class UnitForageService : GURUService
         // Update all foragers with their assignments
         foreach (var forager in activeForagers)
         {
-            var assignedSpore = sporeAssignments.FirstOrDefault(kvp => kvp.Value == forager).Key;
-            forager.SetTargetSpore(assignedSpore);
+            var assignedTarget = targetAssignments.FirstOrDefault(kvp => kvp.Value == forager).Key;
+            forager.SetTarget(assignedTarget);
         }
     }
 }

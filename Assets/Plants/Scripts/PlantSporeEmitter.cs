@@ -56,7 +56,7 @@ public enum SporeEmissionBehaviour
     Fall,
 }
 
-public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget
+public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IForageTarget
 {
     [Header("References")]
     [SerializeField] private SporeController sporePrefab;
@@ -77,6 +77,11 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget
     public int EmissionStep => emissionStep;
     Transform ITarget.Transform => transform;
 
+    void IForageTarget.OnForaged(UnitController forager)
+    {
+        Select(forager);
+    }
+
     private Vector3 startScale;
     private ObjectPool<SporeController> sporePool;
     private UnityAction onSporeReachedTarget;
@@ -90,7 +95,7 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget
         });
     }
 
-    void IInteractable.Select(UnitController source)
+    public void Select(UnitController source)
     {
         switch (emissionBehaviour)
         {

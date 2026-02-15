@@ -2,14 +2,20 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class SporeController : MonoBehaviour
+public class SporeController : MonoBehaviour, IForageTarget
 {
     [Header("References")]
     [SerializeField] private InventoryReference inventoryReference;
-    [SerializeField] private SporeReference sporeReference;
+    [SerializeField] private UnitForageService forageService;
 
     [Header("Spore Settings")]
     [SerializeField] private float driftDownDuration = 2f;
+
+    public Transform Transform => transform;
+    void IForageTarget.OnForaged(UnitController forager)
+    {
+        Collect();
+    }
 
     public event UnityAction OnCollect;
 
@@ -19,7 +25,7 @@ public class SporeController : MonoBehaviour
 
         StopAllCoroutines();
 
-        sporeReference.RemoveSpore(this);
+        forageService.RemoveTarget(this);
         gameObject.SetActive(false);
 
         OnCollect?.Invoke();
@@ -27,7 +33,7 @@ public class SporeController : MonoBehaviour
 
     public void LaunchSpore(Vector3 peak, Vector3 landing, UnityAction onPeakAction = null, UnityAction onLandAction = null)
     {
-        sporeReference.RegisterSpore(this);
+        forageService.RegisterTarget(this);
         StartCoroutine(AnimateSpore(peak, landing, onPeakAction, onLandAction));
     }
 

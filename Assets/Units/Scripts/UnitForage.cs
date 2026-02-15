@@ -1,20 +1,16 @@
-using System;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
+public interface IForageTarget : ITarget
+{
+    void OnForaged(UnitController forager);
+}
+
 public class UnitForage : UnitBehaviour
 {
-    [Header("References")]
-    [SerializeField] private SporeReference sporeReference;
-
-    [Header("Runtime")]
-    [SerializeField] private SporeController targetSpore;
-
+    private IForageTarget target;
     private NavMeshAgent agent;
-
-    public SporeController TargetSpore => targetSpore;
 
     protected override void Awake()
     {
@@ -23,16 +19,16 @@ public class UnitForage : UnitBehaviour
         agent.updateRotation = false;
     }
 
-    public void SetTargetSpore(SporeController spore)
+    public void SetTarget(IForageTarget target)
     {
-        targetSpore = spore;
-        Debug.Log($"Unit {name} assigned to spore {spore?.name ?? "null"}");
+        Debug.Log("Setting forage target: " + target?.Transform.name ?? "None");
+        this.target = target;
     }
 
 
     protected override void OnBehaviourStart()
     {
-        if (targetSpore)
+        if (target != null)
         {
             agent.isStopped = false;
             StartCoroutine(ForagingBehaviour());
@@ -41,12 +37,22 @@ public class UnitForage : UnitBehaviour
 
     private IEnumerator ForagingBehaviour()
     {
-        while (targetSpore)
+        Debug.Log("Starting foraging behavior towards target: " + target.Transform.name);
+        while (target != null)
         {
-            agent.SetDestination(targetSpore.transform.position);
-            Controller.SetLookPosition(targetSpore.transform.position);
+            Controller.Destination.SetDestination(target.Transform.position);
+            Controller.SetLookPosition(target.Transform.position);
+
+            if (Vector3.Distance(transform.position, target.Transform.position) <= 2f)
+            {
+                Debug.Log("Reached forage target: " + target.Transform.name);
+                target.OnForaged(Controller);
+                // break;
+            }
             yield return null;
         }
+
+        Debug.Log("Foraging complete");
 
         StopBehaviour();
     }
@@ -60,8 +66,9 @@ public class UnitForage : UnitBehaviour
 
     public override int GetPriority()
     {
-        // High priority if we have a target spore
-        return targetSpore != null ? 100 : 0;
+        Debug.Log("Checking forage behavior priority. Target: " + (target != null ? target.Transform.name : "None"));
+        // High priority if we have a target
+        return target != null ? 100 : 0;
     }
 
 }

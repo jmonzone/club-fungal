@@ -3229,6 +3229,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7653803590705474910, guid: 493e56f4e7abc4c2a9aa77c9084f0316,
         type: 3}
+      propertyPath: forageService
+      value: 
+      objectReference: {fileID: 11400000, guid: f917411f3aeff4ed29a58299b9e9b579,
+        type: 2}
+    - target: {fileID: 7653803590705474910, guid: 493e56f4e7abc4c2a9aa77c9084f0316,
+        type: 3}
       propertyPath: emissionBehaviour
       value: 2
       objectReference: {fileID: 0}
@@ -38527,6 +38533,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7653803590705474910, guid: 493e56f4e7abc4c2a9aa77c9084f0316,
         type: 3}
+      propertyPath: forageService
+      value: 
+      objectReference: {fileID: 11400000, guid: f917411f3aeff4ed29a58299b9e9b579,
+        type: 2}
+    - target: {fileID: 7653803590705474910, guid: 493e56f4e7abc4c2a9aa77c9084f0316,
+        type: 3}
       propertyPath: emissionBehaviour
       value: 2
       objectReference: {fileID: 0}
@@ -42574,6 +42586,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mushroom
       objectReference: {fileID: 0}
+    - target: {fileID: 7653803590705474910, guid: 493e56f4e7abc4c2a9aa77c9084f0316,
+        type: 3}
+      propertyPath: forageService
+      value: 
+      objectReference: {fileID: 11400000, guid: f917411f3aeff4ed29a58299b9e9b579,
+        type: 2}
     - target: {fileID: 7653803590705474910, guid: 493e56f4e7abc4c2a9aa77c9084f0316,
         type: 3}
       propertyPath: emissionBehaviour
