@@ -69,20 +69,20 @@ public class EyeballController : MonoBehaviour
 
     void FindClosestTarget()
     {
-        FungalController[] fungals = FindObjectsOfType<FungalController>();
-        float closestDist = Mathf.Infinity;
-        Transform closest = null;
+        // FungalController[] fungals = FindObjectsOfType<FungalController>();
+        // float closestDist = Mathf.Infinity;
+        // Transform closest = null;
 
-        foreach (var fungal in fungals)
-        {
-            float dist = Vector3.Distance(transform.position, fungal.transform.position);
-            if (dist < closestDist)
-            {
-                closestDist = dist;
-                closest = fungal.transform;
-            }
-        }
+        // foreach (var fungal in fungals)
+        // {
+        //     float dist = Vector3.Distance(transform.position, fungal.transform.position);
+        //     if (dist < closestDist)
+        //     {
+        //         closestDist = dist;
+        //         closest = fungal.transform;
+        //     }
+        // }
 
-        target = closest;
+        // target = closest;
     }
 }

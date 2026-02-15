@@ -14,7 +14,7 @@ public class GURUInitializer
         // Debug.Log("GURUServiceInitializer detected play mode state change: " + state);
         if (state == PlayModeStateChange.EnteredEditMode)
         {
-            InitializeSystems();
+            // InitializeSystems();
         }
         // else if (state == PlayModeStateChange.EnteredPlayMode)
         // {

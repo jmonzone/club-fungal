@@ -70,6 +70,8 @@ MonoBehaviour:
   scaleTransform: {fileID: 8110878824461284166}
   sporeItem: {fileID: 11400000, guid: ddde813dc82944f04928d4fd69f1a1b8, type: 2}
   networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
+  target: {fileID: 0}
+  emissionBehaviour: 2
   emissionStep: 8
   launchHeight: 2
   bounceScale: 1.2

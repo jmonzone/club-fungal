@@ -15,6 +15,7 @@ public class NetworkRunPartyTether : MonoBehaviour
     private void Awake()
     {
         mainCamera = Camera.main;
+        CheckAndTetherUnits();
     }
 
     private void Update()
