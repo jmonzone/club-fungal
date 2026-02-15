@@ -70,6 +70,7 @@ public class UnitForageService : GURUService
         if (forager != null && !activeForagers.Contains(forager))
         {
             activeForagers.Add(forager);
+            forager.OnForageTargetReached += ReassignSpores;
             controller.OnBehaviourComplete += ReassignSpores;
             ReassignSpores();
         }

@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 public interface IForageTarget : ITarget
 {
@@ -11,6 +12,8 @@ public class UnitForage : UnitBehaviour
 {
     private IForageTarget target;
     private NavMeshAgent agent;
+
+    public event UnityAction OnForageTargetReached;
 
     protected override void Awake()
     {
@@ -46,6 +49,7 @@ public class UnitForage : UnitBehaviour
                 {
                     Debug.Log("Reached forage target: " + target.Transform.name);
                     target.OnForaged(Controller);
+                    OnForageTargetReached?.Invoke();
                     yield return new WaitForSeconds(Random.Range(0.5f, 1.5f)); // small delay after foraging
                 }
             }
