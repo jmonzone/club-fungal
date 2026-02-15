@@ -56,6 +56,7 @@ public class UnitController : MonoBehaviour, IInteractable
     public event UnityAction OnInitialized;
     public event UnityAction OnNavMeshAgentReady;
     public event UnityAction OnBehaviourChanged;
+    public event UnityAction OnBehaviourComplete;
 
     private void OnValidate()
     {
@@ -147,6 +148,8 @@ public class UnitController : MonoBehaviour, IInteractable
 
     private void HandleBehaviourCompleteFallback()
     {
+        OnBehaviourComplete?.Invoke();
+
         // Determine the next appropriate behavior
         var nextBehaviour = DetermineNextBehaviour();
         ApplyBehaviour(nextBehaviour);
@@ -154,6 +157,7 @@ public class UnitController : MonoBehaviour, IInteractable
 
     protected virtual UnitBehaviour DetermineNextBehaviour()
     {
+        Debug.Log("Determining next behavior...");
         // Get all behaviors and find the one with highest priority
         var allBehaviours = GetComponents<UnitBehaviour>();
         UnitBehaviour bestBehaviour = defaultBehaviour;

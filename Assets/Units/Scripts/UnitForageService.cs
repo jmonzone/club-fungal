@@ -45,6 +45,7 @@ public class UnitForageService : GURUService
         if (forager != null && !activeForagers.Contains(forager))
         {
             activeForagers.Add(forager);
+            controller.OnBehaviourComplete += ReassignSpores;
             ReassignSpores();
         }
     }
@@ -54,6 +55,7 @@ public class UnitForageService : GURUService
         if (sporeReference == null || networkRunService == null)
             return;
 
+        Debug.Log("Reassigning spores to foragers...");
         Vector3 partyCenterGround = networkRunService.PartyCenterGround;
         float maxAssignmentDistance = networkRunService.MaxTetherDistance;
 
@@ -104,14 +106,5 @@ public class UnitForageService : GURUService
             var assignedSpore = sporeAssignments.FirstOrDefault(kvp => kvp.Value == forager).Key;
             forager.SetTargetSpore(assignedSpore);
         }
-    }
-
-    public void RequestAssignment(UnitForage forager)
-    {
-        if (!activeForagers.Contains(forager))
-        {
-            activeForagers.Add(forager);
-        }
-        ReassignSpores();
     }
 }

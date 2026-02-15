@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -7,7 +8,6 @@ public class UnitForage : UnitBehaviour
 {
     [Header("References")]
     [SerializeField] private SporeReference sporeReference;
-    [SerializeField] private UnitForageService forageService;
 
     [Header("Runtime")]
     [SerializeField] private SporeController targetSpore;
@@ -26,17 +26,7 @@ public class UnitForage : UnitBehaviour
     public void SetTargetSpore(SporeController spore)
     {
         targetSpore = spore;
-
-        // If we got a new target, request to start foraging
-        if (targetSpore != null)
-        {
-            InvokeOnBehaviourRequest();
-        }
-        // If we lost our target while foraging, stop the behaviour
-        else if (IsActive)
-        {
-            StopBehaviour();
-        }
+        Debug.Log($"Unit {name} assigned to spore {spore?.name ?? "null"}");
     }
 
 
@@ -70,12 +60,6 @@ public class UnitForage : UnitBehaviour
 
     public override int GetPriority()
     {
-        // If we don't have a target, request assignment from service
-        if (targetSpore == null && forageService != null)
-        {
-            forageService.RequestAssignment(this);
-        }
-
         // High priority if we have a target spore
         return targetSpore != null ? 100 : 0;
     }
