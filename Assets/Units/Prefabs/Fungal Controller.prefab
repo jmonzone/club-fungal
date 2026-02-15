@@ -293,7 +293,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  baseSpeed: 2
+  baseSpeed: 5
   wanderRadius: 10
   minIdleTime: 3
   maxIdleTime: 20
@@ -354,9 +354,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  sporeReference: {fileID: 11400000, guid: aada144c7ab1b4304a84a13d3ddc010c, type: 2}
-  forageService: {fileID: 11400000, guid: f917411f3aeff4ed29a58299b9e9b579, type: 2}
-  targetSpore: {fileID: 0}
 --- !u!114 &7222236572253189186
 MonoBehaviour:
   m_ObjectHideFlags: 0

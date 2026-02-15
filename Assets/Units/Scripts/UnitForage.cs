@@ -25,7 +25,6 @@ public class UnitForage : UnitBehaviour
 
     public void SetTarget(IForageTarget target)
     {
-        Debug.Log("Setting forage target: " + target?.Transform.name ?? "None");
         var previousTarget = this.target;
         this.target = target;
         if (previousTarget == null && target != null) InvokeOnBehaviourRequest();

@@ -21,7 +21,7 @@ public class UnitReturnToParty : UnitBehaviour
             // Teleport immediately
             Controller.Teleport(returnPosition, Controller.transform.parent);
         }
-        else if (Controller.IsDefaultBehaviour)
+        else
         {
             // Walk back by requesting behavior
             InvokeOnBehaviourRequest();
@@ -30,7 +30,7 @@ public class UnitReturnToParty : UnitBehaviour
 
     protected override void OnBehaviourStart()
     {
-        if (navMeshAgent != null)
+        if (navMeshAgent != null && navMeshAgent.isOnNavMesh)
         {
             navMeshAgent.isStopped = false;
             navMeshAgent.SetDestination(returnPosition);
@@ -43,7 +43,7 @@ public class UnitReturnToParty : UnitBehaviour
 
         if (!IsActive) return;
 
-        if (navMeshAgent != null)
+        if (navMeshAgent != null && navMeshAgent.isOnNavMesh)
         {
             Controller.SetLookPosition(returnPosition);
 
