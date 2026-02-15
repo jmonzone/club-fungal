@@ -54,14 +54,12 @@ public class UnitForageService : GURUService
         Debug.Log("Registering forage target: " + target.Transform.name);
         forageTargets.Add(target);
         OnTargetsChanged?.Invoke();
-        ReassignSpores();
     }
 
     public void RemoveTarget(IForageTarget target)
     {
         forageTargets.Remove(target);
         OnTargetsChanged?.Invoke();
-        ReassignSpores();
     }
 
     private void OnUnitSummoned(UnitController controller)
