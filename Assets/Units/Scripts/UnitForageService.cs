@@ -60,9 +60,7 @@ public class UnitForageService : GURUService
         // Refresh forager list to remove destroyed objects
         activeForagers.RemoveAll(f => f == null);
 
-        // Track which targets have been assigned to avoid duplicates when possible
-        var assignedTargets = new HashSet<IForageTarget>();
-
+        // Collect all forage targets within range
         var forageTargets = new List<IForageTarget>();
         Collider[] colliders = Physics.OverlapSphere(partyCenterGround, maxAssignmentDistance);
         foreach (var collider in colliders)
@@ -70,39 +68,49 @@ public class UnitForageService : GURUService
             var target = collider.GetComponentInParent<IForageTarget>();
             if (target != null && !forageTargets.Contains(target))
             {
-                forageTargets.Add(target);
+                float targetDistanceFromCenter = Vector3.Distance(target.Transform.position, partyCenterGround);
+                if (targetDistanceFromCenter <= maxAssignmentDistance)
+                {
+                    forageTargets.Add(target);
+                }
             }
         }
 
-        // For each forager, assign them to their closest available unassigned target
+        // Build a list of all valid (forager, target, distance) combinations
+        var assignments = new List<(UnitForage forager, IForageTarget target, float distance)>();
         foreach (var forager in activeForagers)
         {
-            IForageTarget closestTarget = null;
-            float closestDistance = float.MaxValue;
-
-            // Find closest unassigned target (only one forager per target)
             foreach (var target in forageTargets)
             {
-                if (assignedTargets.Contains(target)) continue;
-
-                // Only consider targets within party tether range
-                float targetDistanceFromCenter = Vector3.Distance(target.Transform.position, partyCenterGround);
-                if (targetDistanceFromCenter > maxAssignmentDistance)
-                    continue;
-
                 float distance = Vector3.Distance(target.Transform.position, forager.transform.position);
-                if (distance < closestDistance)
-                {
-                    closestDistance = distance;
-                    closestTarget = target;
-                }
+                assignments.Add((forager, target, distance));
             }
+        }
 
-            // Assign the target (or null if none available) and mark it as assigned
-            forager.SetTarget(closestTarget);
-            if (closestTarget != null)
+        // Sort by distance (closest first)
+        assignments.Sort((a, b) => a.distance.CompareTo(b.distance));
+
+        // Assign targets to foragers, prioritizing closest pairs
+        var assignedForagers = new HashSet<UnitForage>();
+        var assignedTargets = new HashSet<IForageTarget>();
+
+        foreach (var assignment in assignments)
+        {
+            // Skip if either forager or target is already assigned
+            if (assignedForagers.Contains(assignment.forager) || assignedTargets.Contains(assignment.target))
+                continue;
+
+            assignment.forager.SetTarget(assignment.target);
+            assignedForagers.Add(assignment.forager);
+            assignedTargets.Add(assignment.target);
+        }
+
+        // Clear targets for unassigned foragers
+        foreach (var forager in activeForagers)
+        {
+            if (!assignedForagers.Contains(forager))
             {
-                assignedTargets.Add(closestTarget);
+                forager.SetTarget(null);
             }
         }
     }

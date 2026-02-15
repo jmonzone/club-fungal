@@ -67,7 +67,7 @@ public class UnitForage : UnitBehaviour
 
     public override int GetPriority()
     {
-        Debug.Log("Checking forage behavior priority. Target: " + (target != null ? target.Transform.name : "None"));
+        // Debug.Log("Checking forage behavior priority. Target: " + (target != null ? target.Transform.name : "None"));
         // High priority if we have a target
         return target != null ? 100 : 0;
     }

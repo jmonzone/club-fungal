@@ -157,7 +157,7 @@ public class UnitController : MonoBehaviour, IInteractable
 
     protected virtual UnitBehaviour DetermineNextBehaviour()
     {
-        Debug.Log("Determining next behavior...");
+        // Debug.Log("Determining next behavior...");
         // Get all behaviors and find the one with highest priority
         var allBehaviours = GetComponents<UnitBehaviour>();
         UnitBehaviour bestBehaviour = defaultBehaviour;
