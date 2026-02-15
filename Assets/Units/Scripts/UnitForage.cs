@@ -38,23 +38,23 @@ public class UnitForage : UnitBehaviour
     private IEnumerator ForagingBehaviour()
     {
         Debug.Log("Starting foraging behavior towards target: " + target.Transform.name);
-        while (true)
+        while (target != null)
         {
-            if (target != null)
-            {
-                Controller.Destination.SetDestination(target.Transform.position);
-                Controller.SetLookPosition(target.Transform.position);
+            Controller.Destination.SetDestination(target.Transform.position);
+            Controller.SetLookPosition(target.Transform.position);
 
-                if (Vector3.Distance(transform.position, target.Transform.position) <= 2f)
-                {
-                    Debug.Log("Reached forage target: " + target.Transform.name);
-                    target.OnForaged(Controller);
-                    OnForageTargetReached?.Invoke();
-                    yield return new WaitForSeconds(Random.Range(0.5f, 1.5f)); // small delay after foraging
-                }
+            if (Vector3.Distance(transform.position, target.Transform.position) <= 2f)
+            {
+                Debug.Log("Reached forage target: " + target.Transform.name);
+                target.OnForaged(Controller);
+                OnForageTargetReached?.Invoke();
+                yield return new WaitForSeconds(Random.Range(0.5f, 1.5f)); // small delay after foraging
             }
+
             yield return null;
         }
+
+        StopBehaviour();
     }
 
     public override void StopBehaviour()
