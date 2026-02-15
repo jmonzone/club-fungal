@@ -91,13 +91,13 @@ public class UnitForageService : GURUService
         // Track which targets have been assigned to avoid duplicates when possible
         var assignedTargets = new HashSet<IForageTarget>();
 
-        // For each forager, assign them to their closest available target
+        // For each forager, assign them to their closest available unassigned target
         foreach (var forager in activeForagers)
         {
             IForageTarget closestTarget = null;
             float closestDistance = float.MaxValue;
 
-            // First pass: try to find closest unassigned target
+            // Find closest unassigned target (only one forager per target)
             foreach (var target in forageTargets)
             {
                 if (assignedTargets.Contains(target)) continue;
@@ -115,27 +115,7 @@ public class UnitForageService : GURUService
                 }
             }
 
-            // If no unassigned target found, fall back to any closest target (allows sharing)
-            if (closestTarget == null)
-            {
-                closestDistance = float.MaxValue;
-                foreach (var target in forageTargets)
-                {
-                    // Only consider targets within party tether range
-                    float targetDistanceFromCenter = Vector3.Distance(target.Transform.position, partyCenterGround);
-                    if (targetDistanceFromCenter > maxAssignmentDistance)
-                        continue;
-
-                    float distance = Vector3.Distance(target.Transform.position, forager.transform.position);
-                    if (distance < closestDistance)
-                    {
-                        closestDistance = distance;
-                        closestTarget = target;
-                    }
-                }
-            }
-
-            // Assign the target and mark it as assigned
+            // Assign the target (or null if none available) and mark it as assigned
             forager.SetTarget(closestTarget);
             if (closestTarget != null)
             {
