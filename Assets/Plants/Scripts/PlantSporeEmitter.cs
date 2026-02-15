@@ -117,7 +117,8 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IFor
                 break;
 
             case SporeEmissionBehaviour.Target:
-                EmitSpore(spore => spore.gameObject.SetActive(false), () => onSporeReachedTarget?.Invoke());
+                gameObject.SetActive(false);
+                // EmitSpore(spore => spore.gameObject.SetActive(false), () => onSporeReachedTarget?.Invoke());
                 break;
         }
     }

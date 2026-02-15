@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 
 [CreateAssetMenu(menuName = "Services/Unit Forage Service")]
 public class UnitForageService : GURUService
@@ -11,29 +9,12 @@ public class UnitForageService : GURUService
 
     private List<UnitForage> activeForagers = new List<UnitForage>();
     private Dictionary<IForageTarget, UnitForage> targetAssignments = new Dictionary<IForageTarget, UnitForage>();
-    private List<IForageTarget> forageTargets = new List<IForageTarget>();
-
-    public event UnityAction OnTargetsChanged;
 
     protected override void OnInitialize()
     {
-        forageTargets = new List<IForageTarget>();
-
         if (unitControllerService != null)
         {
             unitControllerService.OnUnitSummoned += OnUnitSummoned;
-        }
-    }
-
-    public override void OnSceneLoaded()
-    {
-        base.OnSceneLoaded();
-
-        // Find all forage targets in scene
-        var plantsInScene = FindObjectsOfType<PlantSporeEmitter>();
-        foreach (var plant in plantsInScene)
-        {
-            RegisterTarget(plant);
         }
     }
 
@@ -46,21 +27,8 @@ public class UnitForageService : GURUService
 
         activeForagers.Clear();
         targetAssignments.Clear();
-        forageTargets.Clear();
     }
 
-    public void RegisterTarget(IForageTarget target)
-    {
-        Debug.Log("Registering forage target: " + target.Transform.name);
-        forageTargets.Add(target);
-        OnTargetsChanged?.Invoke();
-    }
-
-    public void RemoveTarget(IForageTarget target)
-    {
-        forageTargets.Remove(target);
-        OnTargetsChanged?.Invoke();
-    }
 
     private void OnUnitSummoned(UnitController controller)
     {
@@ -79,7 +47,6 @@ public class UnitForageService : GURUService
         if (networkRunService == null)
             return;
 
-        Debug.Log($"Reassigning targets to foragers... foragetargets: {forageTargets.Count}, activeForagers: {activeForagers.Count}");
         Vector3 partyCenterGround = networkRunService.PartyCenterGround;
         float maxAssignmentDistance = networkRunService.MaxTetherDistance;
 
@@ -89,6 +56,17 @@ public class UnitForageService : GURUService
         // Track which targets have been assigned to avoid duplicates when possible
         var assignedTargets = new HashSet<IForageTarget>();
 
+        var forageTargets = new List<IForageTarget>();
+        Collider[] colliders = Physics.OverlapSphere(partyCenterGround, maxAssignmentDistance);
+        foreach (var collider in colliders)
+        {
+            var target = collider.GetComponentInParent<IForageTarget>();
+            if (target != null && !forageTargets.Contains(target))
+            {
+                forageTargets.Add(target);
+            }
+        }
+        
         // For each forager, assign them to their closest available unassigned target
         foreach (var forager in activeForagers)
         {
