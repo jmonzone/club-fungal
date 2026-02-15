@@ -6,7 +6,6 @@ using UnityEngine.AI;
 public class UnitWander : UnitBehaviour
 {
     [Header("Settings")]
-    [SerializeField] private float baseSpeed = 2f;
     [SerializeField] private float wanderRadius = 10f;
     [SerializeField] private float minIdleTime = 1f;
     [SerializeField] private float maxIdleTime = 4f;
@@ -67,7 +66,6 @@ public class UnitWander : UnitBehaviour
 
             var targetPosition = GetReachableRandomDestination(transform.position, wanderRadius, NavMesh.AllAreas);
             navMeshAgent.SetDestination(targetPosition);
-            navMeshAgent.speed = baseSpeed * Random.Range(0.8f, 1.2f);
 
             while (navMeshAgent.pathPending || navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance)
             {

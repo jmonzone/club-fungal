@@ -14,10 +14,10 @@ public interface IJob
 
 public class FungalController : UnitController
 {
+    [SerializeField] private NetworkRunService networkRunService;
+
     private UnitFollow unitFollow;
     private UnitColorPalette colorPalette;
-    private Animator animator;
-
     public override Color Color
     {
         get => colorPalette.SecondaryColor;
@@ -38,6 +38,8 @@ public class FungalController : UnitController
     protected override IEnumerator Start()
     {
         var agent = GetComponent<NavMeshAgent>();
+        agent.speed = networkRunService.Settings.baseMovementSpeed;
+
         agent.enabled = false;
         yield return null; // wait 1 frame
         agent.enabled = true;
@@ -52,7 +54,7 @@ public class FungalController : UnitController
             Quaternion randomYRotation = Quaternion.Euler(0, Random.Range(135f, 225f), 0);
             renderRoot = Instantiate(instance.Species.Prefab, transform.position, randomYRotation, transform).transform;
         }
-        animator = GetComponentInChildren<Animator>();
+
         base.Initialize(instance);
     }
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class NetworkRunPartyTether : MonoBehaviour
@@ -15,6 +16,7 @@ public class NetworkRunPartyTether : MonoBehaviour
     private Vector3 tetherVelocity;
     [SerializeField] private float anticipationTime = 1.5f; // How far ahead to predict
     [SerializeField] private float minVelocityThreshold = 1f; // Min speed to trigger anticipation
+    private HashSet<UnitInstance> unitsOutsideTether = new HashSet<UnitInstance>();
 
     private void Awake()
     {
@@ -72,8 +74,22 @@ public class NetworkRunPartyTether : MonoBehaviour
                 effectiveDistance = Mathf.Max(currentDistance, predictedDistance);
             }
 
+            bool isOutside = effectiveDistance > maxDistance;
+            bool wasOutside = unitsOutsideTether.Contains(unitInstance);
+
+            // Track unit re-entering tether
+            if (wasOutside && !isOutside)
+            {
+                unitsOutsideTether.Remove(unitInstance);
+                networkRunService.NotifyUnitReenteredTether();
+            }
+            else if (!wasOutside && isOutside)
+            {
+                unitsOutsideTether.Add(unitInstance);
+            }
+
             // Trigger return if currently too far OR predicted to be too far
-            if (effectiveDistance > maxDistance)
+            if (isOutside)
             {
                 // Calculate spread position in a circle around ground center
                 float angle = (index * 360f / networkRunService.Party.Unit.Count) * Mathf.Deg2Rad;

@@ -35,6 +35,8 @@ public class NetworkRunService : GURUService
     private Vector3 partyCenterGround;
     private float maxTetherDistance;
 
+    public event Action OnUnitReenteredTether;
+    public NetworkRunSettings Settings => settings;
     public Inventory Inventory => inventory;
     public Party Party => party;
     public Vector3 PartyCenterGround => partyCenterGround;
@@ -49,6 +51,11 @@ public class NetworkRunService : GURUService
     {
         partyCenterGround = centerGround;
         maxTetherDistance = maxDistance;
+    }
+
+    public void NotifyUnitReenteredTether()
+    {
+        OnUnitReenteredTether?.Invoke();
     }
 
     protected override void OnInitialize()

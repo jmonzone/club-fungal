@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,6 +16,12 @@ public class UnitForageService : GURUService
         if (unitControllerService != null)
         {
             unitControllerService.OnUnitSummoned += OnUnitSummoned;
+        }
+
+        // Subscribe to unit re-entry events
+        if (networkRunService != null)
+        {
+            networkRunService.OnUnitReenteredTether += ReassignSpores;
         }
     }
 
@@ -66,7 +73,7 @@ public class UnitForageService : GURUService
                 forageTargets.Add(target);
             }
         }
-        
+
         // For each forager, assign them to their closest available unassigned target
         foreach (var forager in activeForagers)
         {

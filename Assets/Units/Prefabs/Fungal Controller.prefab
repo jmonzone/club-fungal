@@ -231,6 +231,7 @@ MonoBehaviour:
   targetLookPosition: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
   dialogueCamera: {fileID: 2897206226710500820}
+  networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
 --- !u!195 &6701783708521320235
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -293,7 +294,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  baseSpeed: 5
   wanderRadius: 10
   minIdleTime: 3
   maxIdleTime: 20

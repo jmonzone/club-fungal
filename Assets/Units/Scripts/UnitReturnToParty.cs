@@ -33,7 +33,6 @@ public class UnitReturnToParty : UnitBehaviour
         if (navMeshAgent != null && navMeshAgent.isOnNavMesh)
         {
             navMeshAgent.isStopped = false;
-            navMeshAgent.SetDestination(returnPosition);
         }
     }
 
@@ -46,6 +45,7 @@ public class UnitReturnToParty : UnitBehaviour
         if (navMeshAgent != null && navMeshAgent.isOnNavMesh)
         {
             Controller.SetLookPosition(returnPosition);
+            Controller.Destination.SetDestination(returnPosition);
 
             // Check if we've reached the destination
             if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
