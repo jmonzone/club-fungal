@@ -58,6 +58,19 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IFor
         });
     }
 
+    private void OnEnable()
+    {
+        // Reset state when enabled (e.g., when retrieved from pool)
+        forageCoroutine = null;
+        currentForager = null;
+        adjustedForageDuration = forageDuration;
+
+        if (scaleTransform != null && startScale != Vector3.zero)
+        {
+            scaleTransform.localScale = startScale;
+        }
+    }
+
     private void OnDisable()
     {
         CancelForage();

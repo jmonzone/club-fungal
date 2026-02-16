@@ -2,10 +2,19 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Events;
 
+[System.Serializable]
+public struct MushroomSpawnData
+{
+    public PlantSporeEmitter prefab;
+    [Range(0f, 1f)]
+    [Tooltip("Spawn chance (0-1). All weights are normalized to sum to 1.")]
+    public float spawnWeight;
+}
+
 public class MushroomSpawner : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private GameObject mushroomPrefab;
+    [SerializeField] private MushroomSpawnData[] mushroomTypes;
     [SerializeField] private Collider spawnCollider;
     [SerializeField] private Transform mushroomParent;
 
@@ -22,23 +31,32 @@ public class MushroomSpawner : MonoBehaviour
     [Header("Runtime")]
     [SerializeField] private List<GameObject> spawnedMushrooms = new List<GameObject>();
 
-    private ObjectPool<Transform> mushroomPool;
+    private Dictionary<PlantSporeEmitter, ObjectPool<PlantSporeEmitter>> mushroomPools = new Dictionary<PlantSporeEmitter, ObjectPool<PlantSporeEmitter>>();
     private List<Vector3> availableSpawnPositions = new List<Vector3>();
+    private List<Vector3> occupiedPositions = new List<Vector3>();
+    private Dictionary<GameObject, Vector3> mushroomPositions = new Dictionary<GameObject, Vector3>();
     private Dictionary<GameObject, UnityAction> mushroomCallbacks = new Dictionary<GameObject, UnityAction>();
+    private float totalSpawnWeight;
 
     private void Awake()
     {
-        if (mushroomPrefab != null)
+        // Normalize weights to ensure they sum to 1
+        NormalizeWeights();
+
+        // Initialize pools for each mushroom type
+        totalSpawnWeight = 0f;
+        foreach (var mushroomType in mushroomTypes)
         {
-            mushroomPool = new ObjectPool<Transform>(mushroomPrefab.transform, mushroomCount * 2, transform, mushroom =>
+            if (mushroomType.prefab != null)
             {
-                // Subscribe to forage event when mushroom is initialized
-                var forageTarget = mushroom.GetComponent<PlantSporeEmitter>();
-                if (forageTarget != null)
-                {
-                    // We'll handle the forage callback in the spawning logic
-                }
-            });
+                mushroomPools[mushroomType.prefab] = new ObjectPool<PlantSporeEmitter>(
+                    mushroomType.prefab,
+                    mushroomCount * 2,
+                    transform,
+                    mushroom => { /* Forage callback handled in spawning */ }
+                );
+                totalSpawnWeight += mushroomType.spawnWeight;
+            }
         }
 
         if (spawnOnAwake)
@@ -51,9 +69,9 @@ public class MushroomSpawner : MonoBehaviour
     {
         ClearMushrooms();
 
-        if (mushroomPrefab == null)
+        if (mushroomTypes == null || mushroomTypes.Length == 0)
         {
-            Debug.LogWarning("MushroomSpawner: No mushroom prefab assigned");
+            Debug.LogWarning("MushroomSpawner: No mushroom types assigned");
             return;
         }
 
@@ -63,51 +81,110 @@ public class MushroomSpawner : MonoBehaviour
             return;
         }
 
-        availableSpawnPositions = GenerateSpawnPositions();
+        List<Vector3> allPositions = GenerateSpawnPositions();
+        availableSpawnPositions = new List<Vector3>(allPositions);
+        occupiedPositions.Clear();
 
-        for (int i = 0; i < availableSpawnPositions.Count; i++)
+        for (int i = 0; i < Mathf.Min(mushroomCount, availableSpawnPositions.Count); i++)
         {
-            SpawnMushroomAt(availableSpawnPositions[i]);
+            SpawnMushroomAtRandomAvailablePosition();
         }
 
         Debug.Log($"MushroomSpawner: Spawned {spawnedMushrooms.Count} mushrooms");
     }
 
+    private void SpawnMushroomAtRandomAvailablePosition()
+    {
+        if (availableSpawnPositions.Count == 0)
+        {
+            Debug.LogWarning("MushroomSpawner: No available spawn positions");
+            return;
+        }
+
+        int randomIndex = Random.Range(0, availableSpawnPositions.Count);
+        Vector3 position = availableSpawnPositions[randomIndex];
+        availableSpawnPositions.RemoveAt(randomIndex);
+        occupiedPositions.Add(position);
+
+        SpawnMushroomAt(position);
+    }
+
     private void SpawnMushroomAt(Vector3 position)
     {
-        Transform mushroom = mushroomPool.Get();
-        mushroom.position = position;
+        // Select mushroom type based on spawn weights
+        PlantSporeEmitter selectedPrefab = SelectRandomMushroomType();
+        if (selectedPrefab == null || !mushroomPools.ContainsKey(selectedPrefab))
+        {
+            Debug.LogWarning("MushroomSpawner: Could not select valid mushroom type");
+            return;
+        }
+
+        PlantSporeEmitter mushroom = mushroomPools[selectedPrefab].Get();
+        mushroom.transform.position = position;
 
         if (randomizeRotation)
         {
             float randomY = Random.Range(0f, 360f);
-            mushroom.rotation = Quaternion.Euler(0f, randomY, 0f);
+            mushroom.transform.rotation = Quaternion.Euler(0f, randomY, 0f);
         }
 
         if (randomizeScale)
         {
             float randomScale = Random.Range(scaleRange.x, scaleRange.y);
-            mushroom.localScale = Vector3.one * randomScale;
+            mushroom.transform.localScale = Vector3.one * randomScale;
         }
 
         // Subscribe to the foraged event
-        var plantEmitter = mushroom.GetComponent<PlantSporeEmitter>();
-        if (plantEmitter != null)
-        {
-            GameObject mushroomObj = mushroom.gameObject;
-            UnityAction callback = () => OnMushroomForaged(mushroomObj);
-            mushroomCallbacks[mushroomObj] = callback;
-            plantEmitter.OnMushroomForaged += callback;
-        }
+        GameObject mushroomObj = mushroom.gameObject;
+        UnityAction callback = () => OnMushroomForaged(mushroomObj, selectedPrefab);
+        mushroomCallbacks[mushroomObj] = callback;
+        mushroom.OnMushroomForaged += callback;
 
-        spawnedMushrooms.Add(mushroom.gameObject);
+        // Track position
+        mushroomPositions[mushroomObj] = position;
+
+        spawnedMushrooms.Add(mushroomObj);
     }
 
-    private void OnMushroomForaged(GameObject mushroom)
+    private PlantSporeEmitter SelectRandomMushroomType()
+    {
+        if (totalSpawnWeight <= 0f) return null;
+
+        float randomValue = Random.Range(0f, totalSpawnWeight);
+        float cumulativeWeight = 0f;
+
+        foreach (var mushroomType in mushroomTypes)
+        {
+            if (mushroomType.prefab == null) continue;
+
+            cumulativeWeight += mushroomType.spawnWeight;
+            if (randomValue <= cumulativeWeight)
+            {
+                return mushroomType.prefab;
+            }
+        }
+
+        // Fallback to first valid prefab
+        foreach (var mushroomType in mushroomTypes)
+        {
+            if (mushroomType.prefab != null) return mushroomType.prefab;
+        }
+        return null;
+    }
+
+    private void OnMushroomForaged(GameObject mushroom, PlantSporeEmitter prefabType)
     {
         if (spawnedMushrooms.Contains(mushroom))
         {
             spawnedMushrooms.Remove(mushroom);
+
+            // Free up the position
+            if (mushroomPositions.TryGetValue(mushroom, out Vector3 oldPosition))
+            {
+                occupiedPositions.Remove(oldPosition);
+                availableSpawnPositions.Add(oldPosition);
+                mushroomPositions.Remove(mushroom);
+            }
 
             // Unsubscribe from event before returning to pool
             var plantEmitter = mushroom.GetComponent<PlantSporeEmitter>();
@@ -117,14 +194,13 @@ public class MushroomSpawner : MonoBehaviour
                 mushroomCallbacks.Remove(mushroom);
             }
 
-            mushroomPool.Return(mushroom.transform);
-
-            // Spawn a new mushroom at a random position
-            if (availableSpawnPositions.Count > 0)
+            if (mushroomPools.ContainsKey(prefabType))
             {
-                Vector3 newPosition = availableSpawnPositions[Random.Range(0, availableSpawnPositions.Count)];
-                SpawnMushroomAt(newPosition);
+                mushroomPools[prefabType].Return(plantEmitter);
             }
+
+            // Spawn a new mushroom at a random available position
+            SpawnMushroomAtRandomAvailablePosition();
         }
     }
 
@@ -184,7 +260,7 @@ public class MushroomSpawner : MonoBehaviour
     {
         foreach (GameObject mushroom in spawnedMushrooms)
         {
-            if (mushroom != null && mushroomPool != null)
+            if (mushroom != null)
             {
                 // Unsubscribe from events
                 var plantEmitter = mushroom.GetComponent<PlantSporeEmitter>();
@@ -193,11 +269,49 @@ public class MushroomSpawner : MonoBehaviour
                     plantEmitter.OnMushroomForaged -= callback;
                 }
 
-                mushroomPool.Return(mushroom.transform);
+                // Find which pool this mushroom belongs to
+                foreach (var pool in mushroomPools)
+                {
+                    if (plantEmitter != null && plantEmitter.name.Contains(pool.Key.name))
+                    {
+                        pool.Value.Return(plantEmitter);
+                        break;
+                    }
+                }
             }
         }
         spawnedMushrooms.Clear();
         mushroomCallbacks.Clear();
+        mushroomPositions.Clear();
+        occupiedPositions.Clear();
+    }
+
+    private void NormalizeWeights()
+    {
+        if (mushroomTypes == null || mushroomTypes.Length == 0) return;
+
+        float total = 0f;
+        for (int i = 0; i < mushroomTypes.Length; i++)
+        {
+            if (mushroomTypes[i].prefab != null)
+            {
+                total += mushroomTypes[i].spawnWeight;
+            }
+        }
+
+        // Only normalize if weights don't sum to approximately 1
+        if (total > 0 && Mathf.Abs(total - 1f) > 0.01f)
+        {
+            for (int i = 0; i < mushroomTypes.Length; i++)
+            {
+                if (mushroomTypes[i].prefab != null)
+                {
+                    var data = mushroomTypes[i];
+                    data.spawnWeight /= total;
+                    mushroomTypes[i] = data;
+                }
+            }
+        }
     }
 
     private void OnDrawGizmosSelected()

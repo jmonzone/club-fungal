@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6087820389965264361}
   - component: {fileID: 4219176299035986033}
   m_Layer: 8
-  m_Name: Mushroom
+  m_Name: Large Mushroom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,7 +77,7 @@ MonoBehaviour:
   launchHeight: 2
   bounceScale: 1.2
   bounceDuration: 0.3
-  forageDuration: 2
+  forageDuration: 4
 --- !u!114 &6087820389965264361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,13 +218,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8607779521919147620, guid: 84fc4ee116e5d41d5a5c9fe129acbc02,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8607779521919147620, guid: 84fc4ee116e5d41d5a5c9fe129acbc02,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8607779521919147620, guid: 84fc4ee116e5d41d5a5c9fe129acbc02,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8607779521919147620, guid: 84fc4ee116e5d41d5a5c9fe129acbc02,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8607779521919147620, guid: 84fc4ee116e5d41d5a5c9fe129acbc02,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 8607779521919147620, guid: 84fc4ee116e5d41d5a5c9fe129acbc02,
         type: 3}
@@ -265,6 +280,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8607779521919147620, guid: 84fc4ee116e5d41d5a5c9fe129acbc02,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -312,6 +332,18 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4637034189228814, guid: c72f3f8a9daab2442b7dd148c087d333, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4637034189228814, guid: c72f3f8a9daab2442b7dd148c087d333, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4637034189228814, guid: c72f3f8a9daab2442b7dd148c087d333, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4637034189228814, guid: c72f3f8a9daab2442b7dd148c087d333, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -350,6 +382,10 @@ PrefabInstance:
     - target: {fileID: 4637034189228814, guid: c72f3f8a9daab2442b7dd148c087d333, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4637034189228814, guid: c72f3f8a9daab2442b7dd148c087d333, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 23318464693688554, guid: c72f3f8a9daab2442b7dd148c087d333,
         type: 3}

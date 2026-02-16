@@ -23,6 +23,17 @@ public class ForageProgressUI : MonoBehaviour
 
     private void OnEnable()
     {
+        // Reset UI state when enabled (e.g., when retrieved from pool)
+        if (progressContainer != null)
+        {
+            progressContainer.SetActive(false);
+        }
+
+        if (progressSlider != null)
+        {
+            progressSlider.value = 0f;
+        }
+
         if (plantSporeEmitter != null)
         {
             plantSporeEmitter.OnForageStarted += HandleForageStarted;

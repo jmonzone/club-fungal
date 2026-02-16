@@ -49,7 +49,6 @@ public class OverheadCanvasPosition : MonoBehaviour
         float distance = Vector3.Distance(mainCamera.transform.position, worldPosition);
         if (hideWhenTooFar && distance > maxDistance)
         {
-            rectTransform.gameObject.SetActive(false);
             return;
         }
 
@@ -59,17 +58,7 @@ public class OverheadCanvasPosition : MonoBehaviour
         // Check if behind camera or off screen
         if (screenPoint.z < 0)
         {
-            if (hideWhenOffscreen)
-            {
-                rectTransform.gameObject.SetActive(false);
-            }
             return;
-        }
-
-        // Ensure UI is visible
-        if (hideWhenOffscreen && !rectTransform.gameObject.activeSelf)
-        {
-            rectTransform.gameObject.SetActive(true);
         }
 
         // Convert screen point to canvas position
