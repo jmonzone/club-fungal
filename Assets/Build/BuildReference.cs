@@ -64,7 +64,8 @@ public class BuildReference : ScriptableObject
                 {
                     if (build is JObject buildJson)
                     {
-                        var itemData = inventory.Items.Find(item => item.Name == buildJson["name"].ToString());
+                        var itemStack = inventory.Items.Find(stack => stack.Item.Name == buildJson["name"].ToString());
+                        var itemData = itemStack?.Item;
                         if (itemData)
                         {
                             var buildData = CreateInstance<BuildInstance>();

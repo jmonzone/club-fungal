@@ -3,6 +3,19 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
+[System.Serializable]
+public class ItemStack
+{
+    public Item Item;
+    public int Count;
+
+    public ItemStack(Item item, int count = 1)
+    {
+        Item = item;
+        Count = count;
+    }
+}
+
 [CreateAssetMenu]
 public class InventoryReference : ScriptableObject
 {
@@ -14,15 +27,15 @@ public class InventoryReference : ScriptableObject
 
     [Header("Settings")]
     [SerializeField] private int initialSporeCount = 124;
-    [SerializeField] private List<Item> initialItems;
+    [SerializeField] private List<ItemStack> initialItems;
 
     [Header("Runtime")]
     [SerializeField] private int sporeCount = 0;
-    [SerializeField] private List<Item> items;
+    [SerializeField] private List<ItemStack> items;
     [SerializeField] private Dictionary<GlyphData, int> glyphs;
 
     public int SporeCount => sporeCount;
-    public List<Item> Items => items;
+    public List<ItemStack> Items => items;
     public Dictionary<GlyphData, int> Glyphs => glyphs;
 
     public event UnityAction<SporeController> OnSporeCollected;
@@ -31,13 +44,21 @@ public class InventoryReference : ScriptableObject
     public event UnityAction OnItemSummoned;
     public event UnityAction OnInventoryOpened;
     public event UnityAction<Item> OnItemSelected;
+    public event UnityAction OnInventoryChanged;
 
     private const string SPORE_KEY = "spore";
     private const string SHRUNE_KEY = "shrune";
 
     public void Initialize()
     {
-        items = new List<Item>(initialItems);
+        items = new List<ItemStack>();
+        foreach (var itemStack in initialItems)
+        {
+            if (itemStack.Item != null && itemStack.Count > 0)
+            {
+                items.Add(new ItemStack(itemStack.Item, itemStack.Count));
+            }
+        }
         glyphs = new Dictionary<GlyphData, int>();
 
         if (localData.JsonFile.ContainsKey(SPORE_KEY))
@@ -71,6 +92,20 @@ public class InventoryReference : ScriptableObject
     {
         IncreaseSporeCount(1);
         OnSporeCollected?.Invoke(sporeController);
+    }
+
+    public void AddItem(Item item, int count = 1)
+    {
+        var existingStack = items.Find(stack => stack.Item == item);
+        if (existingStack != null)
+        {
+            existingStack.Count += count;
+        }
+        else
+        {
+            items.Add(new ItemStack(item, count));
+        }
+        OnInventoryChanged?.Invoke();
     }
 
     public void IncreaseSporeCount(int value = 1)
@@ -136,7 +171,7 @@ public class InventoryReference : ScriptableObject
 
     public void SummonItem(Item item)
     {
-        items.Add(item);
+        AddItem(item, 1);
         DecreaseSporeCount(item.Price);
         OnItemSummoned?.Invoke();
     }

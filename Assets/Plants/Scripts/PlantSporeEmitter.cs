@@ -61,10 +61,11 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IFor
     [Header("References")]
     [SerializeField] private SporeController sporePrefab;
     [SerializeField] private Transform spawnPoint;
-    [SerializeField] private DJTableReference dJTableReference;
+    [SerializeField] private InventoryReference inventoryReference;
+    [SerializeField] private Item sporeItem;
     [SerializeField] private Transform scaleTransform;
-    [SerializeField] private ItemTemplate sporeItem;
     [SerializeField] private NetworkRunService networkRunService;
+
     [SerializeField] private Transform target;
 
     [Header("Settings")]
@@ -111,12 +112,12 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IFor
             case SporeEmissionBehaviour.Direct:
                 EmitSpore(spore =>
                 {
-                    networkRunService.Inventory.AddItem(sporeItem, 1);
                     spore.gameObject.SetActive(false);
                 });
                 break;
 
             case SporeEmissionBehaviour.Target:
+                inventoryReference.AddItem(sporeItem);
                 gameObject.SetActive(false);
                 // EmitSpore(spore => spore.gameObject.SetActive(false), () => onSporeReachedTarget?.Invoke());
                 break;

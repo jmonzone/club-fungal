@@ -46,7 +46,6 @@ public class UnitForage : UnitBehaviour
 
             if (Vector3.Distance(transform.position, target.Transform.position) <= 2f)
             {
-                Debug.Log("Reached forage target: " + target.Transform.name);
                 target.OnForaged(Controller);
                 OnForageTargetReached?.Invoke();
                 yield return new WaitForSeconds(Random.Range(0.5f, 1.5f)); // small delay after foraging

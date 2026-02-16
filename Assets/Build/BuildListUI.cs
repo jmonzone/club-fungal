@@ -19,7 +19,7 @@ public class BuildListUI : MonoBehaviour
     {
         GetComponentsInChildren(true, itemViewList);
 
-        foreach(var itemView in itemViewList)
+        foreach (var itemView in itemViewList)
         {
             itemView.OnClick += () => build.StartBuildPlacement(itemView.Item);
         }
@@ -36,7 +36,7 @@ public class BuildListUI : MonoBehaviour
     {
         int itemCount = inventory.Items.Count;
 
-        var sortedItems = inventory.Items.OrderBy(item => item.Price).ToList();
+        var sortedItems = inventory.Items.OrderBy(item => item.Item.Price).ToList();
 
         // Ensure we have enough views
         while (itemViewList.Count < itemCount)
@@ -51,7 +51,7 @@ public class BuildListUI : MonoBehaviour
         {
             if (i < itemCount)
             {
-                itemViewList[i].SetItem(sortedItems[i]);
+                itemViewList[i].SetItem(sortedItems[i].Item);
                 itemViewList[i].gameObject.SetActive(true);
             }
             else

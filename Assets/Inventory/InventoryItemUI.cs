@@ -12,28 +12,37 @@ public class InventoryItemUI : MonoBehaviour
     [SerializeField] private Button button;
     [SerializeField] private Image image;
     [SerializeField] private TextMeshProUGUI nameText;
+    [SerializeField] private TextMeshProUGUI countText;
 
     [Header("Runtime")]
-    [SerializeField] private Item item;
+    [SerializeField] private ItemStack itemStack;
 
-    public Item Item => item;
+    public Item Item => itemStack?.Item;
 
     private void Awake()
     {
-        button.onClick.AddListener(() => inventory.SelectItem(item));
+        button.onClick.AddListener(() => inventory.SelectItem(itemStack?.Item));
     }
 
-    public void SetItem(Item item)
+    public void SetItemStack(ItemStack itemStack)
     {
-        this.item = item;
+        this.itemStack = itemStack;
 
-        if (item)
+        if (itemStack?.Item)
         {
-            nameText.text = item.Name;
-            image.sprite = item.Sprite;
+            nameText.text = itemStack.Item.Name;
+            image.sprite = itemStack.Item.Sprite;
+            if (countText)
+            {
+                countText.text = itemStack.Count > 1 ? $"x{itemStack.Count}" : "";
+            }
         }
 
-        nameText.gameObject.SetActive(item);
-        image.enabled = item;
+        nameText.gameObject.SetActive(itemStack?.Item);
+        image.enabled = itemStack?.Item;
+        if (countText)
+        {
+            countText.gameObject.SetActive(itemStack?.Item && itemStack.Count > 1);
+        }
     }
 }
