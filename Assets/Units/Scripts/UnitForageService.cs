@@ -90,18 +90,17 @@ public class UnitForageService : GURUService
         assignments.Sort((a, b) => a.distance.CompareTo(b.distance));
 
         // Assign targets to foragers, prioritizing closest pairs
+        // Multiple foragers can share the same target if there are more foragers than targets
         var assignedForagers = new HashSet<UnitForage>();
-        var assignedTargets = new HashSet<IForageTarget>();
 
         foreach (var assignment in assignments)
         {
-            // Skip if either forager or target is already assigned
-            if (assignedForagers.Contains(assignment.forager) || assignedTargets.Contains(assignment.target))
+            // Skip if forager is already assigned
+            if (assignedForagers.Contains(assignment.forager))
                 continue;
 
             assignment.forager.SetTarget(assignment.target);
             assignedForagers.Add(assignment.forager);
-            assignedTargets.Add(assignment.target);
         }
 
         // Clear targets for unassigned foragers

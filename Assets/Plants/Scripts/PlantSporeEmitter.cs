@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -46,8 +47,8 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IFor
     private ObjectPool<SporeController> sporePool;
     private UnityAction onSporeReachedTarget;
     private Coroutine forageCoroutine;
-    private UnitController currentForager;
-    private float adjustedForageDuration;
+    private Dictionary<UnitController, float> activeForagers = new Dictionary<UnitController, float>();
+    private float baseForageDuration;
 
     private void Awake()
     {
@@ -62,8 +63,8 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IFor
     {
         // Reset state when enabled (e.g., when retrieved from pool)
         forageCoroutine = null;
-        currentForager = null;
-        adjustedForageDuration = forageDuration;
+        activeForagers.Clear();
+        baseForageDuration = forageDuration;
 
         if (scaleTransform != null && startScale != Vector3.zero)
         {
@@ -110,17 +111,21 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IFor
 
     public void StartForage(UnitController forager, float speedMultiplier = 1f)
     {
-        if (forageCoroutine != null)
+        // Add or update this forager's contribution
+        if (!activeForagers.ContainsKey(forager))
         {
-            StopCoroutine(forageCoroutine);
+            activeForagers[forager] = speedMultiplier;
         }
-        currentForager = forager;
+        else
+        {
+            activeForagers[forager] = speedMultiplier;
+        }
 
-        // Faster units forage faster (shorter duration)
-        // Cap minimum duration at 0.5 seconds for responsiveness
-        adjustedForageDuration = Mathf.Max(0.5f, forageDuration / Mathf.Max(0.1f, speedMultiplier));
-
-        forageCoroutine = StartCoroutine(ForageRoutine());
+        // Start foraging if not already started
+        if (forageCoroutine == null)
+        {
+            forageCoroutine = StartCoroutine(ForageRoutine());
+        }
     }
 
     public void CancelForage()
@@ -131,9 +136,9 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IFor
             forageCoroutine = null;
         }
 
-        if (currentForager != null)
+        if (activeForagers.Count > 0)
         {
-            currentForager = null;
+            activeForagers.Clear();
             OnForageCancelled?.Invoke();
             OnForageProgress?.Invoke(0f);
         }
@@ -145,25 +150,60 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IFor
         float elapsed = 0f;
         bool wasCancelled = false;
 
-        while (elapsed < adjustedForageDuration)
+        while (true)
         {
-            // Check if forager is still valid and nearby
-            if (currentForager == null || !currentForager.gameObject.activeInHierarchy)
+            // Remove invalid or distant foragers
+            var foragersToRemove = new List<UnitController>();
+            foreach (var kvp in activeForagers)
+            {
+                UnitController forager = kvp.Key;
+                if (forager == null || !forager.gameObject.activeInHierarchy)
+                {
+                    foragersToRemove.Add(forager);
+                    continue;
+                }
+
+                float distance = Vector3.Distance(transform.position, forager.transform.position);
+                if (distance > 2f) // Cancel if unit moves too far away
+                {
+                    foragersToRemove.Add(forager);
+                }
+            }
+
+            foreach (var forager in foragersToRemove)
+            {
+                activeForagers.Remove(forager);
+            }
+
+            // If no valid foragers remain, cancel
+            if (activeForagers.Count == 0)
             {
                 wasCancelled = true;
                 break;
             }
 
-            float distance = Vector3.Distance(transform.position, currentForager.transform.position);
-            if (distance > 2f) // Cancel if unit moves too far away
+            // Calculate combined speed multiplier (sum of all foragers' multipliers)
+            float combinedSpeedMultiplier = 0f;
+            foreach (var speedMultiplier in activeForagers.Values)
             {
-                wasCancelled = true;
-                break;
+                combinedSpeedMultiplier += speedMultiplier;
             }
 
+            // Calculate adjusted duration based on combined effort
+            // Cap minimum duration at 0.5 seconds for responsiveness
+            float adjustedForageDuration = Mathf.Max(0.5f, baseForageDuration / Mathf.Max(0.1f, combinedSpeedMultiplier));
+
+            // Progress faster with more/faster foragers
             elapsed += Time.deltaTime;
             float progress = Mathf.Clamp01(elapsed / adjustedForageDuration);
             OnForageProgress?.Invoke(progress);
+
+            // Check if forage is complete
+            if (elapsed >= adjustedForageDuration)
+            {
+                break;
+            }
+
             yield return null;
         }
 
@@ -171,7 +211,7 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IFor
         {
             // Clean up cancelled forage
             forageCoroutine = null;
-            currentForager = null;
+            activeForagers.Clear();
             OnForageCancelled?.Invoke();
             OnForageProgress?.Invoke(0f);
         }
@@ -183,7 +223,7 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IFor
             OnMushroomForaged?.Invoke();
             gameObject.SetActive(false);
             forageCoroutine = null;
-            currentForager = null;
+            activeForagers.Clear();
         }
     }
 

@@ -76,6 +76,7 @@ public class UnitForage : UnitBehaviour
                 if (currentPlant != null)
                 {
                     currentPlant.StartForage(Controller, speedMultiplier);
+
                     Handheld.Vibrate();
                 }
                 else

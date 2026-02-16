@@ -5,6 +5,10 @@ using UnityEngine.EventSystems;
 
 public class VirtualJoystick : MonoBehaviour
 {
+    [Header("Settings")]
+    [SerializeField] private bool hideWhenInactive = false;
+
+    [Header("References")]
     [SerializeField] private RectTransform rect;
     [SerializeField] private RectTransform joystickRect;
     [SerializeField] private GameObject target;
@@ -27,6 +31,11 @@ public class VirtualJoystick : MonoBehaviour
     private void Start()
     {
         defaultPosition = rect.position;
+
+        if (hideWhenInactive)
+        {
+            rect.gameObject.SetActive(false);
+        }
     }
 
     private int activeTouchIndex = -1; // Tracks the touch index (-1 for mouse)
@@ -124,6 +133,12 @@ public class VirtualJoystick : MonoBehaviour
         isActive = true;
         startPosition = inputPosition;
         rect.position = startPosition;
+
+        if (hideWhenInactive)
+        {
+            rect.gameObject.SetActive(true);
+        }
+
         OnJoystickStart?.Invoke(startPosition);
     }
 
@@ -140,6 +155,12 @@ public class VirtualJoystick : MonoBehaviour
         activeTouchIndex = -1;
         rect.position = defaultPosition;
         joystickRect.anchoredPosition = Vector3.zero;
+
+        if (hideWhenInactive)
+        {
+            rect.gameObject.SetActive(false);
+        }
+
         OnJoystickEnd?.Invoke();
     }
 

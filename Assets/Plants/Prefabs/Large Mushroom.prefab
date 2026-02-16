@@ -77,7 +77,7 @@ MonoBehaviour:
   launchHeight: 2
   bounceScale: 1.2
   bounceDuration: 0.3
-  forageDuration: 4
+  forageDuration: 16
 --- !u!114 &6087820389965264361
 MonoBehaviour:
   m_ObjectHideFlags: 0
