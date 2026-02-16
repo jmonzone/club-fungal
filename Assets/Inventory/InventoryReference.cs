@@ -108,6 +108,20 @@ public class InventoryReference : ScriptableObject
         OnInventoryChanged?.Invoke();
     }
 
+    public void RemoveItem(Item item, int count = 1)
+    {
+        var existingStack = items.Find(stack => stack.Item == item);
+        if (existingStack != null)
+        {
+            existingStack.Count -= count;
+            if (existingStack.Count <= 0)
+            {
+                items.Remove(existingStack);
+            }
+            OnInventoryChanged?.Invoke();
+        }
+    }
+
     public void IncreaseSporeCount(int value = 1)
     {
         sporeCount += value;

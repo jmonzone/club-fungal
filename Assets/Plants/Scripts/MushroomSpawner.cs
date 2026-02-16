@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 public class MushroomSpawner : MonoBehaviour
 {
@@ -21,8 +22,25 @@ public class MushroomSpawner : MonoBehaviour
     [Header("Runtime")]
     [SerializeField] private List<GameObject> spawnedMushrooms = new List<GameObject>();
 
+    private ObjectPool<Transform> mushroomPool;
+    private List<Vector3> availableSpawnPositions = new List<Vector3>();
+    private Dictionary<GameObject, UnityAction> mushroomCallbacks = new Dictionary<GameObject, UnityAction>();
+
     private void Awake()
     {
+        if (mushroomPrefab != null)
+        {
+            mushroomPool = new ObjectPool<Transform>(mushroomPrefab.transform, mushroomCount * 2, transform, mushroom =>
+            {
+                // Subscribe to forage event when mushroom is initialized
+                var forageTarget = mushroom.GetComponent<PlantSporeEmitter>();
+                if (forageTarget != null)
+                {
+                    // We'll handle the forage callback in the spawning logic
+                }
+            });
+        }
+
         if (spawnOnAwake)
         {
             SpawnMushrooms();
@@ -45,30 +63,69 @@ public class MushroomSpawner : MonoBehaviour
             return;
         }
 
-        Transform parent = mushroomParent != null ? mushroomParent : transform;
-        List<Vector3> spawnPositions = GenerateSpawnPositions();
+        availableSpawnPositions = GenerateSpawnPositions();
 
-        foreach (Vector3 position in spawnPositions)
+        for (int i = 0; i < availableSpawnPositions.Count; i++)
         {
-            GameObject mushroom = Instantiate(mushroomPrefab, parent);
-            mushroom.transform.position = position;
-
-            if (randomizeRotation)
-            {
-                float randomY = Random.Range(0f, 360f);
-                mushroom.transform.rotation = Quaternion.Euler(0f, randomY, 0f);
-            }
-
-            if (randomizeScale)
-            {
-                float randomScale = Random.Range(scaleRange.x, scaleRange.y);
-                mushroom.transform.localScale = Vector3.one * randomScale;
-            }
-
-            spawnedMushrooms.Add(mushroom);
+            SpawnMushroomAt(availableSpawnPositions[i]);
         }
 
         Debug.Log($"MushroomSpawner: Spawned {spawnedMushrooms.Count} mushrooms");
+    }
+
+    private void SpawnMushroomAt(Vector3 position)
+    {
+        Transform mushroom = mushroomPool.Get();
+        mushroom.position = position;
+
+        if (randomizeRotation)
+        {
+            float randomY = Random.Range(0f, 360f);
+            mushroom.rotation = Quaternion.Euler(0f, randomY, 0f);
+        }
+
+        if (randomizeScale)
+        {
+            float randomScale = Random.Range(scaleRange.x, scaleRange.y);
+            mushroom.localScale = Vector3.one * randomScale;
+        }
+
+        // Subscribe to the foraged event
+        var plantEmitter = mushroom.GetComponent<PlantSporeEmitter>();
+        if (plantEmitter != null)
+        {
+            GameObject mushroomObj = mushroom.gameObject;
+            UnityAction callback = () => OnMushroomForaged(mushroomObj);
+            mushroomCallbacks[mushroomObj] = callback;
+            plantEmitter.OnMushroomForaged += callback;
+        }
+
+        spawnedMushrooms.Add(mushroom.gameObject);
+    }
+
+    private void OnMushroomForaged(GameObject mushroom)
+    {
+        if (spawnedMushrooms.Contains(mushroom))
+        {
+            spawnedMushrooms.Remove(mushroom);
+
+            // Unsubscribe from event before returning to pool
+            var plantEmitter = mushroom.GetComponent<PlantSporeEmitter>();
+            if (plantEmitter != null && mushroomCallbacks.TryGetValue(mushroom, out UnityAction callback))
+            {
+                plantEmitter.OnMushroomForaged -= callback;
+                mushroomCallbacks.Remove(mushroom);
+            }
+
+            mushroomPool.Return(mushroom.transform);
+
+            // Spawn a new mushroom at a random position
+            if (availableSpawnPositions.Count > 0)
+            {
+                Vector3 newPosition = availableSpawnPositions[Random.Range(0, availableSpawnPositions.Count)];
+                SpawnMushroomAt(newPosition);
+            }
+        }
     }
 
     private List<Vector3> GenerateSpawnPositions()
@@ -127,12 +184,20 @@ public class MushroomSpawner : MonoBehaviour
     {
         foreach (GameObject mushroom in spawnedMushrooms)
         {
-            if (mushroom != null)
+            if (mushroom != null && mushroomPool != null)
             {
-                Destroy(mushroom);
+                // Unsubscribe from events
+                var plantEmitter = mushroom.GetComponent<PlantSporeEmitter>();
+                if (plantEmitter != null && mushroomCallbacks.TryGetValue(mushroom, out UnityAction callback))
+                {
+                    plantEmitter.OnMushroomForaged -= callback;
+                }
+
+                mushroomPool.Return(mushroom.transform);
             }
         }
         spawnedMushrooms.Clear();
+        mushroomCallbacks.Clear();
     }
 
     private void OnDrawGizmosSelected()

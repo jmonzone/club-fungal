@@ -50,9 +50,12 @@ public class InventoryUI : MonoBehaviour
 
     private void UpdateView()
     {
-        int itemCount = inventory.Items.Count;
+        var sortedItems = inventory.Items
+            .Where(stack => stack.Count > 0)
+            .OrderBy(stack => stack.Item.Price)
+            .ToList();
 
-        var sortedItems = inventory.Items.OrderBy(stack => stack.Item.Price).ToList();
+        int itemCount = sortedItems.Count;
 
         // Ensure we have enough views
         while (itemViewList.Count < itemCount)

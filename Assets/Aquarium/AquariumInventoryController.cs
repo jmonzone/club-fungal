@@ -6,6 +6,7 @@ public class AquariumInventoryController : MonoBehaviour
     [Header("References")]
     [SerializeField] private InventoryUI inventoryUI;
     [SerializeField] private NetworkRunService networkRunService;
+    [SerializeField] private InventoryReference inventoryReference;
 
     [Header("Settings")]
     [SerializeField] private float speedBoostMultiplier = 3f;
@@ -24,10 +25,10 @@ public class AquariumInventoryController : MonoBehaviour
     private void HandleItemSelected(Item item)
     {
         Debug.Log("speed boost");
-        StartCoroutine(ApplySpeedBoostToParty());
+        StartCoroutine(ApplySpeedBoostToParty(item));
     }
 
-    private IEnumerator ApplySpeedBoostToParty()
+    private IEnumerator ApplySpeedBoostToParty(Item item)
     {
         if (networkRunService == null || networkRunService.PartyControllers == null)
         {
@@ -54,6 +55,12 @@ public class AquariumInventoryController : MonoBehaviour
         }
 
         Debug.Log($"Applied {speedBoostMultiplier}x speed boost to {networkRunService.PartyControllers.Count} party members for {speedBoostDuration} seconds");
+
+        // Remove item from inventory
+        if (inventoryReference != null)
+        {
+            inventoryReference.RemoveItem(item, 1);
+        }
 
         yield return new WaitForSeconds(speedBoostDuration);
 
