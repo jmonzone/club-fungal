@@ -162,6 +162,7 @@ GameObject:
   - component: {fileID: 3445689529040859860}
   - component: {fileID: 2753700914627426309}
   - component: {fileID: 6597411002312729148}
+  - component: {fileID: 7500700067273940}
   m_Layer: 8
   m_Name: Fungal Controller
   m_TagString: Untagged
@@ -579,6 +580,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitReturnToParty
   isActive: 0
+--- !u!114 &7500700067273940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5390423667600184729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfd5299170289421a87a9bf59b242dbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitSpeedModifier
+  networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
+  agent: {fileID: 6701783708521320235}
+  baseSpeed: 0
+  speedModifiers: []
 --- !u!1001 &1899791931242643327
 PrefabInstance:
   m_ObjectHideFlags: 0

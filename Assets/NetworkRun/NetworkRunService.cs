@@ -31,9 +31,11 @@ public class NetworkRunService : GURUService
     [Header("Spawn Settings")]
     [SerializeField] private float spawnSpacing = 2f;
 
+    [Header("Runtime")]
     private Transform spawnParent;
     private Vector3 partyCenterGround;
     private float maxTetherDistance;
+    private List<UnitController> partyControllers = new List<UnitController>();
 
     public event Action OnUnitReenteredTether;
     public NetworkRunSettings Settings => settings;
@@ -41,6 +43,7 @@ public class NetworkRunService : GURUService
     public Party Party => party;
     public Vector3 PartyCenterGround => partyCenterGround;
     public float MaxTetherDistance => maxTetherDistance;
+    public List<UnitController> PartyControllers => partyControllers;
 
     public void SetSpawnParent(Transform parent)
     {
@@ -79,6 +82,7 @@ public class NetworkRunService : GURUService
             return;
         }
 
+        partyControllers.Clear();
         Vector3 basePosition = spawnParent != null ? spawnParent.position : Vector3.zero;
 
         for (int i = 0; i < party.Unit.Count; i++)
@@ -86,7 +90,8 @@ public class NetworkRunService : GURUService
             var unit = party.Unit[i];
             var offset = new Vector3(i * spawnSpacing, 0, 0);
             var position = basePosition + offset;
-            unitControllerService.SpawnUnit(unit, position, spawnParent);
+            var controller = unitControllerService.SpawnUnit(unit, position, spawnParent);
+            partyControllers.Add(controller);
         }
 
         Debug.Log($"Spawned {party.Unit.Count} party members");

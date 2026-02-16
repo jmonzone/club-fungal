@@ -17,8 +17,6 @@ public class InventoryItemUI : MonoBehaviour
     [Header("Runtime")]
     [SerializeField] private ItemStack itemStack;
 
-    public Item Item => itemStack?.Item;
-
     private void Awake()
     {
         button.onClick.AddListener(() => inventory.SelectItem(itemStack?.Item));

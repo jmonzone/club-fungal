@@ -30286,6 +30286,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1179766176}
   - component: {fileID: 1179766177}
+  - component: {fileID: 1179766178}
   m_Layer: 0
   m_Name: Inventory
   m_TagString: Untagged
@@ -30330,6 +30331,19 @@ MonoBehaviour:
   itemViewPrefab: {fileID: 90923142979407894, guid: 820ebe76478a24904a859493c58881d2,
     type: 3}
   itemContainer: {fileID: 1165525826}
+--- !u!114 &1179766178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1179766175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eeb8433e993840dbb0b450506b9a970, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InventoryItemHandler
+  inventoryUI: {fileID: 1179766177}
 --- !u!1 &1183132642
 GameObject:
   m_ObjectHideFlags: 0

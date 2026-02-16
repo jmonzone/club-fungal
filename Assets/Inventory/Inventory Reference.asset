@@ -18,10 +18,7 @@ MonoBehaviour:
   glyphCollection: {fileID: 11400000, guid: 8ff2f86eb4f5142c8aa3e3c918fb7d61, type: 2}
   initialSporeCount: 0
   initialItems:
-  - {fileID: 11400000, guid: ec503a2453c1e4547b234275ed982ca8, type: 2}
-  - {fileID: 11400000, guid: f800f7f23681f4814a45231da68fdad2, type: 2}
-  - {fileID: 11400000, guid: acff478c3e9464e36a306e4c83c824c2, type: 2}
-  - {fileID: 11400000, guid: 06829bb7f2e584dc7b778c567aca9d1b, type: 2}
-  - {fileID: 11400000, guid: 743661d69c3af43b9ab24104ea612071, type: 2}
+  - Item: {fileID: 11400000, guid: ec503a2453c1e4547b234275ed982ca8, type: 2}
+    Count: 10
   sporeCount: 760
   items: []

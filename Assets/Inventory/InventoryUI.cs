@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class InventoryUI : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private Transform itemContainer;
 
     private List<InventoryItemUI> itemViewList = new List<InventoryItemUI>();
+
+    public event UnityAction<Item> OnItemSelected;
 
     private void Awake()
     {
@@ -30,12 +33,19 @@ public class InventoryUI : MonoBehaviour
     {
         inventory.OnInventoryOpened += UpdateView;
         inventory.OnInventoryChanged += UpdateView;
+        inventory.OnItemSelected += HandleItemSelected;
     }
 
     private void OnDisable()
     {
         inventory.OnInventoryOpened -= UpdateView;
         inventory.OnInventoryChanged -= UpdateView;
+        inventory.OnItemSelected -= HandleItemSelected;
+    }
+
+    private void HandleItemSelected(Item item)
+    {
+        OnItemSelected?.Invoke(item);
     }
 
     private void UpdateView()
