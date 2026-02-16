@@ -21596,7 +21596,7 @@ MonoBehaviour:
     type: 3}
   spawnCollider: {fileID: 1039316315}
   mushroomParent: {fileID: 1607545530}
-  mushroomCount: 30
+  mushroomCount: 69
   minSpacing: 0.5
   spawnOnAwake: 1
   randomizeRotation: 1

@@ -27,11 +27,15 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IFor
     [SerializeField] private float launchHeight = 2f;
     [SerializeField] private float bounceScale = 1.2f;
     [SerializeField] private float bounceDuration = 0.3f;
+    [SerializeField] private float forageDuration = 2f;
 
     public int EmissionStep => emissionStep;
     Transform ITarget.Transform => transform;
 
     public event UnityAction OnMushroomForaged;
+    public event UnityAction<float> OnForageProgress;
+    public event UnityAction OnForageStarted;
+    public event UnityAction OnForageCancelled;
 
     void IForageTarget.OnForaged(UnitController forager)
     {
@@ -41,6 +45,9 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IFor
     private Vector3 startScale;
     private ObjectPool<SporeController> sporePool;
     private UnityAction onSporeReachedTarget;
+    private Coroutine forageCoroutine;
+    private UnitController currentForager;
+    private float adjustedForageDuration;
 
     private void Awake()
     {
@@ -49,6 +56,11 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IFor
         {
             spore.OnCollect += () => sporePool.Return(spore);
         });
+    }
+
+    private void OnDisable()
+    {
+        CancelForage();
     }
 
     public void Select(UnitController source)
@@ -72,10 +84,7 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IFor
                 break;
 
             case SporeEmissionBehaviour.Target:
-                inventoryReference.AddItem(sporeItem);
-                OnMushroomForaged?.Invoke();
-                gameObject.SetActive(false);
-                // EmitSpore(spore => spore.gameObject.SetActive(false), () => onSporeReachedTarget?.Invoke());
+                // Foraging is now handled by UnitForage calling StartForage directly
                 break;
         }
     }
@@ -84,6 +93,85 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IFor
     {
         target = newTarget;
         this.onSporeReachedTarget = onSporeReachedTarget;
+    }
+
+    public void StartForage(UnitController forager, float speedMultiplier = 1f)
+    {
+        if (forageCoroutine != null)
+        {
+            StopCoroutine(forageCoroutine);
+        }
+        currentForager = forager;
+
+        // Faster units forage faster (shorter duration)
+        // Cap minimum duration at 0.5 seconds for responsiveness
+        adjustedForageDuration = Mathf.Max(0.5f, forageDuration / Mathf.Max(0.1f, speedMultiplier));
+
+        forageCoroutine = StartCoroutine(ForageRoutine());
+    }
+
+    public void CancelForage()
+    {
+        if (forageCoroutine != null)
+        {
+            StopCoroutine(forageCoroutine);
+            forageCoroutine = null;
+        }
+
+        if (currentForager != null)
+        {
+            currentForager = null;
+            OnForageCancelled?.Invoke();
+            OnForageProgress?.Invoke(0f);
+        }
+    }
+
+    private IEnumerator ForageRoutine()
+    {
+        OnForageStarted?.Invoke();
+        float elapsed = 0f;
+        bool wasCancelled = false;
+
+        while (elapsed < adjustedForageDuration)
+        {
+            // Check if forager is still valid and nearby
+            if (currentForager == null || !currentForager.gameObject.activeInHierarchy)
+            {
+                wasCancelled = true;
+                break;
+            }
+
+            float distance = Vector3.Distance(transform.position, currentForager.transform.position);
+            if (distance > 2f) // Cancel if unit moves too far away
+            {
+                wasCancelled = true;
+                break;
+            }
+
+            elapsed += Time.deltaTime;
+            float progress = Mathf.Clamp01(elapsed / adjustedForageDuration);
+            OnForageProgress?.Invoke(progress);
+            yield return null;
+        }
+
+        if (wasCancelled)
+        {
+            // Clean up cancelled forage
+            forageCoroutine = null;
+            currentForager = null;
+            OnForageCancelled?.Invoke();
+            OnForageProgress?.Invoke(0f);
+        }
+        else
+        {
+            // Forage complete
+            OnForageProgress?.Invoke(1f);
+            inventoryReference.AddItem(sporeItem);
+            OnMushroomForaged?.Invoke();
+            gameObject.SetActive(false);
+            forageCoroutine = null;
+            currentForager = null;
+        }
     }
 
     public void EmitSpore(UnityAction<SporeController> onPeakAction = null, UnityAction onLandAction = null)

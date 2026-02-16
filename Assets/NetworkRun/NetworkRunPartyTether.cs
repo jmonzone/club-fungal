@@ -65,9 +65,13 @@ public class NetworkRunPartyTether : MonoBehaviour
             Vector3 unitPosition = controller.transform.position;
             float currentDistance = Vector3.Distance(unitPosition, partyCenterGround);
 
-            // Predict future distance if tether is moving
+            // Check if unit is currently foraging
+            var forageComponent = controller.GetComponent<UnitForage>();
+            bool isForaging = forageComponent != null && forageComponent.IsActive;
+
+            // Predict future distance if tether is moving (but not if foraging)
             float effectiveDistance = currentDistance;
-            if (shouldAnticipate)
+            if (shouldAnticipate && !isForaging)
             {
                 Vector3 predictedTetherPosition = partyCenterGround + (tetherVelocity * anticipationTime);
                 float predictedDistance = Vector3.Distance(unitPosition, predictedTetherPosition);

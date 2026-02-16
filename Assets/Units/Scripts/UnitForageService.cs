@@ -45,7 +45,6 @@ public class UnitForageService : GURUService
             activeForagers.Add(forager);
             forager.OnForageTargetReached += ReassignSpores;
             controller.OnBehaviourComplete += ReassignSpores;
-            ReassignSpores();
         }
     }
 

@@ -48,16 +48,23 @@ public class UnitSpeedModifier : MonoBehaviour
         UpdateSpeed();
     }
 
+    public float CurrentSpeedMultiplier
+    {
+        get
+        {
+            float totalModifier = 1f;
+            foreach (var modifier in speedModifiers)
+            {
+                totalModifier *= modifier;
+            }
+            return totalModifier;
+        }
+    }
+
     private void UpdateSpeed()
     {
         if (!agent) return;
 
-        float totalModifier = 1f;
-        foreach (var modifier in speedModifiers)
-        {
-            totalModifier *= modifier;
-        }
-
-        agent.speed = baseSpeed * totalModifier;
+        agent.speed = baseSpeed * CurrentSpeedMultiplier;
     }
 }
