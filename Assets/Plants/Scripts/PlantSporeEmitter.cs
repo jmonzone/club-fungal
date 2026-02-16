@@ -147,7 +147,7 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IFor
     private IEnumerator ForageRoutine()
     {
         OnForageStarted?.Invoke();
-        float elapsed = 0f;
+        float accumulatedProgress = 0f;
         bool wasCancelled = false;
 
         while (true)
@@ -189,17 +189,16 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IFor
                 combinedSpeedMultiplier += speedMultiplier;
             }
 
-            // Calculate adjusted duration based on combined effort
-            // Cap minimum duration at 0.5 seconds for responsiveness
-            float adjustedForageDuration = Mathf.Max(0.5f, baseForageDuration / Mathf.Max(0.1f, combinedSpeedMultiplier));
+            // Accumulate progress based on combined effort this frame
+            // More/faster foragers = more progress per frame
+            accumulatedProgress += Time.deltaTime * combinedSpeedMultiplier;
 
-            // Progress faster with more/faster foragers
-            elapsed += Time.deltaTime;
-            float progress = Mathf.Clamp01(elapsed / adjustedForageDuration);
+            // Calculate progress as ratio of work done vs total work needed
+            float progress = Mathf.Clamp01(accumulatedProgress / baseForageDuration);
             OnForageProgress?.Invoke(progress);
 
             // Check if forage is complete
-            if (elapsed >= adjustedForageDuration)
+            if (accumulatedProgress >= baseForageDuration)
             {
                 break;
             }

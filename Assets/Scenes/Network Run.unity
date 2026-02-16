@@ -21756,8 +21756,8 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 64
-  maxDistance: 5
-  teleportDistance: 20
+  maxDistance: 6
+  teleportDistance: 25
   spreadRadius: 2
   anticipationTime: 1.5
   minVelocityThreshold: 1
@@ -21790,13 +21790,13 @@ MonoBehaviour:
   mushroomTypes:
   - prefab: {fileID: 7653803590705474910, guid: 493e56f4e7abc4c2a9aa77c9084f0316,
       type: 3}
-    spawnWeight: 0.828
+    spawnWeight: 0.797
   - prefab: {fileID: 7653803590705474910, guid: c3d18f6e6c3474295afefb791da42ef5,
       type: 3}
-    spawnWeight: 0.219
+    spawnWeight: 0.352
   spawnCollider: {fileID: 1039316315}
   mushroomParent: {fileID: 1607545530}
-  mushroomCount: 69
+  mushroomCount: 100
   minSpacing: 0.5
   spawnOnAwake: 1
   randomizeRotation: 1
@@ -32928,7 +32928,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1257360005}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -43998,7 +43998,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: b742818b957a1463391877b25568021b, type: 3}
-  m_Color: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 0.043137256}
+  m_Color: {r: 0.35686275, g: 0.8235294, b: 0.9254902, a: 0.011764706}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -54657,6 +54657,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfdb3ff39d7d94b63aebb4052e8031d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hideWhenInactive: 1
   rect: {fileID: 1257360006}
   joystickRect: {fileID: 8686078182459619438}
   target: {fileID: 375394507}
