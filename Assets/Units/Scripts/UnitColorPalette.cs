@@ -62,7 +62,7 @@ public class UnitColorPalette : UnitBehaviour
 
     private void ApplyColorPalette()
     {
-        foreach (var renderer in Controller.GetComponentsInChildren<Renderer>())
+        foreach (var renderer in Controller.RenderRoot.GetComponentsInChildren<Renderer>())
         {
             ApplySelectedPalette(renderer);
         }
@@ -151,7 +151,7 @@ public class UnitColorPalette : UnitBehaviour
 
         tex.Apply();
 
-        foreach (var renderer in Controller.GetComponentsInChildren<Renderer>())
+        foreach (var renderer in Controller.RenderRoot.GetComponentsInChildren<Renderer>())
         {
             renderer.material.mainTexture = tex;
         }

@@ -30288,7 +30288,7 @@ GameObject:
   - component: {fileID: 1179766177}
   - component: {fileID: 1179766178}
   m_Layer: 0
-  m_Name: Inventory
+  m_Name: Aquarium Inventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30344,6 +30344,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InventoryItemHandler
   inventoryUI: {fileID: 1179766177}
+  networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
+  speedBoostMultiplier: 4
+  speedBoostDuration: 3
 --- !u!1 &1183132642
 GameObject:
   m_ObjectHideFlags: 0

@@ -49,10 +49,11 @@ public class FungalController : UnitController
 
     public override void Initialize(UnitInstance instance)
     {
-        if (renderRoot == null)
+        if (renderRoot != null)
         {
-            Quaternion randomYRotation = Quaternion.Euler(0, Random.Range(135f, 225f), 0);
-            renderRoot = Instantiate(instance.Species.Prefab, transform.position, randomYRotation, transform).transform;
+            // Quaternion randomYRotation = Quaternion.Euler(0, Random.Range(135f, 225f), 0);
+            // renderRoot.rotation = randomYRotation;
+            Instantiate(instance.Species.Prefab, transform.position, Quaternion.identity, renderRoot);
         }
 
         base.Initialize(instance);
