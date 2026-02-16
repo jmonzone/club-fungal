@@ -11,6 +11,7 @@ public class UnitWander : UnitBehaviour
     [SerializeField] private float maxIdleTime = 4f;
 
     private NavMeshAgent navMeshAgent;
+    private float baseSpeed;
 
     protected override void Awake()
     {
@@ -21,6 +22,7 @@ public class UnitWander : UnitBehaviour
 
     protected override void OnBehaviourStart()
     {
+        baseSpeed = navMeshAgent.speed;
         StartWander();
     }
 
@@ -59,7 +61,14 @@ public class UnitWander : UnitBehaviour
     {
         while (true)
         {
-            var idleTargetTime = Random.Range(minIdleTime, maxIdleTime);
+            // Calculate speed multiplier (agent.speed / baseSpeed)
+            float speedMultiplier = baseSpeed > 0 ? navMeshAgent.speed / baseSpeed : 1f;
+
+            // Scale idle time inversely with speed (faster = less idle time)
+            float scaledMinIdleTime = minIdleTime / speedMultiplier;
+            float scaledMaxIdleTime = maxIdleTime / speedMultiplier;
+
+            var idleTargetTime = Random.Range(scaledMinIdleTime, scaledMaxIdleTime);
             navMeshAgent.isStopped = true;
             yield return new WaitForSeconds(idleTargetTime);
             navMeshAgent.isStopped = false;
