@@ -53848,8 +53848,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraInputHandler
   cameraService: {fileID: 11400000, guid: 6a3cd891900334ca1ba50dee37569ba4, type: 2}
   zoomComponent: {fileID: 6319959642017140789}
-  panComponent: {fileID: 0}
-  panTouchSensitivity: 0.01
+  panComponent: {fileID: 8668372441766908414}
+  panTouchSensitivity: 1
   panMouseSensitivity: 100
   canOrbit: 1
   dragging: 0
@@ -55038,7 +55038,7 @@ MonoBehaviour:
   panSpeed: 0.05
   panAxisMode: 1
   panSmoothTime: 0.12
-  driftDamping: 0.99
+  driftDamping: 0.85
   panVelocity: {x: 0, y: 0, z: 0}
   driftVelocity: {x: -0.061879396, y: 0.05432379, z: 0}
 --- !u!1 &8669874351063531218

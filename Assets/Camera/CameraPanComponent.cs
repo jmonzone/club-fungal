@@ -12,12 +12,12 @@ public class CameraPanComponent : MonoBehaviour
     public float panSpeed = 0.5f;
     [Header("Pan Axis Mode")]
     public PanAxisMode panAxisMode = PanAxisMode.XY;
-    public float panSmoothTime = 0.12f;
-    public float driftDamping = 0.92f;
+    public float touchDriftDamping = 0.85f;
+    public float mouseDriftDamping = 0.92f;
 
     [Header("Read Only")]
-    [SerializeField][ReadOnly] Vector3 panVelocity;
     [SerializeField][ReadOnly] Vector3 driftVelocity;
+    [SerializeField][ReadOnly] bool isTouch;
 
     public void Initialize()
     {
@@ -30,7 +30,8 @@ public class CameraPanComponent : MonoBehaviour
         if (driftVelocity.magnitude > 0.001f)
         {
             transform.position += driftVelocity * Time.deltaTime;
-            driftVelocity *= driftDamping;
+            float damping = isTouch ? touchDriftDamping : mouseDriftDamping;
+            driftVelocity *= damping;
         }
         else
         {
@@ -38,8 +39,9 @@ public class CameraPanComponent : MonoBehaviour
         }
     }
 
-    public void AddPan(Vector2 delta)
+    public void AddPan(Vector2 delta, bool fromTouch = true)
     {
+        isTouch = fromTouch;
         Vector3 right = transform.right;
         if (panAxisMode == PanAxisMode.XY)
         {

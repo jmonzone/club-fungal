@@ -39,22 +39,7 @@ public class CameraInputHandler : MonoBehaviour
 
         bool isFirstPerson = cameraService.CameraMode == CameraMode.FIRST_PERSON;
 
-        // One finger touch -> yaw (and pitch in first-person)
-        if (Input.touchCount == 1)
-        {
-            Touch t = Input.GetTouch(0);
-            if (t.phase == TouchPhase.Moved)
-            {
-                float directionMultiplier = zoomComponent.CurrentDistance < 0 ? -1 : 1;
-                cameraService.AddYaw(t.deltaPosition.x * directionMultiplier);
-
-                if (isFirstPerson)
-                {
-                    cameraService.AddPitch(-t.deltaPosition.y * directionMultiplier);
-                }
-            }
-        }
-        else if (Application.isEditor)
+        if (Application.isEditor)
         {
             // Mouse drag (Editor) -> yaw (and pitch in first-person)
             if (Input.GetMouseButtonDown(0))
@@ -118,24 +103,21 @@ public class CameraInputHandler : MonoBehaviour
     {
         if (panComponent == null) return;
 
-        // Two finger swipe -> pan (average the delta movement)
-        if (Input.touchCount == 2)
+        // One finger swipe -> pan
+        if (Input.touchCount == 1)
         {
-            Touch t0 = Input.GetTouch(0);
-            Touch t1 = Input.GetTouch(1);
+            Touch t = Input.GetTouch(0);
 
-            // Only pan if both touches are moving (not just pinching)
-            if (t0.phase == TouchPhase.Moved && t1.phase == TouchPhase.Moved)
+            if (t.phase == TouchPhase.Moved)
             {
-                Vector2 avgDelta = (t0.deltaPosition + t1.deltaPosition) * 0.5f;
-                panComponent.AddPan(-avgDelta * panTouchSensitivity);
+                panComponent.AddPan(-t.deltaPosition * panTouchSensitivity, true);
             }
         }
         else if (Application.isEditor && Input.GetMouseButton(0))
         {
             // Shift + Left mouse drag (Editor) -> pan
             Vector2 delta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-            panComponent.AddPan(-delta * panMouseSensitivity);
+            panComponent.AddPan(-delta * panMouseSensitivity, false);
         }
     }
 }
