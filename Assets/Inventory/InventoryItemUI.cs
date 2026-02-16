@@ -28,7 +28,10 @@ public class InventoryItemUI : MonoBehaviour
 
         if (itemStack?.Item)
         {
-            nameText.text = itemStack.Item.Name;
+            if (nameText)
+            {
+                nameText.text = itemStack.Item.Name;
+            }
             image.sprite = itemStack.Item.Sprite;
             if (countText)
             {
@@ -36,7 +39,10 @@ public class InventoryItemUI : MonoBehaviour
             }
         }
 
-        nameText.gameObject.SetActive(itemStack?.Item);
+        if (nameText)
+        {
+            nameText.gameObject.SetActive(itemStack?.Item);
+        }
         image.enabled = itemStack?.Item;
         if (countText)
         {

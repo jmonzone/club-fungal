@@ -7,16 +7,43 @@ public class CameraInputHandler : MonoBehaviour
     [SerializeField] private CameraService cameraService;
     public CameraZoomComponent zoomComponent;
     public CameraPanComponent panComponent;
+    [SerializeField] private VirtualJoystick virtualJoystick;
 
     [Header("Pan Settings")]
     public float panTouchSensitivity = 0.01f;
     public float panMouseSensitivity = 10f;
+    public float joystickPanSensitivity = 0.01f;
 
     [Header("Read Only")]
     [SerializeField][ReadOnly] bool canOrbit = true;
     [SerializeField][ReadOnly] bool dragging;
 
     Vector2 lastMousePos;
+
+    private void OnEnable()
+    {
+        if (virtualJoystick != null)
+        {
+            virtualJoystick.OnJoystickUpdate += HandleJoystickPan;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (virtualJoystick != null)
+        {
+            virtualJoystick.OnJoystickUpdate -= HandleJoystickPan;
+        }
+    }
+
+    private void HandleJoystickPan(Vector3 direction)
+    {
+        if (panComponent != null)
+        {
+            Vector2 delta = new Vector2(direction.x, direction.y);
+            panComponent.AddPan(delta * joystickPanSensitivity, true);
+        }
+    }
 
     public void SetCanOrbit(bool canOrbit)
     {
@@ -102,6 +129,9 @@ public class CameraInputHandler : MonoBehaviour
     void HandlePanInput()
     {
         if (panComponent == null) return;
+
+        // Skip touch panning if virtual joystick is active
+        if (virtualJoystick != null && virtualJoystick) return;
 
         // One finger swipe -> pan
         if (Input.touchCount == 1)
