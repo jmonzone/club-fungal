@@ -19829,7 +19829,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 12.5, y: -0.0999, z: -15.5}
-  m_LocalScale: {x: 10, y: 0.1, z: 10}
+  m_LocalScale: {x: 17, y: 0.1, z: 17}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1558974432}
@@ -20673,8 +20673,8 @@ Transform:
   m_GameObject: {fileID: 854330815}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 19.75, y: -0.0999, z: 18.25}
-  m_LocalScale: {x: 10, y: 0.1, z: 10}
+  m_LocalPosition: {x: 17.5, y: -0.0999, z: 20}
+  m_LocalScale: {x: 20, y: 0.1, z: 22.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1558974432}
@@ -21099,7 +21099,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -23.75, y: -0.0999, z: 19.75}
-  m_LocalScale: {x: 10, y: 0.1, z: 10}
+  m_LocalScale: {x: 5, y: 0.1, z: 7.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1558974432}
@@ -22246,10 +22246,11 @@ MonoBehaviour:
   networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
   unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
     type: 2}
+  navMeshAreaConfig: {fileID: 11400000, guid: 57edff644ce85440db6cfb3636326d00, type: 2}
   groundMask:
     serializedVersion: 2
     m_Bits: 64
-  maxDistance: 6
+  maxDistance: 5
   teleportDistance: 25
   spreadRadius: 2
   anticipationTime: 1.5
@@ -22289,10 +22290,10 @@ MonoBehaviour:
     spawnWeight: 0.352
   spawnCollider: {fileID: 1039316315}
   mushroomParent: {fileID: 1607545530}
+  navMeshAreaConfig: {fileID: 11400000, guid: 57edff644ce85440db6cfb3636326d00, type: 2}
   mushroomCount: 100
   minSpacing: 0.5
   spawnOnAwake: 1
-  validNavMeshArea: 0
   randomizeRotation: 1
   randomizeScale: 0
   scaleRange: {x: 0.8, y: 1.2}
@@ -38242,7 +38243,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -12.5, y: -0.0999, z: -17.75}
-  m_LocalScale: {x: 10, y: 0.1, z: 10}
+  m_LocalScale: {x: 15, y: 0.1, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1558974432}

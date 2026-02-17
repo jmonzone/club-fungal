@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class NetworkRunPartyTether : MonoBehaviour
 {
     [SerializeField] private NetworkRunService networkRunService;
     [SerializeField] private UnitControllerService unitControllerService;
+    [SerializeField] private NavMeshAreaConfig navMeshAreaConfig;
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private float maxDistance = 10f;
     [SerializeField] private float teleportDistance = 20f;
@@ -95,10 +97,24 @@ public class NetworkRunPartyTether : MonoBehaviour
             // Trigger return if currently too far OR predicted to be too far
             if (isOutside)
             {
-                // Calculate spread position in a circle around ground center
-                float angle = (index * 360f / networkRunService.Party.Unit.Count) * Mathf.Deg2Rad;
-                Vector3 offset = new Vector3(Mathf.Cos(angle) * spreadRadius, 0, Mathf.Sin(angle) * spreadRadius);
+                // Calculate spread position with some randomization to avoid same angle every time
+                float baseAngle = (index * 360f / networkRunService.Party.Unit.Count);
+                float angleVariation = Random.Range(-30f, 30f); // Add random variation
+                float angle = (baseAngle + angleVariation) * Mathf.Deg2Rad;
+
+                float randomSpread = Random.Range(spreadRadius * 0.5f, spreadRadius);
+                Vector3 offset = new Vector3(Mathf.Cos(angle) * randomSpread, 0, Mathf.Sin(angle) * randomSpread);
                 Vector3 spreadPosition = partyCenterGround + offset;
+
+                // Try to find a position on NavMesh area 0 (Walkable) instead of slow terrain
+                if (navMeshAreaConfig != null)
+                {
+                    spreadPosition = navMeshAreaConfig.FindBestNavMeshPosition(spreadPosition, partyCenterGround, true);
+                }
+                else
+                {
+                    spreadPosition = FindBestNavMeshPosition(spreadPosition, partyCenterGround);
+                }
 
                 // Use return behavior for both walking and teleporting
                 var returnBehaviour = controller.GetComponent<UnitReturnToParty>();
@@ -111,6 +127,48 @@ public class NetworkRunPartyTether : MonoBehaviour
 
             index++;
         }
+    }
+
+    // Fallback method if navMeshAreaConfig is not assigned
+    private Vector3 FindBestNavMeshPosition(Vector3 targetPosition, Vector3 fallbackCenter)
+    {
+        int walkableAreaMask = 1 << 0;
+        int slowTerrainAreaMask = 1 << 6;
+        float[] searchRadii = { 0.5f, 1f, 2f, 5f, 10f };
+
+        // Try walkable areas first
+        foreach (float radius in searchRadii)
+        {
+            if (NavMesh.SamplePosition(targetPosition, out NavMeshHit hit, radius, walkableAreaMask))
+            {
+                Vector3 toCenter = (fallbackCenter - hit.position).normalized;
+                Vector3 paddedPosition = hit.position + toCenter * 0.3f;
+
+                if (NavMesh.SamplePosition(paddedPosition, out NavMeshHit paddedHit, 0.5f, walkableAreaMask))
+                {
+                    return paddedHit.position;
+                }
+
+                return hit.position;
+            }
+        }
+
+        // If no walkable area found, try slow terrain
+        foreach (float radius in searchRadii)
+        {
+            if (NavMesh.SamplePosition(targetPosition, out NavMeshHit slowHit, radius, slowTerrainAreaMask))
+            {
+                return slowHit.position;
+            }
+        }
+
+        // Last resort: any NavMesh area
+        if (NavMesh.SamplePosition(targetPosition, out NavMeshHit anyHit, 10f, NavMesh.AllAreas))
+        {
+            return anyHit.position;
+        }
+
+        return targetPosition;
     }
 
     private void OnDrawGizmos()

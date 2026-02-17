@@ -598,6 +598,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitSpeedModifier
   networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
   agent: {fileID: 6701783708521320235}
+  navMeshAreaConfig: {fileID: 11400000, guid: 57edff644ce85440db6cfb3636326d00, type: 2}
   areaSpeedModifiers:
   - areaIndex: 6
     speedMultiplier: 0.5

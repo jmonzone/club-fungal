@@ -18,12 +18,12 @@ public class MushroomSpawner : MonoBehaviour
     [SerializeField] private MushroomSpawnData[] mushroomTypes;
     [SerializeField] private Collider spawnCollider;
     [SerializeField] private Transform mushroomParent;
+    [SerializeField] private NavMeshAreaConfig navMeshAreaConfig;
 
     [Header("Spawn Settings")]
     [SerializeField] private int mushroomCount = 10;
     [SerializeField] private float minSpacing = 0.5f;
     [SerializeField] private bool spawnOnAwake = false;
-    [SerializeField] private int validNavMeshArea = 0; // 0 = Walkable, 1 = Not Walkable, 2 = Jump, etc.
 
     [Header("Randomization")]
     [SerializeField] private bool randomizeRotation = true;
@@ -235,16 +235,31 @@ public class MushroomSpawner : MonoBehaviour
                 continue; // Skip if no ground found
             }
 
-            // Check if position is on valid NavMesh area
-            // Only search on specified area (1 << validNavMeshArea = bit mask for that area)
-            int areaMask = 1 << validNavMeshArea;
-            if (NavMesh.SamplePosition(finalPosition, out NavMeshHit navHit, 1f, areaMask))
+            // Check if position is on valid NavMesh area (walkable) with padding from edges
+            if (navMeshAreaConfig != null)
             {
-                finalPosition = navHit.position;
+                // Use bounds center as fallback center for padding
+                Vector3 boundsCenter = new Vector3(bounds.center.x, finalPosition.y, bounds.center.z);
+                finalPosition = navMeshAreaConfig.FindBestNavMeshPosition(finalPosition, boundsCenter, true);
+
+                // Verify it's actually walkable
+                if (!navMeshAreaConfig.IsPositionWalkable(finalPosition, 0.5f))
+                {
+                    continue; // Skip if not on valid NavMesh area
+                }
             }
             else
             {
-                continue; // Skip if not on valid NavMesh area
+                // Fallback without config
+                int areaMask = 1 << 0;
+                if (NavMesh.SamplePosition(finalPosition, out NavMeshHit navHit, 1f, areaMask))
+                {
+                    finalPosition = navHit.position;
+                }
+                else
+                {
+                    continue;
+                }
             }
 
             // Check spacing from other mushrooms

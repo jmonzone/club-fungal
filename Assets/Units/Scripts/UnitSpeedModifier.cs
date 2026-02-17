@@ -15,8 +15,10 @@ public class UnitSpeedModifier : MonoBehaviour
     [Header("References")]
     [SerializeField] private NetworkRunService networkRunService;
     [SerializeField] private NavMeshAgent agent;
+    [SerializeField] private NavMeshAreaConfig navMeshAreaConfig;
 
     [Header("NavMesh Area Speed Modifiers")]
+    [Tooltip("Area-specific speed multipliers. Leave empty to use default config values.")]
     [SerializeField] private NavMeshAreaSpeedModifier[] areaSpeedModifiers;
 
     [Header("Runtime")]
