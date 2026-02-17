@@ -17,8 +17,8 @@ NavMeshProjectSettings:
     cost: 1
   - name: Spawn Area
     cost: 2
-  - name: 
-    cost: 1
+  - name: SlowTerrain
+    cost: 4
   - name: 
     cost: 1
   - name: 

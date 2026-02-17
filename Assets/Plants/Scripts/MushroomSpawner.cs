@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 using System.Collections.Generic;
 using UnityEngine.Events;
 
@@ -22,6 +23,7 @@ public class MushroomSpawner : MonoBehaviour
     [SerializeField] private int mushroomCount = 10;
     [SerializeField] private float minSpacing = 0.5f;
     [SerializeField] private bool spawnOnAwake = false;
+    [SerializeField] private int validNavMeshArea = 0; // 0 = Walkable, 1 = Not Walkable, 2 = Jump, etc.
 
     [Header("Randomization")]
     [SerializeField] private bool randomizeRotation = true;
@@ -231,6 +233,18 @@ public class MushroomSpawner : MonoBehaviour
             else
             {
                 continue; // Skip if no ground found
+            }
+
+            // Check if position is on valid NavMesh area
+            // Only search on specified area (1 << validNavMeshArea = bit mask for that area)
+            int areaMask = 1 << validNavMeshArea;
+            if (NavMesh.SamplePosition(finalPosition, out NavMeshHit navHit, 1f, areaMask))
+            {
+                finalPosition = navHit.position;
+            }
+            else
+            {
+                continue; // Skip if not on valid NavMesh area
             }
 
             // Check spacing from other mushrooms
