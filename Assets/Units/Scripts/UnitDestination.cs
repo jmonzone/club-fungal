@@ -32,6 +32,11 @@ public class UnitDestination : MonoBehaviour
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
         navMeshAgent.updateRotation = false;
+
+        // Enable avoidance to prevent units from stacking
+        navMeshAgent.radius = 0.5f;
+        navMeshAgent.avoidancePriority = Random.Range(0, 100);
+        navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
     }
 
     public void SetDestination(Vector3 destination)
