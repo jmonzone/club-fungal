@@ -66,16 +66,13 @@ public class NavMeshAreaConfig : ScriptableObject
         {
             if (NavMesh.SamplePosition(targetPosition, out NavMeshHit hit, radius, WalkableAreaMask))
             {
-                // Apply padding toward center if requested
-                if (applyPadding && fallbackCenter != default && edgePadding > 0f)
+                // Apply padding away from slow terrain edges
+                if (applyPadding && edgePadding > 0f)
                 {
-                    Vector3 toCenter = (fallbackCenter - hit.position).normalized;
-                    Vector3 paddedPosition = hit.position + toCenter * edgePadding;
-
-                    // Verify padded position is still on walkable area
-                    if (NavMesh.SamplePosition(paddedPosition, out NavMeshHit paddedHit, 0.5f, WalkableAreaMask))
+                    Vector3 paddedPosition = FindBestPaddedPosition(hit.position, WalkableAreaMask);
+                    if (paddedPosition != hit.position)
                     {
-                        return paddedHit.position;
+                        return paddedPosition;
                     }
                 }
 
@@ -83,11 +80,22 @@ public class NavMeshAreaConfig : ScriptableObject
             }
         }
 
-        // If no walkable area found, try slow terrain within same range
+        // If no walkable area found, try slow terrain and pad toward walkable areas
         foreach (float radius in searchRadii)
         {
             if (NavMesh.SamplePosition(targetPosition, out NavMeshHit slowHit, radius, SlowTerrainAreaMask))
             {
+                // Try to pad toward walkable area
+                if (applyPadding && edgePadding > 0f)
+                {
+                    Vector3 paddedPosition = FindBestPaddedPosition(slowHit.position, WalkableAreaMask);
+                    // If we found a walkable position nearby, use it
+                    if (NavMesh.SamplePosition(paddedPosition, out NavMeshHit walkableCheck, 0.5f, WalkableAreaMask))
+                    {
+                        return walkableCheck.position;
+                    }
+                }
+
                 return slowHit.position;
             }
         }
@@ -100,6 +108,64 @@ public class NavMeshAreaConfig : ScriptableObject
 
         // Last resort: return the original target
         return targetPosition;
+    }
+
+    /// <summary>
+    /// Find the best padded position by sampling directions to move deeper into target area
+    /// </summary>
+    private Vector3 FindBestPaddedPosition(Vector3 position, int targetAreaMask)
+    {
+        // Sample 8 directions to find which one has the most continuous target area
+        Vector3[] directions = new Vector3[]
+        {
+            Vector3.forward,
+            Vector3.back,
+            Vector3.left,
+            Vector3.right,
+            (Vector3.forward + Vector3.left).normalized,
+            (Vector3.forward + Vector3.right).normalized,
+            (Vector3.back + Vector3.left).normalized,
+            (Vector3.back + Vector3.right).normalized
+        };
+
+        int bestScore = -1;
+        Vector3 bestDirection = Vector3.zero;
+
+        foreach (Vector3 dir in directions)
+        {
+            int score = 0;
+            // Check multiple distances in this direction
+            for (float dist = edgePadding; dist <= edgePadding * 3f; dist += edgePadding)
+            {
+                Vector3 testPos = position + dir * dist;
+                if (NavMesh.SamplePosition(testPos, out NavMeshHit hit, 0.5f, targetAreaMask))
+                {
+                    score++;
+                }
+                else
+                {
+                    break; // Stop checking this direction if we hit non-target area
+                }
+            }
+
+            if (score > bestScore)
+            {
+                bestScore = score;
+                bestDirection = dir;
+            }
+        }
+
+        // If we found a good direction, pad in that direction
+        if (bestScore > 0)
+        {
+            Vector3 paddedPosition = position + bestDirection * edgePadding;
+            if (NavMesh.SamplePosition(paddedPosition, out NavMeshHit paddedHit, 0.5f, targetAreaMask))
+            {
+                return paddedHit.position;
+            }
+        }
+
+        return position;
     }
 
     /// <summary>

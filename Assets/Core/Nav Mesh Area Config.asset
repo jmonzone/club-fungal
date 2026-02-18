@@ -16,4 +16,4 @@ MonoBehaviour:
   slowTerrainArea: 6
   jumpArea: 2
   notWalkableArea: 1
-  edgePadding: 1
+  edgePadding: 2
