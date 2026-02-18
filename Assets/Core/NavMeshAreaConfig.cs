@@ -57,7 +57,7 @@ public class NavMeshAreaConfig : ScriptableObject
     /// <param name="fallbackCenter">Center point to pad toward (optional)</param>
     /// <param name="applyPadding">Whether to apply edge padding</param>
     /// <returns>Best valid NavMesh position</returns>
-    public Vector3 FindBestNavMeshPosition(Vector3 targetPosition, Vector3 fallbackCenter = default, bool applyPadding = true)
+    public Vector3 FindBestNavMeshPosition(Vector3 targetPosition, Vector3 fallbackCenter = default, bool applyPadding = true, float maxSearchDistance = float.MaxValue)
     {
         // Try increasing search radii to find closest walkable position
         float[] searchRadii = { 0.5f, 1f, 2f, 5f, 10f };
@@ -66,13 +66,23 @@ public class NavMeshAreaConfig : ScriptableObject
         {
             if (NavMesh.SamplePosition(targetPosition, out NavMeshHit hit, radius, WalkableAreaMask))
             {
+                // Check if position is within max distance from fallback center (if provided)
+                if (fallbackCenter != default && Vector3.Distance(hit.position, fallbackCenter) > maxSearchDistance)
+                {
+                    continue; // Skip positions outside the search range
+                }
+
                 // Apply padding away from slow terrain edges
                 if (applyPadding && edgePadding > 0f)
                 {
                     Vector3 paddedPosition = FindBestPaddedPosition(hit.position, WalkableAreaMask);
+                    // Validate padded position is also within range
                     if (paddedPosition != hit.position)
                     {
-                        return paddedPosition;
+                        if (fallbackCenter == default || Vector3.Distance(paddedPosition, fallbackCenter) <= maxSearchDistance)
+                        {
+                            return paddedPosition;
+                        }
                     }
                 }
 
@@ -80,28 +90,38 @@ public class NavMeshAreaConfig : ScriptableObject
             }
         }
 
-        // If no walkable area found, try slow terrain and pad toward walkable areas
+        // If no walkable area found within range, try slow terrain (within maxSearchDistance)
         foreach (float radius in searchRadii)
         {
             if (NavMesh.SamplePosition(targetPosition, out NavMeshHit slowHit, radius, SlowTerrainAreaMask))
             {
+                // Check if position is within max distance from fallback center (if provided)
+                if (fallbackCenter != default && Vector3.Distance(slowHit.position, fallbackCenter) > maxSearchDistance)
+                {
+                    continue; // Skip positions outside the search range
+                }
+
                 // Try to pad toward walkable area
                 if (applyPadding && edgePadding > 0f)
                 {
                     Vector3 paddedPosition = FindBestPaddedPosition(slowHit.position, WalkableAreaMask);
-                    // If we found a walkable position nearby, use it
+                    // If we found a walkable position nearby and it's in range, use it
                     if (NavMesh.SamplePosition(paddedPosition, out NavMeshHit walkableCheck, 0.5f, WalkableAreaMask))
                     {
-                        return walkableCheck.position;
+                        if (fallbackCenter == default || Vector3.Distance(walkableCheck.position, fallbackCenter) <= maxSearchDistance)
+                        {
+                            return walkableCheck.position;
+                        }
                     }
                 }
 
+                // Return slow terrain position since it's in range
                 return slowHit.position;
             }
         }
 
-        // Fall back to any NavMesh position as last resort
-        if (NavMesh.SamplePosition(targetPosition, out NavMeshHit anyHit, 10f, NavMesh.AllAreas))
+        // Last resort: use original position even if on slow terrain, as long as it's somewhat close to a NavMesh
+        if (NavMesh.SamplePosition(targetPosition, out NavMeshHit anyHit, 2f, NavMesh.AllAreas))
         {
             return anyHit.position;
         }

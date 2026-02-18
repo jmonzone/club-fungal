@@ -109,11 +109,11 @@ public class NetworkRunPartyTether : MonoBehaviour
                 // Try to find a position on NavMesh area 0 (Walkable) instead of slow terrain
                 if (navMeshAreaConfig != null)
                 {
-                    spreadPosition = navMeshAreaConfig.FindBestNavMeshPosition(spreadPosition, partyCenterGround, true);
+                    spreadPosition = navMeshAreaConfig.FindBestNavMeshPosition(spreadPosition, partyCenterGround, true, maxDistance);
                 }
                 else
                 {
-                    spreadPosition = FindBestNavMeshPosition(spreadPosition, partyCenterGround);
+                    spreadPosition = FindBestNavMeshPosition(spreadPosition, partyCenterGround, maxDistance);
                 }
 
                 // Use return behavior for both walking and teleporting
@@ -130,45 +130,57 @@ public class NetworkRunPartyTether : MonoBehaviour
     }
 
     // Fallback method if navMeshAreaConfig is not assigned
-    private Vector3 FindBestNavMeshPosition(Vector3 targetPosition, Vector3 fallbackCenter)
+    private Vector3 FindBestNavMeshPosition(Vector3 targetPosition, Vector3 fallbackCenter, float maxSearchDistance)
     {
         int walkableAreaMask = 1 << 0;
         int slowTerrainAreaMask = 1 << 6;
         float edgePadding = 0.3f;
         float[] searchRadii = { 0.5f, 1f, 2f, 5f, 10f };
 
-        // Try walkable areas first with directional padding
+        // Try walkable areas first with directional padding (within maxSearchDistance)
         foreach (float radius in searchRadii)
         {
             if (NavMesh.SamplePosition(targetPosition, out NavMeshHit hit, radius, walkableAreaMask))
             {
-                Vector3 paddedPosition = FindBestPaddedPosition(hit.position, walkableAreaMask, edgePadding);
-                if (paddedPosition != hit.position)
+                // Check if position is within max distance from party center
+                if (Vector3.Distance(hit.position, fallbackCenter) <= maxSearchDistance)
                 {
-                    return paddedPosition;
+                    Vector3 paddedPosition = FindBestPaddedPosition(hit.position, walkableAreaMask, edgePadding);
+                    if (paddedPosition != hit.position && Vector3.Distance(paddedPosition, fallbackCenter) <= maxSearchDistance)
+                    {
+                        return paddedPosition;
+                    }
+                    return hit.position;
                 }
-                return hit.position;
             }
         }
 
-        // If no walkable area found, try slow terrain and pad toward walkable
+        // If no walkable area found within range, try slow terrain (within maxSearchDistance)
         foreach (float radius in searchRadii)
         {
             if (NavMesh.SamplePosition(targetPosition, out NavMeshHit slowHit, radius, slowTerrainAreaMask))
             {
-                // Try to pad toward walkable area
-                Vector3 paddedPosition = FindBestPaddedPosition(slowHit.position, walkableAreaMask, edgePadding);
-                // If we found a walkable position nearby, use it
-                if (NavMesh.SamplePosition(paddedPosition, out NavMeshHit walkableCheck, 0.5f, walkableAreaMask))
+                // Check if position is within max distance from party center
+                if (Vector3.Distance(slowHit.position, fallbackCenter) <= maxSearchDistance)
                 {
-                    return walkableCheck.position;
+                    // Try to pad toward walkable area
+                    Vector3 paddedPosition = FindBestPaddedPosition(slowHit.position, walkableAreaMask, edgePadding);
+                    // If we found a walkable position nearby and it's in range, use it
+                    if (NavMesh.SamplePosition(paddedPosition, out NavMeshHit walkableCheck, 0.5f, walkableAreaMask))
+                    {
+                        if (Vector3.Distance(walkableCheck.position, fallbackCenter) <= maxSearchDistance)
+                        {
+                            return walkableCheck.position;
+                        }
+                    }
+                    // Otherwise use the slow terrain position since it's in range
+                    return slowHit.position;
                 }
-                return slowHit.position;
             }
         }
 
-        // Last resort: any NavMesh area
-        if (NavMesh.SamplePosition(targetPosition, out NavMeshHit anyHit, 10f, NavMesh.AllAreas))
+        // Last resort: use original position even if on slow terrain, as long as it's somewhat close to a NavMesh
+        if (NavMesh.SamplePosition(targetPosition, out NavMeshHit anyHit, 2f, NavMesh.AllAreas))
         {
             return anyHit.position;
         }
