@@ -37,7 +37,7 @@ public class UnitForage : UnitBehaviour
         var previousTarget = this.target;
         this.target = target;
         if (previousTarget == null && target != null) InvokeOnBehaviourRequest();
-        else if (target == null && !IsActive) StopBehaviour();
+        else if (target == null && IsActive) StopBehaviour();
     }
 
     protected override void OnBehaviourStart()
