@@ -35,6 +35,7 @@ public class NetworkRunService : GURUService
     private Transform spawnParent;
     private Vector3 partyCenterGround;
     private float maxTetherDistance;
+    private Vector3 cameraVelocity;
     private List<UnitController> partyControllers = new List<UnitController>();
 
     public event Action OnUnitReenteredTether;
@@ -43,6 +44,7 @@ public class NetworkRunService : GURUService
     public Party Party => party;
     public Vector3 PartyCenterGround => partyCenterGround;
     public float MaxTetherDistance => maxTetherDistance;
+    public Vector3 CameraVelocity => cameraVelocity;
     public List<UnitController> PartyControllers => partyControllers;
 
     public void SetSpawnParent(Transform parent)
@@ -50,10 +52,11 @@ public class NetworkRunService : GURUService
         spawnParent = parent;
     }
 
-    public void SetPartyTetherData(Vector3 centerGround, float maxDistance)
+    public void SetPartyTetherData(Vector3 centerGround, float maxDistance, Vector3 velocity)
     {
         partyCenterGround = centerGround;
         maxTetherDistance = maxDistance;
+        cameraVelocity = velocity;
     }
 
     public void NotifyUnitReenteredTether()

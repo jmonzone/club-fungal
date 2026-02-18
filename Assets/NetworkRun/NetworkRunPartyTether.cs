@@ -51,7 +51,7 @@ public class NetworkRunPartyTether : MonoBehaviour
         }
         previousCenterGround = partyCenterGround;
 
-        networkRunService.SetPartyTetherData(partyCenterGround, maxDistance);
+        networkRunService.SetPartyTetherData(partyCenterGround, maxDistance, tetherVelocity);
 
         // Check if tether is moving fast enough to anticipate
         float tetherSpeed = tetherVelocity.magnitude;

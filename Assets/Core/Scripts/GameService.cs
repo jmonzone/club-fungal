@@ -74,4 +74,17 @@ public class GameService : GURUService
             service.OnSceneLoaded();
         }
     }
+
+    public override void DoUpdate()
+    {
+        // Update core services
+        unitInstanceService?.DoUpdate();
+        unitControllerService?.DoUpdate();
+
+        // Update all other services
+        foreach (var service in services)
+        {
+            service?.DoUpdate();
+        }
+    }
 }

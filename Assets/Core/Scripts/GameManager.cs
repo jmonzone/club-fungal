@@ -53,4 +53,9 @@ public class GameManager : MonoBehaviour
         yield return screenFade.FadeOut();
         sceneNavigation.Initialize();
     }
+
+    private void Update()
+    {
+        gameService.DoUpdate();
+    }
 }

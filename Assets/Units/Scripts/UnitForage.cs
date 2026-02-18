@@ -12,10 +12,13 @@ public interface IForageTarget : ITarget
 public class UnitForage : UnitBehaviour
 {
     private IForageTarget target;
+    private Vector3 targetPosition;
     private NavMeshAgent agent;
     private UnitSpeedModifier speedModifier;
     private bool isForaging = false;
     private PlantSporeEmitter currentPlant;
+
+    public IForageTarget CurrentTarget => target;
 
     public event UnityAction OnForageTargetReached;
 
@@ -32,9 +35,11 @@ public class UnitForage : UnitBehaviour
         CleanupPlantEvents();
     }
 
-    public void SetTarget(IForageTarget target)
+    public void SetTarget(IForageTarget target, Vector3 position = default)
     {
         this.target = target;
+        // If no position provided, use target's position
+        this.targetPosition = position != default ? position : (target?.Transform.position ?? Vector3.zero);
         // Priority system will automatically activate/deactivate this behavior
     }
 
@@ -66,7 +71,7 @@ public class UnitForage : UnitBehaviour
 
         while (target != null)
         {
-            float distance = Vector3.Distance(transform.position, target.Transform.position);
+            float distance = Vector3.Distance(transform.position, targetPosition);
 
             if (!isForaging && distance <= 2f)
             {
@@ -110,8 +115,8 @@ public class UnitForage : UnitBehaviour
             }
             else
             {
-                // Moving towards target
-                Controller.Destination.SetDestination(target.Transform.position);
+                // Moving towards assigned position around target
+                Controller.Destination.SetDestination(targetPosition);
                 Controller.SetLookPosition(target.Transform.position);
             }
 
