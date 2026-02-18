@@ -64,7 +64,7 @@ public class PartyControllerService : GURUService
                 if (followBehaviour != null)
                 {
                     followBehaviour.SetTarget(playerReference.Player.transform);
-                    unit.SetBehaviour(followBehaviour);
+                    // Priority system will automatically activate follow behavior
                 }
             }
         }

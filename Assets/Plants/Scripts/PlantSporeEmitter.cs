@@ -86,7 +86,7 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IFor
                 {
                     UnitSpore sporeBehaviour = source.GetComponent<UnitSpore>();
                     sporeBehaviour.SetEmitter(this);
-                    source.SetBehaviour(sporeBehaviour);
+                    // Priority system will automatically activate spore behavior
                 }
                 break;
 

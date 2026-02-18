@@ -88,7 +88,7 @@ public abstract class ActivityController<T> : ActivityController where T : Activ
     {
         Debug.Log($"[{name}] OnUnitEnter {unit.name}");
         var activityBehaviour = unit.GetComponent<T>();
-        unit.SetBehaviour(activityBehaviour);
+        // Priority system will automatically activate the activity behavior
         OnUnitBehaviourApplied(activityBehaviour);
     }
 

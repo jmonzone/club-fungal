@@ -67,12 +67,6 @@ public class UnitController : MonoBehaviour, IInteractable
     {
         if (renderRoot) targetLookPosition = transform.position + renderRoot.forward;
 
-        var allBehaviours = GetComponents<UnitBehaviour>();
-        foreach (var behaviour in allBehaviours)
-        {
-            behaviour.OnBehaviourRequest += () => ApplyBehaviour(behaviour);
-        }
-
         destination = GetComponent<UnitDestination>();
         dialogue = GetComponent<UnitDialogue>();
 
@@ -80,7 +74,6 @@ public class UnitController : MonoBehaviour, IInteractable
         {
             destination.OnTargetSelected += () => SetLookTarget(destination.Target);
         }
-
 
         if (dialogue)
         {
@@ -92,7 +85,6 @@ public class UnitController : MonoBehaviour, IInteractable
     protected virtual IEnumerator Start()
     {
         yield return null;
-        if (!currentBehaviour) ApplyDefaultBehaviour();
         OnNavMeshAgentReady?.Invoke();
     }
 
@@ -108,6 +100,10 @@ public class UnitController : MonoBehaviour, IInteractable
 
     protected virtual void Update()
     {
+        // Evaluate behavior priority every frame
+        EvaluateBehaviourPriority();
+
+        // Handle look rotation
         if (target) targetLookPosition = target.transform.position;
 
         if (!renderRoot) return;
@@ -115,53 +111,22 @@ public class UnitController : MonoBehaviour, IInteractable
         Vector3 direction = targetLookPosition - renderRoot.position;
         direction.y = 0f;
 
-        if (direction.sqrMagnitude > 0.001f) // make sure it's not zero
+        if (direction.sqrMagnitude > 0.001f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             renderRoot.rotation = Quaternion.Slerp(
                 renderRoot.rotation,
                 targetRotation,
-                Time.deltaTime * 5f // rotation speed factor
+                Time.deltaTime * 5f
             );
         }
-
     }
 
-    protected void ApplyBehaviour(UnitBehaviour behaviour)
+    private void EvaluateBehaviourPriority()
     {
-        if (currentBehaviour)
-        {
-            currentBehaviour.OnBehaviourComplete -= HandleBehaviourCompleteFallback;
-            currentBehaviour.StopBehaviour();
-        }
-
-        currentBehaviour = behaviour;
-
-        if (currentBehaviour)
-        {
-            currentBehaviour.OnBehaviourComplete += HandleBehaviourCompleteFallback;
-            currentBehaviour.StartBehaviour();
-        }
-
-        OnBehaviourChanged?.Invoke();
-    }
-
-    private void HandleBehaviourCompleteFallback()
-    {
-        OnBehaviourComplete?.Invoke();
-
-        // Determine the next appropriate behavior
-        var nextBehaviour = DetermineNextBehaviour();
-        ApplyBehaviour(nextBehaviour);
-    }
-
-    protected virtual UnitBehaviour DetermineNextBehaviour()
-    {
-        // Debug.Log("Determining next behavior...");
-        // Get all behaviors and find the one with highest priority
         var allBehaviours = GetComponents<UnitBehaviour>();
         UnitBehaviour bestBehaviour = defaultBehaviour;
-        int highestPriority = 0;
+        int highestPriority = defaultBehaviour ? defaultBehaviour.GetPriority() : 0;
 
         foreach (var behaviour in allBehaviours)
         {
@@ -173,8 +138,23 @@ public class UnitController : MonoBehaviour, IInteractable
             }
         }
 
-        // If no behavior has priority, return default
-        return bestBehaviour ?? defaultBehaviour;
+        // Switch to best behavior if different from current
+        if (bestBehaviour != currentBehaviour)
+        {
+            if (currentBehaviour != null)
+            {
+                currentBehaviour.StopBehaviour();
+            }
+
+            currentBehaviour = bestBehaviour;
+
+            if (currentBehaviour != null)
+            {
+                currentBehaviour.StartBehaviour();
+            }
+
+            OnBehaviourChanged?.Invoke();
+        }
     }
 
     public virtual void Initialize(UnitInstance instance)
@@ -201,16 +181,6 @@ public class UnitController : MonoBehaviour, IInteractable
     public void SetLookTarget(Transform target)
     {
         this.target = target;
-    }
-
-    public void ApplyDefaultBehaviour()
-    {
-        ApplyBehaviour(defaultBehaviour);
-    }
-
-    public void SetBehaviour(UnitBehaviour behaviour)
-    {
-        ApplyBehaviour(behaviour);
     }
 
     public void AddMoment(UnitInteraction interaction)

@@ -24,20 +24,37 @@ public class UnitWander : UnitBehaviour
 
     protected override void OnBehaviourStart()
     {
+        if (navMeshAgent != null && navMeshAgent.isOnNavMesh)
+        {
+            baseSpeed = navMeshAgent.speed;
+            StartWander();
+        }
+        else
+        {
+            StartCoroutine(WaitForNavMesh());
+        }
+    }
+
+    private IEnumerator WaitForNavMesh()
+    {
+        yield return new WaitUntil(() => navMeshAgent != null && navMeshAgent.isOnNavMesh);
         baseSpeed = navMeshAgent.speed;
         StartWander();
     }
 
-    public override void StopBehaviour()
+    protected override void OnBehaviourStop()
     {
-        base.StopBehaviour();
+        base.OnBehaviourStop();
         StopWander();
     }
 
     public override void PauseBehaviour()
     {
         base.PauseBehaviour();
-        navMeshAgent.isStopped = true;
+        if (navMeshAgent != null && navMeshAgent.isOnNavMesh)
+        {
+            navMeshAgent.isStopped = true;
+        }
         StopWander();
     }
 
@@ -49,8 +66,6 @@ public class UnitWander : UnitBehaviour
 
     private void StartWander()
     {
-        navMeshAgent.stoppingDistance = 0.1f;
-        navMeshAgent.isStopped = false;
         StartCoroutine(WanderRoutine());
     }
 
@@ -61,8 +76,15 @@ public class UnitWander : UnitBehaviour
 
     private IEnumerator WanderRoutine()
     {
+        yield return new WaitUntil(() => navMeshAgent.isOnNavMesh);
+
+        navMeshAgent.stoppingDistance = 0.1f;
+        navMeshAgent.isStopped = false;
+
         while (true)
         {
+            yield return new WaitUntil(() => navMeshAgent.isOnNavMesh);
+
             // Get speed multiplier from UnitSpeedModifier
             float speedMultiplier = speedModifier != null ? speedModifier.CurrentSpeedMultiplier : 1f;
 
@@ -73,12 +95,18 @@ public class UnitWander : UnitBehaviour
             var idleTargetTime = Random.Range(scaledMinIdleTime, scaledMaxIdleTime);
             navMeshAgent.isStopped = true;
             yield return new WaitForSeconds(idleTargetTime);
+
+            yield return new WaitUntil(() => navMeshAgent.isOnNavMesh);
+
             navMeshAgent.isStopped = false;
 
             var targetPosition = GetReachableRandomDestination(transform.position, wanderRadius, NavMesh.AllAreas);
+
+            yield return new WaitUntil(() => navMeshAgent.isOnNavMesh);
+
             navMeshAgent.SetDestination(targetPosition);
 
-            while (navMeshAgent.pathPending || navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance)
+            while (navMeshAgent.isOnNavMesh && (navMeshAgent.pathPending || navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance))
             {
                 Controller.SetLookPosition(targetPosition);
                 yield return null;

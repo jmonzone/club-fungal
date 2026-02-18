@@ -22,9 +22,6 @@ public abstract class UnitBehaviour : UnitComponent
     [SerializeField] private bool isActive;
     public bool IsActive => isActive;
 
-    public event UnityAction OnBehaviourRequest;
-    public event UnityAction OnBehaviourComplete;
-
     protected virtual void Update()
     {
 
@@ -39,15 +36,21 @@ public abstract class UnitBehaviour : UnitComponent
         }
     }
 
-    protected abstract void OnBehaviourStart();
+    protected virtual void OnBehaviourStart()
+    {
+    }
 
     public virtual void StopBehaviour()
     {
         if (isActive)
         {
             isActive = false;
-            OnBehaviourComplete?.Invoke();
+            OnBehaviourStop();
         }
+    }
+
+    protected virtual void OnBehaviourStop()
+    {
     }
 
     public virtual void PauseBehaviour()
@@ -56,12 +59,6 @@ public abstract class UnitBehaviour : UnitComponent
 
     public virtual void UnpauseBehaviour()
     {
-    }
-
-    protected void InvokeOnBehaviourRequest()
-    {
-        if (isActive) return;
-        OnBehaviourRequest?.Invoke();
     }
 
     /// <summary>

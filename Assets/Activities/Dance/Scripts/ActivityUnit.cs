@@ -45,12 +45,7 @@ public class ActivityUnit : MonoBehaviour
 
     public void ExitActivity()
     {
-        controller.ApplyDefaultBehaviour();
-    }
-
-    public void SetBehaviour(ActivityUnitBehaviour behaviour)
-    {
-        controller.SetBehaviour(behaviour);
+        // Priority system will automatically switch to appropriate behavior
     }
 
     public void SetActivityPosition(Vector3 position)

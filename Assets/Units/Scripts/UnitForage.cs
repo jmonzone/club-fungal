@@ -34,10 +34,8 @@ public class UnitForage : UnitBehaviour
 
     public void SetTarget(IForageTarget target)
     {
-        var previousTarget = this.target;
         this.target = target;
-        if (previousTarget == null && target != null) InvokeOnBehaviourRequest();
-        else if (target == null && IsActive) StopBehaviour();
+        // Priority system will automatically activate/deactivate this behavior
     }
 
     protected override void OnBehaviourStart()
@@ -45,6 +43,21 @@ public class UnitForage : UnitBehaviour
         agent.isStopped = false;
         isForaging = false;
         StartCoroutine(ForagingBehaviour());
+    }
+
+    protected override void OnBehaviourStop()
+    {
+        agent.isStopped = true;
+
+        // Cancel any ongoing forage
+        if (currentPlant != null)
+        {
+            currentPlant.CancelForage();
+        }
+
+        CleanupPlantEvents();
+        isForaging = false;
+        StopAllCoroutines();
     }
 
     private IEnumerator ForagingBehaviour()
@@ -132,22 +145,6 @@ public class UnitForage : UnitBehaviour
         }
     }
 
-    public override void StopBehaviour()
-    {
-        base.StopBehaviour();
-        agent.isStopped = true;
-
-        // Cancel any ongoing forage
-        if (currentPlant != null)
-        {
-            currentPlant.CancelForage();
-        }
-
-        CleanupPlantEvents();
-        isForaging = false;
-        StopAllCoroutines();
-    }
-
     public override void PauseBehaviour()
     {
         base.PauseBehaviour();
@@ -172,7 +169,6 @@ public class UnitForage : UnitBehaviour
 
     public override int GetPriority()
     {
-        // Debug.Log("Checking forage behavior priority. Target: " + (target != null ? target.Transform.name : "None"));
         // High priority if we have a target
         return target != null ? 100 : 0;
     }

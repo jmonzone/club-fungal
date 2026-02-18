@@ -62,7 +62,7 @@ public class FungalController : UnitController
     public void Follow(UnitFollow leader)
     {
         unitFollow.FollowUnit(leader);
-        ApplyBehaviour(unitFollow);
+        // Priority system will automatically activate follow behavior
     }
 
     public override void OnProximityChanged(bool value)

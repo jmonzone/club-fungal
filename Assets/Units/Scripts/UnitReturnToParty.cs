@@ -5,6 +5,7 @@ public class UnitReturnToParty : UnitBehaviour
 {
     private NavMeshAgent navMeshAgent;
     private Vector3 returnPosition;
+    private const float acceptableDistance = 1f; // Distance considered "close enough" to return position
 
     protected override void Awake()
     {
@@ -21,11 +22,7 @@ public class UnitReturnToParty : UnitBehaviour
             // Teleport immediately
             Controller.Teleport(returnPosition, Controller.transform.parent);
         }
-        else
-        {
-            // Walk back by requesting behavior
-            InvokeOnBehaviourRequest();
-        }
+        // Priority system will automatically activate this behavior if needed
     }
 
     protected override void OnBehaviourStart()
@@ -33,6 +30,14 @@ public class UnitReturnToParty : UnitBehaviour
         if (navMeshAgent != null && navMeshAgent.isOnNavMesh)
         {
             navMeshAgent.isStopped = false;
+        }
+    }
+
+    protected override void OnBehaviourStop()
+    {
+        if (navMeshAgent != null)
+        {
+            navMeshAgent.isStopped = true;
         }
     }
 
@@ -46,28 +51,20 @@ public class UnitReturnToParty : UnitBehaviour
         {
             Controller.SetLookPosition(returnPosition);
             Controller.Destination.SetDestination(returnPosition);
-
-            // Check if we've reached the destination
-            if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
-            {
-                StopBehaviour();
-            }
-        }
-    }
-
-    public override void StopBehaviour()
-    {
-        base.StopBehaviour();
-        if (navMeshAgent != null)
-        {
-            navMeshAgent.isStopped = true;
         }
     }
 
     public override int GetPriority()
     {
-        // Return to party is triggered externally via SetReturnPosition
-        // Priority system doesn't apply - behavior is invoked directly when needed
+        // Check if we need to return to party
+        float distanceToReturn = Vector3.Distance(transform.position, returnPosition);
+
+        // High priority when far from return position, zero when close
+        if (distanceToReturn > acceptableDistance)
+        {
+            return 50;
+        }
+
         return 0;
     }
 }
