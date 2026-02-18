@@ -5,6 +5,10 @@ using UnityEngine.Events;
 
 public class UnitDestination : MonoBehaviour
 {
+    [Header("Navigation")]
+    [SerializeField] private float avoidanceRadius = 0.3f;
+    [SerializeField] private ObstacleAvoidanceType avoidanceQuality = ObstacleAvoidanceType.MedQualityObstacleAvoidance;
+
     [Header("Runtime")]
     [SerializeField] private Vector3 destination;
     [SerializeField] private Transform target;
@@ -34,9 +38,9 @@ public class UnitDestination : MonoBehaviour
         navMeshAgent.updateRotation = false;
 
         // Enable avoidance to prevent units from stacking
-        navMeshAgent.radius = 0.5f;
+        navMeshAgent.radius = avoidanceRadius;
         navMeshAgent.avoidancePriority = Random.Range(0, 100);
-        navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+        navMeshAgent.obstacleAvoidanceType = avoidanceQuality;
     }
 
     public void SetDestination(Vector3 destination)

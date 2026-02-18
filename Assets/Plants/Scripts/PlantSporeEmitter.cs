@@ -111,6 +111,12 @@ public class PlantSporeEmitter : MonoBehaviour, IInteractable, INoteTarget, IFor
 
     public void StartForage(UnitController forager, float speedMultiplier = 1f)
     {
+        // Don't start foraging if this GameObject is inactive
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         // Add or update this forager's contribution
         if (!activeForagers.ContainsKey(forager))
         {
