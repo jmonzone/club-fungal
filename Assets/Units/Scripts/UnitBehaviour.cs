@@ -1,26 +1,29 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-public abstract class UnitBehaviour : MonoBehaviour
+public abstract class UnitComponent : MonoBehaviour
 {
-    [SerializeField] private bool isActive;
-
     public UnitController Controller { get; private set; }
     public UnitInstance Instance => Controller.Instance;
-    public bool IsActive => isActive;
-
-    public event UnityAction OnBehaviourRequest;
-    public event UnityAction OnBehaviourComplete;
 
     protected virtual void Awake()
     {
-        Controller = GetComponent<UnitController>();
+        Controller = GetComponentInParent<UnitController>();
         Controller.OnInitialized += OnInitialized;
     }
 
     protected virtual void OnInitialized()
     {
     }
+}
+
+public abstract class UnitBehaviour : UnitComponent
+{
+    [SerializeField] private bool isActive;
+    public bool IsActive => isActive;
+
+    public event UnityAction OnBehaviourRequest;
+    public event UnityAction OnBehaviourComplete;
 
     protected virtual void Update()
     {
