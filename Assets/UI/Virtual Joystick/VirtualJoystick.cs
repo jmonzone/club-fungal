@@ -17,6 +17,8 @@ public class VirtualJoystick : MonoBehaviour
     [Header("Runtime")]
     [SerializeField] private bool isActive;
     [SerializeField] private Vector3 direction;
+
+    public RectTransform Rect => rect;
     public event UnityAction<Vector3> OnJoystickStart;
     public event UnityAction<Vector3> OnJoystickUpdate;
     public event UnityAction OnJoystickEnd;

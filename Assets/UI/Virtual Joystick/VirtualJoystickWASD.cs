@@ -18,10 +18,10 @@ public class VirtualJoystickWASD : MonoBehaviour
         {
             if (!isActive)
             {
-                virtualJoystick.HandleJoystickStart(virtualJoystick.transform.position);
+                virtualJoystick.HandleJoystickStart(virtualJoystick.Rect.position);
                 isActive = true;
             }
-            virtualJoystick.HandleJoystickUpdate(new Vector3(input.x, input.y, 0f) * 100f + virtualJoystick.transform.position);
+            virtualJoystick.HandleJoystickUpdate(new Vector3(input.x, input.y, 0f) * 100f + virtualJoystick.Rect.position);
         }
         else if (isActive)
         {
