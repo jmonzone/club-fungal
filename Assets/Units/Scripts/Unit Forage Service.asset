@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64d27ce7f02d462db8a8035f62e9d05, type: 3}
   m_Name: Unit Forage Service
   m_EditorClassIdentifier: Assembly-CSharp::UnitForageService
-  sporeReference: {fileID: 11400000, guid: aada144c7ab1b4304a84a13d3ddc010c, type: 2}
   unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
     type: 2}
   networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
+  maxCameraVelocityForForaging: 1

@@ -19902,7 +19902,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7b26e281b3c384c4a864821a328dba54, type: 2}
+  - {fileID: 2100000, guid: 76de7fe0d4609694dac330bb3ef77a6b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -20747,7 +20747,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7b26e281b3c384c4a864821a328dba54, type: 2}
+  - {fileID: 2100000, guid: 76de7fe0d4609694dac330bb3ef77a6b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -21172,7 +21172,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7b26e281b3c384c4a864821a328dba54, type: 2}
+  - {fileID: 2100000, guid: 76de7fe0d4609694dac330bb3ef77a6b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -37098,6 +37098,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 225081015780643707, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
+        type: 3}
+      propertyPath: avoidancePriority
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 356197031390877139, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
       propertyPath: m_IsActive
@@ -38316,7 +38321,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7b26e281b3c384c4a864821a328dba54, type: 2}
+  - {fileID: 2100000, guid: 76de7fe0d4609694dac330bb3ef77a6b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -40229,7 +40234,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7b26e281b3c384c4a864821a328dba54, type: 2}
+  - {fileID: 2100000, guid: 76de7fe0d4609694dac330bb3ef77a6b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -55403,6 +55408,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6701783708521320235, guid: e9f8a044aacf9498eb482430f1da38f4,
+        type: 3}
+      propertyPath: avoidancePriority
+      value: 89
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
