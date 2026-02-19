@@ -199,6 +199,7 @@ MonoBehaviour:
   currentBehaviour: {fileID: 0}
   targetLookPosition: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
+  isEnemy: 0
   dialogueCamera: {fileID: 234270906037310017}
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   inventoryReference: {fileID: 11400000, guid: e9c2fc38b99d8404f8495af08b4889fc, type: 2}
@@ -215,7 +216,7 @@ NavMeshAgent:
   m_Radius: 0.3
   m_Speed: 2
   m_Acceleration: 100
-  avoidancePriority: 3
+  avoidancePriority: 28
   m_AngularSpeed: 1250
   m_StoppingDistance: 0.05
   m_AutoTraverseOffMeshLink: 1

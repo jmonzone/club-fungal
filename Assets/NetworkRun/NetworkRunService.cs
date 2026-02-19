@@ -46,6 +46,7 @@ public class NetworkRunService : GURUService
     public float MaxTetherDistance => maxTetherDistance;
     public Vector3 CameraVelocity => cameraVelocity;
     public List<UnitController> PartyControllers => partyControllers;
+    public Transform SpawnParent => spawnParent;
 
     public void SetSpawnParent(Transform parent)
     {
@@ -93,7 +94,7 @@ public class NetworkRunService : GURUService
             var unit = party.Unit[i];
             var offset = new Vector3(i * spawnSpacing, 0, 0);
             var position = basePosition + offset;
-            var controller = unitControllerService.SpawnUnit(unit, position, spawnParent);
+            var controller = unitControllerService.SpawnUnit(unit, position);
             partyControllers.Add(controller);
         }
 

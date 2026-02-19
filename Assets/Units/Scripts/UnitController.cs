@@ -20,9 +20,11 @@ public class UnitController : MonoBehaviour, IInteractable
     [SerializeField] private UnitBehaviour currentBehaviour;
     [SerializeField] private Vector3 targetLookPosition;
     [SerializeField] private Transform target;
+    [SerializeField] private bool isEnemy = false;
 
     public UnitInstance Instance => instance;
     public UnitBehaviour CurrentBehaviour => currentBehaviour;
+    public bool IsEnemy => isEnemy;
 
     public Vector3 LookPosition => targetLookPosition;
 
@@ -162,6 +164,15 @@ public class UnitController : MonoBehaviour, IInteractable
         this.instance = instance;
         name = "Unit - " + instance.Species.Id;
         OnInitialized?.Invoke();
+    }
+
+    public void SetAsEnemy(bool enemy)
+    {
+        isEnemy = enemy;
+        if (enemy)
+        {
+            name = "Enemy - " + (instance?.Species.Id ?? "Unknown");
+        }
     }
 
     public void SetLookPosition(Vector3 targetPosition)

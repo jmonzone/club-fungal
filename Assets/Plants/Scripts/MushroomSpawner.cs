@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.AI;
 using System.Collections.Generic;
 using UnityEngine.Events;
 
@@ -12,18 +11,11 @@ public struct MushroomSpawnData
     public float spawnWeight;
 }
 
-public class MushroomSpawner : MonoBehaviour
+public class MushroomSpawner : NavMeshSpawner
 {
-    [Header("References")]
+    [Header("Mushroom Settings")]
     [SerializeField] private MushroomSpawnData[] mushroomTypes;
-    [SerializeField] private Collider spawnCollider;
     [SerializeField] private Transform mushroomParent;
-    [SerializeField] private NavMeshAreaConfig navMeshAreaConfig;
-
-    [Header("Spawn Settings")]
-    [SerializeField] private int mushroomCount = 10;
-    [SerializeField] private float minSpacing = 0.5f;
-    [SerializeField] private bool spawnOnAwake = false;
 
     [Header("Randomization")]
     [SerializeField] private bool randomizeRotation = true;
@@ -34,13 +26,11 @@ public class MushroomSpawner : MonoBehaviour
     [SerializeField] private List<GameObject> spawnedMushrooms = new List<GameObject>();
 
     private Dictionary<PlantSporeEmitter, ObjectPool<PlantSporeEmitter>> mushroomPools = new Dictionary<PlantSporeEmitter, ObjectPool<PlantSporeEmitter>>();
-    private List<Vector3> availableSpawnPositions = new List<Vector3>();
-    private List<Vector3> occupiedPositions = new List<Vector3>();
     private Dictionary<GameObject, Vector3> mushroomPositions = new Dictionary<GameObject, Vector3>();
     private Dictionary<GameObject, UnityAction> mushroomCallbacks = new Dictionary<GameObject, UnityAction>();
     private float totalSpawnWeight;
 
-    private void Awake()
+    protected override void Awake()
     {
         // Normalize weights to ensure they sum to 1
         NormalizeWeights();
@@ -53,7 +43,7 @@ public class MushroomSpawner : MonoBehaviour
             {
                 mushroomPools[mushroomType.prefab] = new ObjectPool<PlantSporeEmitter>(
                     mushroomType.prefab,
-                    mushroomCount * 2,
+                    spawnCount * 2,
                     transform,
                     mushroom => { /* Forage callback handled in spawning */ }
                 );
@@ -61,10 +51,12 @@ public class MushroomSpawner : MonoBehaviour
             }
         }
 
-        if (spawnOnAwake)
-        {
-            SpawnMushrooms();
-        }
+        base.Awake();
+    }
+
+    public override void Spawn()
+    {
+        SpawnMushrooms();
     }
 
     public void SpawnMushrooms()
@@ -83,11 +75,11 @@ public class MushroomSpawner : MonoBehaviour
             return;
         }
 
-        List<Vector3> allPositions = GenerateSpawnPositions();
+        List<Vector3> allPositions = GenerateSpawnPositions(spawnCount);
         availableSpawnPositions = new List<Vector3>(allPositions);
         occupiedPositions.Clear();
 
-        for (int i = 0; i < Mathf.Min(mushroomCount, availableSpawnPositions.Count); i++)
+        for (int i = 0; i < Mathf.Min(spawnCount, availableSpawnPositions.Count); i++)
         {
             SpawnMushroomAtRandomAvailablePosition();
         }
@@ -97,16 +89,8 @@ public class MushroomSpawner : MonoBehaviour
 
     private void SpawnMushroomAtRandomAvailablePosition()
     {
-        if (availableSpawnPositions.Count == 0)
-        {
-            Debug.LogWarning("MushroomSpawner: No available spawn positions");
-            return;
-        }
-
-        int randomIndex = Random.Range(0, availableSpawnPositions.Count);
-        Vector3 position = availableSpawnPositions[randomIndex];
-        availableSpawnPositions.RemoveAt(randomIndex);
-        occupiedPositions.Add(position);
+        Vector3 position = GetRandomAvailablePosition();
+        if (position == Vector3.zero) return;
 
         SpawnMushroomAt(position);
     }
@@ -183,8 +167,7 @@ public class MushroomSpawner : MonoBehaviour
             // Free up the position
             if (mushroomPositions.TryGetValue(mushroom, out Vector3 oldPosition))
             {
-                occupiedPositions.Remove(oldPosition);
-                availableSpawnPositions.Add(oldPosition);
+                FreePosition(oldPosition);
                 mushroomPositions.Remove(mushroom);
             }
 
@@ -204,85 +187,6 @@ public class MushroomSpawner : MonoBehaviour
             // Spawn a new mushroom at a random available position
             SpawnMushroomAtRandomAvailablePosition();
         }
-    }
-
-    private List<Vector3> GenerateSpawnPositions()
-    {
-        List<Vector3> positions = new List<Vector3>();
-        Bounds bounds = spawnCollider.bounds;
-
-        int maxAttempts = mushroomCount * 10;
-        int attempts = 0;
-
-        while (positions.Count < mushroomCount && attempts < maxAttempts)
-        {
-            attempts++;
-
-            Vector3 randomPoint = new Vector3(
-                Random.Range(bounds.min.x, bounds.max.x),
-                bounds.center.y,
-                Random.Range(bounds.min.z, bounds.max.z)
-            );
-
-            // Raycast down to find ground
-            Vector3 finalPosition = randomPoint;
-            if (Physics.Raycast(randomPoint + Vector3.up * 10f, Vector3.down, out RaycastHit hit, 20f))
-            {
-                finalPosition = hit.point;
-            }
-            else
-            {
-                continue; // Skip if no ground found
-            }
-
-            // Check if position is on valid NavMesh area (walkable) with padding from edges
-            if (navMeshAreaConfig != null)
-            {
-                // Use bounds center as fallback center for padding
-                Vector3 boundsCenter = new Vector3(bounds.center.x, finalPosition.y, bounds.center.z);
-                finalPosition = navMeshAreaConfig.FindBestNavMeshPosition(finalPosition, boundsCenter, true);
-
-                // Verify it's actually walkable
-                if (!navMeshAreaConfig.IsPositionWalkable(finalPosition, 0.5f))
-                {
-                    continue; // Skip if not on valid NavMesh area
-                }
-            }
-            else
-            {
-                // Fallback without config
-                int areaMask = 1 << 0;
-                if (NavMesh.SamplePosition(finalPosition, out NavMeshHit navHit, 1f, areaMask))
-                {
-                    finalPosition = navHit.position;
-                }
-                else
-                {
-                    continue;
-                }
-            }
-
-            // Check spacing from other mushrooms
-            if (IsValidSpacing(finalPosition, positions))
-            {
-                positions.Add(finalPosition);
-            }
-        }
-
-        return positions;
-    }
-
-    private bool IsValidSpacing(Vector3 position, List<Vector3> existingPositions)
-    {
-        foreach (Vector3 existing in existingPositions)
-        {
-            float distance = Vector3.Distance(position, existing);
-            if (distance < minSpacing)
-            {
-                return false;
-            }
-        }
-        return true;
     }
 
     public void ClearMushrooms()
@@ -312,7 +216,6 @@ public class MushroomSpawner : MonoBehaviour
         spawnedMushrooms.Clear();
         mushroomCallbacks.Clear();
         mushroomPositions.Clear();
-        occupiedPositions.Clear();
     }
 
     private void NormalizeWeights()
@@ -343,13 +246,14 @@ public class MushroomSpawner : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmosSelected()
+    protected override Color GetGizmoColor()
     {
-        if (spawnCollider != null)
-        {
-            Gizmos.color = new Color(0f, 1f, 0f, 0.3f);
-            Gizmos.DrawCube(spawnCollider.bounds.center, spawnCollider.bounds.size);
-        }
+        return new Color(0f, 1f, 0f, 0.3f);
+    }
+
+    protected override void OnDrawGizmosSelected()
+    {
+        base.OnDrawGizmosSelected();
 
         if (spawnedMushrooms != null)
         {
