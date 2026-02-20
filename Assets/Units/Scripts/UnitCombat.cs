@@ -122,6 +122,18 @@ public class UnitCombat : UnitBehaviour, IReturnPositionable
         }
     }
 
+    protected override void Update()
+    {
+        base.Update();
+
+        // Auto-find target periodically
+        if (Time.time - lastTargetSearchTime >= targetSearchInterval)
+        {
+            FindNearestTarget();
+            lastTargetSearchTime = Time.time;
+        }
+    }
+
     protected override void OnBehaviourStart()
     {
         if (agent != null)
@@ -146,13 +158,6 @@ public class UnitCombat : UnitBehaviour, IReturnPositionable
     {
         while (true)
         {
-            // Auto-find target periodically
-            if (Time.time - lastTargetSearchTime >= targetSearchInterval)
-            {
-                FindNearestTarget();
-                lastTargetSearchTime = Time.time;
-            }
-
             // If no target, just wait
             if (target == null)
             {
@@ -197,41 +202,6 @@ public class UnitCombat : UnitBehaviour, IReturnPositionable
         projectile.transform.position = spawnPosition;
         projectile.transform.rotation = Quaternion.identity;
         projectile.Initialize(target, damage);
-    }
-
-    protected override int GetBasePriority()
-    {
-        // Try to find a target if we don't have one
-        if (target == null)
-        {
-            FindNearestTarget();
-        }
-
-        // Only active if we have a target
-        if (target == null)
-        {
-            return 0;
-        }
-
-        // Check if unit is within party tether range
-        if (networkRunService != null && networkRunService.Party != null)
-        {
-            Vector3 unitPosition = transform.position;
-            Vector3 partyCenter = networkRunService.PartyCenterGround;
-            float maxDistance = networkRunService.MaxTetherDistance;
-
-            float distanceFromParty = Vector3.Distance(unitPosition, partyCenter);
-
-            // Only combat if within tether range
-            if (distanceFromParty <= maxDistance)
-            {
-                // Highest priority (higher than foraging which is 100)
-                return 150;
-            }
-        }
-
-        // Not in tether range, don't combat
-        return 0;
     }
 
     public override void PauseBehaviour()

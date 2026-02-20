@@ -15,7 +15,7 @@ MonoBehaviour:
   cameraMode: 0
   isMoving: 0
   hasSettled: 1
-  timeSinceLastMovement: 1.199959
+  timeSinceLastMovement: 4.875736
   displacementFromSettled: 0
-  settleDuration: 1
-  unsettleDisplacementThreshold: 0.25
+  settleDuration: 0.75
+  unsettleDisplacementThreshold: 0.75

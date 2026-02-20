@@ -143,10 +143,4 @@ public class UnitWander : UnitBehaviour
         // Fallback
         return origin;
     }
-
-    protected override int GetBasePriority()
-    {
-        // Low priority - active when no other behaviors have higher priority
-        return 10;
-    }
 }

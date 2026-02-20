@@ -15,10 +15,14 @@ public class UnitController : MonoBehaviour, IInteractable
     [SerializeField] private UnitBehaviour defaultBehaviour;
     [SerializeField] private UnitInteraction defaultInteraction;
 
+    [Header("Services")]
+    [SerializeField] private UnitBehaviourPriorityService behaviourPriorityService;
+
     public UnitDestination Destination => destination;
     public UnitDialogue Dialogue => dialogue;
     public UnitHealth Health => health;
     public UnitDeath Death => death;
+    public UnitBehaviourPriorityService BehaviourPriorityService => behaviourPriorityService;
     [Header("Runtime")]
     [SerializeField] private UnitInstance instance;
     [SerializeField] private UnitBehaviour currentBehaviour;
@@ -134,13 +138,16 @@ public class UnitController : MonoBehaviour, IInteractable
 
     private void EvaluateBehaviourPriority()
     {
+        if (behaviourPriorityService == null)
+            return;
+
         var allBehaviours = GetComponents<UnitBehaviour>();
         UnitBehaviour bestBehaviour = defaultBehaviour;
-        int highestPriority = defaultBehaviour ? defaultBehaviour.GetPriority() : 0;
+        int highestPriority = 0;
 
         foreach (var behaviour in allBehaviours)
         {
-            int priority = behaviour.GetPriority();
+            int priority = behaviourPriorityService.GetBehaviourPriority(behaviour, this);
             if (priority > highestPriority)
             {
                 highestPriority = priority;

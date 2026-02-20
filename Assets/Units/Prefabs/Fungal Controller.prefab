@@ -213,6 +213,8 @@ MonoBehaviour:
   death: {fileID: 0}
   defaultBehaviour: {fileID: 3042677307364813546}
   defaultInteraction: {fileID: 11400000, guid: cd6893964a6274906b52bbbf6b56f4d8, type: 2}
+  behaviourPriorityService: {fileID: 11400000, guid: 6afebe865a6264c8b834fed8c6189cc2,
+    type: 2}
   instance:
     template: {fileID: 0}
     data:
@@ -255,7 +257,7 @@ NavMeshAgent:
   m_Radius: 0.3
   m_Speed: 2
   m_Acceleration: 100
-  avoidancePriority: 45
+  avoidancePriority: 92
   m_AngularSpeed: 1250
   m_StoppingDistance: 0.5
   m_AutoTraverseOffMeshLink: 1
@@ -305,8 +307,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  priorityModifiers:
-  - {fileID: 11400000, guid: 93bb92bad204c402aade23af0daf5975, type: 2}
   wanderRadius: 10
   minIdleTime: 3
   maxIdleTime: 20
@@ -352,8 +352,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  priorityModifiers:
-  - {fileID: 11400000, guid: 93bb92bad204c402aade23af0daf5975, type: 2}
 --- !u!114 &7222236572253189186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -367,7 +365,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  priorityModifiers: []
   djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
   playlist:
   - {fileID: 11400000, guid: eb7ab907c1d584cb7bb9935d2c347147, type: 2}
@@ -483,7 +480,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  priorityModifiers: []
   originalCache: {fileID: 0}
   colorPalette: {fileID: 0}
   primaryColor: {r: 0, g: 0, b: 0, a: 0}
@@ -536,7 +532,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  priorityModifiers: []
   activityReference: {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}
   djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
   baseDanceAnimation: Bounce
@@ -553,7 +548,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  priorityModifiers: []
   activityReference: {fileID: 11400000, guid: 20234f3cd19d34d52ba858ad98b27405, type: 2}
   sporeOffset: {x: 0, y: 0.1, z: 0.4}
 --- !u!114 &2753700914627426309
@@ -569,7 +563,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShruneReadingUnit
   isActive: 0
-  priorityModifiers: []
   activityReference: {fileID: 11400000, guid: 6acca8bf6674942fc809a4d20308a3af, type: 2}
 --- !u!114 &6597411002312729148
 MonoBehaviour:
@@ -584,8 +577,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitReturnToParty
   isActive: 0
-  priorityModifiers:
-  - {fileID: 11400000, guid: 9426b27b11ec54babaac8733c140d79c, type: 2}
 --- !u!114 &7500700067273940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -636,8 +627,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitCombat
   isActive: 0
-  priorityModifiers:
-  - {fileID: 11400000, guid: 9426b27b11ec54babaac8733c140d79c, type: 2}
   networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
   unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
     type: 2}
@@ -663,7 +652,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitFollow
   isActive: 0
-  priorityModifiers: []
   target: {fileID: 0}
   leader: {fileID: 0}
   followers: []

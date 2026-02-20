@@ -174,6 +174,7 @@ MonoBehaviour:
   death: {fileID: 0}
   defaultBehaviour: {fileID: 8396654974067815368}
   defaultInteraction: {fileID: 11400000, guid: cd6893964a6274906b52bbbf6b56f4d8, type: 2}
+  behaviourPriorityService: {fileID: 0}
   instance:
     template: {fileID: 0}
     data:
@@ -218,7 +219,7 @@ NavMeshAgent:
   m_Radius: 0.3
   m_Speed: 2
   m_Acceleration: 100
-  avoidancePriority: 74
+  avoidancePriority: 53
   m_AngularSpeed: 1250
   m_StoppingDistance: 0.05
   m_AutoTraverseOffMeshLink: 1
@@ -241,7 +242,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitPlayer
   isActive: 0
-  priorityModifiers: []
   playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
 --- !u!114 &8264549079356023806
 MonoBehaviour:
@@ -280,7 +280,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  priorityModifiers: []
   target: {fileID: 0}
   leader: {fileID: 0}
   followers: []
@@ -315,7 +314,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  priorityModifiers: []
   dJTableReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
   step: 4
   audioClips:
@@ -467,7 +465,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  priorityModifiers: []
   activityReference: {fileID: 11400000, guid: 0651293cfe83f4f34bdd7eb7e76e7477, type: 2}
   djReference: {fileID: 11400000, guid: 3bda1116fcf8f49e696cd21c6b5092da, type: 2}
   baseDanceAnimation: Dance_SwordAndShield
@@ -484,7 +481,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  priorityModifiers: []
   activityReference: {fileID: 11400000, guid: 20234f3cd19d34d52ba858ad98b27405, type: 2}
   sporeOffset: {x: 0, y: 0.1, z: 0.4}
 --- !u!114 &495309119734572904
@@ -536,7 +532,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShruneReadingUnit
   isActive: 0
-  priorityModifiers: []
   activityReference: {fileID: 11400000, guid: 6acca8bf6674942fc809a4d20308a3af, type: 2}
 --- !u!114 &8974912156065095882
 MonoBehaviour:
@@ -551,7 +546,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitSpore
   isActive: 0
-  priorityModifiers: []
   emissionInterval: 1
 --- !u!1 &5392631694524631568
 GameObject:

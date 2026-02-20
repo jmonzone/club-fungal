@@ -97,6 +97,8 @@ MonoBehaviour:
   death: {fileID: 5205446127520852507}
   defaultBehaviour: {fileID: 3224737969685497950}
   defaultInteraction: {fileID: 11400000, guid: cd6893964a6274906b52bbbf6b56f4d8, type: 2}
+  behaviourPriorityService: {fileID: 11400000, guid: 6afebe865a6264c8b834fed8c6189cc2,
+    type: 2}
   instance:
     template: {fileID: 11400000, guid: 9f94c43fcb7de4716af0753df9bbdbb3, type: 2}
     data:
@@ -139,7 +141,7 @@ NavMeshAgent:
   m_Radius: 0.3
   m_Speed: 2
   m_Acceleration: 100
-  avoidancePriority: 85
+  avoidancePriority: 97
   m_AngularSpeed: 1250
   m_StoppingDistance: 0.5
   m_AutoTraverseOffMeshLink: 1
@@ -162,7 +164,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  priorityModifiers: []
   wanderRadius: 10
   minIdleTime: 3
   maxIdleTime: 20
@@ -293,7 +294,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  priorityModifiers: []
   originalCache: {fileID: 0}
   colorPalette: {fileID: 0}
   primaryColor: {r: 0, g: 0, b: 0, a: 0}

@@ -7,6 +7,8 @@ public class UnitReturnToParty : UnitBehaviour, IReturnPositionable
     private Vector3 returnPosition;
     private const float acceptableDistance = 1f; // Distance considered "close enough" to return position
 
+    public Vector3 ReturnPosition => returnPosition;
+
     protected override void Awake()
     {
         base.Awake();
@@ -52,19 +54,5 @@ public class UnitReturnToParty : UnitBehaviour, IReturnPositionable
             Controller.SetLookPosition(returnPosition);
             Controller.Destination.SetDestination(returnPosition);
         }
-    }
-
-    protected override int GetBasePriority()
-    {
-        // Check if we need to return to party based on distance
-        float distanceToReturn = Vector3.Distance(transform.position, returnPosition);
-
-        // Priority based on distance from return position
-        if (distanceToReturn > acceptableDistance)
-        {
-            return 50;
-        }
-
-        return 0;
     }
 }
