@@ -11,6 +11,7 @@ public class UnitCombat : UnitBehaviour
     [Header("Combat Settings")]
     [SerializeField] private Projectile projectilePrefab;
     [SerializeField] private Transform projectileSpawnPoint;
+    [SerializeField] private float damage = 10f;
     [SerializeField] private float attackInterval = 1.5f;
     [SerializeField] private float attackRange = 15f;
     [SerializeField] private float detectionRangeOffset = 1f;
@@ -178,7 +179,7 @@ public class UnitCombat : UnitBehaviour
         Vector3 spawnPosition = projectileSpawnPoint.position + Vector3.up * 1f;
         projectile.transform.position = spawnPosition;
         projectile.transform.rotation = Quaternion.identity;
-        projectile.Initialize(target.transform);
+        projectile.Initialize(target, damage);
     }
 
     protected override int GetBasePriority()

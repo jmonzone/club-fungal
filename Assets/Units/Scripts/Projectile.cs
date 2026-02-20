@@ -14,6 +14,8 @@ public class Projectile : MonoBehaviour
     [SerializeField] private float endScale = 0.5f;
 
     private Transform target;
+    private UnitController targetController;
+    private float damage;
     private Vector3 startPos;
     private Vector3 targetPos;
     private float startTime;
@@ -33,6 +35,18 @@ public class Projectile : MonoBehaviour
     public void Initialize(Transform target)
     {
         this.target = target;
+        this.targetController = null;
+        this.damage = 0f;
+        startPos = transform.position;
+        startTime = Time.time;
+        transform.localScale = Vector3.one * initialScale;
+    }
+
+    public void Initialize(UnitController targetController, float damage)
+    {
+        this.target = targetController.transform;
+        this.targetController = targetController;
+        this.damage = damage;
         startPos = transform.position;
         startTime = Time.time;
         transform.localScale = Vector3.one * initialScale;
@@ -94,6 +108,16 @@ public class Projectile : MonoBehaviour
 
     private void OnHitTarget()
     {
+        // Deal damage to target if it has health
+        if (targetController != null && damage > 0f)
+        {
+            UnitHealth health = targetController.Health;
+            if (health != null)
+            {
+                health.TakeDamage(damage);
+            }
+        }
+
         // Notify pool to return this projectile
         OnHit?.Invoke();
         gameObject.SetActive(false);
