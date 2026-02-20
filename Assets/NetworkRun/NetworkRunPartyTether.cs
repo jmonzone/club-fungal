@@ -73,12 +73,12 @@ public class NetworkRunPartyTether : MonoBehaviour
                     spreadPosition = FindBestNavMeshPosition(spreadPosition, partyCenterGround, maxDistance);
                 }
 
-                // Use return behavior for both walking and teleporting
-                var returnBehaviour = controller.GetComponent<UnitReturnToParty>();
-                if (returnBehaviour != null)
+                // Set return position on all behaviors that support it
+                var returnPositionables = controller.GetComponents<IReturnPositionable>();
+                bool shouldTeleport = currentDistance > teleportDistance;
+                foreach (var returnPositionable in returnPositionables)
                 {
-                    bool shouldTeleport = currentDistance > teleportDistance;
-                    returnBehaviour.SetReturnPosition(spreadPosition, shouldTeleport);
+                    returnPositionable.SetReturnPosition(spreadPosition, shouldTeleport);
                 }
             }
 

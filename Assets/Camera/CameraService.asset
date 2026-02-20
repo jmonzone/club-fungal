@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraService
   cameraMode: 0
   isMoving: 0
-  hasSettled: 0
-  timeSinceLastMovement: 0.8531437
+  hasSettled: 1
+  timeSinceLastMovement: 1.199959
   displacementFromSettled: 0
   settleDuration: 1
-  unsettleDisplacementThreshold: 0.75
+  unsettleDisplacementThreshold: 0.25

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class UnitReturnToParty : UnitBehaviour
+public class UnitReturnToParty : UnitBehaviour, IReturnPositionable
 {
     private NavMeshAgent navMeshAgent;
     private Vector3 returnPosition;

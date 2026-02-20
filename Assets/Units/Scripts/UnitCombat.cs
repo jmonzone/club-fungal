@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class UnitCombat : UnitBehaviour
+public class UnitCombat : UnitBehaviour, IReturnPositionable
 {
     [Header("References")]
     [SerializeField] private NetworkRunService networkRunService;
@@ -111,6 +111,15 @@ public class UnitCombat : UnitBehaviour
         }
 
         SetTarget(nearestEnemy);
+    }
+
+    public void SetReturnPosition(Vector3 position, bool shouldTeleport = false)
+    {
+        // Only handle teleporting for combat units
+        if (shouldTeleport)
+        {
+            Controller.Teleport(position, Controller.transform.parent);
+        }
     }
 
     protected override void OnBehaviourStart()
