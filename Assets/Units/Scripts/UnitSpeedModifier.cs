@@ -33,14 +33,6 @@ public class UnitSpeedModifier : MonoBehaviour
 
     private void Start()
     {
-        if (networkRunService)
-        {
-            baseSpeed = networkRunService.Settings.baseMovementSpeed;
-        }
-        else
-        {
-            baseSpeed = agent.speed;
-        }
         UpdateSpeed();
     }
 
@@ -127,6 +119,7 @@ public class UnitSpeedModifier : MonoBehaviour
     {
         if (!agent) return;
 
+        baseSpeed = networkRunService.Settings.baseMovementSpeed;
         agent.speed = baseSpeed * CurrentSpeedMultiplier;
     }
 }

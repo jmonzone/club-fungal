@@ -37125,7 +37125,7 @@ PrefabInstance:
     - target: {fileID: 225081015780643707, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
       propertyPath: avoidancePriority
-      value: 5
+      value: 56
       objectReference: {fileID: 0}
     - target: {fileID: 356197031390877139, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
@@ -52314,7 +52314,7 @@ PrefabInstance:
     - target: {fileID: 977793336520775865, guid: f7449fb6d88ed40b39443d2eef0e0b04,
         type: 3}
       propertyPath: avoidancePriority
-      value: 19
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 2495404817932921699, guid: f7449fb6d88ed40b39443d2eef0e0b04,
         type: 3}
@@ -55514,7 +55514,7 @@ PrefabInstance:
     - target: {fileID: 6701783708521320235, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
       propertyPath: avoidancePriority
-      value: 11
+      value: 26
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -57173,7 +57173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d3993750f4df46cbb3b0e85fb9033b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraPanComponent
-  panSpeed: 0.05
+  panSpeed: 0.025
   panAxisMode: 1
   touchDriftDamping: 0.85
   mouseDriftDamping: 0.92

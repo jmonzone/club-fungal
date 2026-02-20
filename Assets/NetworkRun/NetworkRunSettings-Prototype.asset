@@ -16,7 +16,7 @@ MonoBehaviour:
   updateInterval: 1
   debugMode: 1
   speedMultiplier: 2
-  baseMovementSpeed: 2
+  baseMovementSpeed: 7.5
   useEnergySystem: 0
   energyDepletionPerUpdate: 1
   energyRestorationPerUpdate: 20
