@@ -10,11 +10,13 @@ public class UnitController : MonoBehaviour, IInteractable
     [SerializeField] protected Transform renderRoot;
     [SerializeField] private UnitDestination destination;
     [SerializeField] private UnitDialogue dialogue;
+    [SerializeField] private UnitHealth health;
     [SerializeField] private UnitBehaviour defaultBehaviour;
     [SerializeField] private UnitInteraction defaultInteraction;
 
     public UnitDestination Destination => destination;
     public UnitDialogue Dialogue => dialogue;
+    public UnitHealth Health => health;
     [Header("Runtime")]
     [SerializeField] private UnitInstance instance;
     [SerializeField] private UnitBehaviour currentBehaviour;
@@ -63,6 +65,7 @@ public class UnitController : MonoBehaviour, IInteractable
     private void OnValidate()
     {
         destination = GetComponent<UnitDestination>();
+        health = GetComponent<UnitHealth>();
     }
 
     protected virtual void Awake()
@@ -71,6 +74,7 @@ public class UnitController : MonoBehaviour, IInteractable
 
         destination = GetComponent<UnitDestination>();
         dialogue = GetComponent<UnitDialogue>();
+        health = GetComponent<UnitHealth>();
 
         if (destination)
         {
