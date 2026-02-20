@@ -23,6 +23,7 @@ public class NetworkRunService : GURUService
     [SerializeField] private Party party;
     [SerializeField] private UnitInstanceService unitInstanceService;
     [SerializeField] private UnitControllerService unitControllerService;
+    [SerializeField] private CameraService cameraService;
 
     [Header("Party Generation")]
     [SerializeField] private bool generateNewUnits = false;
@@ -47,6 +48,32 @@ public class NetworkRunService : GURUService
     public Vector3 CameraVelocity => cameraVelocity;
     public List<UnitController> PartyControllers => partyControllers;
     public Transform SpawnParent => spawnParent;
+
+    public float AveragePartySpeedMultiplier
+    {
+        get
+        {
+            if (partyControllers == null || partyControllers.Count == 0)
+                return 1f;
+
+            float totalMultiplier = 0f;
+            int validCount = 0;
+
+            foreach (var controller in partyControllers)
+            {
+                if (controller == null) continue;
+
+                var speedModifier = controller.GetComponent<UnitSpeedModifier>();
+                if (speedModifier != null)
+                {
+                    totalMultiplier += speedModifier.CurrentSpeedMultiplier;
+                    validCount++;
+                }
+            }
+
+            return validCount > 0 ? totalMultiplier / validCount : 1f;
+        }
+    }
 
     public void SetSpawnParent(Transform parent)
     {
@@ -130,6 +157,17 @@ public class NetworkRunService : GURUService
         }
 
         return party;
+    }
+
+    public override void DoUpdate()
+    {
+        base.DoUpdate();
+
+        // Update camera service with current party speed
+        if (cameraService != null)
+        {
+            cameraService.SetPartySpeedMultiplier(AveragePartySpeedMultiplier);
+        }
     }
 
     // public void Update()

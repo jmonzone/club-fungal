@@ -22189,7 +22189,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 925300557}
-  - component: {fileID: 925300558}
   - component: {fileID: 925300559}
   - component: {fileID: 925300560}
   - component: {fileID: 925300561}
@@ -22218,20 +22217,6 @@ Transform:
   - {fileID: 289661289}
   m_Father: {fileID: 958196309}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &925300558
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 925300556}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46f96e3fbc0374095ab2e15e7a32eb89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NetworkRunManager
-  networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
-  spawnParent: {fileID: 0}
 --- !u!114 &925300559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37124,7 +37109,7 @@ PrefabInstance:
     - target: {fileID: 225081015780643707, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
       propertyPath: avoidancePriority
-      value: 76
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 356197031390877139, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
@@ -52314,7 +52299,7 @@ PrefabInstance:
     - target: {fileID: 977793336520775865, guid: f7449fb6d88ed40b39443d2eef0e0b04,
         type: 3}
       propertyPath: avoidancePriority
-      value: 76
+      value: 37
       objectReference: {fileID: 0}
     - target: {fileID: 2386547562463187968, guid: f7449fb6d88ed40b39443d2eef0e0b04,
         type: 3}
@@ -55569,7 +55554,7 @@ PrefabInstance:
     - target: {fileID: 6701783708521320235, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
       propertyPath: avoidancePriority
-      value: 60
+      value: 23
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -57232,8 +57217,11 @@ MonoBehaviour:
   panAxisMode: 1
   touchDriftDamping: 0.85
   mouseDriftDamping: 0.92
+  cameraService: {fileID: 11400000, guid: 6a3cd891900334ca1ba50dee37569ba4, type: 2}
+  scaleWithPartySpeed: 1
   driftVelocityValue: {x: 0, y: 0, z: 0}
   isTouch: 0
+  currentSpeedMultiplier: 1
 --- !u!1 &8669874351063531218
 GameObject:
   m_ObjectHideFlags: 0

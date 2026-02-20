@@ -16,14 +16,17 @@ public class CameraService : GURUService
     [SerializeField][ReadOnly] private bool hasSettled;
     [SerializeField][ReadOnly] private float timeSinceLastMovement;
     [SerializeField][ReadOnly] private float displacementFromSettled;
+    [SerializeField][ReadOnly] private float partySpeedMultiplier = 1f;
 
     [Header("Settings")]
     [SerializeField] private float settleDuration = 0.5f;
     [SerializeField] private float unsettleDisplacementThreshold = 0.5f;
+    [SerializeField][Range(0f, 2f)] private float partySpeedSensitivity = 1f;
 
     public CameraMode CameraMode => cameraMode;
     public bool IsMoving => isMoving;
     public bool HasSettled => hasSettled;
+    public float PartySpeedMultiplier => Mathf.Lerp(1f, partySpeedMultiplier, partySpeedSensitivity);
 
     public event UnityAction<CameraMode> OnCameraModeChanged;
     public event UnityAction<float> OnYawDeltaRequested;
@@ -37,6 +40,12 @@ public class CameraService : GURUService
         hasSettled = false;
         timeSinceLastMovement = 0f;
         displacementFromSettled = 0f;
+        partySpeedMultiplier = 1f;
+    }
+
+    public void SetPartySpeedMultiplier(float multiplier)
+    {
+        partySpeedMultiplier = Mathf.Max(0f, multiplier);
     }
 
     public void SetZoomT(float t)
