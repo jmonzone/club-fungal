@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -147,6 +146,7 @@ public class UnitWander : UnitBehaviour
 
     protected override int GetBasePriority()
     {
-        return 1; // Low priority, other behaviors can override
+        // Low priority - active when no other behaviors have higher priority
+        return 10;
     }
 }

@@ -7,6 +7,7 @@ public class UnitForageService : GURUService
 {
     [SerializeField] private UnitControllerService unitControllerService;
     [SerializeField] private NetworkRunService networkRunService;
+    [SerializeField] private CameraService cameraService;
 
     [Header("Camera Movement Settings")]
     [SerializeField] private float maxCameraVelocityForForaging = 2f;
@@ -26,6 +27,12 @@ public class UnitForageService : GURUService
         {
             networkRunService.OnUnitReenteredTether += ReassignSpores;
         }
+
+        // Subscribe to camera settle event
+        if (cameraService != null)
+        {
+            cameraService.OnCameraSettled += ReassignSpores;
+        }
     }
 
     private void OnDisable()
@@ -33,6 +40,11 @@ public class UnitForageService : GURUService
         if (unitControllerService != null)
         {
             unitControllerService.OnUnitSummoned -= OnUnitSummoned;
+        }
+
+        if (cameraService != null)
+        {
+            cameraService.OnCameraSettled -= ReassignSpores;
         }
 
         activeForagers.Clear();
