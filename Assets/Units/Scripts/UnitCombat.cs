@@ -162,33 +162,15 @@ public class UnitCombat : UnitBehaviour, IReturnPositionable
 
             float distance = Vector3.Distance(transform.position, target.transform.position);
 
-            if (distance <= attackRange)
-            {
-                // Stop moving and attack
-                if (agent != null)
-                {
-                    agent.isStopped = true;
-                }
+            // Always move toward target and face them
+            Controller.SetLookPosition(target.transform.position);
+            Controller.Destination.SetDestination(target.transform.position);
 
-                // Face the target
-                Controller.SetLookPosition(target.transform.position);
-
-                // Attack if enough time has passed
-                if (Time.time - lastAttackTime >= attackInterval)
-                {
-                    ThrowProjectile();
-                    lastAttackTime = Time.time;
-                }
-            }
-            else
+            // Attack if in range and enough time has passed
+            if (distance <= attackRange && Time.time - lastAttackTime >= attackInterval)
             {
-                // Move toward target
-                if (agent != null && agent.isOnNavMesh)
-                {
-                    agent.isStopped = false;
-                    agent.SetDestination(target.transform.position);
-                }
-                Controller.SetLookPosition(target.transform.position);
+                ThrowProjectile();
+                lastAttackTime = Time.time;
             }
 
             yield return null;
