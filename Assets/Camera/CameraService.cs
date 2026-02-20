@@ -15,9 +15,11 @@ public class CameraService : GURUService
     [SerializeField][ReadOnly] private bool isMoving;
     [SerializeField][ReadOnly] private bool hasSettled;
     [SerializeField][ReadOnly] private float timeSinceLastMovement;
+    [SerializeField][ReadOnly] private float displacementFromSettled;
 
     [Header("Settings")]
     [SerializeField] private float settleDuration = 0.5f;
+    [SerializeField] private float unsettleDisplacementThreshold = 0.5f;
 
     public CameraMode CameraMode => cameraMode;
     public bool IsMoving => isMoving;
@@ -34,6 +36,7 @@ public class CameraService : GURUService
         isMoving = false;
         hasSettled = false;
         timeSinceLastMovement = 0f;
+        displacementFromSettled = 0f;
     }
 
     public void SetZoomT(float t)
@@ -56,13 +59,21 @@ public class CameraService : GURUService
         OnPitchDeltaRequested?.Invoke(pitchDelta);
     }
 
-    public void ReportMovement(bool moving)
+    public void ReportMovement(float velocity, float displacement)
     {
+        bool moving = velocity > 0.001f;
+        displacementFromSettled = displacement;
+
         if (moving)
         {
             isMoving = true;
-            hasSettled = false;
             timeSinceLastMovement = 0f;
+
+            // Only unsettle if displacement exceeds threshold
+            if (displacement >= unsettleDisplacementThreshold)
+            {
+                hasSettled = false;
+            }
         }
         else
         {
@@ -79,6 +90,7 @@ public class CameraService : GURUService
             if (!hasSettled && timeSinceLastMovement >= settleDuration)
             {
                 hasSettled = true;
+                displacementFromSettled = 0f;
                 OnCameraSettled?.Invoke();
             }
         }

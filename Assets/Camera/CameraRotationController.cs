@@ -25,6 +25,9 @@ public class CameraRotationController : MonoBehaviour
     [Header("Services")]
     [SerializeField] private CameraService cameraService;
 
+    private Vector3 settledPosition;
+    private bool hasStoredSettledPosition;
+
     void Start()
     {
         if (vCam == null) Debug.LogError("CameraRotationController: vCam not assigned!");
@@ -96,13 +99,26 @@ public class CameraRotationController : MonoBehaviour
         // Report movement to camera service
         if (cameraService)
         {
-            bool isMoving = false;
-            if (panComponent && panComponent.driftVelocity.magnitude > 0.001f)
+            float velocity = 0f;
+            if (panComponent)
             {
-                isMoving = true;
+                velocity = panComponent.driftVelocity.magnitude;
             }
 
-            cameraService.ReportMovement(isMoving);
+            // Track displacement from settled position
+            if (cameraService.HasSettled && !hasStoredSettledPosition)
+            {
+                settledPosition = transform.position;
+                hasStoredSettledPosition = true;
+            }
+            else if (!cameraService.HasSettled)
+            {
+                hasStoredSettledPosition = false;
+            }
+
+            float displacement = hasStoredSettledPosition ? Vector3.Distance(transform.position, settledPosition) : 0f;
+
+            cameraService.ReportMovement(velocity, displacement);
             cameraService.UpdateSettleTimer(Time.deltaTime);
         }
     }
