@@ -49,9 +49,31 @@ public class UnitCombat : UnitBehaviour
         }
     }
 
-    public void SetTarget(UnitController target)
+    public void SetTarget(UnitController newTarget)
     {
-        this.target = target;
+        // Unsubscribe from previous target's death event
+        if (target != null && target.Death != null)
+        {
+            target.Death.OnUnitDeath -= OnTargetDied;
+        }
+
+        this.target = newTarget;
+
+        // Subscribe to new target's death event
+        if (target != null && target.Death != null)
+        {
+            target.Death.OnUnitDeath += OnTargetDied;
+        }
+    }
+
+    private void OnTargetDied()
+    {
+        // Clear target when it dies
+        if (target != null && target.Death != null)
+        {
+            target.Death.OnUnitDeath -= OnTargetDied;
+        }
+        target = null;
     }
 
     private void FindNearestTarget()
@@ -75,6 +97,10 @@ public class UnitCombat : UnitBehaviour
             if (!controller.IsEnemy)
                 continue;
 
+            // Skip dead units
+            if (controller.Death != null && controller.Death.IsDead)
+                continue;
+
             // Check distance
             float distance = Vector3.Distance(transform.position, controller.transform.position);
             if (distance < nearestDistance)
@@ -84,7 +110,7 @@ public class UnitCombat : UnitBehaviour
             }
         }
 
-        target = nearestEnemy;
+        SetTarget(nearestEnemy);
     }
 
     protected override void OnBehaviourStart()
@@ -232,5 +258,14 @@ public class UnitCombat : UnitBehaviour
     {
         base.UnpauseBehaviour();
         StartCoroutine(CombatBehaviour());
+    }
+
+    private void OnDestroy()
+    {
+        // Clean up event subscription
+        if (target != null && target.Death != null)
+        {
+            target.Death.OnUnitDeath -= OnTargetDied;
+        }
     }
 }

@@ -11,12 +11,14 @@ public class UnitController : MonoBehaviour, IInteractable
     [SerializeField] private UnitDestination destination;
     [SerializeField] private UnitDialogue dialogue;
     [SerializeField] private UnitHealth health;
+    [SerializeField] private UnitDeath death;
     [SerializeField] private UnitBehaviour defaultBehaviour;
     [SerializeField] private UnitInteraction defaultInteraction;
 
     public UnitDestination Destination => destination;
     public UnitDialogue Dialogue => dialogue;
     public UnitHealth Health => health;
+    public UnitDeath Death => death;
     [Header("Runtime")]
     [SerializeField] private UnitInstance instance;
     [SerializeField] private UnitBehaviour currentBehaviour;
@@ -66,6 +68,7 @@ public class UnitController : MonoBehaviour, IInteractable
     {
         destination = GetComponent<UnitDestination>();
         health = GetComponent<UnitHealth>();
+        death = GetComponent<UnitDeath>();
     }
 
     protected virtual void Awake()
@@ -75,6 +78,7 @@ public class UnitController : MonoBehaviour, IInteractable
         destination = GetComponent<UnitDestination>();
         dialogue = GetComponent<UnitDialogue>();
         health = GetComponent<UnitHealth>();
+        death = GetComponent<UnitDeath>();
 
         if (destination)
         {

@@ -171,6 +171,7 @@ MonoBehaviour:
   destination: {fileID: 4440137496922120304}
   dialogue: {fileID: 1162159686060968867}
   health: {fileID: 0}
+  death: {fileID: 0}
   defaultBehaviour: {fileID: 8396654974067815368}
   defaultInteraction: {fileID: 11400000, guid: cd6893964a6274906b52bbbf6b56f4d8, type: 2}
   instance:
@@ -217,7 +218,7 @@ NavMeshAgent:
   m_Radius: 0.3
   m_Speed: 2
   m_Acceleration: 100
-  avoidancePriority: 99
+  avoidancePriority: 72
   m_AngularSpeed: 1250
   m_StoppingDistance: 0.05
   m_AutoTraverseOffMeshLink: 1

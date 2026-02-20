@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class UnitHealthUI : UnitComponent
 {
+    [SerializeField] private GameObject renderRoot;
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private Slider healthSlider;
     [SerializeField] private Image healthFillImage;
@@ -16,17 +17,30 @@ public class UnitHealthUI : UnitComponent
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        
+
         unitHealth = Controller.GetComponent<UnitHealth>();
         if (unitHealth)
         {
             unitHealth.OnHealthChanged += UpdateHealthUI;
             UpdateHealthUI(unitHealth.CurrentHealth, unitHealth.MaxHealth);
         }
+
+        // Hide UI by default (show only when damaged)
+        if (renderRoot)
+        {
+            renderRoot.SetActive(false);
+        }
     }
 
     private void UpdateHealthUI(float currentHealth, float maxHealth)
     {
+        // Show UI only when unit has taken damage
+        bool hasTakenDamage = currentHealth < maxHealth;
+        if (renderRoot)
+        {
+            renderRoot.SetActive(hasTakenDamage);
+        }
+
         if (healthText)
         {
             healthText.text = $"{Mathf.CeilToInt(currentHealth)}/{Mathf.CeilToInt(maxHealth)}";
@@ -40,7 +54,7 @@ public class UnitHealthUI : UnitComponent
         if (healthFillImage)
         {
             float healthPercent = currentHealth / maxHealth;
-            healthFillImage.color = Color.Lerp(lowHealthColor, fullHealthColor, 
+            healthFillImage.color = Color.Lerp(lowHealthColor, fullHealthColor,
                 healthPercent > lowHealthThreshold ? 1f : healthPercent / lowHealthThreshold);
         }
     }
