@@ -22247,15 +22247,14 @@ MonoBehaviour:
   networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
   unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
     type: 2}
+  cameraService: {fileID: 11400000, guid: 6a3cd891900334ca1ba50dee37569ba4, type: 2}
   navMeshAreaConfig: {fileID: 11400000, guid: 57edff644ce85440db6cfb3636326d00, type: 2}
   groundMask:
     serializedVersion: 2
     m_Bits: 64
-  maxDistance: 5
+  maxDistance: 5.5
   teleportDistance: 25
   spreadRadius: 2
-  anticipationTime: 1.5
-  minVelocityThreshold: 1
 --- !u!114 &925300560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22284,7 +22283,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MushroomSpawner
   spawnCollider: {fileID: 1039316315}
   navMeshAreaConfig: {fileID: 11400000, guid: 57edff644ce85440db6cfb3636326d00, type: 2}
-  spawnCount: 10
+  spawnCount: 20
   minSpacing: 0.5
   spawnOnAwake: 1
   mushroomTypes:
@@ -37125,7 +37124,7 @@ PrefabInstance:
     - target: {fileID: 225081015780643707, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
       propertyPath: avoidancePriority
-      value: 91
+      value: 76
       objectReference: {fileID: 0}
     - target: {fileID: 356197031390877139, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
@@ -52315,7 +52314,7 @@ PrefabInstance:
     - target: {fileID: 977793336520775865, guid: f7449fb6d88ed40b39443d2eef0e0b04,
         type: 3}
       propertyPath: avoidancePriority
-      value: 14
+      value: 76
       objectReference: {fileID: 0}
     - target: {fileID: 2386547562463187968, guid: f7449fb6d88ed40b39443d2eef0e0b04,
         type: 3}
@@ -55570,7 +55569,7 @@ PrefabInstance:
     - target: {fileID: 6701783708521320235, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
       propertyPath: avoidancePriority
-      value: 11
+      value: 60
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

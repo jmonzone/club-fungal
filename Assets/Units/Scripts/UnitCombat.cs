@@ -25,6 +25,7 @@ public class UnitCombat : UnitBehaviour, IReturnPositionable
     private float lastAttackTime;
     private float lastTargetSearchTime;
     private ObjectPool<Projectile> projectilePool;
+    private Vector3 returnPosition;
 
     public UnitController CurrentTarget => target;
 
@@ -115,6 +116,8 @@ public class UnitCombat : UnitBehaviour, IReturnPositionable
 
     public void SetReturnPosition(Vector3 position, bool shouldTeleport = false)
     {
+        returnPosition = position;
+
         // Only handle teleporting for combat units
         if (shouldTeleport)
         {
@@ -167,9 +170,12 @@ public class UnitCombat : UnitBehaviour, IReturnPositionable
 
             float distance = Vector3.Distance(transform.position, target.transform.position);
 
-            // Always move toward target and face them
+            // Calculate optimal combat position (close to return position while in attack range)
+            Vector3 combatPosition = CalculateOptimalCombatPosition();
+
+            // Move to optimal position and face target
             Controller.SetLookPosition(target.transform.position);
-            Controller.Destination.SetDestination(target.transform.position);
+            Controller.Destination.SetDestination(combatPosition);
 
             // Attack if in range and enough time has passed
             if (distance <= attackRange && Time.time - lastAttackTime >= attackInterval)
@@ -180,6 +186,52 @@ public class UnitCombat : UnitBehaviour, IReturnPositionable
 
             yield return null;
         }
+    }
+
+    private Vector3 CalculateOptimalCombatPosition()
+    {
+        if (target == null || networkRunService == null || networkRunService.Party == null)
+            return transform.position;
+
+        Vector3 targetPosition = target.transform.position;
+        float optimalDistance = attackRange * 0.9f;
+
+        // If return position is set
+        if (returnPosition != Vector3.zero)
+        {
+            float distanceToTarget = Vector3.Distance(returnPosition, targetPosition);
+
+            // Return position is in attack range - use it
+            if (distanceToTarget <= attackRange)
+            {
+                return returnPosition;
+            }
+
+            // Return position is out of range - find closest point to it that IS in range
+            Vector3 directionToReturn = returnPosition - targetPosition;
+
+            // Safety check: if target is at/very near return position, use current position
+            if (directionToReturn.sqrMagnitude < 0.01f)
+            {
+                return transform.position;
+            }
+
+            directionToReturn.Normalize();
+            return targetPosition + (directionToReturn * optimalDistance);
+        }
+
+        // No return position set - use party center as fallback
+        Vector3 partyCenter = networkRunService.PartyCenterGround;
+        Vector3 directionToParty = partyCenter - targetPosition;
+
+        // Safety check: if target is at/very near party center, use current position
+        if (directionToParty.sqrMagnitude < 0.01f)
+        {
+            return transform.position;
+        }
+
+        directionToParty.Normalize();
+        return targetPosition + (directionToParty * optimalDistance);
     }
 
     private void ThrowProjectile()

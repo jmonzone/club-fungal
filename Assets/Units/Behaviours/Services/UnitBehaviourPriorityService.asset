@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b760e4faf338445da999558d83f8694, type: 3}
   m_Name: UnitBehaviourPriorityService
   m_EditorClassIdentifier: Assembly-CSharp::UnitBehaviourPriorityService
-  cameraService: {fileID: 0}
+  cameraService: {fileID: 11400000, guid: 6a3cd891900334ca1ba50dee37569ba4, type: 2}
   combatPriority: 400
   returnToPartyPriority: 300
   foragePriority: 200
