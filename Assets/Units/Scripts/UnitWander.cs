@@ -145,4 +145,8 @@ public class UnitWander : UnitBehaviour
         return origin;
     }
 
+    protected override int GetBasePriority()
+    {
+        return 1; // Low priority, other behaviors can override
+    }
 }

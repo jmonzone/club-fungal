@@ -54,12 +54,12 @@ public class UnitReturnToParty : UnitBehaviour
         }
     }
 
-    public override int GetPriority()
+    protected override int GetBasePriority()
     {
-        // Check if we need to return to party
+        // Check if we need to return to party based on distance
         float distanceToReturn = Vector3.Distance(transform.position, returnPosition);
 
-        // High priority when far from return position, zero when close
+        // Priority based on distance from return position
         if (distanceToReturn > acceptableDistance)
         {
             return 50;

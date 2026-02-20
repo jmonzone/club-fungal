@@ -13,3 +13,7 @@ MonoBehaviour:
   m_Name: CameraService
   m_EditorClassIdentifier: Assembly-CSharp::CameraService
   cameraMode: 0
+  isMoving: 0
+  hasSettled: 1
+  timeSinceLastMovement: 30.5467
+  settleDuration: 1

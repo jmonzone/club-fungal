@@ -172,7 +172,7 @@ public class UnitForage : UnitBehaviour
         StartCoroutine(ForagingBehaviour());
     }
 
-    public override int GetPriority()
+    protected override int GetBasePriority()
     {
         // High priority if we have a target
         return target != null ? 100 : 0;

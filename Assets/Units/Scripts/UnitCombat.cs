@@ -181,7 +181,7 @@ public class UnitCombat : UnitBehaviour
         projectile.Initialize(target.transform);
     }
 
-    public override int GetPriority()
+    protected override int GetBasePriority()
     {
         // Try to find a target if we don't have one
         if (target == null)

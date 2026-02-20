@@ -22,6 +22,9 @@ public class CameraRotationController : MonoBehaviour
     [SerializeField][ReadOnly] CameraPanComponent panComponent;
     [SerializeField][ReadOnly] CameraInputHandler inputHandler;
 
+    [Header("Services")]
+    [SerializeField] private CameraService cameraService;
+
     void Start()
     {
         if (vCam == null) Debug.LogError("CameraRotationController: vCam not assigned!");
@@ -89,6 +92,19 @@ public class CameraRotationController : MonoBehaviour
 
         // Handle input
         if (inputHandler) inputHandler.HandleInput();
+
+        // Report movement to camera service
+        if (cameraService)
+        {
+            bool isMoving = false;
+            if (panComponent && panComponent.driftVelocity.magnitude > 0.001f)
+            {
+                isMoving = true;
+            }
+
+            cameraService.ReportMovement(isMoving);
+            cameraService.UpdateSettleTimer(Time.deltaTime);
+        }
     }
 
     public void SetCanOrbit(bool canOrbit)

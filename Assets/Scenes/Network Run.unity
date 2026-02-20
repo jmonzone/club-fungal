@@ -37125,7 +37125,7 @@ PrefabInstance:
     - target: {fileID: 225081015780643707, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
       propertyPath: avoidancePriority
-      value: 56
+      value: 84
       objectReference: {fileID: 0}
     - target: {fileID: 356197031390877139, guid: aeb9ea07d40654a459c0e87b5ab0f0d2,
         type: 3}
@@ -51887,6 +51887,7 @@ MonoBehaviour:
   zoomComponent: {fileID: 0}
   panComponent: {fileID: 0}
   inputHandler: {fileID: 0}
+  cameraService: {fileID: 11400000, guid: 6a3cd891900334ca1ba50dee37569ba4, type: 2}
 --- !u!1001 &2109795342937993625
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -52314,7 +52315,7 @@ PrefabInstance:
     - target: {fileID: 977793336520775865, guid: f7449fb6d88ed40b39443d2eef0e0b04,
         type: 3}
       propertyPath: avoidancePriority
-      value: 24
+      value: 44
       objectReference: {fileID: 0}
     - target: {fileID: 2495404817932921699, guid: f7449fb6d88ed40b39443d2eef0e0b04,
         type: 3}
@@ -55514,7 +55515,7 @@ PrefabInstance:
     - target: {fileID: 6701783708521320235, guid: e9f8a044aacf9498eb482430f1da38f4,
         type: 3}
       propertyPath: avoidancePriority
-      value: 26
+      value: 56
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -57177,7 +57178,7 @@ MonoBehaviour:
   panAxisMode: 1
   touchDriftDamping: 0.85
   mouseDriftDamping: 0.92
-  driftVelocity: {x: -0.061879396, y: 0.05432379, z: 0}
+  driftVelocityValue: {x: 0, y: 0, z: 0}
   isTouch: 0
 --- !u!1 &8669874351063531218
 GameObject:

@@ -12,16 +12,28 @@ public class CameraService : GURUService
 {
     [Header("Runtime")]
     [SerializeField][ReadOnly] private CameraMode cameraMode;
+    [SerializeField][ReadOnly] private bool isMoving;
+    [SerializeField][ReadOnly] private bool hasSettled;
+    [SerializeField][ReadOnly] private float timeSinceLastMovement;
+
+    [Header("Settings")]
+    [SerializeField] private float settleDuration = 0.5f;
 
     public CameraMode CameraMode => cameraMode;
+    public bool IsMoving => isMoving;
+    public bool HasSettled => hasSettled;
 
     public event UnityAction<CameraMode> OnCameraModeChanged;
     public event UnityAction<float> OnYawDeltaRequested;
     public event UnityAction<float> OnPitchDeltaRequested;
+    public event UnityAction OnCameraSettled;
 
     protected override void OnInitialize()
     {
         cameraMode = CameraMode.THIRD_PERSON;
+        isMoving = false;
+        hasSettled = false;
+        timeSinceLastMovement = 0f;
     }
 
     public void SetZoomT(float t)
@@ -42,5 +54,33 @@ public class CameraService : GURUService
     public void AddPitch(float pitchDelta)
     {
         OnPitchDeltaRequested?.Invoke(pitchDelta);
+    }
+
+    public void ReportMovement(bool moving)
+    {
+        if (moving)
+        {
+            isMoving = true;
+            hasSettled = false;
+            timeSinceLastMovement = 0f;
+        }
+        else
+        {
+            isMoving = false;
+        }
+    }
+
+    public void UpdateSettleTimer(float deltaTime)
+    {
+        if (!isMoving)
+        {
+            timeSinceLastMovement += deltaTime;
+
+            if (!hasSettled && timeSinceLastMovement >= settleDuration)
+            {
+                hasSettled = true;
+                OnCameraSettled?.Invoke();
+            }
+        }
     }
 }

@@ -16,26 +16,28 @@ public class CameraPanComponent : MonoBehaviour
     public float mouseDriftDamping = 0.92f;
 
     [Header("Read Only")]
-    [SerializeField][ReadOnly] Vector3 driftVelocity;
+    [SerializeField][ReadOnly] Vector3 driftVelocityValue;
     [SerializeField][ReadOnly] bool isTouch;
+
+    public Vector3 driftVelocity => driftVelocityValue;
 
     public void Initialize()
     {
-        driftVelocity = Vector3.zero;
+        driftVelocityValue = Vector3.zero;
     }
 
     public void ApplyPan()
     {
         // Apply drift with damping
-        if (driftVelocity.magnitude > 0.001f)
+        if (driftVelocityValue.magnitude > 0.001f)
         {
-            transform.position += driftVelocity * Time.deltaTime;
+            transform.position += driftVelocityValue * Time.deltaTime;
             float damping = isTouch ? touchDriftDamping : mouseDriftDamping;
-            driftVelocity *= damping;
+            driftVelocityValue *= damping;
         }
         else
         {
-            driftVelocity = Vector3.zero;
+            driftVelocityValue = Vector3.zero;
         }
     }
 
@@ -46,12 +48,12 @@ public class CameraPanComponent : MonoBehaviour
         if (panAxisMode == PanAxisMode.XY)
         {
             Vector3 up = Vector3.up;
-            driftVelocity += (right * delta.x + up * delta.y) * panSpeed;
+            driftVelocityValue += (right * delta.x + up * delta.y) * panSpeed;
         }
         else // XZ
         {
             Vector3 forward = Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
-            driftVelocity += (right * delta.x + forward * delta.y) * panSpeed;
+            driftVelocityValue += (right * delta.x + forward * delta.y) * panSpeed;
         }
     }
 }
