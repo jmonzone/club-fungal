@@ -57,13 +57,13 @@ public class AquariumInventoryController : MonoBehaviour
 
     private IEnumerator ApplySpeedBoostToParty(Item item)
     {
-        if (networkRunService == null || networkRunService.PartyControllers == null)
+        if (networkRunService == null || networkRunService.PartyService == null || networkRunService.PartyService.PartyControllers == null)
         {
             Debug.LogWarning("NetworkRunService or PartyControllers not available");
             yield break;
         }
 
-        foreach (var controller in networkRunService.PartyControllers)
+        foreach (var controller in networkRunService.PartyService.PartyControllers)
         {
             var speedModifier = controller.GetComponent<UnitSpeedModifier>();
             if (speedModifier == null)
@@ -81,7 +81,7 @@ public class AquariumInventoryController : MonoBehaviour
             trail.ActivateTrail();
         }
 
-        Debug.Log($"Applied {speedBoostMultiplier}x speed boost to {networkRunService.PartyControllers.Count} party members for {speedBoostDuration} seconds");
+        Debug.Log($"Applied {speedBoostMultiplier}x speed boost to {networkRunService.PartyService.PartyControllers.Count} party members for {speedBoostDuration} seconds");
 
         // Remove item from inventory
         if (inventoryReference != null)
@@ -91,7 +91,7 @@ public class AquariumInventoryController : MonoBehaviour
 
         yield return new WaitForSeconds(speedBoostDuration);
 
-        foreach (var controller in networkRunService.PartyControllers)
+        foreach (var controller in networkRunService.PartyService.PartyControllers)
         {
             var speedModifier = controller.GetComponent<UnitSpeedModifier>();
             if (speedModifier != null)

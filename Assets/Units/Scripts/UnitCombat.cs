@@ -79,7 +79,7 @@ public class UnitCombat : UnitBehaviour, IReturnPositionable
 
     private void FindNearestTarget()
     {
-        if (unitControllerService == null || networkRunService == null || networkRunService.Party == null)
+        if (unitControllerService == null || networkRunService == null || networkRunService.PartyService == null || networkRunService.PartyService.Party == null)
             return;
 
         UnitController nearestEnemy = null;
@@ -190,7 +190,7 @@ public class UnitCombat : UnitBehaviour, IReturnPositionable
 
     private Vector3 CalculateOptimalCombatPosition()
     {
-        if (target == null || networkRunService == null || networkRunService.Party == null)
+        if (target == null || networkRunService == null || networkRunService.PartyService == null || networkRunService.PartyService.Party == null)
             return transform.position;
 
         Vector3 targetPosition = target.transform.position;

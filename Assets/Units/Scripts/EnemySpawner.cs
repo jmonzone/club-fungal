@@ -48,7 +48,7 @@ public class EnemySpawner : NavMeshSpawner
         Vector3 position = GetRandomAvailablePosition();
         if (position == Vector3.zero) return;
 
-        Transform parent = enemyParent != null ? enemyParent : (networkRunService != null ? networkRunService.SpawnParent : null);
+        Transform parent = enemyParent != null ? enemyParent : (networkRunService != null && networkRunService.PartyService != null ? networkRunService.PartyService.SpawnParent : null);
         UnitController enemy = unitControllerService.SpawnEnemy(position, parent);
 
         if (enemy == null)

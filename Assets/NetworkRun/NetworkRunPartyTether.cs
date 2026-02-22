@@ -27,7 +27,7 @@ public class NetworkRunPartyTether : MonoBehaviour
 
     private void CheckAndTetherUnits()
     {
-        if (mainCamera == null || networkRunService == null || networkRunService.Party == null)
+        if (mainCamera == null || networkRunService == null || networkRunService.PartyService == null || networkRunService.PartyService.Party == null)
             return;
 
         // Raycast from center of screen to ground
@@ -44,7 +44,7 @@ public class NetworkRunPartyTether : MonoBehaviour
 
         // Check each party member's distance
         int index = 0;
-        foreach (var unitInstance in networkRunService.Party.Unit)
+        foreach (var unitInstance in networkRunService.PartyService.Party.Units)
         {
             var controller = unitControllerService.Controllers.Find(c => c.Instance == unitInstance);
             if (controller == null) continue;
@@ -56,7 +56,7 @@ public class NetworkRunPartyTether : MonoBehaviour
             if (cameraIsMoving)
             {
                 // Calculate spread position
-                float angle = index * 360f / networkRunService.Party.Unit.Count * Mathf.Deg2Rad;
+                float angle = index * 360f / networkRunService.PartyService.Party.Units.Count * Mathf.Deg2Rad;
                 Vector3 offset = new Vector3(Mathf.Cos(angle) * spreadRadius, 0, Mathf.Sin(angle) * spreadRadius);
                 Vector3 spreadPosition = partyCenterGround + offset;
 

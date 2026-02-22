@@ -4,6 +4,7 @@ public class NetworkRunInitializer : MonoBehaviour
 {
     [SerializeField] private NetworkRunService networkRunService;
     [SerializeField] private Transform spawnParent;
+    [SerializeField] private CameraRotationController cameraController;
 
     private void Awake()
     {
@@ -12,8 +13,12 @@ public class NetworkRunInitializer : MonoBehaviour
 
     private void Start()
     {
-        networkRunService.SetSpawnParent(spawnParent);
+        networkRunService.PartyService.SetSpawnParent(spawnParent);
         networkRunService.OnSceneLoaded();
 
+        if (cameraController != null && networkRunService.PartyService.PartyLeader != null)
+        {
+            cameraController.target = networkRunService.PartyService.PartyLeader.transform;
+        }
     }
 }
