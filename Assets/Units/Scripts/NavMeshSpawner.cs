@@ -18,7 +18,7 @@ public abstract class NavMeshSpawner : MonoBehaviour
 
     protected virtual void Awake()
     {
-        if (spawnOnAwake)
+        if (spawnOnAwake && enabled)
         {
             Spawn();
         }
