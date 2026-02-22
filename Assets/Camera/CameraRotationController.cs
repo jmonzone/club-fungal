@@ -27,6 +27,7 @@ public class CameraRotationController : MonoBehaviour
 
     private Vector3 settledPosition;
     private bool hasStoredSettledPosition;
+    private Vector3 lastPosition;
 
     void OnEnable()
     {
@@ -110,6 +111,9 @@ public class CameraRotationController : MonoBehaviour
 
         // Initialize pan component
         if (panComponent) panComponent.Initialize();
+
+        // Store initial position for movement tracking
+        lastPosition = transform.position;
     }
 
     void Update()
@@ -128,11 +132,9 @@ public class CameraRotationController : MonoBehaviour
         // Report movement to camera service
         if (cameraService)
         {
-            float velocity = 0f;
-            if (panComponent)
-            {
-                velocity = panComponent.driftVelocity.magnitude;
-            }
+            // Calculate velocity from actual position change (captures both following and panning)
+            float velocity = Vector3.Distance(transform.position, lastPosition) / Time.deltaTime;
+            lastPosition = transform.position;
 
             // Track displacement from settled position
             if (cameraService.HasSettled && !hasStoredSettledPosition)
