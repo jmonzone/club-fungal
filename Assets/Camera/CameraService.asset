@@ -18,6 +18,6 @@ MonoBehaviour:
   timeSinceLastMovement: 0.76978886
   displacementFromSettled: 0
   partySpeedMultiplier: 1
-  settleDuration: 0.75
-  unsettleDisplacementThreshold: 0.75
+  settleDuration: 0.5
+  unsettleDisplacementThreshold: 1
   partySpeedSensitivity: 0.2
