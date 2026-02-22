@@ -37,18 +37,21 @@ public class NetworkRunPartyTether : MonoBehaviour
         if (mainCamera == null || networkRunService == null || networkRunService.PartyService == null || networkRunService.PartyService.Party == null)
             return;
 
-        // Raycast from center of screen to ground
-        Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-        if (!Physics.Raycast(ray, out RaycastHit hit, 1000f, groundMask))
+        // Use party leader position as center
+        var partyLeader = networkRunService.PartyService.PartyLeader;
+        if (partyLeader == null)
             return;
 
-        Debug.Log($"Camera ray hit at {hit.point}");
-        partyCenterGround = hit.point;
+        partyCenterGround = partyLeader.transform.position;
 
         networkRunService.SetPartyTetherData(partyCenterGround, maxDistance, Vector3.zero);
 
         // Give units return positions when camera is moving
         bool cameraIsMoving = cameraService != null && cameraService.IsMoving;
+
+        // Get party leader's forward direction for relative positioning (use render root for visual facing)
+        Vector3 leaderForward = partyLeader.RenderRoot != null ? partyLeader.RenderRoot.forward : partyLeader.transform.forward;
+        float leaderYaw = Mathf.Atan2(leaderForward.x, leaderForward.z);
 
         // Check each party member's distance
         int index = 0;
@@ -56,15 +59,23 @@ public class NetworkRunPartyTether : MonoBehaviour
         {
             var controller = unitControllerService.Controllers.Find(c => c.Instance == unitInstance);
             if (controller == null) continue;
+
+            // Skip party leader - they don't need a return position
+            if (controller == partyLeader)
+            {
+                index++;
+                continue;
+            }
+
             Vector3 unitPosition = controller.transform.position;
             float currentDistance = Vector3.Distance(unitPosition, partyCenterGround);
 
             // Give return position if camera is moving
             if (cameraIsMoving)
             {
-                // Calculate spread position
-                float angle = index * 360f / networkRunService.PartyService.Party.Units.Count * Mathf.Deg2Rad;
-                Vector3 offset = new Vector3(Mathf.Cos(angle) * spreadRadius, 0, Mathf.Sin(angle) * spreadRadius);
+                // Calculate spread position relative to leader's facing direction
+                float angle = leaderYaw + (index * 360f / networkRunService.PartyService.Party.Units.Count * Mathf.Deg2Rad);
+                Vector3 offset = new Vector3(Mathf.Sin(angle) * spreadRadius, 0, Mathf.Cos(angle) * spreadRadius);
                 Vector3 spreadPosition = partyCenterGround + offset;
 
                 // Try to find a position on NavMesh - aqua units prefer water/slow terrain
