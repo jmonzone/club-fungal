@@ -36,7 +36,7 @@ public class CameraPanComponent : MonoBehaviour
         // Update speed multiplier from party
         if (scaleWithPartySpeed && cameraService != null)
         {
-            currentSpeedMultiplier = cameraService.PartySpeedMultiplier;
+            currentSpeedMultiplier = cameraService.SpeedMultiplier;
         }
         else
         {
@@ -64,7 +64,7 @@ public class CameraPanComponent : MonoBehaviour
         float speedMultiplier = 1f;
         if (scaleWithPartySpeed && cameraService != null)
         {
-            speedMultiplier = cameraService.PartySpeedMultiplier;
+            speedMultiplier = cameraService.SpeedMultiplier;
         }
 
         Vector3 right = transform.right;

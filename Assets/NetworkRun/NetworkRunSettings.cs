@@ -30,6 +30,7 @@ public class NetworkRunSettings : ScriptableObject
     public float updateInterval = 1.0f;
     public bool debugMode = false;
     public float speedMultiplier = 1.0f; // Simulation speed (1.0 = normal, 2.0 = 2x speed, etc.)
+    public float maxSpeedMultiplier = 2.0f; // Maximum party speed multiplier cap
     public float baseMovementSpeed = 3f;
     public bool useEnergySystem = true; // Enable/disable energy depletion and restoration
     public float energyDepletionPerUpdate = 1f; // How much energy is depleted per resource collection

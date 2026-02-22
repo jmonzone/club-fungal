@@ -56,8 +56,8 @@ public class NetworkRunService : GURUService
             if (partyControllers == null || partyControllers.Count == 0)
                 return 1f;
 
-            float totalMultiplier = 0f;
-            int validCount = 0;
+            float minMultiplier = float.MaxValue;
+            bool foundAny = false;
 
             foreach (var controller in partyControllers)
             {
@@ -66,12 +66,17 @@ public class NetworkRunService : GURUService
                 var speedModifier = controller.GetComponent<UnitSpeedModifier>();
                 if (speedModifier != null)
                 {
-                    totalMultiplier += speedModifier.CurrentSpeedMultiplier;
-                    validCount++;
+                    minMultiplier = Mathf.Min(minMultiplier, speedModifier.CurrentSpeedMultiplier);
+                    foundAny = true;
                 }
             }
 
-            return validCount > 0 ? totalMultiplier / validCount : 1f;
+            if (!foundAny)
+                return 1f;
+
+            // Smooth convergence at max value using hyperbolic curve
+            // This approaches maxSpeedMultiplier asymptotically as speeds increase
+            return settings.maxSpeedMultiplier * minMultiplier / (minMultiplier + (settings.maxSpeedMultiplier - 1f));
         }
     }
 
@@ -166,7 +171,7 @@ public class NetworkRunService : GURUService
         // Update camera service with current party speed
         if (cameraService != null)
         {
-            cameraService.SetPartySpeedMultiplier(AveragePartySpeedMultiplier);
+            cameraService.SetSpeedMultiplier(AveragePartySpeedMultiplier);
         }
     }
 

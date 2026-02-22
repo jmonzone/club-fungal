@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class NetworkRunPartyTether : MonoBehaviour
 {
@@ -15,7 +13,6 @@ public class NetworkRunPartyTether : MonoBehaviour
 
     private Camera mainCamera;
     private Vector3 partyCenterGround;
-    private HashSet<UnitInstance> unitsOutsideTether = new HashSet<UnitInstance>();
 
     private void Awake()
     {
@@ -59,7 +56,7 @@ public class NetworkRunPartyTether : MonoBehaviour
             if (cameraIsMoving)
             {
                 // Calculate spread position
-                float angle = (index * 360f / networkRunService.Party.Unit.Count) * Mathf.Deg2Rad;
+                float angle = index * 360f / networkRunService.Party.Unit.Count * Mathf.Deg2Rad;
                 Vector3 offset = new Vector3(Mathf.Cos(angle) * spreadRadius, 0, Mathf.Sin(angle) * spreadRadius);
                 Vector3 spreadPosition = partyCenterGround + offset;
 
@@ -67,10 +64,6 @@ public class NetworkRunPartyTether : MonoBehaviour
                 if (navMeshAreaConfig != null)
                 {
                     spreadPosition = navMeshAreaConfig.FindBestNavMeshPosition(spreadPosition, partyCenterGround, true, maxDistance);
-                }
-                else
-                {
-                    spreadPosition = FindBestNavMeshPosition(spreadPosition, partyCenterGround, maxDistance);
                 }
 
                 // Set return position on all behaviors that support it
@@ -84,121 +77,6 @@ public class NetworkRunPartyTether : MonoBehaviour
 
             index++;
         }
-    }
-
-    // Fallback method if navMeshAreaConfig is not assigned
-    private Vector3 FindBestNavMeshPosition(Vector3 targetPosition, Vector3 fallbackCenter, float maxSearchDistance)
-    {
-        int walkableAreaMask = 1 << 0;
-        int slowTerrainAreaMask = 1 << 6;
-        float edgePadding = 0.3f;
-        float[] searchRadii = { 0.5f, 1f, 2f, 5f, 10f };
-
-        // Try walkable areas first with directional padding (within maxSearchDistance)
-        foreach (float radius in searchRadii)
-        {
-            if (NavMesh.SamplePosition(targetPosition, out NavMeshHit hit, radius, walkableAreaMask))
-            {
-                // Check if position is within max distance from party center
-                if (Vector3.Distance(hit.position, fallbackCenter) <= maxSearchDistance)
-                {
-                    Vector3 paddedPosition = FindBestPaddedPosition(hit.position, walkableAreaMask, edgePadding);
-                    if (paddedPosition != hit.position && Vector3.Distance(paddedPosition, fallbackCenter) <= maxSearchDistance)
-                    {
-                        return paddedPosition;
-                    }
-                    return hit.position;
-                }
-            }
-        }
-
-        // If no walkable area found within range, try slow terrain (within maxSearchDistance)
-        foreach (float radius in searchRadii)
-        {
-            if (NavMesh.SamplePosition(targetPosition, out NavMeshHit slowHit, radius, slowTerrainAreaMask))
-            {
-                // Check if position is within max distance from party center
-                if (Vector3.Distance(slowHit.position, fallbackCenter) <= maxSearchDistance)
-                {
-                    // Try to pad toward walkable area
-                    Vector3 paddedPosition = FindBestPaddedPosition(slowHit.position, walkableAreaMask, edgePadding);
-                    // If we found a walkable position nearby and it's in range, use it
-                    if (NavMesh.SamplePosition(paddedPosition, out NavMeshHit walkableCheck, 0.5f, walkableAreaMask))
-                    {
-                        if (Vector3.Distance(walkableCheck.position, fallbackCenter) <= maxSearchDistance)
-                        {
-                            return walkableCheck.position;
-                        }
-                    }
-                    // Otherwise use the slow terrain position since it's in range
-                    return slowHit.position;
-                }
-            }
-        }
-
-        // Last resort: use original position even if on slow terrain, as long as it's somewhat close to a NavMesh
-        if (NavMesh.SamplePosition(targetPosition, out NavMeshHit anyHit, 2f, NavMesh.AllAreas))
-        {
-            return anyHit.position;
-        }
-
-        return targetPosition;
-    }
-
-    // Find the best padded position by sampling directions to move deeper into target area
-    private Vector3 FindBestPaddedPosition(Vector3 position, int targetAreaMask, float edgePadding)
-    {
-        // Sample 8 directions to find which one has the most continuous target area
-        Vector3[] directions = new Vector3[]
-        {
-            Vector3.forward,
-            Vector3.back,
-            Vector3.left,
-            Vector3.right,
-            (Vector3.forward + Vector3.left).normalized,
-            (Vector3.forward + Vector3.right).normalized,
-            (Vector3.back + Vector3.left).normalized,
-            (Vector3.back + Vector3.right).normalized
-        };
-
-        int bestScore = -1;
-        Vector3 bestDirection = Vector3.zero;
-
-        foreach (Vector3 dir in directions)
-        {
-            int score = 0;
-            // Check multiple distances in this direction
-            for (float dist = edgePadding; dist <= edgePadding * 3f; dist += edgePadding)
-            {
-                Vector3 testPos = position + dir * dist;
-                if (NavMesh.SamplePosition(testPos, out NavMeshHit hit, 0.5f, targetAreaMask))
-                {
-                    score++;
-                }
-                else
-                {
-                    break; // Stop checking this direction if we hit non-target area
-                }
-            }
-
-            if (score > bestScore)
-            {
-                bestScore = score;
-                bestDirection = dir;
-            }
-        }
-
-        // If we found a good direction, pad in that direction
-        if (bestScore > 0)
-        {
-            Vector3 paddedPosition = position + bestDirection * edgePadding;
-            if (NavMesh.SamplePosition(paddedPosition, out NavMeshHit paddedHit, 0.5f, targetAreaMask))
-            {
-                return paddedHit.position;
-            }
-        }
-
-        return position;
     }
 
     private void OnDrawGizmos()
