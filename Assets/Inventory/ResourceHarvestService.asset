@@ -9,11 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a841cca689584364b02b110d9a0133e, type: 3}
-  m_Name: Nav Mesh Area Config
-  m_EditorClassIdentifier: Assembly-CSharp::NavMeshAreaConfig
-  walkableAreaMask: 191
-  slowTerrainArea: 6
-  jumpArea: 2
-  notWalkableArea: 1
-  edgePadding: 2
+  m_Script: {fileID: 11500000, guid: ca63fc2172ff74452b71645c777eb3ee, type: 3}
+  m_Name: ResourceHarvestService
+  m_EditorClassIdentifier: Assembly-CSharp::ResourceHarvestService
+  inventoryReference: {fileID: 11400000, guid: e9c2fc38b99d8404f8495af08b4889fc, type: 2}

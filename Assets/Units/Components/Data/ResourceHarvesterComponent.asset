@@ -20,5 +20,5 @@ MonoBehaviour:
   amountPerHarvest: 1
   harvestInterval: 2
   minimumStayDuration: 0.5
-  harvestTarget: 1
-  globalInventory: {fileID: 11400000, guid: e9c2fc38b99d8404f8495af08b4889fc, type: 2}
+  resourceHarvestService: {fileID: 11400000, guid: d9aa97f4de9ed4f80a18f31db6c80eb5,
+    type: 2}

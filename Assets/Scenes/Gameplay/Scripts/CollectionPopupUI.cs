@@ -1,9 +1,11 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using UnityEngine.UI;
 
 public class CollectionPopupUI : MonoBehaviour
 {
+    [SerializeField] private Image itemImage;
     [SerializeField] private TextMeshProUGUI countText;
 
     public CanvasGroup canvasGroup;        // For fading
@@ -26,8 +28,18 @@ public class CollectionPopupUI : MonoBehaviour
     /// <summary>
     /// Starts the popup animation anchored to a world position.
     /// </summary>
-    public void PlayPopup(Vector3 worldPos, int count)
+    public void PlayPopup(Item item, Vector3 worldPos, int count)
     {
+        if (item != null && item.Sprite != null)
+        {
+            itemImage.sprite = item.Sprite;
+            itemImage.enabled = true;
+        }
+        else
+        {
+            itemImage.enabled = false;
+        }
+
         countText.text = $"+{count}";
 
         mainCamera = Camera.main;

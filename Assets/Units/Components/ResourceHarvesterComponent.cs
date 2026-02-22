@@ -27,35 +27,21 @@ public class ResourceHarvesterComponentDefinition : UnitComponentDefinition
     [Tooltip("Minimum time in seconds the unit must remain on harvest terrain before collecting")]
     [SerializeField] private float minimumStayDuration = 0.5f;
 
-    [Header("Collection Target")]
-    [Tooltip("Where to store collected resources")]
-    [SerializeField] private HarvestTarget harvestTarget = HarvestTarget.UnitInventory;
-
-    [Tooltip("Optional: Reference to global inventory (only used if target is GlobalInventory)")]
-    [SerializeField] private InventoryReference globalInventory;
+    [Header("Service Reference")]
+    [Tooltip("Service to notify when resources are harvested")]
+    [SerializeField] private ResourceHarvestService resourceHarvestService;
 
     public int HarvestAreaIndex => harvestAreaIndex;
     public Item ResourceItem => resourceItem;
     public int AmountPerHarvest => amountPerHarvest;
     public float HarvestInterval => harvestInterval;
     public float MinimumStayDuration => minimumStayDuration;
-    public HarvestTarget Target => harvestTarget;
-    public InventoryReference GlobalInventory => globalInventory;
+    public ResourceHarvestService ResourceHarvestService => resourceHarvestService;
 
     public override UnitComponentInstance CreateInstance(UnitController controller)
     {
         return new ResourceHarvesterComponentInstance(this, controller);
     }
-}
-
-/// <summary>
-/// Where harvested resources should be stored
-/// </summary>
-public enum HarvestTarget
-{
-    UnitInventory,      // Store in unit's inventory component
-    GlobalInventory,    // Store in global inventory reference
-    Both                // Store in both
 }
 
 /// <summary>
@@ -68,14 +54,9 @@ public class ResourceHarvesterComponentInstance : UnitComponentInstance
     [SerializeField] private bool isOnHarvestTerrain;
     [SerializeField] private float timeOnTerrain;
     [SerializeField] private float timeSinceLastHarvest;
-    [SerializeField] private int totalHarvested;
-
     private NavMeshAgent navMeshAgent;
-    private InventoryComponentInstance unitInventory;
 
     public ResourceHarvesterComponentDefinition HarvesterDefinition => definition as ResourceHarvesterComponentDefinition;
-    public bool IsOnHarvestTerrain => isOnHarvestTerrain;
-    public int TotalHarvested => totalHarvested;
 
     public event UnityAction<Item, int> OnResourceHarvested;
     public event UnityAction OnEnteredHarvestTerrain;
@@ -91,8 +72,6 @@ public class ResourceHarvesterComponentInstance : UnitComponentInstance
         base.OnInitialize();
 
         navMeshAgent = controller.GetComponent<NavMeshAgent>();
-        unitInventory = controller.GetComponentInstance<InventoryComponentInstance>();
-
         ResetHarvestState();
     }
 
@@ -154,39 +133,16 @@ public class ResourceHarvesterComponentInstance : UnitComponentInstance
     {
         var item = HarvesterDefinition.ResourceItem;
         var amount = HarvesterDefinition.AmountPerHarvest;
-        var target = HarvesterDefinition.Target;
+        var service = HarvesterDefinition.ResourceHarvestService;
 
-        bool harvested = false;
-
-        // Add to unit inventory
-        if ((target == HarvestTarget.UnitInventory || target == HarvestTarget.Both) && unitInventory != null)
+        if (service != null)
         {
-            for (int i = 0; i < amount; i++)
-            {
-                if (unitInventory.AddItem(item.Name, 1))
-                {
-                    harvested = true;
-                }
-                else
-                {
-                    Debug.Log($"Unit inventory full, couldn't harvest {item.Name}");
-                    break;
-                }
-            }
-        }
-
-        // Add to global inventory
-        if ((target == HarvestTarget.GlobalInventory || target == HarvestTarget.Both) &&
-            HarvesterDefinition.GlobalInventory != null)
-        {
-            HarvesterDefinition.GlobalInventory.AddItem(item, amount);
-            harvested = true;
-        }
-
-        if (harvested)
-        {
-            totalHarvested += amount;
+            service.Harvest(item, amount, controller.transform.position + Vector3.up);
             OnResourceHarvested?.Invoke(item, amount);
+        }
+        else
+        {
+            Debug.LogWarning($"ResourceHarvestService not assigned to {controller.name}'s harvester component");
         }
     }
 
@@ -195,11 +151,5 @@ public class ResourceHarvesterComponentInstance : UnitComponentInstance
         isOnHarvestTerrain = false;
         timeOnTerrain = 0f;
         timeSinceLastHarvest = 0f;
-        totalHarvested = 0;
-    }
-
-    public void ResetHarvestCount()
-    {
-        totalHarvested = 0;
     }
 }

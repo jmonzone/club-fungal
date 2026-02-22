@@ -4,7 +4,7 @@ using System.Collections;
 
 public class CollectionPopupManager : MonoBehaviour
 {
-    [SerializeField] private InventoryReference inventoryReference;
+    [SerializeField] private ResourceHarvestService resourceHarvestService;
 
     public Canvas uiCanvas;
     public Camera mainCamera;
@@ -27,15 +27,21 @@ public class CollectionPopupManager : MonoBehaviour
 
     private void OnEnable()
     {
-        inventoryReference.OnSporeCollected += InventoryReference_OnSporeCollected;
+        if (resourceHarvestService != null)
+        {
+            resourceHarvestService.OnResourceHarvested += ShowPopup;
+        }
     }
 
     private void OnDisable()
     {
-        inventoryReference.OnSporeCollected -= InventoryReference_OnSporeCollected;
+        if (resourceHarvestService != null)
+        {
+            resourceHarvestService.OnResourceHarvested -= ShowPopup;
+        }
     }
 
-    private void InventoryReference_OnSporeCollected(SporeController spore)
+    private void ShowPopup(Item item, Vector3 worldPosition, int count)
     {
         if (popupPool.Count == 0)
         {
@@ -44,7 +50,7 @@ public class CollectionPopupManager : MonoBehaviour
         }
 
         CollectionPopupUI popup = popupPool.Dequeue();
-        popup.PlayPopup(spore.transform.position, 1);
+        popup.PlayPopup(item, worldPosition, count);
 
         StartCoroutine(ReturnToPoolAfterDuration(popup, popup.duration));
     }
