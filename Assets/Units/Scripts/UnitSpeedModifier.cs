@@ -2,24 +2,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[System.Serializable]
-public struct NavMeshAreaSpeedModifier
-{
-    public int areaIndex;
-    [Tooltip("Speed multiplier when on this area (e.g., 0.5 = half speed)")]
-    public float speedMultiplier;
-}
-
 public class UnitSpeedModifier : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private NetworkRunService networkRunService;
     [SerializeField] private NavMeshAgent agent;
-    [SerializeField] private NavMeshAreaConfig navMeshAreaConfig;
-
-    [Header("NavMesh Area Speed Modifiers")]
-    [Tooltip("Area-specific speed multipliers. Leave empty to use default config values.")]
-    [SerializeField] private NavMeshAreaSpeedModifier[] areaSpeedModifiers;
+    [SerializeField] private UnitController unitController;
 
     [Header("Runtime")]
     [SerializeField] private float baseSpeed;
@@ -29,6 +17,7 @@ public class UnitSpeedModifier : MonoBehaviour
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        unitController = GetComponent<UnitController>();
     }
 
     private void Start()
@@ -43,24 +32,16 @@ public class UnitSpeedModifier : MonoBehaviour
 
     private void CheckNavMeshArea()
     {
-        if (!agent || !agent.isOnNavMesh) return;
+        if (!agent || !agent.isOnNavMesh || !unitController || unitController.Instance?.Species?.Type == null) return;
 
         // Sample the NavMesh at the agent's current position
         if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 1f, NavMesh.AllAreas))
         {
-            // Get the area index from the hit mask (bit index of the first set bit)
+            // Get the area index from the hit mask
             int currentArea = GetAreaIndexFromMask(hit.mask);
 
-            // Check if this area has a speed modifier
-            float newAreaMultiplier = 1f;
-            foreach (var areaModifier in areaSpeedModifiers)
-            {
-                if (areaModifier.areaIndex == currentArea)
-                {
-                    newAreaMultiplier = areaModifier.speedMultiplier;
-                    break;
-                }
-            }
+            // Get speed multiplier from unit type's terrain modifiers
+            float newAreaMultiplier = unitController.Instance.Species.Type.GetSpeedMultiplierForTerrain(currentArea);
 
             // Update speed if area multiplier changed
             if (Mathf.Abs(currentAreaSpeedMultiplier - newAreaMultiplier) > 0.001f)
