@@ -60,10 +60,11 @@ public class NetworkRunPartyTether : MonoBehaviour
                 Vector3 offset = new Vector3(Mathf.Cos(angle) * spreadRadius, 0, Mathf.Sin(angle) * spreadRadius);
                 Vector3 spreadPosition = partyCenterGround + offset;
 
-                // Try to find a position on NavMesh area 0 (Walkable) instead of slow terrain
+                // Try to find a position on NavMesh - aqua units prefer water/slow terrain
                 if (navMeshAreaConfig != null)
                 {
-                    spreadPosition = navMeshAreaConfig.FindBestNavMeshPosition(spreadPosition, partyCenterGround, true, maxDistance);
+                    bool isAquaUnit = unitInstance.Species?.Type?.Id == "aqua";
+                    spreadPosition = navMeshAreaConfig.FindBestNavMeshPosition(spreadPosition, partyCenterGround, true, maxDistance, isAquaUnit);
                 }
 
                 // Set return position on all behaviors that support it

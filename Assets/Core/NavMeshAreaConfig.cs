@@ -33,71 +33,62 @@ public class NavMeshAreaConfig : ScriptableObject
     /// <param name="targetPosition">Desired position</param>
     /// <param name="fallbackCenter">Center point to pad toward (optional)</param>
     /// <param name="applyPadding">Whether to apply edge padding</param>
+    /// <param name="maxSearchDistance">Maximum distance from fallback center</param>
+    /// <param name="preferSlowTerrain">If true, prefer slow terrain (water) over walkable areas (for aqua units)</param>
     /// <returns>Best valid NavMesh position</returns>
-    public Vector3 FindBestNavMeshPosition(Vector3 targetPosition, Vector3 fallbackCenter = default, bool applyPadding = true, float maxSearchDistance = float.MaxValue)
+    public Vector3 FindBestNavMeshPosition(Vector3 targetPosition, Vector3 fallbackCenter = default, bool applyPadding = true, float maxSearchDistance = float.MaxValue, bool preferSlowTerrain = false)
     {
-        // Try increasing search radii to find closest walkable position
         float[] searchRadii = { 0.5f, 1f, 2f, 5f, 10f };
+        const int maxSmallRadiusIndex = 2; // Radii beyond this index mean area is too small/sparse
 
-        foreach (float radius in searchRadii)
+        // Determine preferred and fallback area masks based on preferSlowTerrain
+        int preferredAreaMask = preferSlowTerrain ? SlowTerrainAreaMask : WalkableAreaMask;
+        int fallbackAreaMask = preferSlowTerrain ? WalkableAreaMask : SlowTerrainAreaMask;
+
+        NavMeshHit? firstFallbackHit = null;
+
+        for (int i = 0; i < searchRadii.Length; i++)
         {
-            if (NavMesh.SamplePosition(targetPosition, out NavMeshHit hit, radius, WalkableAreaMask))
+            float radius = searchRadii[i];
+
+            // Try preferred area first
+            if (NavMesh.SamplePosition(targetPosition, out NavMeshHit hit, radius, preferredAreaMask))
             {
-                // Check if position is within max distance from fallback center (if provided)
                 if (fallbackCenter != default && Vector3.Distance(hit.position, fallbackCenter) > maxSearchDistance)
-                {
-                    continue; // Skip positions outside the search range
-                }
+                    continue;
 
-                // Apply padding away from slow terrain edges
-                if (applyPadding && edgePadding > 0f)
+                // If found at small radius, use it (area is substantial)
+                if (i <= maxSmallRadiusIndex)
                 {
-                    Vector3 paddedPosition = FindBestPaddedPosition(hit.position, WalkableAreaMask);
-                    // Validate padded position is also within range
-                    if (paddedPosition != hit.position)
+                    if (applyPadding && edgePadding > 0f)
                     {
-                        if (fallbackCenter == default || Vector3.Distance(paddedPosition, fallbackCenter) <= maxSearchDistance)
+                        Vector3 paddedPosition = FindBestPaddedPosition(hit.position, preferredAreaMask);
+                        if (paddedPosition != hit.position)
                         {
-                            return paddedPosition;
+                            if (fallbackCenter == default || Vector3.Distance(paddedPosition, fallbackCenter) <= maxSearchDistance)
+                                return paddedPosition;
                         }
                     }
+                    return hit.position;
                 }
-
-                return hit.position;
+                // If found at large radius but we have a fallback, use fallback (preferred area is too small)
+                if (firstFallbackHit.HasValue)
+                    return firstFallbackHit.Value.position;
             }
-        }
 
-        // If no walkable area found within range, try slow terrain (within maxSearchDistance)
-        foreach (float radius in searchRadii)
-        {
-            if (NavMesh.SamplePosition(targetPosition, out NavMeshHit slowHit, radius, SlowTerrainAreaMask))
+            // Track first valid fallback position
+            if (!firstFallbackHit.HasValue && NavMesh.SamplePosition(targetPosition, out NavMeshHit fallbackHit, radius, fallbackAreaMask))
             {
-                // Check if position is within max distance from fallback center (if provided)
-                if (fallbackCenter != default && Vector3.Distance(slowHit.position, fallbackCenter) > maxSearchDistance)
-                {
-                    continue; // Skip positions outside the search range
-                }
-
-                // Try to pad toward walkable area
-                if (applyPadding && edgePadding > 0f)
-                {
-                    Vector3 paddedPosition = FindBestPaddedPosition(slowHit.position, WalkableAreaMask);
-                    // If we found a walkable position nearby and it's in range, use it
-                    if (NavMesh.SamplePosition(paddedPosition, out NavMeshHit walkableCheck, 0.5f, WalkableAreaMask))
-                    {
-                        if (fallbackCenter == default || Vector3.Distance(walkableCheck.position, fallbackCenter) <= maxSearchDistance)
-                        {
-                            return walkableCheck.position;
-                        }
-                    }
-                }
-
-                // Return slow terrain position since it's in range
-                return slowHit.position;
+                if (fallbackCenter == default || Vector3.Distance(fallbackHit.position, fallbackCenter) <= maxSearchDistance)
+                    firstFallbackHit = fallbackHit;
             }
         }
 
-        // Last resort: use original position even if on slow terrain, as long as it's somewhat close to a NavMesh
+        // Use fallback if we found one
+        if (firstFallbackHit.HasValue)
+            return firstFallbackHit.Value.position;
+
+        // Last resort: use original position even if on fallback terrain, as long as it's somewhat close to a NavMesh
         if (NavMesh.SamplePosition(targetPosition, out NavMeshHit anyHit, 2f, NavMesh.AllAreas))
         {
             return anyHit.position;
