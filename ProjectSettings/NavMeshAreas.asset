@@ -17,7 +17,7 @@ NavMeshProjectSettings:
     cost: 1
   - name: Spawn Area
     cost: 2
-  - name: SlowTerrain
+  - name: Water
     cost: 1
   - name: Mushroom
     cost: 1

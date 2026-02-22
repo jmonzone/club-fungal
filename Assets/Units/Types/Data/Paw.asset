@@ -17,3 +17,8 @@ MonoBehaviour:
   resourceSpeedBonuses:
   - resource: {fileID: 11400000, guid: ddde813dc82944f04928d4fd69f1a1b8, type: 2}
     speedBonus: 1.5
+  terrainSpeedModifiers:
+  - areaIndex: 7
+    speedMultiplier: 1.25
+  - areaIndex: 6
+    speedMultiplier: 0.75

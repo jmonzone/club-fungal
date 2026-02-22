@@ -40,6 +40,8 @@ public class NetworkRunPartyService : GURUService
     public UnitController PartyLeader => partyLeader;
     public Transform SpawnParent => spawnParent;
 
+    public event UnityEngine.Events.UnityAction<UnitController> OnPartyLeaderChanged;
+
     public void SetSpawnParent(Transform parent)
     {
         spawnParent = parent;
@@ -83,6 +85,25 @@ public class NetworkRunPartyService : GURUService
         }
 
         Debug.Log($"Spawned {party.Units.Count} party members with {partyLeader?.Instance.DisplayName} as leader");
+    }
+
+    public void CyclePartyLeader()
+    {
+        if (partyControllers == null || partyControllers.Count == 0)
+        {
+            Debug.LogWarning("No party controllers to cycle through");
+            return;
+        }
+
+        // Find current leader index
+        int currentIndex = partyControllers.IndexOf(partyLeader);
+
+        // Cycle to next controller (wrap around to 0 if at end)
+        int nextIndex = (currentIndex + 1) % partyControllers.Count;
+        partyLeader = partyControllers[nextIndex];
+
+        Debug.Log($"Party leader changed to: {partyLeader?.Instance.DisplayName}");
+        OnPartyLeaderChanged?.Invoke(partyLeader);
     }
 
     private List<UnitInstance> GenerateParty()
