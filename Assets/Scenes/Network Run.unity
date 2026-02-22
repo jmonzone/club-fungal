@@ -21122,7 +21122,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &876340295
 Transform:
   m_ObjectHideFlags: 0
@@ -22269,6 +22269,9 @@ MonoBehaviour:
     type: 2}
   cameraService: {fileID: 11400000, guid: 6a3cd891900334ca1ba50dee37569ba4, type: 2}
   navMeshAreaConfig: {fileID: 11400000, guid: 57edff644ce85440db6cfb3636326d00, type: 2}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 64
   maxDistance: 5.5
   teleportDistance: 25
   spreadRadius: 2
@@ -29852,8 +29855,8 @@ Transform:
   m_GameObject: {fileID: 1132269377}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -16.25, y: -0.0999, z: 0.5}
-  m_LocalScale: {x: 10, y: 0.1, z: 10}
+  m_LocalPosition: {x: -16.75, y: -0.0999, z: 15.5}
+  m_LocalScale: {x: 25, y: 0.1, z: 25}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1558974432}
@@ -36082,8 +36085,8 @@ Transform:
   m_GameObject: {fileID: 1382946600}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1, y: -0.0999, z: 14.75}
-  m_LocalScale: {x: 10, y: 0.1, z: 10}
+  m_LocalPosition: {x: -7.25, y: -0.0999, z: 12}
+  m_LocalScale: {x: 20, y: 0.1, z: 20}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1558974432}

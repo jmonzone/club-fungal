@@ -19,4 +19,4 @@ MonoBehaviour:
     speedBonus: 1.5
   terrainSpeedModifiers:
   - areaIndex: 6
-    speedMultiplier: 1.5
+    speedMultiplier: 1.75
