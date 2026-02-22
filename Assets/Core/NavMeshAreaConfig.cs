@@ -13,15 +13,6 @@ public class NavMeshAreaConfig : ScriptableObject
     [Tooltip("Slow terrain area that reduces movement speed")]
     public int slowTerrainArea = 6;
 
-    [Header("Other Areas")]
-    [NavMeshArea]
-    [Tooltip("Jump area")]
-    public int jumpArea = 2;
-
-    [NavMeshArea]
-    [Tooltip("Not walkable area")]
-    public int notWalkableArea = 1;
-
     [Header("Spawn Padding")]
     [Tooltip("Distance to pad positions away from edges toward center")]
     public float edgePadding = 0.3f;
@@ -35,36 +26,6 @@ public class NavMeshAreaConfig : ScriptableObject
     /// Get the NavMesh area mask for the slow terrain area (1 << slowTerrainArea)
     /// </summary>
     public int SlowTerrainAreaMask => 1 << slowTerrainArea;
-
-    /// <summary>
-    /// Get the NavMesh area mask for a specific area index
-    /// </summary>
-    public int GetAreaMask(int areaIndex) => 1 << areaIndex;
-
-    /// <summary>
-    /// Check if a specific area index is included in the walkable areas
-    /// </summary>
-    public bool IsAreaWalkable(int areaIndex)
-    {
-        int areaMask = 1 << areaIndex;
-        return (walkableAreaMask & areaMask) != 0;
-    }
-
-    /// <summary>
-    /// Check if a NavMeshHit is on one of the walkable areas
-    /// </summary>
-    public bool IsWalkableArea(NavMeshHit hit)
-    {
-        return (hit.mask & walkableAreaMask) != 0;
-    }
-
-    /// <summary>
-    /// Check if a NavMeshHit is on the slow terrain area
-    /// </summary>
-    public bool IsSlowTerrainArea(NavMeshHit hit)
-    {
-        return (hit.mask & SlowTerrainAreaMask) != 0;
-    }
 
     /// <summary>
     /// Find the best NavMesh position on walkable area, with padding away from edges
