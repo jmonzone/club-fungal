@@ -5,14 +5,21 @@ using UnityEngine.AI;
 public class NavMeshAreaConfig : ScriptableObject
 {
     [Header("NavMesh Area Indices")]
-    [Tooltip("Default walkable area (typically area 0)")]
-    public int walkableArea = 0;
+    [NavMeshAreaMask]
+    [Tooltip("Walkable areas - select multiple areas that are considered walkable")]
+    public int walkableAreaMask = 1; // Default: area 0 (Walkable)
 
+    [NavMeshArea]
     [Tooltip("Slow terrain area that reduces movement speed")]
     public int slowTerrainArea = 6;
 
-    [Tooltip("Other custom areas")]
+    [Header("Other Areas")]
+    [NavMeshArea]
+    [Tooltip("Jump area")]
     public int jumpArea = 2;
+
+    [NavMeshArea]
+    [Tooltip("Not walkable area")]
     public int notWalkableArea = 1;
 
     [Header("Spawn Padding")]
@@ -20,9 +27,9 @@ public class NavMeshAreaConfig : ScriptableObject
     public float edgePadding = 0.3f;
 
     /// <summary>
-    /// Get the NavMesh area mask for the walkable area (1 << walkableArea)
+    /// Get the NavMesh area mask for all walkable areas (combined from selection)
     /// </summary>
-    public int WalkableAreaMask => 1 << walkableArea;
+    public int WalkableAreaMask => walkableAreaMask;
 
     /// <summary>
     /// Get the NavMesh area mask for the slow terrain area (1 << slowTerrainArea)
@@ -35,11 +42,20 @@ public class NavMeshAreaConfig : ScriptableObject
     public int GetAreaMask(int areaIndex) => 1 << areaIndex;
 
     /// <summary>
-    /// Check if a NavMeshHit is on the walkable area
+    /// Check if a specific area index is included in the walkable areas
     /// </summary>
-    public bool IsWalkableArea(UnityEngine.AI.NavMeshHit hit)
+    public bool IsAreaWalkable(int areaIndex)
     {
-        return (hit.mask & WalkableAreaMask) != 0;
+        int areaMask = 1 << areaIndex;
+        return (walkableAreaMask & areaMask) != 0;
+    }
+
+    /// <summary>
+    /// Check if a NavMeshHit is on one of the walkable areas
+    /// </summary>
+    public bool IsWalkableArea(NavMeshHit hit)
+    {
+        return (hit.mask & walkableAreaMask) != 0;
     }
 
     /// <summary>

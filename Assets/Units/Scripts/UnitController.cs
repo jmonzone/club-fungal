@@ -18,11 +18,17 @@ public class UnitController : MonoBehaviour, IInteractable
     [Header("Services")]
     [SerializeField] private UnitBehaviourPriorityService behaviourPriorityService;
 
+    [Header("Component System")]
+    [SerializeField] private List<UnitComponentDefinition> componentDefinitions = new List<UnitComponentDefinition>();
+    [SerializeField] private List<UnitComponentInstance> componentInstances = new List<UnitComponentInstance>();
+
     public UnitDestination Destination => destination;
     public UnitDialogue Dialogue => dialogue;
     public UnitHealth Health => health;
     public UnitDeath Death => death;
     public UnitBehaviourPriorityService BehaviourPriorityService => behaviourPriorityService;
+    public List<UnitComponentInstance> ComponentInstances => componentInstances;
+
     [Header("Runtime")]
     [SerializeField] private UnitInstance instance;
     [SerializeField] private UnitBehaviour currentBehaviour;
@@ -112,8 +118,21 @@ public class UnitController : MonoBehaviour, IInteractable
 
     }
 
+    protected virtual void OnDestroy()
+    {
+        // Clean up all components
+        foreach (var component in componentInstances)
+        {
+            component?.OnDestroy();
+        }
+        componentInstances.Clear();
+    }
+
     protected virtual void Update()
     {
+        // Update all components
+        UpdateComponents();
+
         // Evaluate behavior priority every frame
         EvaluateBehaviourPriority();
 
@@ -178,8 +197,81 @@ public class UnitController : MonoBehaviour, IInteractable
     {
         this.instance = instance;
         name = "Unit - " + instance.Species.Id;
+        InitializeComponents();
         OnInitialized?.Invoke();
     }
+
+    #region Component Management
+
+    /// <summary>
+    /// Initialize all component instances from their definitions.
+    /// </summary>
+    private void InitializeComponents()
+    {
+        componentInstances.Clear();
+
+        foreach (var definition in componentDefinitions)
+        {
+            if (definition != null)
+            {
+                var instance = definition.CreateInstance(this);
+                componentInstances.Add(instance);
+                instance.OnInitialize();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Add a component at runtime.
+    /// </summary>
+    public void AddComponent(UnitComponentDefinition definition)
+    {
+        if (definition == null) return;
+
+        var instance = definition.CreateInstance(this);
+        componentInstances.Add(instance);
+        instance.OnInitialize();
+    }
+
+    /// <summary>
+    /// Remove a component at runtime.
+    /// </summary>
+    public void RemoveComponent(UnitComponentInstance instance)
+    {
+        if (instance == null) return;
+
+        instance.OnDestroy();
+        componentInstances.Remove(instance);
+    }
+
+    /// <summary>
+    /// Get a component instance by type.
+    /// </summary>
+    public T GetComponentInstance<T>() where T : UnitComponentInstance
+    {
+        return componentInstances.OfType<T>().FirstOrDefault();
+    }
+
+    /// <summary>
+    /// Get all component instances of a specific type.
+    /// </summary>
+    public List<T> GetComponentInstances<T>() where T : UnitComponentInstance
+    {
+        return componentInstances.OfType<T>().ToList();
+    }
+
+    /// <summary>
+    /// Update all components.
+    /// </summary>
+    private void UpdateComponents()
+    {
+        foreach (var component in componentInstances)
+        {
+            component?.OnUpdate();
+        }
+    }
+
+    #endregion
 
     public void SetAsEnemy(bool enemy)
     {

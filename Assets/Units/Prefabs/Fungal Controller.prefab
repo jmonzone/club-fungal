@@ -151,7 +151,6 @@ GameObject:
   - component: {fileID: 3042677307364813546}
   - component: {fileID: 8649680259317709286}
   - component: {fileID: 90876838566174676}
-  - component: {fileID: 4216329062336841891}
   - component: {fileID: 7222236572253189186}
   - component: {fileID: 493320410429043383}
   - component: {fileID: 6929509154742900535}
@@ -215,6 +214,8 @@ MonoBehaviour:
   defaultInteraction: {fileID: 11400000, guid: cd6893964a6274906b52bbbf6b56f4d8, type: 2}
   behaviourPriorityService: {fileID: 11400000, guid: 6afebe865a6264c8b834fed8c6189cc2,
     type: 2}
+  componentDefinitions:
+  - {fileID: 11400000, guid: 486e87b0fecec4c20afc2631ae071cd8, type: 2}
   instance:
     template: {fileID: 0}
     data:
@@ -257,7 +258,7 @@ NavMeshAgent:
   m_Radius: 0.3
   m_Speed: 2
   m_Acceleration: 100
-  avoidancePriority: 68
+  avoidancePriority: 84
   m_AngularSpeed: 1250
   m_StoppingDistance: 0.5
   m_AutoTraverseOffMeshLink: 1
@@ -339,19 +340,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e0271bb48d214210aec3a4e614933fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4216329062336841891
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5390423667600184729}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 429e16007b5ac46ad85b660c4685773e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isActive: 0
 --- !u!114 &7222236572253189186
 MonoBehaviour:
   m_ObjectHideFlags: 0

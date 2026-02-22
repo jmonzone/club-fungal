@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 506d30afc3819446a81dbc5f3054b61f, type: 3}
+  m_Name: ResourceHarvesterComponent
+  m_EditorClassIdentifier: Assembly-CSharp::ResourceHarvesterComponentDefinition
+  id: resource harvest component
+  displayName: Resource Harvest Component
+  description: 
+  harvestAreaIndex: 7
+  resourceItem: {fileID: 11400000, guid: ec503a2453c1e4547b234275ed982ca8, type: 2}
+  amountPerHarvest: 1
+  harvestInterval: 2
+  minimumStayDuration: 0.5
+  harvestTarget: 1
+  globalInventory: {fileID: 11400000, guid: e9c2fc38b99d8404f8495af08b4889fc, type: 2}
