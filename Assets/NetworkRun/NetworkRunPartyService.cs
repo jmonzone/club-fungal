@@ -21,6 +21,7 @@ public class NetworkRunPartyService : GURUService
     [SerializeField] private NetworkRunService networkRunService;
     [SerializeField] private UnitInstanceService unitInstanceService;
     [SerializeField] private UnitControllerService unitControllerService;
+    [SerializeField] private PlayerService playerService;
 
     [Header("Party Generation")]
     [SerializeField] private bool generateNewUnits = false;
@@ -80,11 +81,26 @@ public class NetworkRunPartyService : GURUService
 
             if (i == 0)
             {
-                partyLeader = controller;
+                SetPartyLeader(controller);
             }
         }
 
         Debug.Log($"Spawned {party.Units.Count} party members with {partyLeader?.Instance.DisplayName} as leader");
+    }
+
+    private void SetPartyLeader(UnitController newLeader)
+    {
+        if (newLeader == null) return;
+
+        partyLeader = newLeader;
+
+        // Update player service
+        if (playerService != null)
+        {
+            playerService.SetPlayer(partyLeader);
+        }
+
+        OnPartyLeaderChanged?.Invoke(partyLeader);
     }
 
     public void CyclePartyLeader()
@@ -100,10 +116,9 @@ public class NetworkRunPartyService : GURUService
 
         // Cycle to next controller (wrap around to 0 if at end)
         int nextIndex = (currentIndex + 1) % partyControllers.Count;
-        partyLeader = partyControllers[nextIndex];
 
+        SetPartyLeader(partyControllers[nextIndex]);
         Debug.Log($"Party leader changed to: {partyLeader?.Instance.DisplayName}");
-        OnPartyLeaderChanged?.Invoke(partyLeader);
     }
 
     private List<UnitInstance> GenerateParty()

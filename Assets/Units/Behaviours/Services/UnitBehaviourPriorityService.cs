@@ -9,8 +9,10 @@ public class UnitBehaviourPriorityService : GURUService
 {
     [Header("Services")]
     [SerializeField] private CameraService cameraService;
+    [SerializeField] private PlayerService playerService;
 
     [Header("Priority Values")]
+    [SerializeField] private int playerControlPriority = 500;
     [SerializeField] private int combatPriority = 400;
     [SerializeField] private int returnToPartyPriority = 300;
     [SerializeField] private int foragePriority = 200;
@@ -26,6 +28,23 @@ public class UnitBehaviourPriorityService : GURUService
     /// </summary>
     public int GetBehaviourPriority(UnitBehaviour behaviour, UnitController controller)
     {
+        // Check if this is the UnitPlayer behavior
+        bool isPlayerBehavior = behaviour is UnitPlayer;
+        bool isPlayerUnit = playerService != null && controller == playerService.Player;
+
+        // If this unit is the selected player
+        if (isPlayerUnit)
+        {
+            // Only allow UnitPlayer behavior, disable all others
+            return isPlayerBehavior ? playerControlPriority : 0;
+        }
+
+        // For non-player units, UnitPlayer behavior should never be active
+        if (isPlayerBehavior)
+        {
+            return 0;
+        }
+
         // Route to appropriate priority service method based on behaviour type
         switch (behaviour)
         {

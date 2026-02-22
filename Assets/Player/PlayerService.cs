@@ -16,7 +16,7 @@ public class PlayerService : GURUService
 
     [Header("Runtime")]
     [SerializeField] private UnitInstance playerInstance;
-    [SerializeField] private PlayerController player;
+    [SerializeField] private UnitController player;
     [SerializeField] private Vector3 targetPosition;
     [SerializeField] private IInteractable targetInteractable;
 
@@ -25,7 +25,7 @@ public class PlayerService : GURUService
     public float Speed => Application.isEditor ? editorSpeed : speed;
 
     public UnitInstance PlayerInstance => playerInstance;
-    public PlayerController Player => player;
+    public UnitController Player => player;
     public ActivityUnit ActivityUnit => activityUnit;
     public Vector3 TargetPosition => targetPosition;
     public IInteractable TargetInteractable => targetInteractable;
@@ -37,7 +37,7 @@ public class PlayerService : GURUService
 
     override protected void OnInitialize()
     {
-        FindPlayerController();
+        // Player controller will be assigned externally
     }
 
     private void OnEnable()
@@ -50,21 +50,13 @@ public class PlayerService : GURUService
         cameraService.OnCameraModeChanged -= OnCameraModeChanged;
     }
 
-    override public void OnSceneLoaded()
+    public void SetPlayer(UnitController unitController)
     {
-        base.OnSceneLoaded();
-        FindPlayerController();
-    }
-
-    private void FindPlayerController()
-    {
-        // Debug.Log("Searching for PlayerController in scene...");
-        var player = FindObjectOfType<PlayerController>();
-        if (player != null)
+        if (unitController != null)
         {
-            this.player = player;
-            playerInstance = player.Instance;
-            activityUnit = player.GetComponent<ActivityUnit>();
+            player = unitController;
+            playerInstance = unitController.Instance;
+            activityUnit = unitController.GetComponent<ActivityUnit>();
             OnPlayerInitialized?.Invoke();
         }
     }

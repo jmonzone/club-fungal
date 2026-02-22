@@ -28,6 +28,35 @@ public class CameraRotationController : MonoBehaviour
     private Vector3 settledPosition;
     private bool hasStoredSettledPosition;
 
+    void OnEnable()
+    {
+        if (playerReference != null)
+        {
+            playerReference.OnPlayerInitialized += OnPlayerChanged;
+            // Set initial target if player already exists
+            if (playerReference.Player != null)
+            {
+                target = playerReference.Player.transform;
+            }
+        }
+    }
+
+    void OnDisable()
+    {
+        if (playerReference != null)
+        {
+            playerReference.OnPlayerInitialized -= OnPlayerChanged;
+        }
+    }
+
+    void OnPlayerChanged()
+    {
+        if (playerReference != null && playerReference.Player != null)
+        {
+            target = playerReference.Player.transform;
+        }
+    }
+
     void Start()
     {
         if (vCam == null) Debug.LogError("CameraRotationController: vCam not assigned!");

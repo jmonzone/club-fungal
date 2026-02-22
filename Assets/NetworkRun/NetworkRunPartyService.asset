@@ -17,6 +17,7 @@ MonoBehaviour:
     type: 2}
   unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
     type: 2}
+  playerService: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   generateNewUnits: 1
   blacklistedSpecies:
   - {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
@@ -26,13 +27,13 @@ MonoBehaviour:
     units:
     - template: {fileID: 0}
       data:
-        id: ee7a9b6942b0731d7290c8da
-        name: frog
-        displayName: Fun Bella
-        species: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
+        id: 39879b69adfdd45f5c725291
+        name: jellyfish
+        displayName: Happy Mickey
+        species: {fileID: 11400000, guid: 84acf7738ffbc4db09e660e7ce20b7a1, type: 2}
         job: {fileID: 0}
-        element: 4
-        colorPalette: {fileID: 11400000, guid: 28fd44a00cafe4888abe1427813e8334, type: 2}
+        element: 1
+        colorPalette: {fileID: 11400000, guid: 3489c52b81a94463aaa5e67d4ebd81b4, type: 2}
         scene: 
         friendshipLevel: 0
         friendshipXP: 0
@@ -67,13 +68,13 @@ MonoBehaviour:
       isExhausted: 0
     - template: {fileID: 0}
       data:
-        id: ee7a9b69bd682bdfd02689da
+        id: 39879b69d923418bc6675776
         name: owl
-        displayName: Sad Mickey
+        displayName: Fun Alice
         species: {fileID: 11400000, guid: a0789f36ed7f54fe7bb95cee622eeb16, type: 2}
         job: {fileID: 0}
-        element: 4
-        colorPalette: {fileID: 11400000, guid: 28fd44a00cafe4888abe1427813e8334, type: 2}
+        element: 1
+        colorPalette: {fileID: 11400000, guid: 3489c52b81a94463aaa5e67d4ebd81b4, type: 2}
         scene: 
         friendshipLevel: 0
         friendshipXP: 0
@@ -108,13 +109,13 @@ MonoBehaviour:
       isExhausted: 0
     - template: {fileID: 0}
       data:
-        id: ee7a9b6914395a57a6541245
+        id: 39879b69bd23f6e6e61d2cec
         name: jellyfish
-        displayName: Party Lily
+        displayName: Mysterious Bob
         species: {fileID: 11400000, guid: 84acf7738ffbc4db09e660e7ce20b7a1, type: 2}
         job: {fileID: 0}
-        element: 1
-        colorPalette: {fileID: 11400000, guid: 3489c52b81a94463aaa5e67d4ebd81b4, type: 2}
+        element: 0
+        colorPalette: {fileID: 0}
         scene: 
         friendshipLevel: 0
         friendshipXP: 0
