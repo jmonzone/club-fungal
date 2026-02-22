@@ -217,6 +217,7 @@ MonoBehaviour:
     type: 2}
   componentDefinitions:
   - {fileID: 11400000, guid: 486e87b0fecec4c20afc2631ae071cd8, type: 2}
+  - {fileID: 11400000, guid: 62b264e2f9a484d60a0e66bcba6a15d9, type: 2}
   instance:
     template: {fileID: 0}
     data:

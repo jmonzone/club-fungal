@@ -33,7 +33,6 @@ public class NetworkRunPartyTether : MonoBehaviour
 
     private void CheckAndTetherUnits()
     {
-        Debug.Log("Checking party tether...");
         if (mainCamera == null || networkRunService == null || networkRunService.PartyService == null || networkRunService.PartyService.Party == null)
             return;
 
@@ -90,7 +89,7 @@ public class NetworkRunPartyTether : MonoBehaviour
                 bool shouldTeleport = currentDistance > teleportDistance;
                 foreach (var returnPositionable in returnPositionables)
                 {
-                    Debug.Log($"Setting return position for {controller.Instance.DisplayName} to {spreadPosition} (distance from center: {currentDistance:F1}, teleport: {shouldTeleport})");
+                    // Debug.Log($"Setting return position for {controller.Instance.DisplayName} to {spreadPosition} (distance from center: {currentDistance:F1}, teleport: {shouldTeleport})");
                     returnPositionable.SetReturnPosition(spreadPosition, shouldTeleport);
                 }
             }
