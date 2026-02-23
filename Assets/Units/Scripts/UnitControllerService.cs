@@ -18,6 +18,8 @@ public class UnitControllerService : GURUService
     [SerializeField] private PlayerController playerPrefab;
     [SerializeField] private UnitController enemyPrefab;
     [SerializeField] private UnitSpecies enemySpecies;
+    [SerializeField] private UnitController neutralPrefab;
+    [SerializeField] private UnitSpecies neutralSpecies;
 
     [Header("Runtime")]
     [SerializeField] private List<UnitController> unitControllers;
@@ -169,5 +171,42 @@ public class UnitControllerService : GURUService
         OnUnitSummoned?.Invoke(enemyController);
 
         return enemyController;
+    }
+
+    public UnitController SpawnNeutralUnit(Vector3 spawnPosition, Transform parent = null)
+    {
+        if (neutralPrefab == null)
+        {
+            Debug.LogWarning("UnitControllerService: No neutral prefab assigned");
+            return null;
+        }
+
+        // Create UnitInstance (marked as enemy in data so it won't be persisted)
+        UnitInstance neutralInstance = null;
+        if (neutralSpecies != null)
+        {
+            neutralInstance = unitInstanceService.CreateUnit(species => species == neutralSpecies, isEnemy: true);
+        }
+        else
+        {
+            // Fallback to random unit if no neutral species specified
+            neutralInstance = unitInstanceService.CreateUnit(isEnemy: true);
+        }
+
+        UnitController neutralController;
+
+#if UNITY_EDITOR
+        neutralController = PrefabUtility.InstantiatePrefab(neutralPrefab, parent) as UnitController;
+#else
+        neutralController = Instantiate(neutralPrefab, parent);
+#endif
+        neutralController.transform.SetPositionAndRotation(spawnPosition, Quaternion.identity);
+        neutralController.Initialize(neutralInstance);
+        // Don't call SetAsEnemy - we want normal naming and behavior, just no persistence
+
+        unitControllers.Add(neutralController);
+        OnUnitSummoned?.Invoke(neutralController);
+
+        return neutralController;
     }
 }

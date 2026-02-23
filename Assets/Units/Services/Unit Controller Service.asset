@@ -23,5 +23,7 @@ MonoBehaviour:
   enemyPrefab: {fileID: 4661636074231173861, guid: f7449fb6d88ed40b39443d2eef0e0b04,
     type: 3}
   enemySpecies: {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
+  neutralPrefab: {fileID: 7279415898657451363, guid: 7122a8ba40d804a5db1aa190547495be,
+    type: 3}
   unitControllers:
   - {fileID: 0}
