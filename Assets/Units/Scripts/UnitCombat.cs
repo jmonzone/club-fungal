@@ -90,6 +90,10 @@ public class UnitCombat : UnitBehaviour, IReturnPositionable
 
         foreach (var controller in unitControllerService.Controllers)
         {
+            // Skip null or destroyed controllers
+            if (controller == null)
+                continue;
+
             // Skip self
             if (controller == Controller)
                 continue;

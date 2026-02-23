@@ -19,6 +19,7 @@ MonoBehaviour:
   unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
     type: 2}
   localData: {fileID: 11400000, guid: 81d22df7435974c419891ceb2bc9e4ee, type: 2}
+  sceneNavigation: {fileID: 11400000, guid: 5c885c9a984a3470684bef7e76ca5c2a, type: 2}
   build: {fileID: 11400000, guid: 2526ce71d791f49acb54c441f1370a16, type: 2}
   inventory: {fileID: 11400000, guid: e9c2fc38b99d8404f8495af08b4889fc, type: 2}
   services:

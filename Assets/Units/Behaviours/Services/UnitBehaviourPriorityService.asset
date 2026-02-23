@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitBehaviourPriorityService
   cameraService: {fileID: 11400000, guid: 6a3cd891900334ca1ba50dee37569ba4, type: 2}
   playerService: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
+  partyService: {fileID: 11400000, guid: 042e79e25f7d54a5aa70cf2dc6968d11, type: 2}
   playerControlPriority: 500
   combatPriority: 400
   returnToPartyPriority: 300

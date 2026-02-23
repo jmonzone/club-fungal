@@ -45,4 +45,18 @@ public class UnitPlayer : UnitBehaviour
             Controller.Destination.SetDestination(playerReference.TargetPosition);
         }
     }
+
+    private void OnDestroy()
+    {
+        if (playerReference != null)
+        {
+            playerReference.OnTargetPositionChanged -= PlayerReference_OnTargetPositionChanged;
+            playerReference.OnTargetInteractableChanged -= PlayerReference_OnTargetInteractableChanged;
+        }
+
+        if (interactRoutine != null)
+        {
+            StopCoroutine(interactRoutine);
+        }
+    }
 }
