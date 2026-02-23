@@ -17,9 +17,11 @@ public class ProximityActionComponentDefinition : UnitComponentDefinition
     [SerializeField] private bool requireLineOfSight = false;
 
     [Header("Button Settings")]
-    [SerializeField] private string buttonText = "Interact";
     [SerializeField] private Item costItem;
     [SerializeField] private int costAmount = 0;
+
+    [Header("Action")]
+    [SerializeField] private ProximityAction action;
 
     [Header("UI Prefab")]
     [SerializeField] private GameObject buttonPrefab;
@@ -28,10 +30,10 @@ public class ProximityActionComponentDefinition : UnitComponentDefinition
     public InventoryReference GlobalInventory => globalInventory;
     public float ProximityDistance => proximityDistance;
     public bool RequireLineOfSight => requireLineOfSight;
-    public string ButtonText => buttonText;
     public Item CostItem => costItem;
     public int CostAmount => costAmount;
     public GameObject ButtonPrefab => buttonPrefab;
+    public ProximityAction Action => action;
 
     public override UnitComponentInstance CreateInstance(UnitController controller)
     {
@@ -47,7 +49,7 @@ public class ProximityActionComponentDefinition : UnitComponentDefinition
 public class ProximityActionComponentInstance : UnitComponentInstance
 {
     private GameObject buttonUI;
-    private ButtonUI buttonComponent;
+    private ProximityActionUI proximityActionUI;
     private bool isPlayerNearby;
     private bool isButtonShown;
 
@@ -85,23 +87,18 @@ public class ProximityActionComponentInstance : UnitComponentInstance
 
         // Instantiate button UI in the overhead canvas target container
         buttonUI = Object.Instantiate(ProximityDefinition.ButtonPrefab, controller.OverheadCanvasPosition.TargetContainer);
-        buttonComponent = buttonUI.GetComponent<ButtonUI>();
+        proximityActionUI = buttonUI.GetComponent<ProximityActionUI>();
 
-        if (buttonComponent == null)
+        if (proximityActionUI == null)
         {
-            Debug.LogWarning($"ProximityActionComponent: Button prefab missing ButtonUI component");
+            Debug.LogWarning($"ProximityActionComponent: Button prefab missing ProximityActionUI component");
             Object.Destroy(buttonUI);
             return;
         }
 
-        // Build button text
-        string displayText = ProximityDefinition.ButtonText;
-        if (ProximityDefinition.CostItem != null && ProximityDefinition.CostAmount > 0)
-        {
-            displayText = $"{ProximityDefinition.ButtonText} for {ProximityDefinition.CostAmount} {ProximityDefinition.CostItem.Name}";
-        }
-
-        buttonComponent.Initialize(displayText, OnButtonClicked);
+        // Initialize with item icon and click handler
+        Sprite icon = ProximityDefinition.CostItem?.Sprite;
+        proximityActionUI.Initialize("Recruit", icon, OnButtonClicked);
     }
 
     private void OnButtonClicked()
@@ -126,7 +123,13 @@ public class ProximityActionComponentInstance : UnitComponentInstance
             ProximityDefinition.GlobalInventory.RemoveItem(ProximityDefinition.CostItem, ProximityDefinition.CostAmount);
         }
 
-        // Trigger action event
+        // Execute the action
+        if (ProximityDefinition.Action != null)
+        {
+            ProximityDefinition.Action.Execute(controller);
+        }
+
+        // Trigger action event (for custom behavior)
         OnActionTriggered?.Invoke();
 
         // Hide button after action
@@ -169,6 +172,23 @@ public class ProximityActionComponentInstance : UnitComponentInstance
         {
             HideButton();
         }
+
+        // Update progress UI if button is shown
+        if (isButtonShown)
+        {
+            UpdateProgressUI();
+        }
+    }
+
+    private void UpdateProgressUI()
+    {
+        if (ProximityDefinition.CostItem == null || ProximityDefinition.CostAmount <= 0) return;
+        if (proximityActionUI == null) return;
+
+        int currentAmount = ProximityDefinition.GlobalInventory?.GetItemCount(ProximityDefinition.CostItem) ?? 0;
+        int requiredAmount = ProximityDefinition.CostAmount;
+
+        proximityActionUI.UpdateProgress(currentAmount, requiredAmount);
     }
 
     private void ShowButton()

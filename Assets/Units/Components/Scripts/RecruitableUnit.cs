@@ -1,9 +1,12 @@
 using UnityEngine;
 
 /// <summary>
-/// Example script showing how to use ProximityActionComponent for unit recruitment.
-/// Attach this to a neutral unit that should be recruitable by the player.
+/// DEPRECATED: Use ProximityActionComponent with RecruitableUnitProximityAction ScriptableObject instead.
+/// 
+/// Old example showing how to use ProximityActionComponent for unit recruitment.
+/// This MonoBehaviour approach has been replaced with the ScriptableObject pattern.
 /// </summary>
+[System.Obsolete("Use ProximityActionComponent with RecruitableUnitProximityAction ScriptableObject instead")]
 public class RecruitableUnit : MonoBehaviour
 {
     [SerializeField] private UnitController unitController;
@@ -19,7 +22,7 @@ public class RecruitableUnit : MonoBehaviour
 
         // Find the proximity action component
         var proximityComponent = unitController.GetComponentInstance<ProximityActionComponentInstance>();
-        
+
         if (proximityComponent == null)
         {
             Debug.LogWarning($"RecruitableUnit: No ProximityActionComponent found on {unitController.name}");
@@ -52,7 +55,7 @@ public class RecruitableUnit : MonoBehaviour
 
         // Disable this recruitment script
         enabled = false;
-        
+
         // Optional: Play recruitment VFX/SFX
         // Optional: Show confirmation UI
     }

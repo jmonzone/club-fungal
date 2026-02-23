@@ -91,7 +91,7 @@ public class NetworkRunPartyService : GURUService
         Debug.Log($"Spawned {party.Units.Count} party members with {partyLeader?.Instance.DisplayName} as leader");
     }
 
-    private void SetPartyLeader(UnitController newLeader)
+    public void SetPartyLeader(UnitController newLeader)
     {
         if (newLeader == null) return;
 
@@ -122,6 +122,29 @@ public class NetworkRunPartyService : GURUService
 
         SetPartyLeader(partyControllers[nextIndex]);
         Debug.Log($"Party leader changed to: {partyLeader?.Instance.DisplayName}");
+    }
+
+    public void AddUnitToParty(UnitController controller)
+    {
+        if (controller == null || controller.Instance == null)
+        {
+            Debug.LogWarning("Cannot add null controller or controller without instance to party");
+            return;
+        }
+
+        // Add to party instance if not already there
+        if (!party.Units.Contains(controller.Instance))
+        {
+            party.Units.Add(controller.Instance);
+        }
+
+        // Add to party controllers if not already there
+        if (!partyControllers.Contains(controller))
+        {
+            partyControllers.Add(controller);
+        }
+
+        Debug.Log($"Added {controller.Instance.DisplayName} to party. Party size: {partyControllers.Count}");
     }
 
     private List<UnitInstance> GenerateParty()

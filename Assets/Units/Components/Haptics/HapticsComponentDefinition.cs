@@ -245,7 +245,7 @@ public class HapticsComponentInstance : UnitComponentInstance
             return;
         }
 
-        Debug.Log($"Updating HapticsComponentInstance for {controller.name}");
+        // Debug.Log($"Updating HapticsComponentInstance for {controller.name}");
 
         // Update current terrain
         UpdateNavMeshArea();

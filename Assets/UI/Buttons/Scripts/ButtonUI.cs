@@ -48,6 +48,7 @@ public class ButtonUI : MonoBehaviour
 
     private void OnClick()
     {
+        if (!audioSource) return;
         AudioUtility.PlayClip(audioSource.clip, audioSource.volume);
     }
 }

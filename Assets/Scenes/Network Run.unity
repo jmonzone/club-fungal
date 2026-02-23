@@ -22402,6 +22402,7 @@ MonoBehaviour:
   networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
   indicatorObject: {fileID: 289661288}
   virtualJoystick: {fileID: 1610164947}
+  selectionRadius: 1.5
 --- !u!114 &925300561
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,10 +1,12 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class NetworkRunPartyTetherIndicator : MonoBehaviour
 {
     [SerializeField] private NetworkRunService networkRunService;
     [SerializeField] private GameObject indicatorObject;
     [SerializeField] private VirtualJoystick virtualJoystick;
+    [SerializeField] private float selectionRadius = 1.5f;
 
     private void Update()
     {
@@ -40,10 +42,13 @@ public class NetworkRunPartyTetherIndicator : MonoBehaviour
             // Skip touch if it's being used by the virtual joystick
             if (virtualJoystick != null && virtualJoystick.IsActive && IsJoystickTouch(i)) continue;
 
+            // Skip if touch is over UI
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(touch.fingerId)) continue;
+
             // Check if this touch hits the indicator
             if (CheckRaycastHit(touch.position))
             {
-                networkRunService?.PartyService?.CyclePartyLeader();
+                SelectPartyLeader(touch.position);
                 return;
             }
         }
@@ -51,13 +56,53 @@ public class NetworkRunPartyTetherIndicator : MonoBehaviour
         // Mouse fallback for editor (only if virtual joystick isn't active with mouse)
         if (Input.GetMouseButtonDown(0))
         {
+            // Skip if mouse is over UI
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+
             if (virtualJoystick == null || !virtualJoystick.IsActive)
             {
                 if (CheckRaycastHit(Input.mousePosition))
                 {
-                    networkRunService?.PartyService?.CyclePartyLeader();
+                    SelectPartyLeader(Input.mousePosition);
                 }
             }
+        }
+    }
+
+    private void SelectPartyLeader(Vector3 screenPosition)
+    {
+        if (networkRunService?.PartyService == null) return;
+
+        Ray ray = Camera.main.ScreenPointToRay(screenPosition);
+
+        // Try to find a party member with a spherecast
+        RaycastHit[] hits = Physics.SphereCastAll(ray, selectionRadius, 100f);
+
+        UnitController selectedController = null;
+        float closestDistance = float.MaxValue;
+
+        foreach (var hit in hits)
+        {
+            var controller = hit.transform.GetComponentInParent<UnitController>();
+            if (controller != null && networkRunService.PartyService.PartyControllers.Contains(controller))
+            {
+                // Find the closest party member if multiple are in range
+                if (hit.distance < closestDistance)
+                {
+                    closestDistance = hit.distance;
+                    selectedController = controller;
+                }
+            }
+        }
+
+        // If we found a party member, select them; otherwise cycle
+        if (selectedController != null)
+        {
+            networkRunService.PartyService.SetPartyLeader(selectedController);
+        }
+        else
+        {
+            networkRunService.PartyService.CyclePartyLeader();
         }
     }
 
