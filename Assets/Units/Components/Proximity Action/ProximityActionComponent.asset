@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a6073149d3d245da86574a64c42496b, type: 3}
+  m_Name: ProximityActionComponent
+  m_EditorClassIdentifier: Assembly-CSharp::ProximityActionComponentDefinition
+  id: proximity action
+  displayName: proximity action
+  description: proximity action
+  playerService: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
+  globalInventory: {fileID: 11400000, guid: e9c2fc38b99d8404f8495af08b4889fc, type: 2}
+  proximityDistance: 3
+  requireLineOfSight: 1
+  buttonText: Interact
+  costItem: {fileID: 11400000, guid: ec503a2453c1e4547b234275ed982ca8, type: 2}
+  costAmount: 20
+  buttonPrefab: {fileID: 689804084194502617, guid: a89a0a60f102a4d76bdde579df809c6e,
+    type: 3}

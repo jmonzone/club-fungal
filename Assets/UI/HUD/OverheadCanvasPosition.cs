@@ -4,6 +4,7 @@ public class OverheadCanvasPosition : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform targetTransform;
+    [SerializeField] private Transform targetContainer;
     [SerializeField] private RectTransform rectTransform;
     [SerializeField] private Camera mainCamera;
 
@@ -14,6 +15,13 @@ public class OverheadCanvasPosition : MonoBehaviour
     [SerializeField] private bool hideWhenTooFar = false;
 
     private Canvas canvas;
+
+    public Transform TargetContainer => targetContainer;
+
+    public void SetTargetTransform(Transform target)
+    {
+        targetTransform = target;
+    }
 
     private void Awake()
     {

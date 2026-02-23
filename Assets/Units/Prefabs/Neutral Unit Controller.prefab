@@ -142,9 +142,11 @@ MonoBehaviour:
   death: {fileID: 2775717694171715066}
   defaultBehaviour: {fileID: 2966340765692971654}
   defaultInteraction: {fileID: 11400000, guid: cd6893964a6274906b52bbbf6b56f4d8, type: 2}
+  overheadCanvasPosition: {fileID: 9100838866294772588}
   behaviourPriorityService: {fileID: 11400000, guid: 6afebe865a6264c8b834fed8c6189cc2,
     type: 2}
-  componentDefinitions: []
+  componentDefinitions:
+  - {fileID: 11400000, guid: fe4dff4c2463a4da1b6de4f94468b05c, type: 2}
   instance:
     template: {fileID: 11400000, guid: 9f94c43fcb7de4716af0753df9bbdbb3, type: 2}
     data:
@@ -5644,31 +5646,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4783472890928297495, guid: df18ea2bd5e4b4e12914ea9ec47efea7,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4783472890928297495, guid: df18ea2bd5e4b4e12914ea9ec47efea7,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4783472890928297495, guid: df18ea2bd5e4b4e12914ea9ec47efea7,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4783472890928297495, guid: df18ea2bd5e4b4e12914ea9ec47efea7,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4783472890928297495, guid: df18ea2bd5e4b4e12914ea9ec47efea7,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5956221932434874140, guid: df18ea2bd5e4b4e12914ea9ec47efea7,
         type: 3}
       propertyPath: m_IsActive
@@ -5677,12 +5654,12 @@ PrefabInstance:
     - target: {fileID: 6077671092482267061, guid: df18ea2bd5e4b4e12914ea9ec47efea7,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6077671092482267061, guid: df18ea2bd5e4b4e12914ea9ec47efea7,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6077671092482267061, guid: df18ea2bd5e4b4e12914ea9ec47efea7,
         type: 3}
@@ -5692,17 +5669,22 @@ PrefabInstance:
     - target: {fileID: 6077671092482267061, guid: df18ea2bd5e4b4e12914ea9ec47efea7,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 67.5
       objectReference: {fileID: 0}
     - target: {fileID: 6077671092482267061, guid: df18ea2bd5e4b4e12914ea9ec47efea7,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -86.43
       objectReference: {fileID: 0}
     - target: {fileID: 6296551439678021673, guid: df18ea2bd5e4b4e12914ea9ec47efea7,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6590948859868985505, guid: df18ea2bd5e4b4e12914ea9ec47efea7,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 18
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5715,3 +5697,15 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7031673262330604768}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &9100838866294772588 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2294910739686784908, guid: df18ea2bd5e4b4e12914ea9ec47efea7,
+    type: 3}
+  m_PrefabInstance: {fileID: 7031673262330604768}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8c2f384bb27c4ae8950c5da24a608b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OverheadCanvasPosition

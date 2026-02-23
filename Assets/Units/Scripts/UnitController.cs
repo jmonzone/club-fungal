@@ -14,6 +14,7 @@ public class UnitController : MonoBehaviour, IInteractable
     [SerializeField] private UnitDeath death;
     [SerializeField] private UnitBehaviour defaultBehaviour;
     [SerializeField] private UnitInteraction defaultInteraction;
+    [SerializeField] private OverheadCanvasPosition overheadCanvasPosition;
 
     [Header("Services")]
     [SerializeField] private UnitBehaviourPriorityService behaviourPriorityService;
@@ -28,6 +29,7 @@ public class UnitController : MonoBehaviour, IInteractable
     public UnitDeath Death => death;
     public UnitBehaviourPriorityService BehaviourPriorityService => behaviourPriorityService;
     public List<UnitComponentInstance> ComponentInstances => componentInstances;
+    public OverheadCanvasPosition OverheadCanvasPosition => overheadCanvasPosition;
 
     [Header("Runtime")]
     [SerializeField] private UnitInstance instance;

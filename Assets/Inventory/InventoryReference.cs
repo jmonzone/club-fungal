@@ -122,6 +122,12 @@ public class InventoryReference : ScriptableObject
         }
     }
 
+    public int GetItemCount(Item item)
+    {
+        var existingStack = items.Find(stack => stack.Item == item);
+        return existingStack != null ? existingStack.Count : 0;
+    }
+
     public void IncreaseSporeCount(int value = 1)
     {
         sporeCount += value;

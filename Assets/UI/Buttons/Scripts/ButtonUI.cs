@@ -25,9 +25,9 @@ public class ButtonUI : MonoBehaviour
 
     private void Awake()
     {
-        button = GetComponent<Button>();
-        text = GetComponentInChildren<TextMeshProUGUI>();
-        audioSource = GetComponent<AudioSource>();
+        if (!button) button = GetComponent<Button>();
+        if (!text) text = GetComponentInChildren<TextMeshProUGUI>();
+        if (!audioSource) audioSource = GetComponent<AudioSource>();
     }
 
     public void Initialize(string label, UnityAction action)
