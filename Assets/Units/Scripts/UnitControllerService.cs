@@ -142,16 +142,16 @@ public class UnitControllerService : GURUService
             return null;
         }
 
-        // Create UnitInstance for enemy
+        // Create UnitInstance for enemy (marked as enemy so it won't be persisted)
         UnitInstance enemyInstance = null;
         if (enemySpecies != null)
         {
-            enemyInstance = unitInstanceService.CreateUnit(species => species == enemySpecies);
+            enemyInstance = unitInstanceService.CreateUnit(species => species == enemySpecies, isEnemy: true);
         }
         else
         {
             // Fallback to random unit if no enemy species specified
-            enemyInstance = unitInstanceService.CreateUnit();
+            enemyInstance = unitInstanceService.CreateUnit(isEnemy: true);
         }
 
         UnitController enemyController;

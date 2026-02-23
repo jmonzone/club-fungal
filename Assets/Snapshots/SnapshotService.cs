@@ -33,7 +33,8 @@ public class SnapshotService : GURUService
 
         foreach (var unit in unitControllerService.Controllers)
         {
-            if (unit.Instance != null)
+            // Skip enemies - they should not be persisted
+            if (unit.Instance != null && !unit.Instance.Data.isEnemy)
             {
                 var unitJson = new JObject
                 {

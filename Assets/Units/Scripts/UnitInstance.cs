@@ -20,6 +20,7 @@ public class UnitData
     public List<string> friends;
     public List<InteractionData> interactions;
     public List<SkillData> skills;
+    public bool isEnemy;
 
     [Serializable]
     public class SkillData
