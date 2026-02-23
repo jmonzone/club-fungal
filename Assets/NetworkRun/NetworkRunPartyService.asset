@@ -21,6 +21,7 @@ MonoBehaviour:
   useTemplates: 1
   partyTemplates:
   - {fileID: 11400000, guid: 9f94c43fcb7de4716af0753df9bbdbb3, type: 2}
+  - {fileID: 11400000, guid: b3a34daed756d4fbb83a6c4958dc5588, type: 2}
   generateNewUnits: 1
   blacklistedSpecies:
   - {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
@@ -70,5 +71,49 @@ MonoBehaviour:
       inventory:
         itemStacks: []
         maxCapacity: 12
+      energy: 100
+      isExhausted: 0
+    - template: {fileID: 11400000, guid: b3a34daed756d4fbb83a6c4958dc5588, type: 2}
+      data:
+        id: sporekeeper fox
+        name: sporekeeper fox
+        displayName: The Fox
+        species: {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
+        job: {fileID: 11400000, guid: e0ccc44be171f4a238e11d7e110c89cc, type: 2}
+        element: 0
+        colorPalette: {fileID: 0}
+        scene: 
+        friendshipLevel: 0
+        friendshipXP: 0
+        friends: []
+        interactions: []
+        skills: []
+        isEnemy: 0
+      skills:
+      - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+        level: 1
+        xp: 0
+      - skill: {fileID: 11400000, guid: f8a4854f523d648b192c33a94fba4e80, type: 2}
+        level: 1
+        xp: 0
+      - skill: {fileID: 11400000, guid: 71c6207e188214dfab32f5c23d138e13, type: 2}
+        level: 1
+        xp: 0
+      - skill: {fileID: 11400000, guid: 698cd37da23344a66a7138631f23d9af, type: 2}
+        level: 1
+        xp: 0
+      - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+        level: 1
+        xp: 0
+      - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+        level: 1
+        xp: 0
+      friends: []
+      moments:
+      - interaction: {fileID: 11400000, guid: 5aa5b33e58c2149b9ae9267050d6e3ac, type: 2}
+        isComplete: 0
+      inventory:
+        itemStacks: []
+        maxCapacity: 13
       energy: 100
       isExhausted: 0
