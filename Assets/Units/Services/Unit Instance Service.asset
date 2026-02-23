@@ -46,7 +46,7 @@ MonoBehaviour:
   units:
   - template: {fileID: 0}
     data:
-      id: 16c69b693ecdfaef1c477979
+      id: party frog
       name: party frog
       displayName: Party Frog
       species: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
@@ -84,5 +84,467 @@ MonoBehaviour:
     inventory:
       itemStacks: []
       maxCapacity: 12
+    energy: 100
+    isExhausted: 0
+  - template: {fileID: 0}
+    data:
+      id: sporekeeper fox
+      name: sporekeeper fox
+      displayName: The Fox
+      species: {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
+      job: {fileID: 0}
+      element: 0
+      colorPalette: {fileID: 0}
+      scene: 
+      friendshipLevel: 0
+      friendshipXP: 0
+      friends: []
+      interactions: []
+      skills: []
+      isEnemy: 0
+    skills:
+    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: f8a4854f523d648b192c33a94fba4e80, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 71c6207e188214dfab32f5c23d138e13, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 698cd37da23344a66a7138631f23d9af, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+      level: 1
+      xp: 0
+    friends: []
+    moments: []
+    inventory:
+      itemStacks: []
+      maxCapacity: 13
+    energy: 100
+    isExhausted: 0
+  - template: {fileID: 0}
+    data:
+      id: 1ef39b695e976c2a51e497f1
+      name: fox
+      displayName: Cool Tom
+      species: {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
+      job: {fileID: 0}
+      element: 4
+      colorPalette: {fileID: 11400000, guid: 28fd44a00cafe4888abe1427813e8334, type: 2}
+      scene: 
+      friendshipLevel: 0
+      friendshipXP: 0
+      friends: []
+      interactions: []
+      skills: []
+      isEnemy: 1
+    skills:
+    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: f8a4854f523d648b192c33a94fba4e80, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 71c6207e188214dfab32f5c23d138e13, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 698cd37da23344a66a7138631f23d9af, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+      level: 1
+      xp: 0
+    friends: []
+    moments: []
+    inventory:
+      itemStacks: []
+      maxCapacity: 13
+    energy: 100
+    isExhausted: 0
+  - template: {fileID: 0}
+    data:
+      id: 1ef39b693c6c1964dbf14185
+      name: fox
+      displayName: Sad Luna
+      species: {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
+      job: {fileID: 0}
+      element: 1
+      colorPalette: {fileID: 11400000, guid: 3489c52b81a94463aaa5e67d4ebd81b4, type: 2}
+      scene: 
+      friendshipLevel: 0
+      friendshipXP: 0
+      friends: []
+      interactions: []
+      skills: []
+      isEnemy: 1
+    skills:
+    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: f8a4854f523d648b192c33a94fba4e80, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 71c6207e188214dfab32f5c23d138e13, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 698cd37da23344a66a7138631f23d9af, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+      level: 1
+      xp: 0
+    friends: []
+    moments: []
+    inventory:
+      itemStacks: []
+      maxCapacity: 13
+    energy: 100
+    isExhausted: 0
+  - template: {fileID: 0}
+    data:
+      id: 1ef39b6959106fdb2bef059d
+      name: fox
+      displayName: DJ Bella
+      species: {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
+      job: {fileID: 0}
+      element: 2
+      colorPalette: {fileID: 11400000, guid: ce39a3a65f2424e0092d5fca616737ee, type: 2}
+      scene: 
+      friendshipLevel: 0
+      friendshipXP: 0
+      friends: []
+      interactions: []
+      skills: []
+      isEnemy: 1
+    skills:
+    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: f8a4854f523d648b192c33a94fba4e80, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 71c6207e188214dfab32f5c23d138e13, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 698cd37da23344a66a7138631f23d9af, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+      level: 1
+      xp: 0
+    friends: []
+    moments: []
+    inventory:
+      itemStacks: []
+      maxCapacity: 13
+    energy: 100
+    isExhausted: 0
+  - template: {fileID: 0}
+    data:
+      id: 1ef39b69d3d327a992c39977
+      name: fox
+      displayName: Wild Sal
+      species: {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
+      job: {fileID: 0}
+      element: 8
+      colorPalette: {fileID: 11400000, guid: 3c13432d94b8348578ddb25afa96c0a9, type: 2}
+      scene: 
+      friendshipLevel: 0
+      friendshipXP: 0
+      friends: []
+      interactions: []
+      skills: []
+      isEnemy: 1
+    skills:
+    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: f8a4854f523d648b192c33a94fba4e80, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 71c6207e188214dfab32f5c23d138e13, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 698cd37da23344a66a7138631f23d9af, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+      level: 1
+      xp: 0
+    friends: []
+    moments: []
+    inventory:
+      itemStacks: []
+      maxCapacity: 13
+    energy: 100
+    isExhausted: 0
+  - template: {fileID: 0}
+    data:
+      id: 1ef39b69be9169c16de73bf2
+      name: fox
+      displayName: DJ Tom
+      species: {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
+      job: {fileID: 0}
+      element: 4
+      colorPalette: {fileID: 11400000, guid: 28fd44a00cafe4888abe1427813e8334, type: 2}
+      scene: 
+      friendshipLevel: 0
+      friendshipXP: 0
+      friends: []
+      interactions: []
+      skills: []
+      isEnemy: 1
+    skills:
+    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: f8a4854f523d648b192c33a94fba4e80, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 71c6207e188214dfab32f5c23d138e13, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 698cd37da23344a66a7138631f23d9af, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+      level: 1
+      xp: 0
+    friends: []
+    moments: []
+    inventory:
+      itemStacks: []
+      maxCapacity: 13
+    energy: 100
+    isExhausted: 0
+  - template: {fileID: 0}
+    data:
+      id: 1ef39b69ac0d02684d6b112b
+      name: owl
+      displayName: Party Max
+      species: {fileID: 11400000, guid: a0789f36ed7f54fe7bb95cee622eeb16, type: 2}
+      job: {fileID: 0}
+      element: 4
+      colorPalette: {fileID: 11400000, guid: 28fd44a00cafe4888abe1427813e8334, type: 2}
+      scene: 
+      friendshipLevel: 0
+      friendshipXP: 0
+      friends: []
+      interactions: []
+      skills: []
+      isEnemy: 1
+    skills:
+    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: f8a4854f523d648b192c33a94fba4e80, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 71c6207e188214dfab32f5c23d138e13, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 698cd37da23344a66a7138631f23d9af, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+      level: 1
+      xp: 0
+    friends: []
+    moments: []
+    inventory:
+      itemStacks: []
+      maxCapacity: 10
+    energy: 100
+    isExhausted: 0
+  - template: {fileID: 0}
+    data:
+      id: 1ef39b69584597d5727fccab
+      name: owl
+      displayName: Cool Cindy
+      species: {fileID: 11400000, guid: a0789f36ed7f54fe7bb95cee622eeb16, type: 2}
+      job: {fileID: 0}
+      element: 8
+      colorPalette: {fileID: 11400000, guid: 3c13432d94b8348578ddb25afa96c0a9, type: 2}
+      scene: 
+      friendshipLevel: 0
+      friendshipXP: 0
+      friends: []
+      interactions: []
+      skills: []
+      isEnemy: 1
+    skills:
+    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: f8a4854f523d648b192c33a94fba4e80, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 71c6207e188214dfab32f5c23d138e13, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 698cd37da23344a66a7138631f23d9af, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+      level: 1
+      xp: 0
+    friends: []
+    moments: []
+    inventory:
+      itemStacks: []
+      maxCapacity: 10
+    energy: 100
+    isExhausted: 0
+  - template: {fileID: 0}
+    data:
+      id: 1ef39b695f72e8eedfdecdbd
+      name: owl
+      displayName: Wild Max
+      species: {fileID: 11400000, guid: a0789f36ed7f54fe7bb95cee622eeb16, type: 2}
+      job: {fileID: 0}
+      element: 1
+      colorPalette: {fileID: 11400000, guid: 3489c52b81a94463aaa5e67d4ebd81b4, type: 2}
+      scene: 
+      friendshipLevel: 0
+      friendshipXP: 0
+      friends: []
+      interactions: []
+      skills: []
+      isEnemy: 1
+    skills:
+    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: f8a4854f523d648b192c33a94fba4e80, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 71c6207e188214dfab32f5c23d138e13, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 698cd37da23344a66a7138631f23d9af, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+      level: 1
+      xp: 0
+    friends: []
+    moments: []
+    inventory:
+      itemStacks: []
+      maxCapacity: 10
+    energy: 100
+    isExhausted: 0
+  - template: {fileID: 0}
+    data:
+      id: 1ef39b69beba616d1b160439
+      name: owl
+      displayName: Happy Alice
+      species: {fileID: 11400000, guid: a0789f36ed7f54fe7bb95cee622eeb16, type: 2}
+      job: {fileID: 0}
+      element: 2
+      colorPalette: {fileID: 11400000, guid: ce39a3a65f2424e0092d5fca616737ee, type: 2}
+      scene: 
+      friendshipLevel: 0
+      friendshipXP: 0
+      friends: []
+      interactions: []
+      skills: []
+      isEnemy: 1
+    skills:
+    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: f8a4854f523d648b192c33a94fba4e80, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 71c6207e188214dfab32f5c23d138e13, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 698cd37da23344a66a7138631f23d9af, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+      level: 1
+      xp: 0
+    friends: []
+    moments: []
+    inventory:
+      itemStacks: []
+      maxCapacity: 10
+    energy: 100
+    isExhausted: 0
+  - template: {fileID: 0}
+    data:
+      id: 1ef39b69e645fec3b5b09795
+      name: owl
+      displayName: Fun Charlie
+      species: {fileID: 11400000, guid: a0789f36ed7f54fe7bb95cee622eeb16, type: 2}
+      job: {fileID: 0}
+      element: 8
+      colorPalette: {fileID: 11400000, guid: 3c13432d94b8348578ddb25afa96c0a9, type: 2}
+      scene: 
+      friendshipLevel: 0
+      friendshipXP: 0
+      friends: []
+      interactions: []
+      skills: []
+      isEnemy: 0
+    skills:
+    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: f8a4854f523d648b192c33a94fba4e80, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 71c6207e188214dfab32f5c23d138e13, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 698cd37da23344a66a7138631f23d9af, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+      level: 1
+      xp: 0
+    friends: []
+    moments: []
+    inventory:
+      itemStacks: []
+      maxCapacity: 10
     energy: 100
     isExhausted: 0

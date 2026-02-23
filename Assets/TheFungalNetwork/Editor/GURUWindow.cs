@@ -50,7 +50,7 @@ namespace TheFungalNetwork.Editor
 
         void OnActiveSceneChanged(UnityEngine.SceneManagement.Scene current, UnityEngine.SceneManagement.Scene next)
         {
-            gameService.InitializeSystems();
+            // gameService.InitializeSystems();
             Repaint();
         }
 

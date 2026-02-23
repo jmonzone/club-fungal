@@ -10,6 +10,7 @@ public class UnitBehaviourPriorityService : GURUService
     [Header("Services")]
     [SerializeField] private CameraService cameraService;
     [SerializeField] private PlayerService playerService;
+    [SerializeField] private NetworkRunPartyService partyService;
 
     [Header("Priority Values")]
     [SerializeField] private int playerControlPriority = 500;
@@ -51,7 +52,7 @@ public class UnitBehaviourPriorityService : GURUService
             case UnitCombat combat:
                 return GetCombatPriority(combat);
             case UnitReturnToParty returnToParty:
-                return GetReturnToPartyPriority(returnToParty, controller.transform.position, returnToParty.ReturnPosition);
+                return GetReturnToPartyPriority(returnToParty, controller);
             case UnitForage forage:
                 return GetForagePriority(forage);
             case UnitWander wander:
@@ -73,11 +74,18 @@ public class UnitBehaviourPriorityService : GURUService
 
     /// <summary>
     /// Get priority for UnitReturnToParty behavior.
-    /// Rule: Active when camera is moving.
+    /// Rule: Active when camera is moving AND unit is in the party.
     /// </summary>
-    public int GetReturnToPartyPriority(UnitReturnToParty returnBehaviour, Vector3 currentPosition, Vector3 returnPosition)
+    public int GetReturnToPartyPriority(UnitReturnToParty returnBehaviour, UnitController controller)
     {
-        return cameraService.IsMoving ? returnToPartyPriority : 0;
+        // Only active if camera is moving and unit is in the party
+        if (!cameraService.IsMoving) return 0;
+
+        if (partyService == null || partyService.PartyControllers == null) return 0;
+
+        bool isInParty = partyService.PartyControllers.Contains(controller);
+
+        return isInParty ? returnToPartyPriority : 0;
     }
 
     /// <summary>

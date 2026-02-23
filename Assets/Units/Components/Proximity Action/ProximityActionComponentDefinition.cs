@@ -132,8 +132,8 @@ public class ProximityActionComponentInstance : UnitComponentInstance
         // Trigger action event (for custom behavior)
         OnActionTriggered?.Invoke();
 
-        // Hide button after action
-        HideButton();
+        // Remove this component from the unit controller
+        controller.RemoveComponent(this);
     }
 
     public override void OnUpdate()

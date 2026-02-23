@@ -22,6 +22,7 @@ public class NetworkRunPartyService : GURUService
     [SerializeField] private UnitInstanceService unitInstanceService;
     [SerializeField] private UnitControllerService unitControllerService;
     [SerializeField] private PlayerService playerService;
+    [SerializeField] private LocalData localData;
 
     [Header("Party Generation")]
     [SerializeField] private bool useTemplates = false;
@@ -39,6 +40,8 @@ public class NetworkRunPartyService : GURUService
     private UnitController partyLeader;
     private Transform spawnParent;
 
+    private const string PARTY_KEY = "networkRunParty";
+
     public NetworkRunParty Party => party;
     public List<UnitController> PartyControllers => partyControllers;
     public UnitController PartyLeader => partyLeader;
@@ -54,7 +57,20 @@ public class NetworkRunPartyService : GURUService
     protected override void OnInitialize()
     {
         Debug.Log("Initializing NetworkRunPartyService");
-        party = new NetworkRunParty(GenerateParty());
+
+        // Try to load party from local data first
+        var loadedParty = LoadPartyFromLocalData();
+
+        if (loadedParty != null && loadedParty.Count > 0)
+        {
+            party = new NetworkRunParty(loadedParty);
+            Debug.Log($"Loaded party from local data with {loadedParty.Count} members");
+        }
+        else
+        {
+            party = new NetworkRunParty(GenerateParty());
+            SavePartyToLocalData();
+        }
     }
 
     public override void OnSceneLoaded()
@@ -145,6 +161,67 @@ public class NetworkRunPartyService : GURUService
         }
 
         Debug.Log($"Added {controller.Instance.DisplayName} to party. Party size: {partyControllers.Count}");
+
+        // Save updated party to local data
+        SavePartyToLocalData();
+    }
+
+    private List<UnitInstance> LoadPartyFromLocalData()
+    {
+        if (localData == null || localData.JsonFile == null)
+        {
+            return null;
+        }
+
+        if (!localData.JsonFile.ContainsKey(PARTY_KEY))
+        {
+            return null;
+        }
+
+        var partyIds = localData.JsonFile[PARTY_KEY] as Newtonsoft.Json.Linq.JArray;
+        if (partyIds == null) return null;
+
+        var partyUnits = new List<UnitInstance>();
+
+        foreach (var idToken in partyIds)
+        {
+            var unitId = idToken.ToString();
+            var unitInstance = unitInstanceService.Instances.Find(u => u.Data.id == unitId);
+
+            if (unitInstance != null)
+            {
+                partyUnits.Add(unitInstance);
+            }
+            else
+            {
+                Debug.LogWarning($"Could not find unit with ID {unitId} in UnitInstanceService");
+            }
+        }
+
+        return partyUnits;
+    }
+
+    private void SavePartyToLocalData()
+    {
+        if (localData == null || party == null)
+        {
+            return;
+        }
+
+        if (localData.JsonFile == null) localData.Initialize();
+
+        // Save array of unit IDs
+        var partyIds = new Newtonsoft.Json.Linq.JArray();
+        foreach (var unit in party.Units)
+        {
+            if (unit != null && unit.Data != null)
+            {
+                partyIds.Add(unit.Data.id);
+            }
+        }
+
+        localData.SaveData(PARTY_KEY, partyIds);
+        Debug.Log($"Saved party to local data with {partyIds.Count} members");
     }
 
     private List<UnitInstance> GenerateParty()

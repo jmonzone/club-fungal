@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92d58ed24ffbb44f9b2d4c881ff42090, type: 3}
   m_Name: RecruitableUnitAction
   m_EditorClassIdentifier: Assembly-CSharp::RecruitableUnitProximityAction
-  unitInstanceService: {fileID: 0}
+  unitInstanceService: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2,
+    type: 2}
   partyService: {fileID: 11400000, guid: 042e79e25f7d54a5aa70cf2dc6968d11, type: 2}
   addToParty: 1
   destroyAfterRecruit: 0

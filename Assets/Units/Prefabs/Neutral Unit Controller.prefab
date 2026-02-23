@@ -95,6 +95,8 @@ GameObject:
   - component: {fileID: 3034627611542099151}
   - component: {fileID: 183363605953429838}
   - component: {fileID: 2775717694171715066}
+  - component: {fileID: 8671540776412147898}
+  - component: {fileID: 2012474380602033121}
   m_Layer: 8
   m_Name: Neutral Unit Controller
   m_TagString: Untagged
@@ -410,6 +412,33 @@ MonoBehaviour:
   disableOnDeath: 1
   destroyDelay: 0.1
   deathAnimationTrigger: death
+--- !u!114 &8671540776412147898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1198717324944062984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d90c036088e464b8137d6bcfd68a61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitPlayer
+  isActive: 0
+  playerReference: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
+--- !u!114 &2012474380602033121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1198717324944062984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab873a65198554df18321377221db527, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitReturnToParty
+  isActive: 0
 --- !u!1 &8093596450683381974
 GameObject:
   m_ObjectHideFlags: 0
