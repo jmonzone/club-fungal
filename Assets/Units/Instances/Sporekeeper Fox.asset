@@ -19,13 +19,14 @@ MonoBehaviour:
     species: {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
     job: {fileID: 11400000, guid: e0ccc44be171f4a238e11d7e110c89cc, type: 2}
     element: 0
-    colorPalette: {fileID: 11400000, guid: 28fd44a00cafe4888abe1427813e8334, type: 2}
+    colorPalette: {fileID: 0}
     scene: 
     friendshipLevel: 0
     friendshipXP: 0
     friends: []
     interactions: []
     skills: []
+    isEnemy: 0
   moments:
   - interaction: {fileID: 11400000, guid: 5aa5b33e58c2149b9ae9267050d6e3ac, type: 2}
     isComplete: 0

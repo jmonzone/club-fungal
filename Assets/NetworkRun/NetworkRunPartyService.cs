@@ -131,13 +131,22 @@ public class NetworkRunPartyService : GURUService
 
         if (useTemplates && partyTemplates != null && partyTemplates.Count > 0)
         {
-            // Create units from templates
+            // Create units from templates (or use existing instances if already created)
             foreach (var template in partyTemplates)
             {
                 if (template != null)
                 {
-                    var newUnit = unitInstanceService.CreateUnitFromTemplate(template);
-                    newParty.Add(newUnit);
+                    // Check if an instance from this template already exists
+                    var existingUnit = unitInstanceService.Instances.Find(u => u.Template == template);
+                    if (existingUnit != null)
+                    {
+                        newParty.Add(existingUnit);
+                    }
+                    else
+                    {
+                        var newUnit = unitInstanceService.CreateUnitFromTemplate(template);
+                        newParty.Add(newUnit);
+                    }
                 }
             }
             Debug.Log($"Generated party from {partyTemplates.Count} templates");

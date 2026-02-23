@@ -265,7 +265,7 @@ public class UnitInstanceService : GURUService
         }
 
         var data = template.Data;
-        data.id = null; // Generate new ID for the instance
+        // Keep the template's ID (or generate one if empty)
         var newUnitInstance = new UnitInstance(data);
 
         // Initialize skills
@@ -285,6 +285,9 @@ public class UnitInstanceService : GURUService
         }
 
         newUnitInstance.InitializeSkills(skills);
+
+        // Set the template reference
+        newUnitInstance.SetTemplate(template);
 
         // Add template moments if any
         if (template.Moments != null && template.Moments.Count > 0)

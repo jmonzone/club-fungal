@@ -13,19 +13,20 @@ MonoBehaviour:
   m_Name: Party Frog
   m_EditorClassIdentifier: Assembly-CSharp::UnitTemplate
   data:
-    id: eaa387695f50be19290dc598
+    id: 16c69b693ecdfaef1c477979
     name: party frog
     displayName: Party Frog
     species: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
     job: {fileID: 0}
     element: 0
-    colorPalette: {fileID: 11400000, guid: 3489c52b81a94463aaa5e67d4ebd81b4, type: 2}
+    colorPalette: {fileID: 0}
     scene: 
     friendshipLevel: 0
     friendshipXP: 0
     friends: []
     interactions: []
     skills: []
+    isEnemy: 0
   moments:
   - interaction: {fileID: 11400000, guid: 0740db2fd21f44859941442e25af726b, type: 2}
     isComplete: 0
