@@ -24,6 +24,9 @@ public class NetworkRunPartyService : GURUService
     [SerializeField] private PlayerService playerService;
 
     [Header("Party Generation")]
+    [SerializeField] private bool useTemplates = false;
+    [Tooltip("If useTemplates is true, these templates will be used to create the party")]
+    [SerializeField] private List<UnitTemplate> partyTemplates = new List<UnitTemplate>();
     [SerializeField] private bool generateNewUnits = false;
     [SerializeField] private List<UnitSpecies> blacklistedSpecies;
 
@@ -126,7 +129,20 @@ public class NetworkRunPartyService : GURUService
         var partySize = networkRunService.Settings.defaultPartySize;
         var newParty = new List<UnitInstance>();
 
-        if (generateNewUnits)
+        if (useTemplates && partyTemplates != null && partyTemplates.Count > 0)
+        {
+            // Create units from templates
+            foreach (var template in partyTemplates)
+            {
+                if (template != null)
+                {
+                    var newUnit = unitInstanceService.CreateUnitFromTemplate(template);
+                    newParty.Add(newUnit);
+                }
+            }
+            Debug.Log($"Generated party from {partyTemplates.Count} templates");
+        }
+        else if (generateNewUnits)
         {
             // Generate brand new units (excluding blacklisted species)
             for (int i = 0; i < partySize; i++)

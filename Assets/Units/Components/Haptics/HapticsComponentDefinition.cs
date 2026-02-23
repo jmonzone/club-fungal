@@ -1,6 +1,95 @@
 using System;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.AI;
+
+/// <summary>
+/// iOS native haptics plugin wrapper.
+/// Provides access to UIImpactFeedbackGenerator for sophisticated haptic feedback.
+/// </summary>
+public static class iOSHaptics
+{
+    public enum HapticStyle
+    {
+        Light = 0,      // Light, quick tap
+        Medium = 1,     // Medium impact
+        Heavy = 2,      // Heavy, strong impact
+        Soft = 3,       // Soft, gentle impact (iOS 13+)
+        Rigid = 4       // Rigid, sharp impact (iOS 13+)
+    }
+
+#if UNITY_IOS && !UNITY_EDITOR
+    [DllImport("__Internal")]
+    private static extern void _InitializeHaptics();
+    
+    [DllImport("__Internal")]
+    private static extern void _TriggerHaptic(int style, float intensity);
+    
+    [DllImport("__Internal")]
+    private static extern bool _HapticsSupported();
+    
+    [DllImport("__Internal")]
+    private static extern void _CleanupHaptics();
+#else
+    private static void _InitializeHaptics() { }
+    private static void _TriggerHaptic(int style, float intensity) { }
+    private static bool _HapticsSupported() { return false; }
+    private static void _CleanupHaptics() { }
+#endif
+
+    private static bool initialized = false;
+    private static bool supported = false;
+
+    public static bool IsSupported
+    {
+        get
+        {
+            EnsureInitialized();
+            return supported;
+        }
+    }
+
+    public static void Initialize()
+    {
+        if (initialized) return;
+
+        _InitializeHaptics();
+        supported = _HapticsSupported();
+        initialized = true;
+    }
+
+    public static void Trigger(HapticStyle style, float intensity = 1f)
+    {
+        EnsureInitialized();
+
+        if (!supported)
+        {
+#if UNITY_IOS || UNITY_ANDROID
+            Handheld.Vibrate();
+#endif
+            return;
+        }
+
+        _TriggerHaptic((int)style, Mathf.Clamp01(intensity));
+    }
+
+    public static void Cleanup()
+    {
+        if (!initialized) return;
+
+        _CleanupHaptics();
+        initialized = false;
+        supported = false;
+    }
+
+    private static void EnsureInitialized()
+    {
+        if (!initialized)
+        {
+            Initialize();
+        }
+    }
+}
 
 /// <summary>
 /// ScriptableObject definition for haptic feedback based on unit type and terrain.
@@ -138,6 +227,9 @@ public class HapticsComponentInstance : UnitComponentInstance
 
         navMeshAgent = controller.GetComponent<NavMeshAgent>();
 
+        // Initialize iOS haptics system
+        iOSHaptics.Initialize();
+
         UpdateCurrentPattern();
         ResetHapticTimer();
     }
@@ -152,6 +244,8 @@ public class HapticsComponentInstance : UnitComponentInstance
         {
             return;
         }
+
+        Debug.Log($"Updating HapticsComponentInstance for {controller.name}");
 
         // Update current terrain
         UpdateNavMeshArea();
@@ -214,14 +308,49 @@ public class HapticsComponentInstance : UnitComponentInstance
 
     private void TriggerHaptic()
     {
-        // Use Unity's basic haptic feedback
-        // On iOS/Android this triggers a short vibration
+        if (currentPattern == null || currentPattern.patternType == HapticsComponentDefinition.HapticPatternType.None)
+            return;
+
+        // Use iOS native haptics if available
+        if (iOSHaptics.IsSupported)
+        {
+            var style = GetHapticStyleForPattern(currentPattern.patternType);
+            iOSHaptics.Trigger(style, 1f);
+        }
+        else
+        {
+            // Fallback to basic vibration
 #if UNITY_IOS || UNITY_ANDROID
-        Handheld.Vibrate();
+            Handheld.Vibrate();
 #endif
+        }
 
         // Log for debugging
         Debug.Log($"Haptic triggered: {currentPattern.patternType} on area {currentNavMeshArea}");
+    }
+
+    private iOSHaptics.HapticStyle GetHapticStyleForPattern(HapticsComponentDefinition.HapticPatternType patternType)
+    {
+        switch (patternType)
+        {
+            case HapticsComponentDefinition.HapticPatternType.SmoothFlap:
+                return iOSHaptics.HapticStyle.Soft; // Gentle wing flaps
+
+            case HapticsComponentDefinition.HapticPatternType.Slippery:
+                return iOSHaptics.HapticStyle.Light; // Quick, light splashes
+
+            case HapticsComponentDefinition.HapticPatternType.SmoothSwim:
+                return iOSHaptics.HapticStyle.Soft; // Smooth swimming
+
+            case HapticsComponentDefinition.HapticPatternType.Quadruped:
+                return iOSHaptics.HapticStyle.Medium; // Footsteps
+
+            case HapticsComponentDefinition.HapticPatternType.Drag:
+                return iOSHaptics.HapticStyle.Heavy; // Dragging through water
+
+            default:
+                return iOSHaptics.HapticStyle.Medium;
+        }
     }
 
     private void ResetHapticTimer()
@@ -238,5 +367,13 @@ public class HapticsComponentInstance : UnitComponentInstance
         {
             nextHapticInterval = 0.5f;
         }
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        // Note: We don't cleanup iOS haptics here since it's a static system
+        // that may be used by other components. It will be cleaned up on app shutdown.
     }
 }

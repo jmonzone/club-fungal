@@ -10,40 +10,40 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d555bede3103744c29800f720d427c0e, type: 3}
-  m_Name: HapticsComponent
+  m_Name: HapticsComponentDefinition
   m_EditorClassIdentifier: Assembly-CSharp::HapticsComponentDefinition
-  id: 
-  displayName: 
-  description: 
+  id: hapticscomponentdefinition
+  displayName: HapticsComponentDefinition
+  description: HapticsComponentDefinition
   defaultPattern:
     patternType: 0
     interval: 0.5
     variation: 0.1
     minSpeed: 0.1
   skyPattern:
-    patternType: 0
-    interval: 0.5
-    variation: 0.1
+    patternType: 1
+    interval: 0.3
+    variation: 0.2
     minSpeed: 0.1
   aquaOnLandPattern:
-    patternType: 0
-    interval: 0.5
-    variation: 0.1
+    patternType: 2
+    interval: 0.2
+    variation: 0.5
     minSpeed: 0.1
   aquaOnWaterPattern:
-    patternType: 0
-    interval: 0.5
+    patternType: 3
+    interval: 0.4
     variation: 0.1
-    minSpeed: 0.1
+    minSpeed: 0.15
   pawOnLandPattern:
-    patternType: 0
-    interval: 0.5
-    variation: 0.1
+    patternType: 4
+    interval: 0.25
+    variation: 0.15
     minSpeed: 0.1
   pawOnWaterPattern:
-    patternType: 0
-    interval: 0.5
-    variation: 0.1
+    patternType: 5
+    interval: 0.35
+    variation: 0.3
     minSpeed: 0.1
   playerOnly: 1
-  playerService: {fileID: 0}
+  playerService: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}

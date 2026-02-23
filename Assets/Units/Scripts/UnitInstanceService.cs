@@ -255,6 +255,49 @@ public class UnitInstanceService : GURUService
         return newUnitInstance;
     }
 
+    public UnitInstance CreateUnitFromTemplate(UnitTemplate template)
+    {
+        if (template == null || template.Data == null)
+        {
+            Debug.LogError("Cannot create unit from null template or template with null data");
+            return null;
+        }
+
+        var data = template.Data;
+        data.id = null; // Generate new ID for the instance
+        var newUnitInstance = new UnitInstance(data);
+
+        // Initialize skills
+        var skills = new List<SkillInstance>();
+        foreach (var skill in skillCollection)
+        {
+            SkillInstance skillInstance;
+            if (skill.Id.ToLower() == "dance")
+            {
+                skillInstance = new DanceSkillInstance(newUnitInstance, skill, 0);
+            }
+            else
+            {
+                skillInstance = new SkillInstance(newUnitInstance, skill, 0);
+            }
+            skills.Add(skillInstance);
+        }
+
+        newUnitInstance.InitializeSkills(skills);
+
+        // Add template moments if any
+        if (template.Moments != null && template.Moments.Count > 0)
+        {
+            foreach (var moment in template.Moments)
+            {
+                newUnitInstance.Moments.Add(moment);
+            }
+        }
+
+        RegisterUnit(newUnitInstance);
+        return newUnitInstance;
+    }
+
     private string GenerateDisplayName(string baseName)
     {
         var titles = new[] { "Mysterious", "Party", "DJ", "Crazy", "Wild", "Cool", "Happy", "Sad", "Fun", "Silly" };
