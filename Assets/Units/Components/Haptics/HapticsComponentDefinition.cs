@@ -321,7 +321,7 @@ public class HapticsComponentInstance : UnitComponentInstance
         {
             // Fallback to basic vibration
 #if UNITY_IOS || UNITY_ANDROID
-            Handheld.Vibrate();
+            // Handheld.Vibrate();
 #endif
         }
 

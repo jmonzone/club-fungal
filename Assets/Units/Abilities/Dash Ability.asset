@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Dash Ability
   m_EditorClassIdentifier: Assembly-CSharp::DashAbilityDefinition
   id: dash
-  displayName: dash
+  displayName: Dash
   icon: {fileID: 21300000, guid: c3c95bf40ddc94109a17a122cc0ea722, type: 3}
   description: dash
   dashDistance: 5

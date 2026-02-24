@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Fly Ability
   m_EditorClassIdentifier: Assembly-CSharp::FlyAbilityDefinition
   id: fly
-  displayName: flying
+  displayName: Fly
   icon: {fileID: 21300000, guid: 8d05ea05df31d4c759874807424774da, type: 3}
-  description: sdasd
+  description: flying
   airHeight: 3
   transitionSpeed: 2

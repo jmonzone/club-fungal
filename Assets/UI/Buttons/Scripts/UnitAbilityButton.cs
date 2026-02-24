@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -12,13 +13,9 @@ public class UnitAbilityButton : MonoBehaviour
     [SerializeField] private NetworkRunPartyService partyService;
     [SerializeField] private Button button;
     [SerializeField] private TextMeshProUGUI buttonText;
-
-    [Header("Settings")]
-    [SerializeField] private float cooldownDuration = 5f;
-
-    [Header("Runtime")]
-    [SerializeField] private float cooldownTimer = 0f;
-    [SerializeField] private bool isOnCooldown = false;
+    [SerializeField] private Image cooldownFill;
+    [SerializeField] private TextMeshProUGUI cooldownText;
+    [SerializeField] private List<Image> chargeIndicators;
 
     private void Awake()
     {
@@ -47,19 +44,7 @@ public class UnitAbilityButton : MonoBehaviour
 
     private void Update()
     {
-        if (isOnCooldown)
-        {
-            cooldownTimer -= Time.deltaTime;
-            if (cooldownTimer <= 0f)
-            {
-                isOnCooldown = false;
-                UpdateButtonState();
-            }
-            else
-            {
-                UpdateCooldownText();
-            }
-        }
+        UpdateButtonState();
     }
 
     private void OnPartyLeaderChanged(UnitController newLeader)
@@ -69,32 +54,14 @@ public class UnitAbilityButton : MonoBehaviour
 
     private void OnButtonClicked()
     {
-        if (partyService == null || partyService.PartyLeader == null)
-        {
-            Debug.LogWarning("No party leader available to activate ability");
-            return;
-        }
-
-        if (isOnCooldown)
-        {
-            Debug.Log("Ability is on cooldown");
-            return;
-        }
+        if (partyService == null || partyService.PartyLeader == null) return;
 
         ActivateLeaderAbility(partyService.PartyLeader);
-        StartCooldown();
     }
 
     private void ActivateLeaderAbility(UnitController leader)
     {
         leader.Instance.Abilities[0].Activate(leader);
-    }
-
-    private void StartCooldown()
-    {
-        isOnCooldown = true;
-        cooldownTimer = cooldownDuration;
-        UpdateButtonState();
     }
 
     private void UpdateButtonState()
@@ -106,22 +73,139 @@ public class UnitAbilityButton : MonoBehaviour
             {
                 buttonText.text = "No Leader";
             }
+            HideCooldownUI();
             return;
         }
 
-        button.interactable = !isOnCooldown;
-
-        if (buttonText != null && !isOnCooldown)
+        var abilities = partyService.PartyLeader.Instance.Abilities;
+        if (abilities == null || abilities.Count == 0)
         {
-            buttonText.text = partyService.PartyLeader.Instance.Abilities[0].Definition.DisplayName;
+            button.interactable = false;
+            if (buttonText != null)
+            {
+                buttonText.text = "No Ability";
+            }
+            HideCooldownUI();
+            return;
+        }
+
+        var ability = abilities[0];
+        button.interactable = ability.CanActivate;
+        Debug.Log($"Updating button for ability: {ability.Definition.DisplayName}, CanActivate={ability.CanActivate}");
+
+        if (buttonText != null)
+        {
+            buttonText.text = ability.Definition.DisplayName;
+        }
+
+        UpdateCooldownUI(ability);
+        UpdateChargeUI(ability);
+    }
+
+    private void UpdateCooldownUI(AbilityInstance ability)
+    {
+        // For charge-based abilities, show charge regen progress instead
+        if (ability is DashAbilityInstance dashAbility)
+        {
+            var isRegeneratingCharge = dashAbility.CurrentCharges < dashAbility.DashDefinition.MaxCharges;
+
+            if (cooldownFill != null)
+            {
+                cooldownFill.gameObject.SetActive(isRegeneratingCharge);
+                if (isRegeneratingCharge)
+                {
+                    cooldownFill.fillAmount = 1f - (dashAbility.ChargeRegenTimer / dashAbility.DashDefinition.ChargeRegenTime);
+                }
+            }
+
+            if (cooldownText != null)
+            {
+                cooldownText.gameObject.SetActive(isRegeneratingCharge);
+                if (isRegeneratingCharge)
+                {
+                    var timeRemaining = dashAbility.DashDefinition.ChargeRegenTime - dashAbility.ChargeRegenTimer;
+                    cooldownText.text = Mathf.CeilToInt(timeRemaining).ToString();
+                }
+            }
+            return;
+        }
+
+        // Standard cooldown for non-charge abilities
+        var hasCooldown = ability.CooldownRemaining > 0f;
+
+        if (cooldownFill != null)
+        {
+            cooldownFill.gameObject.SetActive(hasCooldown);
+            if (hasCooldown)
+            {
+                var maxCooldown = GetMaxCooldown(ability);
+                cooldownFill.fillAmount = ability.CooldownRemaining / maxCooldown;
+            }
+        }
+
+        if (cooldownText != null)
+        {
+            cooldownText.gameObject.SetActive(hasCooldown);
+            if (hasCooldown)
+            {
+                cooldownText.text = Mathf.CeilToInt(ability.CooldownRemaining).ToString();
+            }
         }
     }
 
-    private void UpdateCooldownText()
+    private float GetMaxCooldown(AbilityInstance ability)
     {
-        if (buttonText != null)
+        if (ability is DashAbilityInstance dashAbility)
         {
-            buttonText.text = $"Cooldown: {Mathf.CeilToInt(cooldownTimer)}s";
+            return dashAbility.DashDefinition.ChargeRegenTime;
+        }
+
+        // Default fallback - adjust based on your ability types
+        return 5f;
+    }
+
+    private void UpdateChargeUI(AbilityInstance ability)
+    {
+        if (chargeIndicators == null || chargeIndicators.Count == 0) return;
+
+        // Check if it's a dash ability (or any charge-based ability)
+        if (ability is DashAbilityInstance dashAbility)
+        {
+            var maxCharges = dashAbility.DashDefinition.MaxCharges;
+            var currentCharges = dashAbility.CurrentCharges;
+
+            for (int i = 0; i < chargeIndicators.Count; i++)
+            {
+                if (i < maxCharges)
+                {
+                    chargeIndicators[i].gameObject.SetActive(true);
+                    chargeIndicators[i].enabled = i < currentCharges;
+                }
+                else
+                {
+                    chargeIndicators[i].gameObject.SetActive(false);
+                }
+            }
+        }
+        else
+        {
+            foreach (var indicator in chargeIndicators)
+            {
+                indicator.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    private void HideCooldownUI()
+    {
+        if (cooldownFill != null) cooldownFill.gameObject.SetActive(false);
+        if (cooldownText != null) cooldownText.gameObject.SetActive(false);
+        if (chargeIndicators != null)
+        {
+            foreach (var indicator in chargeIndicators)
+            {
+                indicator.gameObject.SetActive(false);
+            }
         }
     }
 }

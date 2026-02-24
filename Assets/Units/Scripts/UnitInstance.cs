@@ -47,7 +47,7 @@ public class UnitInstance
     [SerializeField] private UnitData data;
 
     [SerializeField] private List<SkillInstance> skills;
-    [SerializeField] private List<AbilityInstance> abilities;
+    [SerializeReference] private List<AbilityInstance> abilities;
 
     // Build dictionary on-demand from serialized list
     private Dictionary<Skill, SkillInstance> _skillsCache;

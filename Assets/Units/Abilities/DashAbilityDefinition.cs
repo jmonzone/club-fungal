@@ -36,7 +36,15 @@ public class DashAbilityInstance : AbilityInstance
 
     public DashAbilityDefinition DashDefinition => definition as DashAbilityDefinition;
     public int CurrentCharges => currentCharges;
-    public override bool CanActivate => currentCharges > 0 && !isDashing;
+    public float ChargeRegenTimer => chargeRegenTimer;
+    public override bool CanActivate
+    {
+        get
+        {
+            Debug.Log($"Checking CanActivate for Dash: Charges={currentCharges}, IsDashing={isDashing}");
+            return currentCharges > 0 && !isDashing;
+        }
+    }
 
     public DashAbilityInstance(DashAbilityDefinition definition, UnitInstance unit)
         : base(definition, unit)
@@ -60,6 +68,10 @@ public class DashAbilityInstance : AbilityInstance
                 chargeRegenTimer = 0f;
                 Debug.Log($"{unit.DisplayName} dash charge regenerated ({currentCharges}/{DashDefinition.MaxCharges})");
             }
+        }
+        else
+        {
+            chargeRegenTimer = 0f;
         }
     }
 
@@ -85,12 +97,21 @@ public class DashAbilityInstance : AbilityInstance
         Vector3 startPos = controller.transform.position;
         float elapsed = 0f;
 
+        var agent = controller.GetComponent<UnityEngine.AI.NavMeshAgent>();
+        if (agent) agent.enabled = false;
+
         while (elapsed < DashDefinition.DashDuration)
         {
             elapsed += Time.deltaTime;
             float t = elapsed / DashDefinition.DashDuration;
             controller.transform.position = Vector3.Lerp(startPos, target, t);
             yield return null;
+        }
+
+        if (agent)
+        {
+            agent.enabled = true;
+            controller.Destination.SetDestination(controller.transform.position);
         }
 
         isDashing = false;

@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Dive Ability
   m_EditorClassIdentifier: Assembly-CSharp::DiveAbilityDefinition
   id: dive
-  displayName: dive
+  displayName: Dive
   icon: {fileID: 21300000, guid: f624b74a8f9254ac2b57314ace99f1bb, type: 3}
-  description: 
+  description: diving
   underwaterDepth: 2
   transitionSpeed: 3
   cooldown: 1
