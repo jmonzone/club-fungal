@@ -16,4 +16,4 @@ MonoBehaviour:
   inventoryBonus: 0
   resourceSpeedBonuses: []
   terrainSpeedModifiers: []
-  abilityDefinition: {fileID: 11400000, guid: 44fc7233db50b4873bc41d15c808a0f5, type: 2}
+  abilityDefinition: {fileID: 11400000, guid: ce452494eab4649fd9b9626b400584f7, type: 2}

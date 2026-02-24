@@ -19,4 +19,4 @@ MonoBehaviour:
   dashDistance: 5
   dashDuration: 0.2
   maxCharges: 2
-  chargeRegenTime: 5
+  chargeRegenTime: 3
