@@ -22,3 +22,4 @@ MonoBehaviour:
     speedMultiplier: 1.5
   - areaIndex: 6
     speedMultiplier: 0.5
+  abilityDefinition: {fileID: 11400000, guid: ce452494eab4649fd9b9626b400584f7, type: 2}

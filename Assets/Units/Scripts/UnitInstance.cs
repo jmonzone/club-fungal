@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Events;
@@ -20,6 +21,7 @@ public class UnitData
     public List<string> friends;
     public List<InteractionData> interactions;
     public List<SkillData> skills;
+    public List<AbilityDefinition> abilities;
     public bool isEnemy;
 
     [Serializable]
@@ -45,6 +47,7 @@ public class UnitInstance
     [SerializeField] private UnitData data;
 
     [SerializeField] private List<SkillInstance> skills;
+    [SerializeField] private List<AbilityInstance> abilities;
 
     // Build dictionary on-demand from serialized list
     private Dictionary<Skill, SkillInstance> _skillsCache;
@@ -87,6 +90,7 @@ public class UnitInstance
 
     public List<string> Friends => friends;
     public List<UnitMoment> Moments => moments;
+    public List<AbilityInstance> Abilities => abilities;
 
     public UnitTemplate Template => template;
     public Inventory Inventory => inventory;
@@ -110,6 +114,7 @@ public class UnitInstance
         this.data = initData;
         friends = new List<string>();
         moments = new List<UnitMoment>();
+        abilities = new List<AbilityInstance>();
         inventory = new Inventory(GetInventoryCapacityForSpecies(data.species));
     }
 
@@ -138,6 +143,43 @@ public class UnitInstance
     public void InitializeMoments(List<UnitMoment> moments)
     {
         this.moments = moments;
+    }
+
+    public void InitializeAbilities(List<AbilityInstance> abilities)
+    {
+        this.abilities = abilities;
+        data.abilities = abilities.Select(a => a.Definition).ToList();
+    }
+
+    /// <summary>
+    /// Update all abilities (cooldowns, timers, etc.)
+    /// Should be called every frame by the controller.
+    /// </summary>
+    public void UpdateAbilities(float deltaTime)
+    {
+        if (abilities == null) return;
+
+        foreach (var ability in abilities)
+        {
+            ability?.Update(deltaTime);
+        }
+    }
+
+    /// <summary>
+    /// Get ability instance by definition type.
+    /// </summary>
+    public T GetAbility<T>() where T : AbilityInstance
+    {
+        if (abilities == null) return null;
+
+        foreach (var ability in abilities)
+        {
+            if (ability is T match)
+            {
+                return match;
+            }
+        }
+        return null;
     }
 
     public void ClaimItemsToInventory(ItemTemplate item, Inventory targetInventory)

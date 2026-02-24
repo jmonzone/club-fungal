@@ -15,3 +15,5 @@ MonoBehaviour:
   id: sky
   inventoryBonus: 0
   resourceSpeedBonuses: []
+  terrainSpeedModifiers: []
+  abilityDefinition: {fileID: 11400000, guid: 44fc7233db50b4873bc41d15c808a0f5, type: 2}

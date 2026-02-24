@@ -19,6 +19,7 @@ public class UnitInstanceService : GURUService
     [SerializeField] private List<UnitSpecies> speciesCollection;
     [SerializeField] private List<Job> jobCollection;
     [SerializeField] private List<Skill> skillCollection;
+    [SerializeField] private List<AbilityDefinition> abilityCollection;
     [SerializeField] private List<ColorPalette> colorPalettes;
     [SerializeField] private List<UnitInteraction> interactionCollection;
 
@@ -48,7 +49,11 @@ public class UnitInstanceService : GURUService
 
             var settings = new JsonSerializerSettings
             {
-                Converters = new List<JsonConverter> { new UnitSpeciesConverter(speciesCollection) }
+                Converters = new List<JsonConverter>
+                {
+                    new UnitSpeciesConverter(speciesCollection),
+                    new GURUListConverter<AbilityDefinition>(abilityCollection)
+                }
             };
 
             var unitsData = JsonConvert.DeserializeObject<List<UnitData>>(unitsJson, settings);
@@ -77,29 +82,9 @@ public class UnitInstanceService : GURUService
 
                 var unitInstance = new UnitInstance(unitData);
 
-
-                var skills = new List<SkillInstance>();
-                var skillSaveDict = unitData.skills?.ToDictionary(s => s.id, s => s) ?? new Dictionary<string, UnitData.SkillData>();
-
-                foreach (var skill in skillCollection)
-                {
-                    float xp = 0f;
-                    if (skillSaveDict.TryGetValue(skill.Id, out var skillSave))
-                    {
-                        xp = skillSave.xp;
-                    }
-
-                    SkillInstance skillInstance;
-                    if (skill.Id.ToLower() == "dance")
-                    {
-                        skillInstance = new DanceSkillInstance(unitInstance, skill, xp);
-                    }
-                    else
-                    {
-                        skillInstance = new SkillInstance(unitInstance, skill, xp);
-                    }
-                    skills.Add(skillInstance);
-                }
+                // Initialize skills and abilities
+                InitializeUnitSkills(unitInstance, unitData.skills);
+                InitializeUnitAbilities(unitInstance, unitData.abilities);
 
                 // Check for skills in JSON that are not in the collection
                 var loadedSkillIds = unitData.skills?.Select(s => s.id).Where(id => !string.IsNullOrEmpty(id)).ToList() ?? new List<string>();
@@ -109,8 +94,6 @@ public class UnitInstanceService : GURUService
                 {
                     Debug.LogError($"Skill '{missing}' not found in skillCollection for unit '{unitData.name}'.");
                 }
-
-                unitInstance.InitializeSkills(skills);
 
                 RegisterUnit(unitInstance, false);
 
@@ -141,7 +124,11 @@ public class UnitInstanceService : GURUService
 
             var settings = new JsonSerializerSettings
             {
-                Converters = new List<JsonConverter> { new UnitSpeciesConverter(speciesCollection) }
+                Converters = new List<JsonConverter>
+                {
+                    new UnitSpeciesConverter(speciesCollection),
+                    new GURUListConverter<AbilityDefinition>(abilityCollection)
+                }
             };
 
             var unitsData = JsonConvert.DeserializeObject<List<UnitData>>(unitsJson, settings);
@@ -235,23 +222,10 @@ public class UnitInstanceService : GURUService
 
         var newUnitInstance = new UnitInstance(data);
 
-        var skills = new List<SkillInstance>();
+        // Initialize skills and abilities
+        InitializeUnitSkills(newUnitInstance);
+        InitializeUnitAbilities(newUnitInstance);
 
-        foreach (var skill in skillCollection)
-        {
-            SkillInstance skillInstance;
-            if (skill.Id.ToLower() == "dance")
-            {
-                skillInstance = new DanceSkillInstance(newUnitInstance, skill, 0);
-            }
-            else
-            {
-                skillInstance = new SkillInstance(newUnitInstance, skill, 0);
-            }
-            skills.Add(skillInstance);
-        }
-
-        newUnitInstance.InitializeSkills(skills);
         RegisterUnit(newUnitInstance);
         return newUnitInstance;
     }
@@ -268,23 +242,9 @@ public class UnitInstanceService : GURUService
         // Keep the template's ID (or generate one if empty)
         var newUnitInstance = new UnitInstance(data);
 
-        // Initialize skills
-        var skills = new List<SkillInstance>();
-        foreach (var skill in skillCollection)
-        {
-            SkillInstance skillInstance;
-            if (skill.Id.ToLower() == "dance")
-            {
-                skillInstance = new DanceSkillInstance(newUnitInstance, skill, 0);
-            }
-            else
-            {
-                skillInstance = new SkillInstance(newUnitInstance, skill, 0);
-            }
-            skills.Add(skillInstance);
-        }
-
-        newUnitInstance.InitializeSkills(skills);
+        // Initialize skills and abilities
+        InitializeUnitSkills(newUnitInstance);
+        InitializeUnitAbilities(newUnitInstance);
 
         // Set the template reference
         newUnitInstance.SetTemplate(template);
@@ -300,6 +260,72 @@ public class UnitInstanceService : GURUService
 
         RegisterUnit(newUnitInstance);
         return newUnitInstance;
+    }
+
+    /// <summary>
+    /// Initialize skills for a unit. Optionally loads saved skill XP data.
+    /// </summary>
+    private void InitializeUnitSkills(UnitInstance unit, List<UnitData.SkillData> savedSkills = null)
+    {
+        var skills = new List<SkillInstance>();
+        var skillSaveDict = savedSkills?.ToDictionary(s => s.id, s => s) ?? new Dictionary<string, UnitData.SkillData>();
+
+        foreach (var skill in skillCollection)
+        {
+            float xp = 0f;
+            if (skillSaveDict.TryGetValue(skill.Id, out var skillSave))
+            {
+                xp = skillSave.xp;
+            }
+
+            SkillInstance skillInstance;
+            if (skill.Id.ToLower() == "dance")
+            {
+                skillInstance = new DanceSkillInstance(unit, skill, xp);
+            }
+            else
+            {
+                skillInstance = new SkillInstance(unit, skill, xp);
+            }
+            skills.Add(skillInstance);
+        }
+
+        unit.InitializeSkills(skills);
+    }
+
+    /// <summary>
+    /// Initialize abilities for a unit. Loads from collection and optionally from saved definitions.
+    /// Also adds type-specific ability if the unit's species has one.
+    /// </summary>
+    private void InitializeUnitAbilities(UnitInstance unit, List<AbilityDefinition> savedAbilities = null)
+    {
+        var abilities = new List<AbilityInstance>();
+        var abilityDefinitions = savedAbilities ?? new List<AbilityDefinition>();
+
+        // Load abilities from saved definitions
+        if (abilityDefinitions.Count > 0)
+        {
+            foreach (var abilityDefinition in abilityDefinitions)
+            {
+                if (abilityDefinition != null)
+                {
+                    var abilityInstance = abilityDefinition.CreateInstance(unit);
+                    abilities.Add(abilityInstance);
+                }
+            }
+        }
+
+        // Add type-specific ability if unit has a type
+        if (unit.Species != null && unit.Species.Type != null && unit.Species.Type.AbilityDefinition != null)
+        {
+            if (!abilityDefinitions.Contains(unit.Species.Type.AbilityDefinition))
+            {
+                var typeAbility = unit.Species.Type.AbilityDefinition.CreateInstance(unit);
+                abilities.Add(typeAbility);
+            }
+        }
+
+        unit.InitializeAbilities(abilities);
     }
 
     private string GenerateDisplayName(string baseName)
@@ -318,27 +344,17 @@ public class UnitInstanceService : GURUService
         var copiedUnit = new UnitInstance(data);
 
         // Copy skills with their XP values from original unit
-        var skills = new List<SkillInstance>();
-        if (instance.Skills != null && instance.Skills.Count > 0)
-        {
-            foreach (var skillEntry in instance.Skills)
-            {
-                var skill = skillEntry.Key;
-                var originalSkillInstance = skillEntry.Value;
-                SkillInstance skillInstance;
-                if (skill.Id.ToLower() == "dance")
-                {
-                    skillInstance = new DanceSkillInstance(copiedUnit, skill, originalSkillInstance.XP);
-                }
-                else
-                {
-                    skillInstance = new SkillInstance(copiedUnit, skill, originalSkillInstance.XP);
-                }
-                skills.Add(skillInstance);
-            }
-        }
+        var skillData = instance.Skills?.Values
+            .Select(s => new UnitData.SkillData { id = s.Skill.Id, xp = s.XP })
+            .ToList();
 
-        copiedUnit.InitializeSkills(skills);
+        // Copy abilities from original unit
+        var savedAbilities = instance.Abilities?
+            .Select(a => a.Definition)
+            .ToList();
+
+        InitializeUnitSkills(copiedUnit, skillData);
+        InitializeUnitAbilities(copiedUnit, savedAbilities);
 
         if (register)
         {
@@ -516,7 +532,11 @@ public class UnitInstanceService : GURUService
         var settings = new JsonSerializerSettings
         {
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            Converters = new List<JsonConverter> { new UnitSpeciesConverter(speciesCollection) }
+            Converters = new List<JsonConverter>
+            {
+                new UnitSpeciesConverter(speciesCollection),
+                new GURUListConverter<AbilityDefinition>(abilityCollection)
+            }
         };
 
         var json = JsonConvert.SerializeObject(unitsData, settings);

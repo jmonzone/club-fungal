@@ -28,10 +28,12 @@ public class UnitType : GURUObject
     [SerializeField] private int inventoryBonus = 0; // Bonus inventory slots added to base capacity
     [SerializeField] private List<ResourceSpeedBonus> resourceSpeedBonuses = new List<ResourceSpeedBonus>();
     [SerializeField] private List<TerrainSpeedModifier> terrainSpeedModifiers = new List<TerrainSpeedModifier>();
+    [SerializeField] private AbilityDefinition abilityDefinition; // Type-specific ability (e.g., Fly for birds, Dive for fish)
 
     public int InventoryBonus => inventoryBonus;
     public List<ResourceSpeedBonus> ResourceSpeedBonuses => resourceSpeedBonuses;
     public List<TerrainSpeedModifier> TerrainSpeedModifiers => terrainSpeedModifiers;
+    public AbilityDefinition AbilityDefinition => abilityDefinition;
 
     public float GetSpeedBonusForResource(ItemTemplate item)
     {

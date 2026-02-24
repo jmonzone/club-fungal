@@ -135,6 +135,12 @@ public class UnitController : MonoBehaviour, IInteractable
         // Update all components
         UpdateComponents();
 
+        // Update abilities
+        if (instance != null)
+        {
+            instance.UpdateAbilities(Time.deltaTime);
+        }
+
         // Evaluate behavior priority every frame
         EvaluateBehaviourPriority();
 
