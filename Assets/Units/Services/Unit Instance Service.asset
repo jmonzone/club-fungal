@@ -13,11 +13,7 @@ MonoBehaviour:
   m_Name: Unit Instance Service
   m_EditorClassIdentifier: 
   localData: {fileID: 11400000, guid: 81d22df7435974c419891ceb2bc9e4ee, type: 2}
-  initialUnits:
-  - {fileID: 11400000, guid: 9f94c43fcb7de4716af0753df9bbdbb3, type: 2}
-  - {fileID: 11400000, guid: 1c13d7c1ade7f486ca3ed346a8a49b51, type: 2}
-  - {fileID: 11400000, guid: b3a34daed756d4fbb83a6c4958dc5588, type: 2}
-  - {fileID: 11400000, guid: 6457afa495a7344de88409e5f7c817be, type: 2}
+  initialUnits: []
   playerUnit: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
   speciesCollection:
   - {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
@@ -52,7 +48,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5aa5b33e58c2149b9ae9267050d6e3ac, type: 2}
   - {fileID: 11400000, guid: bf953fd083dda4c43b09b918cd59dc87, type: 2}
   units:
-  - template: {fileID: 11400000, guid: 9f94c43fcb7de4716af0753df9bbdbb3, type: 2}
+  - template: {fileID: 0}
     data:
       id: party frog
       name: party frog
@@ -67,53 +63,8 @@ MonoBehaviour:
       friends: []
       interactions: []
       skills: []
-      abilityIds:
-      - dive
-      isEnemy: 0
-    skills:
-    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
-      level: 1
-      xp: 0
-    - skill: {fileID: 11400000, guid: 698cd37da23344a66a7138631f23d9af, type: 2}
-      level: 1
-      xp: 0
-    - skill: {fileID: 11400000, guid: f8a4854f523d648b192c33a94fba4e80, type: 2}
-      level: 1
-      xp: 0
-    - skill: {fileID: 11400000, guid: 71c6207e188214dfab32f5c23d138e13, type: 2}
-      level: 1
-      xp: 0
-    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
-      level: 1
-      xp: 0
-    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
-      level: 1
-      xp: 0
-    friends: []
-    moments:
-    - interaction: {fileID: 11400000, guid: 0740db2fd21f44859941442e25af726b, type: 2}
-      isComplete: 0
-    inventory:
-      itemStacks: []
-      maxCapacity: 12
-    energy: 100
-    isExhausted: 0
-  - template: {fileID: 11400000, guid: 1c13d7c1ade7f486ca3ed346a8a49b51, type: 2}
-    data:
-      id: player
-      name: player
-      displayName: Player
-      species: {fileID: 11400000, guid: 0f8a8e5b301c1465f82b426348040477, type: 2}
-      job: {fileID: 0}
-      element: 0
-      colorPalette: {fileID: 0}
-      scene: 
-      friendshipLevel: 0
-      friendshipXP: 0
-      friends: []
-      interactions: []
-      skills: []
-      abilityIds: []
+      abilities:
+      - {fileID: 11400000, guid: 4c941416531a14fcbba7e7c4d1bc31b3, type: 2}
       isEnemy: 0
     skills:
     - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
@@ -138,10 +89,10 @@ MonoBehaviour:
     moments: []
     inventory:
       itemStacks: []
-      maxCapacity: 11
+      maxCapacity: 12
     energy: 100
     isExhausted: 0
-  - template: {fileID: 11400000, guid: b3a34daed756d4fbb83a6c4958dc5588, type: 2}
+  - template: {fileID: 0}
     data:
       id: sporekeeper fox
       name: sporekeeper fox
@@ -156,53 +107,8 @@ MonoBehaviour:
       friends: []
       interactions: []
       skills: []
-      abilityIds:
-      - dash
-      isEnemy: 0
-    skills:
-    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
-      level: 1
-      xp: 0
-    - skill: {fileID: 11400000, guid: 698cd37da23344a66a7138631f23d9af, type: 2}
-      level: 1
-      xp: 0
-    - skill: {fileID: 11400000, guid: f8a4854f523d648b192c33a94fba4e80, type: 2}
-      level: 1
-      xp: 0
-    - skill: {fileID: 11400000, guid: 71c6207e188214dfab32f5c23d138e13, type: 2}
-      level: 1
-      xp: 0
-    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
-      level: 1
-      xp: 0
-    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
-      level: 1
-      xp: 0
-    friends: []
-    moments:
-    - interaction: {fileID: 11400000, guid: 5aa5b33e58c2149b9ae9267050d6e3ac, type: 2}
-      isComplete: 0
-    inventory:
-      itemStacks: []
-      maxCapacity: 13
-    energy: 100
-    isExhausted: 0
-  - template: {fileID: 11400000, guid: 6457afa495a7344de88409e5f7c817be, type: 2}
-    data:
-      id: the tree
-      name: the tree
-      displayName: The Tree
-      species: {fileID: 11400000, guid: 95347a15aaf7f4b40b23e8fdfbd3a26f, type: 2}
-      job: {fileID: 0}
-      element: 0
-      colorPalette: {fileID: 0}
-      scene: 
-      friendshipLevel: 0
-      friendshipXP: 0
-      friends: []
-      interactions: []
-      skills: []
-      abilityIds: []
+      abilities:
+      - {fileID: 11400000, guid: ce452494eab4649fd9b9626b400584f7, type: 2}
       isEnemy: 0
     skills:
     - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
@@ -227,6 +133,6 @@ MonoBehaviour:
     moments: []
     inventory:
       itemStacks: []
-      maxCapacity: 11
+      maxCapacity: 13
     energy: 100
     isExhausted: 0
