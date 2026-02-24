@@ -326,7 +326,7 @@ public class HapticsComponentInstance : UnitComponentInstance
         }
 
         // Log for debugging
-        Debug.Log($"Haptic triggered: {currentPattern.patternType} on area {currentNavMeshArea}");
+        // Debug.Log($"Haptic triggered: {currentPattern.patternType} on area {currentNavMeshArea}");
     }
 
     private iOSHaptics.HapticStyle GetHapticStyleForPattern(HapticsComponentDefinition.HapticPatternType patternType)
