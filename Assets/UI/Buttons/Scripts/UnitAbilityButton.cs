@@ -61,7 +61,7 @@ public class UnitAbilityButton : MonoBehaviour
 
     private void ActivateLeaderAbility(UnitController leader)
     {
-        leader.Instance.Abilities[0].Activate(leader);
+        leader.Instance.Abilities[0].Activate();
     }
 
     private void UpdateButtonState()

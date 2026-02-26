@@ -205,6 +205,22 @@ public class UnitController : MonoBehaviour, IInteractable
     {
         this.instance = instance;
         name = "Unit - " + instance.Species.Id;
+
+        // Create ability instances now that controller exists
+        if (instance.Data.abilities != null && instance.Data.abilities.Count > 0)
+        {
+            var abilityInstances = new List<AbilityInstance>();
+            foreach (var abilityDefinition in instance.Data.abilities)
+            {
+                if (abilityDefinition != null)
+                {
+                    var abilityInstance = abilityDefinition.CreateInstance(this);
+                    abilityInstances.Add(abilityInstance);
+                }
+            }
+            instance.InitializeAbilities(abilityInstances);
+        }
+
         InitializeComponents();
         OnInitialized?.Invoke();
     }

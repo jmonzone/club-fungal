@@ -13,16 +13,21 @@ public abstract class AbilityInstance
     [SerializeField] protected float cooldownRemaining;
     [SerializeField] protected bool isActive;
 
+    protected UnitController controller;
+
     public AbilityDefinition Definition => definition;
     public UnitInstance Unit => unit;
+    public UnitController Controller => controller;
     public float CooldownRemaining => cooldownRemaining;
     public bool IsActive => isActive;
     public virtual bool CanActivate => cooldownRemaining <= 0f;
+    public virtual bool IsControllingMovement => false;
 
-    protected AbilityInstance(AbilityDefinition definition, UnitInstance unit)
+    protected AbilityInstance(AbilityDefinition definition, UnitController controller)
     {
         this.definition = definition;
-        this.unit = unit;
+        this.controller = controller;
+        this.unit = controller.Instance;
         this.cooldownRemaining = 0f;
         this.isActive = false;
     }
@@ -41,13 +46,29 @@ public abstract class AbilityInstance
     /// <summary>
     /// Attempt to activate the ability.
     /// </summary>
-    public abstract void Activate(UnitController controller);
+    public void Activate()
+    {
+        ActivateAbility();
+    }
+
+    /// <summary>
+    /// Internal activation logic to be implemented by subclasses.
+    /// </summary>
+    protected abstract void ActivateAbility();
 
     /// <summary>
     /// Deactivate the ability if it's a toggle or persistent ability.
     /// </summary>
-    public virtual void Deactivate(UnitController controller)
+    public virtual void Deactivate()
     {
         isActive = false;
+    }
+
+    /// <summary>
+    /// Apply directional input to the ability if it supports it.
+    /// </summary>
+    public virtual void ApplyDirectionalInput(Vector3 direction)
+    {
+        // Base implementation does nothing
     }
 }

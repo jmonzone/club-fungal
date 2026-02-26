@@ -13,9 +13,9 @@ public class FlyAbilityDefinition : AbilityDefinition
     public float AirHeight => airHeight;
     public float TransitionSpeed => transitionSpeed;
 
-    public override AbilityInstance CreateInstance(UnitInstance unit)
+    public override AbilityInstance CreateInstance(UnitController controller)
     {
-        return new FlyAbilityInstance(this, unit);
+        return new FlyAbilityInstance(this, controller);
     }
 }
 
@@ -31,13 +31,13 @@ public class FlyAbilityInstance : AbilityInstance
     public FlyAbilityDefinition FlyDefinition => definition as FlyAbilityDefinition;
     public bool IsFlying => isFlying;
 
-    public FlyAbilityInstance(FlyAbilityDefinition definition, UnitInstance unit)
-        : base(definition, unit)
+    public FlyAbilityInstance(FlyAbilityDefinition definition, UnitController controller)
+        : base(definition, controller)
     {
         isFlying = false;
     }
 
-    public override void Activate(UnitController controller)
+    protected override void ActivateAbility()
     {
         if (!CanActivate) return;
 
@@ -48,9 +48,9 @@ public class FlyAbilityInstance : AbilityInstance
         Debug.Log($"{unit.DisplayName} is now {(isFlying ? "flying" : "walking")}");
     }
 
-    public override void Deactivate(UnitController controller)
+    public override void Deactivate()
     {
         isFlying = false;
-        base.Deactivate(controller);
+        base.Deactivate();
     }
 }

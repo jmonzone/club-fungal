@@ -18,5 +18,5 @@ public abstract class AbilityDefinition : GURUObject
     /// <summary>
     /// Create a runtime instance of this ability for a specific unit.
     /// </summary>
-    public abstract AbilityInstance CreateInstance(UnitInstance unit);
+    public abstract AbilityInstance CreateInstance(UnitController controller);
 }

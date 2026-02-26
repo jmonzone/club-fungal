@@ -17,9 +17,9 @@ public class DashAbilityDefinition : AbilityDefinition
     public int MaxCharges => maxCharges;
     public float ChargeRegenTime => chargeRegenTime;
 
-    public override AbilityInstance CreateInstance(UnitInstance unit)
+    public override AbilityInstance CreateInstance(UnitController controller)
     {
-        return new DashAbilityInstance(this, unit);
+        return new DashAbilityInstance(this, controller);
     }
 }
 
@@ -46,8 +46,8 @@ public class DashAbilityInstance : AbilityInstance
         }
     }
 
-    public DashAbilityInstance(DashAbilityDefinition definition, UnitInstance unit)
-        : base(definition, unit)
+    public DashAbilityInstance(DashAbilityDefinition definition, UnitController controller)
+        : base(definition, controller)
     {
         currentCharges = definition.MaxCharges;
         chargeRegenTimer = 0f;
@@ -75,7 +75,7 @@ public class DashAbilityInstance : AbilityInstance
         }
     }
 
-    public override void Activate(UnitController controller)
+    protected override void ActivateAbility()
     {
         if (!CanActivate) return;
 
@@ -87,12 +87,12 @@ public class DashAbilityInstance : AbilityInstance
         Vector3 dashTarget = controller.transform.position + dashDirection.normalized * DashDefinition.DashDistance;
 
         // Execute dash (controller would handle the actual movement)
-        controller.StartCoroutine(DashCoroutine(controller, dashTarget));
+        controller.StartCoroutine(DashCoroutine(dashTarget));
 
         Debug.Log($"{unit.DisplayName} dashed! Charges remaining: {currentCharges}/{DashDefinition.MaxCharges}");
     }
 
-    private System.Collections.IEnumerator DashCoroutine(UnitController controller, Vector3 target)
+    private System.Collections.IEnumerator DashCoroutine(Vector3 target)
     {
         Vector3 startPos = controller.transform.position;
         float elapsed = 0f;

@@ -8,6 +8,16 @@ public class NetworkRunPartyTetherIndicator : MonoBehaviour
     [SerializeField] private VirtualJoystick virtualJoystick;
     [SerializeField] private float selectionRadius = 1.5f;
 
+    private float groundY;
+
+    private void Start()
+    {
+        if (indicatorObject != null)
+        {
+            groundY = indicatorObject.transform.position.y;
+        }
+    }
+
     private void Update()
     {
         UpdateIndicatorPosition();
@@ -23,7 +33,10 @@ public class NetworkRunPartyTetherIndicator : MonoBehaviour
         // Only update if we have a valid position
         if (partyCenter != Vector3.zero)
         {
-            indicatorObject.transform.position = partyCenter;
+            // Keep indicator on ground even if party leader is jumping/diving
+            Vector3 groundPosition = partyCenter;
+            groundPosition.y = groundY;
+            indicatorObject.transform.position = groundPosition;
         }
     }
 

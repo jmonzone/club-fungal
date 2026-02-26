@@ -40,6 +40,26 @@ public class PlayerJoystick : MonoBehaviour
             // Rotate joystick input to be relative to camera
             Vector3 moveDir = camForward * direction.z + camRight * direction.x;
 
+            // Always feed directional input to first ability (so it knows joystick direction for activation)
+            if (playerReference.Player != null && playerReference.Player.Instance != null)
+            {
+                var abilities = playerReference.Player.Instance.Abilities;
+                if (abilities != null && abilities.Count > 0)
+                {
+                    var ability = abilities[0];
+                    if (ability != null)
+                    {
+                        ability.ApplyDirectionalInput(moveDir);
+
+                        // If ability is controlling movement, don't do normal movement
+                        if (ability.IsControllingMovement)
+                        {
+                            return;
+                        }
+                    }
+                }
+            }
+
             // Rotate camera based on horizontal joystick input only
             if (cameraService != null && cameraService.CameraMode == CameraMode.THIRD_PERSON && Mathf.Abs(direction.x) > 0.01f)
             {

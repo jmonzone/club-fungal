@@ -299,33 +299,19 @@ public class UnitInstanceService : GURUService
     /// </summary>
     private void InitializeUnitAbilities(UnitInstance unit, List<AbilityDefinition> savedAbilities = null)
     {
-        var abilities = new List<AbilityInstance>();
         var abilityDefinitions = savedAbilities ?? new List<AbilityDefinition>();
-
-        // Load abilities from saved definitions
-        if (abilityDefinitions.Count > 0)
-        {
-            foreach (var abilityDefinition in abilityDefinitions)
-            {
-                if (abilityDefinition != null)
-                {
-                    var abilityInstance = abilityDefinition.CreateInstance(unit);
-                    abilities.Add(abilityInstance);
-                }
-            }
-        }
 
         // Add type-specific ability if unit has a type
         if (unit.Species != null && unit.Species.Type != null && unit.Species.Type.AbilityDefinition != null)
         {
             if (!abilityDefinitions.Contains(unit.Species.Type.AbilityDefinition))
             {
-                var typeAbility = unit.Species.Type.AbilityDefinition.CreateInstance(unit);
-                abilities.Add(typeAbility);
+                abilityDefinitions.Add(unit.Species.Type.AbilityDefinition);
             }
         }
 
-        unit.InitializeAbilities(abilities);
+        // Store ability definitions in data - instances will be created when controller initializes
+        unit.Data.abilities = abilityDefinitions;
     }
 
     private string GenerateDisplayName(string baseName)

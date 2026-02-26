@@ -26,6 +26,8 @@ MonoBehaviour:
     friends: []
     interactions: []
     skills: []
+    abilities:
+    - {fileID: 11400000, guid: 4c941416531a14fcbba7e7c4d1bc31b3, type: 2}
     isEnemy: 0
   moments:
   - interaction: {fileID: 11400000, guid: 0740db2fd21f44859941442e25af726b, type: 2}
