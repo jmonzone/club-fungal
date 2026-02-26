@@ -9,10 +9,12 @@ public class UnitDestination : MonoBehaviour
     [SerializeField] private Vector3 destination;
     [SerializeField] private Transform target;
     [SerializeField] private bool isAtDestination = true;
+    [SerializeField] private float yOffset = 0f;
 
     public Vector3 Destination => destination;
     public Transform Target => target;
     public bool IsAtDestination => isAtDestination;
+    public float YOffset => yOffset;
 
     private NavMeshAgent navMeshAgent;
 
@@ -61,6 +63,15 @@ public class UnitDestination : MonoBehaviour
         navMeshAgent.enabled = true;
     }
 
+    /// <summary>
+    /// Set a Y-axis offset to apply to the unit's position.
+    /// Useful for underwater positioning or floating effects.
+    /// </summary>
+    public void SetYOffset(float offset)
+    {
+        yOffset = offset;
+    }
+
     private void Update()
     {
         if (target)
@@ -78,6 +89,14 @@ public class UnitDestination : MonoBehaviour
         if (!isAtDestination && Vector3.Distance(destination, transform.position) < 0.5f)
         {
             isAtDestination = true;
+        }
+
+        // Apply Y-offset after NavMeshAgent updates position
+        if (Mathf.Abs(yOffset) > 0.001f)
+        {
+            Vector3 pos = transform.position;
+            pos.y += yOffset;
+            transform.position = pos;
         }
     }
 }

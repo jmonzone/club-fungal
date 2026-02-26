@@ -10,8 +10,8 @@ public class NavMeshAreaConfig : ScriptableObject
     public int walkableAreaMask = 1; // Default: area 0 (Walkable)
 
     [NavMeshArea]
-    [Tooltip("Slow terrain area that reduces movement speed")]
-    public int slowTerrainArea = 6;
+    [Tooltip("Water terrain area for aquatic units")]
+    public int waterTerrainArea = 6;
 
     [Header("Spawn Padding")]
     [Tooltip("Distance to pad positions away from edges toward center")]
@@ -23,9 +23,9 @@ public class NavMeshAreaConfig : ScriptableObject
     public int WalkableAreaMask => walkableAreaMask;
 
     /// <summary>
-    /// Get the NavMesh area mask for the slow terrain area (1 << slowTerrainArea)
+    /// Get the NavMesh area mask for the water terrain area (1 << waterTerrainArea)
     /// </summary>
-    public int SlowTerrainAreaMask => 1 << slowTerrainArea;
+    public int WaterTerrainAreaMask => 1 << waterTerrainArea;
 
     /// <summary>
     /// Find the best NavMesh position on walkable area, with padding away from edges
@@ -34,7 +34,7 @@ public class NavMeshAreaConfig : ScriptableObject
     /// <param name="fallbackCenter">Center point to pad toward (optional)</param>
     /// <param name="applyPadding">Whether to apply edge padding</param>
     /// <param name="maxSearchDistance">Maximum distance from fallback center</param>
-    /// <param name="preferSlowTerrain">If true, prefer slow terrain (water) over walkable areas (for aqua units)</param>
+    /// <param name="preferSlowTerrain">If true, prefer water terrain over walkable areas (for aqua units)</param>
     /// <returns>Best valid NavMesh position</returns>
     public Vector3 FindBestNavMeshPosition(Vector3 targetPosition, Vector3 fallbackCenter = default, bool applyPadding = true, float maxSearchDistance = float.MaxValue, bool preferSlowTerrain = false)
     {
@@ -42,8 +42,8 @@ public class NavMeshAreaConfig : ScriptableObject
         const int maxSmallRadiusIndex = 2; // Radii beyond this index mean area is too small/sparse
 
         // Determine preferred and fallback area masks based on preferSlowTerrain
-        int preferredAreaMask = preferSlowTerrain ? SlowTerrainAreaMask : WalkableAreaMask;
-        int fallbackAreaMask = preferSlowTerrain ? WalkableAreaMask : SlowTerrainAreaMask;
+        int preferredAreaMask = preferSlowTerrain ? WaterTerrainAreaMask : WalkableAreaMask;
+        int fallbackAreaMask = preferSlowTerrain ? WalkableAreaMask : WaterTerrainAreaMask;
 
         NavMeshHit? firstFallbackHit = null;
 

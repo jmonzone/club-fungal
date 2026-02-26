@@ -11,11 +11,17 @@ public class DiveAbilityDefinition : AbilityDefinition
     [SerializeField] private float diveHeight = 2f;
     [SerializeField] private float diveDuration = 0.5f;
     [SerializeField] private float cooldown = 2f;
+    [SerializeField] private float underwaterOffset = -1.5f;
+    [SerializeField] private NavMeshAreaConfig navMeshAreaConfig;
+    [SerializeField] private GameObject waterShadowPrefab;
 
     public float DiveDistance => diveDistance;
     public float DiveHeight => diveHeight;
     public float DiveDuration => diveDuration;
     public float Cooldown => cooldown;
+    public float UnderwaterOffset => underwaterOffset;
+    public NavMeshAreaConfig NavMeshAreaConfig => navMeshAreaConfig;
+    public GameObject WaterShadowPrefab => waterShadowPrefab;
 
     public override AbilityInstance CreateInstance(UnitController controller)
     {
@@ -31,7 +37,9 @@ public class DiveAbilityDefinition : AbilityDefinition
 public class DiveAbilityInstance : AbilityInstance
 {
     [SerializeField] private bool isDiving;
+    [SerializeField] private bool isSubmerged;
     [SerializeField] private Vector3 directionalInfluence;
+    private GameObject waterShadowInstance;
 
     public DiveAbilityDefinition DiveDefinition => definition as DiveAbilityDefinition;
     public override bool CanActivate => base.CanActivate && !isDiving;
@@ -41,6 +49,7 @@ public class DiveAbilityInstance : AbilityInstance
         : base(definition, controller)
     {
         isDiving = false;
+        isSubmerged = false;
         directionalInfluence = Vector3.zero;
     }
 
@@ -52,6 +61,36 @@ public class DiveAbilityInstance : AbilityInstance
         directionalInfluence = direction;
     }
 
+    /// <summary>
+    /// Update water shadow position to follow unit horizontally.
+    /// </summary>
+    public override void Update(float deltaTime)
+    {
+        base.Update(deltaTime);
+
+        // Keep water shadow at unit's horizontal position but at water surface
+        if (isSubmerged && waterShadowInstance != null && controller != null)
+        {
+            Vector3 shadowPos = controller.transform.position;
+            shadowPos.y = waterShadowInstance.transform.position.y; // Keep at original water surface Y
+            waterShadowInstance.transform.position = shadowPos;
+        }
+    }
+
+    /// <summary>
+    /// Cleanup water shadow when ability is deactivated.
+    /// </summary>
+    public override void Deactivate()
+    {
+        base.Deactivate();
+
+        if (waterShadowInstance != null)
+        {
+            Object.Destroy(waterShadowInstance);
+            waterShadowInstance = null;
+        }
+    }
+
     protected override void ActivateAbility()
     {
         if (!CanActivate) return;
@@ -59,10 +98,47 @@ public class DiveAbilityInstance : AbilityInstance
         isDiving = true;
         cooldownRemaining = DiveDefinition.Cooldown;
 
-        // Start coroutine that will capture direction after joystick updates
-        controller.StartCoroutine(DiveCoroutine());
+        // If already submerged, resurface instead
+        if (isSubmerged)
+        {
+            controller.StartCoroutine(ResurfaceCoroutine());
+            Debug.Log($"{unit.DisplayName} is resurfacing!");
+        }
+        else
+        {
+            // Start dive coroutine
+            controller.StartCoroutine(DiveCoroutine());
+            Debug.Log($"{unit.DisplayName} is diving!");
+        }
+    }
 
-        Debug.Log($"{unit.DisplayName} is diving!");
+    private System.Collections.IEnumerator ResurfaceCoroutine()
+    {
+        Vector3 submergedPosition = controller.transform.position;
+        Vector3 surfacePosition = submergedPosition + Vector3.up * 1.5f;
+
+        float submergeTime = 0.3f;
+        float elapsed = 0f;
+        while (elapsed < submergeTime)
+        {
+            elapsed += Time.deltaTime;
+            controller.transform.position = Vector3.Lerp(submergedPosition, surfacePosition, elapsed / submergeTime);
+            yield return null;
+        }
+
+        controller.transform.position = surfacePosition;
+        isSubmerged = false;
+        isDiving = false;
+
+        // Clear underwater offset
+        controller.Destination.SetYOffset(0f);
+
+        // Destroy water shadow
+        if (waterShadowInstance != null)
+        {
+            Object.Destroy(waterShadowInstance);
+            waterShadowInstance = null;
+        }
     }
 
     private System.Collections.IEnumerator DiveCoroutine()
@@ -131,6 +207,18 @@ public class DiveAbilityInstance : AbilityInstance
         // Ensure we end exactly at target position
         controller.transform.position = target;
 
+        // Check if we landed in water (water terrain)
+        bool landedInWater = false;
+        if (DiveDefinition.NavMeshAreaConfig != null)
+        {
+            UnityEngine.AI.NavMeshHit navHit;
+            if (UnityEngine.AI.NavMesh.SamplePosition(target, out navHit, 1f, DiveDefinition.NavMeshAreaConfig.WaterTerrainAreaMask))
+            {
+                landedInWater = true;
+                Debug.Log($"{unit.DisplayName} landed in water! Submerging...");
+            }
+        }
+
         // Set look position forward after landing
         controller.SetLookPosition(target + horizontalDirection * 2f);
 
@@ -138,6 +226,35 @@ public class DiveAbilityInstance : AbilityInstance
         {
             agent.enabled = true;
             controller.Destination.SetDestination(controller.transform.position);
+        }
+
+        // If landed in water, submerge and stay submerged
+        if (landedInWater)
+        {
+            Vector3 surfacePosition = controller.transform.position;
+            Vector3 submergedPosition = surfacePosition - Vector3.up * 1.5f;
+
+            // Submerge
+            float submergeTime = 0.3f;
+            float submergeElapsed = 0f;
+            while (submergeElapsed < submergeTime)
+            {
+                submergeElapsed += Time.deltaTime;
+                controller.transform.position = Vector3.Lerp(surfacePosition, submergedPosition, submergeElapsed / submergeTime);
+                yield return null;
+            }
+
+            controller.transform.position = submergedPosition;
+            isSubmerged = true;
+
+            // Set underwater offset so unit stays at this depth
+            controller.Destination.SetYOffset(DiveDefinition.UnderwaterOffset);
+
+            // Instantiate water shadow at surface position
+            if (DiveDefinition.WaterShadowPrefab != null)
+            {
+                waterShadowInstance = Object.Instantiate(DiveDefinition.WaterShadowPrefab, surfacePosition, Quaternion.identity);
+            }
         }
 
         directionalInfluence = Vector3.zero; // Reset for next dive
