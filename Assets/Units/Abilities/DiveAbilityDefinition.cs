@@ -43,6 +43,8 @@ public class DiveAbilityInstance : AbilityInstance
     [SerializeField] private Vector3 directionalInfluence;
     private GameObject waterShadowInstance;
     private int originalAreaMask;
+    private float underwaterHapticTimer;
+    private const float UnderwaterHapticInterval = 0.6f; // Frog kick rhythm
 
     public DiveAbilityDefinition DiveDefinition => definition as DiveAbilityDefinition;
     public override bool CanActivate => base.CanActivate && !isDiving;
@@ -77,6 +79,14 @@ public class DiveAbilityInstance : AbilityInstance
             Vector3 shadowPos = controller.transform.position;
             shadowPos.y = waterShadowInstance.transform.position.y; // Keep at original water surface Y
             waterShadowInstance.transform.position = shadowPos;
+
+            // Trigger periodic underwater swimming haptics (frog kicks/breaststroke)
+            underwaterHapticTimer += deltaTime;
+            if (underwaterHapticTimer >= UnderwaterHapticInterval)
+            {
+                TriggerUnderwaterSwimHaptic();
+                underwaterHapticTimer = 0f;
+            }
         }
     }
 
@@ -109,6 +119,9 @@ public class DiveAbilityInstance : AbilityInstance
         }
         else
         {
+            // Initial dive haptic (medium impact for jump)
+            TriggerDiveJumpHaptic();
+
             // Start dive coroutine
             controller.StartCoroutine(DiveCoroutine());
             Debug.Log($"{unit.DisplayName} is diving!");
@@ -157,6 +170,10 @@ public class DiveAbilityInstance : AbilityInstance
 
         isSubmerged = false;
         isDiving = false;
+        underwaterHapticTimer = 0f;
+
+        // Resurface haptic (soft splash)
+        TriggerResurfaceHaptic();
 
         // Remove underwater speed modifier
         var speedModifier = controller.GetComponent<UnitSpeedModifier>();
@@ -306,6 +323,10 @@ public class DiveAbilityInstance : AbilityInstance
 
             controller.transform.position = submergedPosition;
             isSubmerged = true;
+            underwaterHapticTimer = 0f;
+
+            // Water entry haptic (heavier impact for splash)
+            TriggerWaterEntryHaptic();
 
             // Set underwater offset so unit stays at this depth
             controller.Destination.SetYOffset(DiveDefinition.UnderwaterOffset);
@@ -333,5 +354,51 @@ public class DiveAbilityInstance : AbilityInstance
 
         directionalInfluence = Vector3.zero; // Reset for next dive
         isDiving = false;
+    }
+
+    /// <summary>
+    /// Trigger haptic for initial dive jump
+    /// </summary>
+    private void TriggerDiveJumpHaptic()
+    {
+        if (iOSHaptics.IsSupported)
+        {
+            iOSHaptics.Trigger(iOSHaptics.HapticStyle.Medium, 0.8f);
+        }
+    }
+
+    /// <summary>
+    /// Trigger haptic for water entry (splash)
+    /// </summary>
+    private void TriggerWaterEntryHaptic()
+    {
+        if (iOSHaptics.IsSupported)
+        {
+            iOSHaptics.Trigger(iOSHaptics.HapticStyle.Heavy, 1f);
+        }
+    }
+
+    /// <summary>
+    /// Trigger rhythmic underwater swimming haptic (frog kicks/breaststroke)
+    /// Lower bass underwater feel
+    /// </summary>
+    private void TriggerUnderwaterSwimHaptic()
+    {
+        if (iOSHaptics.IsSupported)
+        {
+            // Heavy style for lower bass feel, reduced intensity for underwater damping
+            iOSHaptics.Trigger(iOSHaptics.HapticStyle.Heavy, 0.6f);
+        }
+    }
+
+    /// <summary>
+    /// Trigger haptic for resurfacing
+    /// </summary>
+    private void TriggerResurfaceHaptic()
+    {
+        if (iOSHaptics.IsSupported)
+        {
+            iOSHaptics.Trigger(iOSHaptics.HapticStyle.Soft, 0.7f);
+        }
     }
 }

@@ -12,14 +12,34 @@ public class PlayerJoystick : MonoBehaviour
     [SerializeField] private InteractionController interaction;
     [SerializeField] private CameraService cameraService;
 
+    [Header("Haptic Settings")]
+    [SerializeField] private bool enableHaptics = true;
+    [SerializeField] private float rotationHapticThreshold = 45f; // Degrees of rotation change to trigger haptic
+    [SerializeField] private float rotationHapticCooldown = 0.15f; // Minimum time between rotation haptics
+
     private Camera mainCamera;
+    private Vector3 lastJoystickDirection;
+    private float lastRotationHapticTime;
 
     private void Awake()
     {
         mainCamera = Camera.main;
+
+        // Initialize iOS haptics
+        iOSHaptics.Initialize();
+
         virtualJoystick.OnJoystickStart += position =>
         {
             interaction.Unselect();
+
+            // Haptic feedback on joystick touch start
+            if (enableHaptics)
+            {
+                iOSHaptics.Trigger(iOSHaptics.HapticStyle.Light, 0.6f);
+            }
+
+            lastJoystickDirection = Vector3.zero;
+            lastRotationHapticTime = Time.time;
         };
 
         virtualJoystick.OnJoystickUpdate += direction =>
@@ -27,6 +47,25 @@ public class PlayerJoystick : MonoBehaviour
             // Map joystick to XZ plane
             direction.z = direction.y;
             direction.y = 0;
+
+            // Haptic feedback on rotation (direction change)
+            if (enableHaptics && lastJoystickDirection.sqrMagnitude > 0.01f)
+            {
+                float angle = Vector3.Angle(lastJoystickDirection, direction);
+                float timeSinceLastHaptic = Time.time - lastRotationHapticTime;
+
+                if (angle > rotationHapticThreshold && timeSinceLastHaptic >= rotationHapticCooldown)
+                {
+                    // Vary intensity based on joystick displacement (further = stronger)
+                    float displacement = direction.magnitude;
+                    float intensity = Mathf.Lerp(0.3f, 0.7f, displacement);
+
+                    iOSHaptics.Trigger(iOSHaptics.HapticStyle.Soft, intensity);
+                    lastRotationHapticTime = Time.time;
+                }
+            }
+
+            lastJoystickDirection = direction;
 
             // Get camera forward/right on XZ plane
             Vector3 camForward = mainCamera.transform.forward;
@@ -88,6 +127,14 @@ public class PlayerJoystick : MonoBehaviour
         virtualJoystick.OnJoystickEnd += () =>
         {
             playerReference.SetTargetPosition(playerReference.TargetPosition);
+
+            // Haptic feedback on joystick release
+            if (enableHaptics)
+            {
+                iOSHaptics.Trigger(iOSHaptics.HapticStyle.Light, 0.5f);
+            }
+
+            lastJoystickDirection = Vector3.zero;
         };
     }
 
