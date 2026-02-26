@@ -13,7 +13,5 @@ MonoBehaviour:
   m_Name: Nav Mesh Area Config
   m_EditorClassIdentifier: Assembly-CSharp::NavMeshAreaConfig
   walkableAreaMask: 191
-  slowTerrainArea: 6
-  jumpArea: 2
-  notWalkableArea: 1
-  edgePadding: 2
+  waterTerrainArea: 6
+  edgePadding: 3

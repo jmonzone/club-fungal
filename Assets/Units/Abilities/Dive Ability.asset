@@ -16,11 +16,12 @@ MonoBehaviour:
   displayName: Dive
   icon: {fileID: 21300000, guid: 498449f18107e46b8be6ed26cddd04d9, type: 3}
   description: diving
-  diveDistance: 3
-  diveHeight: 0.16
+  diveDistance: 4
+  diveHeight: 2
   diveDuration: 0.5
   cooldown: 1
   underwaterOffset: -1.5
+  underwaterSpeedModifier: 3
   navMeshAreaConfig: {fileID: 11400000, guid: 57edff644ce85440db6cfb3636326d00, type: 2}
   waterShadowPrefab: {fileID: 7964039319597876308, guid: a11e47e3d245c4ecba276fc60e5f1a21,
     type: 3}

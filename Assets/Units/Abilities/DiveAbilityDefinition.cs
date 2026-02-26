@@ -12,6 +12,7 @@ public class DiveAbilityDefinition : AbilityDefinition
     [SerializeField] private float diveDuration = 0.5f;
     [SerializeField] private float cooldown = 2f;
     [SerializeField] private float underwaterOffset = -1.5f;
+    [SerializeField] private float underwaterSpeedModifier = 0.5f;
     [SerializeField] private NavMeshAreaConfig navMeshAreaConfig;
     [SerializeField] private GameObject waterShadowPrefab;
 
@@ -20,6 +21,7 @@ public class DiveAbilityDefinition : AbilityDefinition
     public float DiveDuration => diveDuration;
     public float Cooldown => cooldown;
     public float UnderwaterOffset => underwaterOffset;
+    public float UnderwaterSpeedModifier => underwaterSpeedModifier;
     public NavMeshAreaConfig NavMeshAreaConfig => navMeshAreaConfig;
     public GameObject WaterShadowPrefab => waterShadowPrefab;
 
@@ -40,6 +42,7 @@ public class DiveAbilityInstance : AbilityInstance
     [SerializeField] private bool isSubmerged;
     [SerializeField] private Vector3 directionalInfluence;
     private GameObject waterShadowInstance;
+    private int originalAreaMask;
 
     public DiveAbilityDefinition DiveDefinition => definition as DiveAbilityDefinition;
     public override bool CanActivate => base.CanActivate && !isDiving;
@@ -114,24 +117,75 @@ public class DiveAbilityInstance : AbilityInstance
 
     private System.Collections.IEnumerator ResurfaceCoroutine()
     {
-        Vector3 submergedPosition = controller.transform.position;
-        Vector3 surfacePosition = submergedPosition + Vector3.up * 1.5f;
+        float underwaterOffset = DiveDefinition.UnderwaterOffset;
 
+        var agent = controller.GetComponent<UnityEngine.AI.NavMeshAgent>();
+        if (agent) agent.enabled = false;
+
+        // Get surface position from water shadow
+        Vector3 surfacePosition;
+        if (waterShadowInstance != null)
+        {
+            surfacePosition = waterShadowInstance.transform.position;
+        }
+        else
+        {
+            // Fallback: add underwater offset magnitude to current position
+            surfacePosition = controller.transform.position + Vector3.up * Mathf.Abs(underwaterOffset);
+        }
+
+        Vector3 submergedPosition = controller.transform.position;
+
+        // Animate rising to surface
         float submergeTime = 0.3f;
         float elapsed = 0f;
         while (elapsed < submergeTime)
         {
             elapsed += Time.deltaTime;
-            controller.transform.position = Vector3.Lerp(submergedPosition, surfacePosition, elapsed / submergeTime);
+            float t = elapsed / submergeTime;
+
+            // Lerp transform position from submerged to surface
+            controller.transform.position = Vector3.Lerp(submergedPosition, surfacePosition, t);
+
+            float currentOffset = Mathf.Lerp(underwaterOffset, 0f, t);
+            controller.Destination.SetYOffset(currentOffset);
             yield return null;
         }
 
+        controller.Destination.SetYOffset(0f);
         controller.transform.position = surfacePosition;
+
         isSubmerged = false;
         isDiving = false;
 
-        // Clear underwater offset
-        controller.Destination.SetYOffset(0f);
+        // Remove underwater speed modifier
+        var speedModifier = controller.GetComponent<UnitSpeedModifier>();
+        if (speedModifier != null)
+        {
+            speedModifier.RemoveSpeedModifier(DiveDefinition.UnderwaterSpeedModifier);
+        }
+
+        // Restore original area mask and re-enable agent
+        if (agent != null)
+        {
+            agent.areaMask = originalAreaMask;
+
+            // Sample NavMesh to find correct surface position
+            UnityEngine.AI.NavMeshHit navHit;
+            if (UnityEngine.AI.NavMesh.SamplePosition(surfacePosition, out navHit, 10f, agent.areaMask))
+            {
+                // Warp to valid NavMesh position (handles multi-level NavMesh correctly)
+                agent.Warp(navHit.position);
+            }
+            else
+            {
+                // Fallback: warp to surface position
+                agent.Warp(surfacePosition);
+            }
+
+            agent.enabled = true;
+            controller.Destination.SetDestination(agent.transform.position);
+        }
 
         // Destroy water shadow
         if (waterShadowInstance != null)
@@ -222,10 +276,16 @@ public class DiveAbilityInstance : AbilityInstance
         // Set look position forward after landing
         controller.SetLookPosition(target + horizontalDirection * 2f);
 
+        // Properly position on NavMesh maintaining correct height
         if (agent)
         {
+            UnityEngine.AI.NavMeshHit navHit;
+            if (UnityEngine.AI.NavMesh.SamplePosition(target, out navHit, 2f, UnityEngine.AI.NavMesh.AllAreas))
+            {
+                agent.Warp(navHit.position);  // Warp handles multi-level NavMesh correctly
+            }
             agent.enabled = true;
-            controller.Destination.SetDestination(controller.transform.position);
+            controller.Destination.SetDestination(agent.transform.position);
         }
 
         // If landed in water, submerge and stay submerged
@@ -249,6 +309,20 @@ public class DiveAbilityInstance : AbilityInstance
 
             // Set underwater offset so unit stays at this depth
             controller.Destination.SetYOffset(DiveDefinition.UnderwaterOffset);
+
+            // Apply underwater speed modifier
+            var speedModifier = controller.GetComponent<UnitSpeedModifier>();
+            if (speedModifier != null)
+            {
+                speedModifier.AddSpeedModifier(DiveDefinition.UnderwaterSpeedModifier);
+            }
+
+            // Constrain navigation to water terrain only
+            if (agent != null && DiveDefinition.NavMeshAreaConfig != null)
+            {
+                originalAreaMask = agent.areaMask;
+                agent.areaMask = DiveDefinition.NavMeshAreaConfig.WaterTerrainAreaMask;
+            }
 
             // Instantiate water shadow at surface position
             if (DiveDefinition.WaterShadowPrefab != null)

@@ -70,6 +70,10 @@ public class UnitDestination : MonoBehaviour
     public void SetYOffset(float offset)
     {
         yOffset = offset;
+        if (navMeshAgent != null)
+        {
+            navMeshAgent.baseOffset = offset;
+        }
     }
 
     private void Update()
@@ -89,14 +93,6 @@ public class UnitDestination : MonoBehaviour
         if (!isAtDestination && Vector3.Distance(destination, transform.position) < 0.5f)
         {
             isAtDestination = true;
-        }
-
-        // Apply Y-offset after NavMeshAgent updates position
-        if (Mathf.Abs(yOffset) > 0.001f)
-        {
-            Vector3 pos = transform.position;
-            pos.y += yOffset;
-            transform.position = pos;
         }
     }
 }
