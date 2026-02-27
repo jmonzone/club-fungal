@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 /// <summary>
 /// Defines a unit type with configurable properties like inventory capacity.
@@ -29,6 +30,7 @@ public class UnitType : GURUObject
     [SerializeField] private List<ResourceSpeedBonus> resourceSpeedBonuses = new List<ResourceSpeedBonus>();
     [SerializeField] private List<TerrainSpeedModifier> terrainSpeedModifiers = new List<TerrainSpeedModifier>();
     [SerializeField] private AbilityDefinition abilityDefinition; // Type-specific ability (e.g., Fly for birds, Dive for fish)
+    [SerializeField][NavMeshAreaMask] private int preferredTerrainMaskOverride = -1; // Manual override for preferred terrain mask (-1 = auto-calculate from speed modifiers)
 
     public int InventoryBonus => inventoryBonus;
     public List<ResourceSpeedBonus> ResourceSpeedBonuses => resourceSpeedBonuses;
@@ -65,5 +67,32 @@ public class UnitType : GURUObject
         }
 
         return 1f;
+    }
+
+    /// <summary>
+    /// Get the NavMesh area mask for preferred terrains (areas with speed >= 1.0).
+    /// Returns NavMesh.AllAreas if no terrain modifiers configured.
+    /// Can be manually overridden via preferredTerrainMaskOverride field.
+    /// </summary>
+    public int GetPreferredTerrainMask()
+    {
+        // Use manual override if set
+        if (preferredTerrainMaskOverride != -1)
+            return preferredTerrainMaskOverride;
+
+        // Auto-calculate from terrain speed modifiers
+        if (terrainSpeedModifiers == null || terrainSpeedModifiers.Count == 0)
+            return NavMesh.AllAreas;
+
+        int mask = 0;
+        foreach (var modifier in terrainSpeedModifiers)
+        {
+            if (modifier.speedMultiplier >= 1f)
+            {
+                mask |= (1 << modifier.areaIndex);
+            }
+        }
+
+        return mask == 0 ? NavMesh.AllAreas : mask;
     }
 }

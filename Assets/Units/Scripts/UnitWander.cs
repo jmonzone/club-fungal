@@ -99,7 +99,14 @@ public class UnitWander : UnitBehaviour
 
             navMeshAgent.isStopped = false;
 
-            var targetPosition = GetReachableRandomDestination(transform.position, wanderRadius, NavMesh.AllAreas);
+            // Get preferred terrain mask from unit type
+            int areaMask = NavMesh.AllAreas;
+            if (Controller.Instance?.Species?.Type != null)
+            {
+                areaMask = Controller.Instance.Species.Type.GetPreferredTerrainMask();
+            }
+
+            var targetPosition = GetReachableRandomDestination(transform.position, wanderRadius, areaMask);
 
             yield return new WaitUntil(() => navMeshAgent.isOnNavMesh);
 

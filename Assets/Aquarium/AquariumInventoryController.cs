@@ -23,32 +23,6 @@ public class AquariumInventoryController : MonoBehaviour
         inventoryUI.OnItemSelected -= HandleItemSelected;
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            UseFirstItem();
-        }
-    }
-
-    private void UseFirstItem()
-    {
-        if (inventoryReference == null || inventoryReference.Items == null || inventoryReference.Items.Count == 0)
-        {
-            return;
-        }
-
-        var firstItemStack = inventoryReference.Items
-            .Where(stack => stack.Count > 0)
-            .OrderBy(stack => stack.Item.Price)
-            .FirstOrDefault();
-
-        if (firstItemStack != null)
-        {
-            HandleItemSelected(firstItemStack.Item);
-        }
-    }
-
     private void HandleItemSelected(Item item)
     {
         Debug.Log("speed boost");

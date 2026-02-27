@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 using System.Collections.Generic;
 
 public class UnitSpawner : NavMeshSpawner
@@ -20,27 +21,130 @@ public class UnitSpawner : NavMeshSpawner
 
     public void SpawnUnits()
     {
-        List<Vector3> allPositions = GenerateSpawnPositions(spawnCount * instructions.Count);
-        availableSpawnPositions = new List<Vector3>(allPositions);
+        availableSpawnPositions = new List<Vector3>();
         occupiedPositions.Clear();
 
         // Spawn units from each instruction
         foreach (UnitSpawnInstruction instruction in instructions)
         {
-            for (int i = 0; i < spawnCount; i++)
+            // Convert area index to area mask
+            int areaMask = instruction.NavMeshArea == -1
+                ? NavMesh.AllAreas
+                : (1 << instruction.NavMeshArea);
+
+            Debug.Log($"Spawning {instruction.name}: count={instruction.SpawnCount}, area={instruction.NavMeshArea}, mask={areaMask}");
+
+            List<Vector3> positions = GenerateSpawnPositionsWithAreaMask(instruction.SpawnCount, areaMask);
+
+            foreach (Vector3 position in positions)
             {
-                SpawnUnitAtRandomAvailablePosition(instruction);
+                SpawnUnitAtPosition(instruction, position);
             }
         }
 
         Debug.Log($"UnitSpawner: Spawned {spawnedUnits.Count} units");
     }
 
-    private void SpawnUnitAtRandomAvailablePosition(UnitSpawnInstruction instruction)
+    private List<Vector3> GenerateSpawnPositionsWithAreaMask(int count, int areaMask)
     {
-        Vector3 position = GetRandomAvailablePosition();
-        if (position == Vector3.zero) return;
+        List<Vector3> positions = new List<Vector3>();
 
+        Bounds bounds = spawnCollider.bounds;
+        int maxAttempts = count * 10;
+        int attempts = 0;
+
+        while (positions.Count < count && attempts < maxAttempts)
+        {
+            attempts++;
+
+            Vector3 randomPoint = new Vector3(
+                Random.Range(bounds.min.x, bounds.max.x),
+                bounds.center.y,
+                Random.Range(bounds.min.z, bounds.max.z)
+            );
+
+            // Sample NavMesh with specified area mask
+            if (NavMesh.SamplePosition(randomPoint, out NavMeshHit navHit, 10f, areaMask))
+            {
+                Vector3 finalPosition = navHit.position;
+
+                // Apply edge padding to avoid spawning on edges
+                if (navMeshAreaConfig != null && navMeshAreaConfig.edgePadding > 0f)
+                {
+                    finalPosition = ApplyEdgePadding(finalPosition, areaMask);
+                }
+
+                // Check spacing from other positions
+                if (IsValidSpacing(finalPosition, positions))
+                {
+                    positions.Add(finalPosition);
+                }
+            }
+        }
+
+        Debug.Log($"Generated {positions.Count} positions out of {count} requested (areaMask={areaMask})");
+        return positions;
+    }
+
+    private Vector3 ApplyEdgePadding(Vector3 position, int areaMask)
+    {
+        float edgePadding = navMeshAreaConfig.edgePadding;
+
+        // Sample 8 directions to find which one has the most continuous target area
+        Vector3[] directions = new Vector3[]
+        {
+            Vector3.forward,
+            Vector3.back,
+            Vector3.left,
+            Vector3.right,
+            (Vector3.forward + Vector3.left).normalized,
+            (Vector3.forward + Vector3.right).normalized,
+            (Vector3.back + Vector3.left).normalized,
+            (Vector3.back + Vector3.right).normalized
+        };
+
+        int bestScore = -1;
+        Vector3 bestDirection = Vector3.zero;
+
+        foreach (Vector3 dir in directions)
+        {
+            int score = 0;
+            // Check multiple distances in this direction
+            for (float dist = edgePadding; dist <= edgePadding * 3f; dist += edgePadding)
+            {
+                Vector3 testPos = position + dir * dist;
+                if (NavMesh.SamplePosition(testPos, out NavMeshHit hit, 0.5f, areaMask))
+                {
+                    score++;
+                }
+                else
+                {
+                    break; // Stop checking this direction if we hit non-target area
+                }
+            }
+
+            if (score > bestScore)
+            {
+                bestScore = score;
+                bestDirection = dir;
+            }
+        }
+
+        // If we found a good direction, pad in that direction
+        if (bestScore > 0)
+        {
+            Vector3 paddedPosition = position + bestDirection * edgePadding;
+            if (NavMesh.SamplePosition(paddedPosition, out NavMeshHit paddedHit, 0.5f, areaMask))
+            {
+                return paddedHit.position;
+            }
+        }
+
+        return position;
+    }
+
+    private void SpawnUnitAtPosition(UnitSpawnInstruction instruction, Vector3 position)
+    {
         // Create UnitInstance (not registered so it won't be persisted)
         UnitInstance unitInstance = null;
         if (instruction.Species != null)
@@ -53,7 +157,11 @@ public class UnitSpawner : NavMeshSpawner
             unitInstance = unitInstanceService.CreateUnit(register: false);
         }
 
-        UnitController unit = unitControllerService.SpawnUnit(unitInstance, position, null, instruction.Prefab);
+        Transform parent = networkRunService != null && networkRunService.PartyService != null
+            ? networkRunService.PartyService.SpawnParent
+            : null;
+
+        UnitController unit = unitControllerService.SpawnUnit(unitInstance, position, parent, instruction.Prefab);
 
         spawnedUnits.Add(unit);
     }

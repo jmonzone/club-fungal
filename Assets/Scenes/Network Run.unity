@@ -22715,8 +22715,6 @@ GameObject:
   - component: {fileID: 925300563}
   - component: {fileID: 925300559}
   - component: {fileID: 925300560}
-  - component: {fileID: 925300561}
-  - component: {fileID: 925300562}
   - component: {fileID: 925300564}
   m_Layer: 0
   m_Name: NetworkRunManager
@@ -22781,63 +22779,6 @@ MonoBehaviour:
   indicatorObject: {fileID: 289661288}
   virtualJoystick: {fileID: 1610164947}
   selectionRadius: 1.5
---- !u!114 &925300561
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 925300556}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22367fa558c2a4ce88c39ce1c959072c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MushroomSpawner
-  spawnCollider: {fileID: 1039316315}
-  navMeshAreaConfig: {fileID: 11400000, guid: 57edff644ce85440db6cfb3636326d00, type: 2}
-  spawnCount: 20
-  minSpacing: 0.5
-  spawnOnAwake: 1
-  mushroomTypes:
-  - prefab: {fileID: 7653803590705474910, guid: 493e56f4e7abc4c2a9aa77c9084f0316,
-      type: 3}
-    spawnWeight: 0.797
-  - prefab: {fileID: 7653803590705474910, guid: c3d18f6e6c3474295afefb791da42ef5,
-      type: 3}
-    spawnWeight: 0.352
-  mushroomParent: {fileID: 1607545530}
-  randomizeRotation: 1
-  randomizeScale: 0
-  scaleRange: {x: 0.8, y: 1.2}
-  spawnedMushrooms: []
---- !u!114 &925300562
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 925300556}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e42351a314cf45f8a183302d083d7b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  spawnCollider: {fileID: 1039316315}
-  navMeshAreaConfig: {fileID: 11400000, guid: 57edff644ce85440db6cfb3636326d00, type: 2}
-  spawnCount: 10
-  minSpacing: 1
-  spawnOnAwake: 1
-  unitInstanceService: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2,
-    type: 2}
-  networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
-  unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
-    type: 2}
-  enemyPrefab: {fileID: 4661636074231173861, guid: f7449fb6d88ed40b39443d2eef0e0b04,
-    type: 3}
-  enemySpecies: {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
-  enemyParent: {fileID: 0}
-  respawnDelay: 10
-  spawnedEnemies: []
 --- !u!114 &925300563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22861,25 +22802,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 925300556}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9dfe0992cb074db689c57bdb7a895c8, type: 3}
+  m_Script: {fileID: 11500000, guid: 748e9f3ba92d84c188cdb837fd516299, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NeutralUnitSpawner
-  spawnCollider: {fileID: 1039316315}
-  navMeshAreaConfig: {fileID: 11400000, guid: 57edff644ce85440db6cfb3636326d00, type: 2}
-  spawnCount: 10
-  minSpacing: 1
-  spawnOnAwake: 1
-  unitInstanceService: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2,
-    type: 2}
-  networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
-  unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
-    type: 2}
-  neutralPrefab: {fileID: 4106141727428995005, guid: e9f8a044aacf9498eb482430f1da38f4,
-    type: 3}
-  neutralSpecies: {fileID: 11400000, guid: a0789f36ed7f54fe7bb95cee622eeb16, type: 2}
-  neutralParent: {fileID: 0}
-  respawnDelay: 10
-  spawnedUnits: []
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkRunAbilityInput
+  partyService: {fileID: 11400000, guid: 042e79e25f7d54a5aa70cf2dc6968d11, type: 2}
+  abilityKey: 32
 --- !u!1 &931160570
 GameObject:
   m_ObjectHideFlags: 0
@@ -23257,6 +23184,7 @@ Transform:
   - {fileID: 1900733815}
   - {fileID: 189055205}
   - {fileID: 109002108083254720}
+  - {fileID: 1455652118}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &958768201
@@ -38399,6 +38327,66 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!1 &1455652117
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1455652118}
+  - component: {fileID: 1455652119}
+  m_Layer: 0
+  m_Name: Unit Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1455652118
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455652117}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 958196309}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1455652119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455652117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6f7ed4e612c24dcb829b70ffb5c642c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitSpawner
+  spawnCollider: {fileID: 1039316315}
+  navMeshAreaConfig: {fileID: 11400000, guid: 57edff644ce85440db6cfb3636326d00, type: 2}
+  spawnCount: 10
+  minSpacing: 1
+  spawnOnAwake: 1
+  instructions:
+  - {fileID: 11400000, guid: 2d0cd397ca62a4c91804248458375adb, type: 2}
+  - {fileID: 11400000, guid: 629f4bbfd56194089a398c4212940912, type: 2}
+  - {fileID: 11400000, guid: 42ef384db916c47fd88cd5d698859510, type: 2}
+  unitInstanceService: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2,
+    type: 2}
+  networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
+  unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
+    type: 2}
+  respawnDelay: 10
+  spawnedUnits: []
 --- !u!1001 &1456978950
 PrefabInstance:
   m_ObjectHideFlags: 0
