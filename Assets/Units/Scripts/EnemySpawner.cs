@@ -4,8 +4,11 @@ using System.Collections.Generic;
 public class EnemySpawner : NavMeshSpawner
 {
     [Header("Enemy Settings")]
+    [SerializeField] private UnitInstanceService unitInstanceService;
     [SerializeField] private NetworkRunService networkRunService;
     [SerializeField] private UnitControllerService unitControllerService;
+    [SerializeField] private UnitController enemyPrefab;
+    [SerializeField] private UnitSpecies enemySpecies;
     [SerializeField] private Transform enemyParent;
     [SerializeField] private float respawnDelay = 10f;
 
@@ -48,8 +51,27 @@ public class EnemySpawner : NavMeshSpawner
         Vector3 position = GetRandomAvailablePosition();
         if (position == Vector3.zero) return;
 
+        if (enemyPrefab == null)
+        {
+            Debug.LogWarning("EnemySpawner: No enemy prefab assigned");
+            return;
+        }
+
+        // Create UnitInstance for enemy (marked as enemy so it won't be persisted)
+        UnitInstance enemyInstance = null;
+        if (enemySpecies != null)
+        {
+            enemyInstance = unitInstanceService.CreateUnit(species => species == enemySpecies, isEnemy: true);
+        }
+        else
+        {
+            // Fallback to random unit if no enemy species specified
+            enemyInstance = unitInstanceService.CreateUnit(isEnemy: true);
+        }
+
         Transform parent = enemyParent != null ? enemyParent : (networkRunService != null && networkRunService.PartyService != null ? networkRunService.PartyService.SpawnParent : null);
-        UnitController enemy = unitControllerService.SpawnEnemy(position, parent);
+
+        UnitController enemy = unitControllerService.SpawnUnit(enemyInstance, position, parent, enemyPrefab);
 
         if (enemy == null)
         {
@@ -57,6 +79,7 @@ public class EnemySpawner : NavMeshSpawner
             return;
         }
 
+        enemy.SetAsEnemy(true);
         spawnedEnemies.Add(enemy);
     }
 

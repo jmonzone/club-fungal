@@ -16,10 +16,6 @@ public class UnitControllerService : GURUService
     [SerializeField] private FungalController fungalPrefab;
     [SerializeField] private TreeController treePrefab;
     [SerializeField] private PlayerController playerPrefab;
-    [SerializeField] private UnitController enemyPrefab;
-    [SerializeField] private UnitSpecies enemySpecies;
-    [SerializeField] private UnitController neutralPrefab;
-    [SerializeField] private UnitSpecies neutralSpecies;
 
     [Header("Runtime")]
     [SerializeField] private List<UnitController> unitControllers;
@@ -79,9 +75,9 @@ public class UnitControllerService : GURUService
         }
     }
 
-    public UnitController SpawnUnit(UnitInstance unit, Vector3 spawnPosition, Transform parent = null)
+    public UnitController SpawnUnit(UnitInstance unit, Vector3 spawnPosition, Transform parent = null, UnitController prefabOverride = null)
     {
-        UnitController unitPrefab = unit.Species.Id switch
+        UnitController unitPrefab = prefabOverride != null ? prefabOverride : unit.Species.Id switch
         {
             "tree" => treePrefab,
             "player" => playerPrefab,
@@ -134,79 +130,5 @@ public class UnitControllerService : GURUService
         var unit = unitInstanceService.CreateUnit(unitQuery);
         var unitController = SpawnUnit(unit, position, null);
         onSpawned?.Invoke(unitController);
-    }
-
-    public UnitController SpawnEnemy(Vector3 spawnPosition, Transform parent = null)
-    {
-        if (enemyPrefab == null)
-        {
-            Debug.LogWarning("UnitControllerService: No enemy prefab assigned");
-            return null;
-        }
-
-        // Create UnitInstance for enemy (marked as enemy so it won't be persisted)
-        UnitInstance enemyInstance = null;
-        if (enemySpecies != null)
-        {
-            enemyInstance = unitInstanceService.CreateUnit(species => species == enemySpecies, isEnemy: true);
-        }
-        else
-        {
-            // Fallback to random unit if no enemy species specified
-            enemyInstance = unitInstanceService.CreateUnit(isEnemy: true);
-        }
-
-        UnitController enemyController;
-
-#if UNITY_EDITOR
-        enemyController = PrefabUtility.InstantiatePrefab(enemyPrefab, parent) as UnitController;
-#else
-        enemyController = Instantiate(enemyPrefab, parent);
-#endif
-        enemyController.transform.SetPositionAndRotation(spawnPosition, Quaternion.identity);
-        enemyController.Initialize(enemyInstance);
-        enemyController.SetAsEnemy(true);
-
-        unitControllers.Add(enemyController);
-        OnUnitSummoned?.Invoke(enemyController);
-
-        return enemyController;
-    }
-
-    public UnitController SpawnNeutralUnit(Vector3 spawnPosition, Transform parent = null)
-    {
-        if (neutralPrefab == null)
-        {
-            Debug.LogWarning("UnitControllerService: No neutral prefab assigned");
-            return null;
-        }
-
-        // Create UnitInstance (marked as enemy in data so it won't be persisted)
-        UnitInstance neutralInstance = null;
-        if (neutralSpecies != null)
-        {
-            neutralInstance = unitInstanceService.CreateUnit(species => species == neutralSpecies, isEnemy: true);
-        }
-        else
-        {
-            // Fallback to random unit if no neutral species specified
-            neutralInstance = unitInstanceService.CreateUnit(isEnemy: true);
-        }
-
-        UnitController neutralController;
-
-#if UNITY_EDITOR
-        neutralController = PrefabUtility.InstantiatePrefab(neutralPrefab, parent) as UnitController;
-#else
-        neutralController = Instantiate(neutralPrefab, parent);
-#endif
-        neutralController.transform.SetPositionAndRotation(spawnPosition, Quaternion.identity);
-        neutralController.Initialize(neutralInstance);
-        // Don't call SetAsEnemy - we want normal naming and behavior, just no persistence
-
-        unitControllers.Add(neutralController);
-        OnUnitSummoned?.Invoke(neutralController);
-
-        return neutralController;
     }
 }

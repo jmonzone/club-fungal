@@ -85,6 +85,7 @@ MonoBehaviour:
     - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
       level: 1
       xp: 0
+    abilities: []
     friends: []
     moments: []
     inventory:
@@ -129,6 +130,7 @@ MonoBehaviour:
     - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
       level: 1
       xp: 0
+    abilities: []
     friends: []
     moments: []
     inventory:
@@ -136,3 +138,6 @@ MonoBehaviour:
       maxCapacity: 13
     energy: 100
     isExhausted: 0
+  references:
+    version: 2
+    RefIds: []

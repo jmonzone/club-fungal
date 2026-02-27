@@ -4,8 +4,11 @@ using System.Collections.Generic;
 public class NeutralUnitSpawner : NavMeshSpawner
 {
     [Header("Neutral Unit Settings")]
+    [SerializeField] private UnitInstanceService unitInstanceService;
     [SerializeField] private NetworkRunService networkRunService;
     [SerializeField] private UnitControllerService unitControllerService;
+    [SerializeField] private UnitController neutralPrefab;
+    [SerializeField] private UnitSpecies neutralSpecies;
     [SerializeField] private Transform neutralParent;
     [SerializeField] private float respawnDelay = 10f;
 
@@ -48,8 +51,27 @@ public class NeutralUnitSpawner : NavMeshSpawner
         Vector3 position = GetRandomAvailablePosition();
         if (position == Vector3.zero) return;
 
+        if (neutralPrefab == null)
+        {
+            Debug.LogWarning("NeutralUnitSpawner: No neutral prefab assigned");
+            return;
+        }
+
+        // Create UnitInstance (marked as enemy in data so it won't be persisted)
+        UnitInstance neutralInstance = null;
+        if (neutralSpecies != null)
+        {
+            neutralInstance = unitInstanceService.CreateUnit(species => species == neutralSpecies, isEnemy: true);
+        }
+        else
+        {
+            // Fallback to random unit if no neutral species specified
+            neutralInstance = unitInstanceService.CreateUnit(isEnemy: true);
+        }
+
         Transform parent = neutralParent != null ? neutralParent : (networkRunService != null && networkRunService.PartyService != null ? networkRunService.PartyService.SpawnParent : null);
-        UnitController neutralUnit = unitControllerService.SpawnNeutralUnit(position, parent);
+
+        UnitController neutralUnit = unitControllerService.SpawnUnit(neutralInstance, position, parent, neutralPrefab);
 
         if (neutralUnit == null)
         {
@@ -57,6 +79,7 @@ public class NeutralUnitSpawner : NavMeshSpawner
             return;
         }
 
+        // Don't call SetAsEnemy - we want normal naming and behavior, just no persistence
         spawnedUnits.Add(neutralUnit);
     }
 
