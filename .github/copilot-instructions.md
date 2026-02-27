@@ -70,7 +70,7 @@ Example: When `UnitInstance.Skills` dictionary was lost after recompilation, the
 
 - **Naming**: Services end with "Service", editors with "Editor". Use `GURU` prefix for custom classes.
 - **Initialization**: Services initialize in `OnInitialize()` or `OnSceneLoaded()`.
-- **Error Handling**: Minimal; assume valid state. Use `Debug.Log()` for feedback.
+- **Error Handling**: Minimal; assume valid state. Let code error naturally for easier debugging—don't add null checks, warnings, or safeguards. If something is missing, a null reference exception at the exact usage line is clearer than a generic warning.
 - **Coding Style**: Write code without null checks; assume all dependencies are available.
 
 ## Examples

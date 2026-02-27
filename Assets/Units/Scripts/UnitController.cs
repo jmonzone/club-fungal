@@ -204,7 +204,15 @@ public class UnitController : MonoBehaviour, IInteractable
     public virtual void Initialize(UnitInstance instance)
     {
         this.instance = instance;
-        name = "Unit - " + instance.Species.Id;
+
+        if (isEnemy)
+        {
+            name = "Enemy - " + instance.Species.Id;
+        }
+        else
+        {
+            name = "Unit - " + instance.Species.Id;
+        }
 
         // Create ability instances now that controller exists
         if (instance.Data.abilities != null && instance.Data.abilities.Count > 0)
@@ -296,15 +304,6 @@ public class UnitController : MonoBehaviour, IInteractable
     }
 
     #endregion
-
-    public void SetAsEnemy(bool enemy)
-    {
-        isEnemy = enemy;
-        if (enemy)
-        {
-            name = "Enemy - " + (instance?.Species.Id ?? "Unknown");
-        }
-    }
 
     public void SetLookPosition(Vector3 targetPosition)
     {

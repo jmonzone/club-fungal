@@ -202,7 +202,7 @@ public class UnitInstanceService : GURUService
 
     public delegate bool UnitQuery(UnitSpecies unit);
 
-    public UnitInstance CreateUnit(UnitQuery query = null, bool isEnemy = false)
+    public UnitInstance CreateUnit(UnitQuery query = null, bool register = true)
     {
         var (newUnit, newElement) = GenerateNewUnit(query);
 
@@ -216,8 +216,7 @@ public class UnitInstanceService : GURUService
             element = newElement,
             job = null,
             species = newUnit,
-            colorPalette = matchingColorPalette,
-            isEnemy = isEnemy
+            colorPalette = matchingColorPalette
         };
 
         var newUnitInstance = new UnitInstance(data);
@@ -226,7 +225,10 @@ public class UnitInstanceService : GURUService
         InitializeUnitSkills(newUnitInstance);
         InitializeUnitAbilities(newUnitInstance);
 
-        RegisterUnit(newUnitInstance);
+        if (register)
+        {
+            RegisterUnit(newUnitInstance);
+        }
         return newUnitInstance;
     }
 
@@ -512,8 +514,7 @@ public class UnitInstanceService : GURUService
         }
         if (localData.JsonFile == null) localData.Initialize();
 
-        // Filter out enemies - they should not be persisted
-        var unitsData = units.Where(unit => !unit.Data.isEnemy).Select(unit => unit.Data).ToList();
+        var unitsData = units.Select(unit => unit.Data).ToList();
 
         var settings = new JsonSerializerSettings
         {

@@ -25,20 +25,14 @@ public class RecruitableUnitProximityAction : ProximityAction
 
         Debug.Log($"Recruited {controller.name}!");
 
-        // Mark unit as non-enemy in the data so it will be persisted
-        if (controller.Instance != null && controller.Instance.Data != null)
+        // Register unit so it will be persisted
+        if (controller.Instance != null && unitInstanceService != null)
         {
-            controller.Instance.Data.isEnemy = false;
-
-            // Ensure unit is in the instances list
-            if (unitInstanceService != null && !unitInstanceService.Instances.Contains(controller.Instance))
+            if (!unitInstanceService.Instances.Contains(controller.Instance))
             {
-                unitInstanceService.Instances.Add(controller.Instance);
+                unitInstanceService.RegisterUnit(controller.Instance);
             }
         }
-
-        // Remove enemy flag from controller (visual/gameplay)
-        controller.SetAsEnemy(false);
 
         // Add to player's party
         if (addToParty && partyService != null && controller.Instance != null)

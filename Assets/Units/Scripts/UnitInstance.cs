@@ -22,7 +22,6 @@ public class UnitData
     public List<InteractionData> interactions;
     public List<SkillData> skills;
     public List<AbilityDefinition> abilities;
-    public bool isEnemy;
 
     [Serializable]
     public class SkillData

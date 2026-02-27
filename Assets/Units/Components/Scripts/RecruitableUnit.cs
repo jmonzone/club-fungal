@@ -37,9 +37,6 @@ public class RecruitableUnit : MonoBehaviour
     {
         Debug.Log($"Recruited {unitController.name}!");
 
-        // Remove enemy flag (unit is now friendly)
-        unitController.SetAsEnemy(false);
-
         // Change unit's Instance data to not be marked as enemy
         if (unitController.Instance != null)
         {
