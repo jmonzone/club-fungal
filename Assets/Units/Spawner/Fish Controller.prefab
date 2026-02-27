@@ -147,7 +147,8 @@ MonoBehaviour:
   overheadCanvasPosition: {fileID: 9100838866294772588}
   behaviourPriorityService: {fileID: 11400000, guid: 6afebe865a6264c8b834fed8c6189cc2,
     type: 2}
-  componentDefinitions: []
+  componentDefinitions:
+  - {fileID: 11400000, guid: 787d318847ea04854b1e21e89b95cdb4, type: 2}
   instance:
     template: {fileID: 11400000, guid: 9f94c43fcb7de4716af0753df9bbdbb3, type: 2}
     data:

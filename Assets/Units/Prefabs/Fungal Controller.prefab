@@ -34,6 +34,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5783364371518427396
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -79,6 +80,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 58cca7df2e78741309b9a4c2cf5562c3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -88,7 +90,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &4101650054890124265
 GameObject:
@@ -213,11 +214,13 @@ MonoBehaviour:
   death: {fileID: 0}
   defaultBehaviour: {fileID: 3042677307364813546}
   defaultInteraction: {fileID: 11400000, guid: cd6893964a6274906b52bbbf6b56f4d8, type: 2}
+  overheadCanvasPosition: {fileID: 0}
   behaviourPriorityService: {fileID: 11400000, guid: 6afebe865a6264c8b834fed8c6189cc2,
     type: 2}
   componentDefinitions:
   - {fileID: 11400000, guid: 36e6ff5233cb141348229c8aa765b019, type: 2}
   - {fileID: 11400000, guid: 486e87b0fecec4c20afc2631ae071cd8, type: 2}
+  - {fileID: 11400000, guid: 71bcc97940a5e4e3a83a9b7c80ca0d85, type: 2}
   instance:
     template: {fileID: 0}
     data:
@@ -234,7 +237,9 @@ MonoBehaviour:
       friends: []
       interactions: []
       skills: []
+      abilities: []
     skills: []
+    abilities: []
     friends: []
     moments: []
     inventory:
@@ -248,6 +253,9 @@ MonoBehaviour:
   isEnemy: 0
   dialogueCamera: {fileID: 2897206226710500820}
   networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
+  references:
+    version: 2
+    RefIds: []
 --- !u!195 &6701783708521320235
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -328,6 +336,7 @@ MonoBehaviour:
   destination: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
   isAtDestination: 0
+  yOffset: 0
 --- !u!114 &90876838566174676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -758,6 +767,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!135 &671625521708340593
 SphereCollider:
@@ -5538,7 +5548,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &3831690733825864078
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5584,6 +5594,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -5615,7 +5626,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1 &8982676824934650655
 GameObject:
   m_ObjectHideFlags: 0
@@ -5682,7 +5692,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!96 &1229198697200623043
 TrailRenderer:
-  serializedVersion: 3
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5728,6 +5738,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Time: 5
   m_PreviewTimeScale: 1
   m_Parameters:
@@ -5795,7 +5806,6 @@ TrailRenderer:
     shadowBias: 0.5
     generateLightingData: 0
   m_MinVertexDistance: 0.1
-  m_MaskInteraction: 0
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
