@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Fish Spawn Instructions
   m_EditorClassIdentifier: Assembly-CSharp::UnitSpawnInstruction
   prefab: {fileID: 7279415898657451363, guid: 3e4e6dfdc14c4461b8ef7d79e8640019, type: 3}
-  species: {fileID: 11400000, guid: 6a44b94449e4b4d4891508d458eafec6, type: 2}
+  species:
+  - {fileID: 11400000, guid: 6a44b94449e4b4d4891508d458eafec6, type: 2}
   spawnCount: 10
   navMeshArea: 6

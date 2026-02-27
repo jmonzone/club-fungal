@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -6,7 +7,7 @@ public class UnitSpawnInstruction : ScriptableObject
 {
     [Header("Unit Configuration")]
     [SerializeField] private UnitController prefab;
-    [SerializeField] private UnitSpecies species;
+    [SerializeField] private List<UnitSpecies> species = new List<UnitSpecies>();
     [SerializeField] private int spawnCount = 1;
 
     [Header("NavMesh Settings")]
@@ -14,7 +15,7 @@ public class UnitSpawnInstruction : ScriptableObject
     [SerializeField] private int navMeshArea = -1;
 
     public UnitController Prefab => prefab;
-    public UnitSpecies Species => species;
+    public List<UnitSpecies> Species => species;
     public int SpawnCount => spawnCount;
     public int NavMeshArea => navMeshArea;
 }

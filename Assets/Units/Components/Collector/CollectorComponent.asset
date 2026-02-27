@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b54600c8c9964b1ab424042283dffa5, type: 3}
   m_Name: CollectorComponent
   m_EditorClassIdentifier: Assembly-CSharp::CollectorComponentDefinition
-  id: 
-  displayName: 
-  description: 
+  id: collectorcomponent
+  displayName: collectorcomponent
+  description: collectorcomponent
   collectionRadius: 0.5
   collectibleLayers:
     serializedVersion: 2

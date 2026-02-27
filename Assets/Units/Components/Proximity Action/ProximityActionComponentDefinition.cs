@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -17,8 +18,9 @@ public class ProximityActionComponentDefinition : UnitComponentDefinition
     [SerializeField] private bool requireLineOfSight = false;
 
     [Header("Button Settings")]
-    [SerializeField] private Item costItem;
-    [SerializeField] private int costAmount = 0;
+    [SerializeField] private List<Item> costItems = new List<Item>();
+    [SerializeField] private int minCostAmount = 1;
+    [SerializeField] private int maxCostAmount = 3;
 
     [Header("Action")]
     [SerializeField] private ProximityAction action;
@@ -30,8 +32,9 @@ public class ProximityActionComponentDefinition : UnitComponentDefinition
     public InventoryReference GlobalInventory => globalInventory;
     public float ProximityDistance => proximityDistance;
     public bool RequireLineOfSight => requireLineOfSight;
-    public Item CostItem => costItem;
-    public int CostAmount => costAmount;
+    public List<Item> CostItems => costItems;
+    public int MinCostAmount => minCostAmount;
+    public int MaxCostAmount => maxCostAmount;
     public GameObject ButtonPrefab => buttonPrefab;
     public ProximityAction Action => action;
 
@@ -52,6 +55,8 @@ public class ProximityActionComponentInstance : UnitComponentInstance
     private ProximityActionUI proximityActionUI;
     private bool isPlayerNearby;
     private bool isButtonShown;
+    private Item selectedCostItem;
+    private int selectedCostAmount;
 
     public ProximityActionComponentDefinition ProximityDefinition => definition as ProximityActionComponentDefinition;
 
@@ -66,6 +71,13 @@ public class ProximityActionComponentInstance : UnitComponentInstance
     public override void OnInitialize()
     {
         base.OnInitialize();
+
+        // Select random cost item and amount
+        if (ProximityDefinition.CostItems != null && ProximityDefinition.CostItems.Count > 0)
+        {
+            selectedCostItem = ProximityDefinition.CostItems[Random.Range(0, ProximityDefinition.CostItems.Count)];
+            selectedCostAmount = Random.Range(ProximityDefinition.MinCostAmount, ProximityDefinition.MaxCostAmount + 1);
+        }
 
         CreateButtonUI();
         HideButton();
@@ -97,14 +109,14 @@ public class ProximityActionComponentInstance : UnitComponentInstance
         }
 
         // Initialize with item icon and click handler
-        Sprite icon = ProximityDefinition.CostItem?.Sprite;
+        Sprite icon = selectedCostItem?.Sprite;
         proximityActionUI.Initialize("Recruit", icon, OnButtonClicked);
     }
 
     private void OnButtonClicked()
     {
         // Check if player can afford the cost
-        if (ProximityDefinition.CostItem != null && ProximityDefinition.CostAmount > 0)
+        if (selectedCostItem != null && selectedCostAmount > 0)
         {
             if (ProximityDefinition.GlobalInventory == null)
             {
@@ -112,15 +124,15 @@ public class ProximityActionComponentInstance : UnitComponentInstance
                 return;
             }
 
-            int currentAmount = ProximityDefinition.GlobalInventory.GetItemCount(ProximityDefinition.CostItem);
-            if (currentAmount < ProximityDefinition.CostAmount)
+            int currentAmount = ProximityDefinition.GlobalInventory.GetItemCount(selectedCostItem);
+            if (currentAmount < selectedCostAmount)
             {
-                Debug.Log($"ProximityActionComponent: Not enough {ProximityDefinition.CostItem.Name}. Need {ProximityDefinition.CostAmount}, have {currentAmount}");
+                Debug.Log($"ProximityActionComponent: Not enough {selectedCostItem.Name}. Need {selectedCostAmount}, have {currentAmount}");
                 return;
             }
 
             // Deduct cost
-            ProximityDefinition.GlobalInventory.RemoveItem(ProximityDefinition.CostItem, ProximityDefinition.CostAmount);
+            ProximityDefinition.GlobalInventory.RemoveItem(selectedCostItem, selectedCostAmount);
         }
 
         // Execute the action
@@ -182,11 +194,11 @@ public class ProximityActionComponentInstance : UnitComponentInstance
 
     private void UpdateProgressUI()
     {
-        if (ProximityDefinition.CostItem == null || ProximityDefinition.CostAmount <= 0) return;
+        if (selectedCostItem == null || selectedCostAmount <= 0) return;
         if (proximityActionUI == null) return;
 
-        int currentAmount = ProximityDefinition.GlobalInventory?.GetItemCount(ProximityDefinition.CostItem) ?? 0;
-        int requiredAmount = ProximityDefinition.CostAmount;
+        int currentAmount = ProximityDefinition.GlobalInventory?.GetItemCount(selectedCostItem) ?? 0;
+        int requiredAmount = selectedCostAmount;
 
         proximityActionUI.UpdateProgress(currentAmount, requiredAmount);
     }

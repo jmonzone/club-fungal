@@ -15,6 +15,6 @@ MonoBehaviour:
   id: collectiblecomponent
   displayName: collectiblecomponent
   description: collectiblecomponent
-  item: {fileID: 11400000, guid: ec503a2453c1e4547b234275ed982ca8, type: 2}
+  item: {fileID: 11400000, guid: e893af5162a9e48748a86f3e815a7a78, type: 2}
   amount: 1
-  globalInventory: {fileID: 0}
+  globalInventory: {fileID: 11400000, guid: e9c2fc38b99d8404f8495af08b4889fc, type: 2}

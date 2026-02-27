@@ -147,9 +147,11 @@ public class UnitSpawner : NavMeshSpawner
     {
         // Create UnitInstance (not registered so it won't be persisted)
         UnitInstance unitInstance = null;
-        if (instruction.Species != null)
+        if (instruction.Species != null && instruction.Species.Count > 0)
         {
-            unitInstance = unitInstanceService.CreateUnit(species => species == instruction.Species, register: false);
+            // Randomly select a species from the list
+            UnitSpecies selectedSpecies = instruction.Species[Random.Range(0, instruction.Species.Count)];
+            unitInstance = unitInstanceService.CreateUnit(species => species == selectedSpecies, register: false);
         }
         else
         {

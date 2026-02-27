@@ -1640,7 +1640,7 @@ MonoBehaviour:
   m_ChildAlignment: 2
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
+  m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
@@ -38378,7 +38378,6 @@ MonoBehaviour:
   spawnOnAwake: 1
   instructions:
   - {fileID: 11400000, guid: 2d0cd397ca62a4c91804248458375adb, type: 2}
-  - {fileID: 11400000, guid: 629f4bbfd56194089a398c4212940912, type: 2}
   - {fileID: 11400000, guid: 42ef384db916c47fd88cd5d698859510, type: 2}
   unitInstanceService: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2,
     type: 2}

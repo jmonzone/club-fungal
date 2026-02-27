@@ -165,8 +165,9 @@ MonoBehaviour:
       friends: []
       interactions: []
       skills: []
-      isEnemy: 0
+      abilities: []
     skills: []
+    abilities: []
     friends: []
     moments: []
     inventory:
@@ -180,6 +181,9 @@ MonoBehaviour:
   isEnemy: 0
   dialogueCamera: {fileID: 4257909668109269821}
   networkRunService: {fileID: 11400000, guid: e23cfce02fd65428685ca2df1c34b683, type: 2}
+  references:
+    version: 2
+    RefIds: []
 --- !u!195 &5999266466641658112
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -233,6 +237,7 @@ MonoBehaviour:
   destination: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
   isAtDestination: 0
+  yOffset: 0
 --- !u!82 &3563322837984820335
 AudioSource:
   m_ObjectHideFlags: 0
@@ -473,6 +478,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &9049858180567029677
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -518,6 +524,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 58cca7df2e78741309b9a4c2cf5562c3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -527,7 +534,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &8185364459585513390
 GameObject:
@@ -563,7 +569,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!96 &988698367251044131
 TrailRenderer:
-  serializedVersion: 3
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -609,6 +615,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Time: 5
   m_PreviewTimeScale: 1
   m_Parameters:
@@ -676,7 +683,6 @@ TrailRenderer:
     shadowBias: 0.5
     generateLightingData: 0
   m_MinVertexDistance: 0.1
-  m_MaskInteraction: 0
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
@@ -5438,7 +5444,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &2750210611168538898
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5484,6 +5490,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -5515,7 +5522,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1001 &684187929972920726
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5615,6 +5621,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 736129821579801538, guid: df18ea2bd5e4b4e12914ea9ec47efea7,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 979272959967549978, guid: df18ea2bd5e4b4e12914ea9ec47efea7,
         type: 3}
       propertyPath: m_Name
@@ -5633,7 +5644,7 @@ PrefabInstance:
     - target: {fileID: 3810289084005472207, guid: df18ea2bd5e4b4e12914ea9ec47efea7,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 3810289084005472207, guid: df18ea2bd5e4b4e12914ea9ec47efea7,
         type: 3}

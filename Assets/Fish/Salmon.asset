@@ -12,12 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a539a2570a1c4367a9cb7cad237f400, type: 3}
   m_Name: Salmon
   m_EditorClassIdentifier: 
-  name: Mushroom
-  sprite: {fileID: 21300000, guid: 135981265452b4e2f90f3d31f750a273, type: 3}
-  description: 'the most well known
-
-    of the fungi'
-  itemPrefab: {fileID: 505392744574898249, guid: 493e56f4e7abc4c2a9aa77c9084f0316,
+  name: Salmon
+  sprite: {fileID: 21300000, guid: 0d37165cc1f234c2d9c9eceb39bf8fef, type: 3}
+  description: Salmon
+  itemPrefab: {fileID: 3974052641194081974, guid: 1beb41e0250e4614083647926ced612e,
     type: 3}
   culturePoints: 5
   price: 5

@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Enemy Spawn Instructions
   m_EditorClassIdentifier: Assembly-CSharp::UnitSpawnInstruction
   prefab: {fileID: 4661636074231173861, guid: f7449fb6d88ed40b39443d2eef0e0b04, type: 3}
-  species: {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
+  species:
+  - {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
   spawnCount: 1
   navMeshArea: 0

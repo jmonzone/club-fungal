@@ -19,8 +19,11 @@ MonoBehaviour:
   globalInventory: {fileID: 11400000, guid: e9c2fc38b99d8404f8495af08b4889fc, type: 2}
   proximityDistance: 3
   requireLineOfSight: 1
-  costItem: {fileID: 11400000, guid: ec503a2453c1e4547b234275ed982ca8, type: 2}
-  costAmount: 5
+  costItems:
+  - {fileID: 11400000, guid: ec503a2453c1e4547b234275ed982ca8, type: 2}
+  - {fileID: 11400000, guid: e893af5162a9e48748a86f3e815a7a78, type: 2}
+  minCostAmount: 4
+  maxCostAmount: 9
   action: {fileID: 11400000, guid: 92c328af3fba64c1bad5e9eadd377974, type: 2}
   buttonPrefab: {fileID: 689804084194502617, guid: a89a0a60f102a4d76bdde579df809c6e,
     type: 3}
