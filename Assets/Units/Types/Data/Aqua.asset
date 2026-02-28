@@ -19,5 +19,6 @@ MonoBehaviour:
     speedBonus: 1.5
   terrainSpeedModifiers:
   - areaIndex: 6
-    speedMultiplier: 0.5
-  abilityDefinition: {fileID: 11400000, guid: 4c941416531a14fcbba7e7c4d1bc31b3, type: 2}
+    speedMultiplier: 0.4
+  abilityDefinition: {fileID: 11400000, guid: 44fc7233db50b4873bc41d15c808a0f5, type: 2}
+  preferredTerrainMaskOverride: -1

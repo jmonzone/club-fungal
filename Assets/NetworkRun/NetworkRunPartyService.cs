@@ -58,6 +58,12 @@ public class NetworkRunPartyService : GURUService
     {
         Debug.Log("Initializing NetworkRunPartyService");
 
+        // Don't initialize party data in edit mode
+        if (!Application.isPlaying)
+        {
+            return;
+        }
+
         // Try to load party from local data first
         var loadedParty = LoadPartyFromLocalData();
 
@@ -81,6 +87,12 @@ public class NetworkRunPartyService : GURUService
 
     public void SpawnParty()
     {
+        // Don't spawn units in edit mode
+        if (!Application.isPlaying)
+        {
+            return;
+        }
+
         if (party == null || party.Units == null || party.Units.Count == 0)
         {
             Debug.LogWarning("No party to spawn");

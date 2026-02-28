@@ -15,5 +15,10 @@ MonoBehaviour:
   id: sky
   inventoryBonus: 0
   resourceSpeedBonuses: []
-  terrainSpeedModifiers: []
+  terrainSpeedModifiers:
+  - areaIndex: 0
+    speedMultiplier: 0
+  - areaIndex: 0
+    speedMultiplier: 0
   abilityDefinition: {fileID: 11400000, guid: ce452494eab4649fd9b9626b400584f7, type: 2}
+  preferredTerrainMaskOverride: -1

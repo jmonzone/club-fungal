@@ -13,6 +13,7 @@ public class UnitSpeedModifier : MonoBehaviour
     [SerializeField] private float baseSpeed;
     [SerializeField] private List<float> speedModifiers = new List<float>();
     [SerializeField] private float currentAreaSpeedMultiplier = 1f;
+    [SerializeField] private bool isTerrainImmune = false;
 
     private void Awake()
     {
@@ -32,6 +33,17 @@ public class UnitSpeedModifier : MonoBehaviour
 
     private void CheckNavMeshArea()
     {
+        // Skip terrain speed modifiers if immune (e.g., flying)
+        if (isTerrainImmune)
+        {
+            if (Mathf.Abs(currentAreaSpeedMultiplier - 1f) > 0.001f)
+            {
+                currentAreaSpeedMultiplier = 1f;
+                UpdateSpeed();
+            }
+            return;
+        }
+
         if (!agent || !agent.isOnNavMesh || !unitController || unitController.Instance?.Species?.Type == null) return;
 
         // Sample the NavMesh at the agent's current position
@@ -80,6 +92,16 @@ public class UnitSpeedModifier : MonoBehaviour
     public void ClearModifiers()
     {
         speedModifiers.Clear();
+        UpdateSpeed();
+    }
+
+    public void SetTerrainImmunity(bool immune)
+    {
+        isTerrainImmune = immune;
+        if (immune)
+        {
+            currentAreaSpeedMultiplier = 1f;
+        }
         UpdateSpeed();
     }
 
