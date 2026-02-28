@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Tarot Owl
   m_EditorClassIdentifier: Assembly-CSharp::UnitTemplate
   data:
-    id: sporekeeper fox
-    name: sporekeeper fox
-    displayName: The Fox
-    species: {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
-    job: {fileID: 11400000, guid: e0ccc44be171f4a238e11d7e110c89cc, type: 2}
+    id: tarot owl
+    name: tarot owl
+    displayName: Tarot Owl
+    species: {fileID: 11400000, guid: a0789f36ed7f54fe7bb95cee622eeb16, type: 2}
+    job: {fileID: 0}
     element: 0
     colorPalette: {fileID: 0}
     scene: 
@@ -26,7 +26,7 @@ MonoBehaviour:
     friends: []
     interactions: []
     skills: []
-    isEnemy: 0
+    abilities: []
   moments:
   - interaction: {fileID: 11400000, guid: 5aa5b33e58c2149b9ae9267050d6e3ac, type: 2}
     isComplete: 0

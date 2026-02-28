@@ -185,6 +185,12 @@ public class NetworkRunPartyService : GURUService
             return null;
         }
 
+        if (unitInstanceService == null)
+        {
+            Debug.LogWarning("UnitInstanceService is null, cannot load party from local data");
+            return null;
+        }
+
         if (!localData.JsonFile.ContainsKey(PARTY_KEY))
         {
             return null;
@@ -238,6 +244,19 @@ public class NetworkRunPartyService : GURUService
 
     private List<UnitInstance> GenerateParty()
     {
+        // Safety checks for edit mode or missing references
+        if (networkRunService == null || networkRunService.Settings == null)
+        {
+            Debug.LogWarning("NetworkRunService or Settings is null, cannot generate party");
+            return new List<UnitInstance>();
+        }
+
+        if (unitInstanceService == null)
+        {
+            Debug.LogWarning("UnitInstanceService is null, cannot generate party");
+            return new List<UnitInstance>();
+        }
+
         var partySize = networkRunService.Settings.defaultPartySize;
         var newParty = new List<UnitInstance>();
 
