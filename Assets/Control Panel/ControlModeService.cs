@@ -17,6 +17,10 @@ public class ControlModeService : GURUService
 
     [Header("Settings")]
     [SerializeField] private bool autoEnterManualControl = false;
+    [SerializeField] private bool autoSelectFirstUnit = false;
+
+    [Header("References")]
+    [SerializeField] private NetworkRunPartyService partyService;
 
     [Header("Current State")]
     [SerializeField] private ControlMode currentMode = ControlMode.FreeCamera;
@@ -35,6 +39,20 @@ public class ControlModeService : GURUService
     {
         currentMode = ControlMode.FreeCamera;
         selectedUnit = null;
+    }
+
+    public override void OnSceneLoaded()
+    {
+        base.OnSceneLoaded();
+
+        if (autoSelectFirstUnit && partyService != null && partyService.Party != null)
+        {
+            var partyUnits = partyService.Party.Units;
+            if (partyUnits != null && partyUnits.Count > 0)
+            {
+                SelectUnit(partyUnits[0]);
+            }
+        }
     }
 
     public void SelectUnit(UnitInstance unit)
@@ -94,5 +112,61 @@ public class ControlModeService : GURUService
             StopManualControl();
         else if (currentMode == ControlMode.UnitSelected)
             StartManualControl();
+    }
+
+    public void CycleNextUnit()
+    {
+        if (partyService == null || partyService.Party == null) return;
+
+        var partyUnits = partyService.Party.Units;
+        if (partyUnits == null || partyUnits.Count <= 1) return;
+
+        int currentIndex = partyUnits.IndexOf(selectedUnit);
+        if (currentIndex == -1) return;
+
+        int nextIndex = (currentIndex + 1) % partyUnits.Count;
+        SelectUnit(partyUnits[nextIndex]);
+    }
+
+    public void CyclePreviousUnit()
+    {
+        if (partyService == null || partyService.Party == null) return;
+
+        var partyUnits = partyService.Party.Units;
+        if (partyUnits == null || partyUnits.Count <= 1) return;
+
+        int currentIndex = partyUnits.IndexOf(selectedUnit);
+        if (currentIndex == -1) return;
+
+        int previousIndex = (currentIndex - 1 + partyUnits.Count) % partyUnits.Count;
+        SelectUnit(partyUnits[previousIndex]);
+    }
+
+    public UnitInstance GetNextUnit()
+    {
+        if (partyService == null || partyService.Party == null) return null;
+
+        var partyUnits = partyService.Party.Units;
+        if (partyUnits == null || partyUnits.Count <= 1) return null;
+
+        int currentIndex = partyUnits.IndexOf(selectedUnit);
+        if (currentIndex == -1) return null;
+
+        int nextIndex = (currentIndex + 1) % partyUnits.Count;
+        return partyUnits[nextIndex];
+    }
+
+    public UnitInstance GetPreviousUnit()
+    {
+        if (partyService == null || partyService.Party == null) return null;
+
+        var partyUnits = partyService.Party.Units;
+        if (partyUnits == null || partyUnits.Count <= 1) return null;
+
+        int currentIndex = partyUnits.IndexOf(selectedUnit);
+        if (currentIndex == -1) return null;
+
+        int previousIndex = (currentIndex - 1 + partyUnits.Count) % partyUnits.Count;
+        return partyUnits[previousIndex];
     }
 }

@@ -12,14 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f0b9c13878bb4f6a85ab281db6c5cd6, type: 3}
   m_Name: ControlModeService
   m_EditorClassIdentifier: Assembly-CSharp::ControlModeService
-  currentMode: 0
+  autoEnterManualControl: 1
+  autoSelectFirstUnit: 1
+  partyService: {fileID: 11400000, guid: 042e79e25f7d54a5aa70cf2dc6968d11, type: 2}
+  currentMode: 2
+  previousMode: 0
   selectedUnit:
-    template: {fileID: 0}
+    template: {fileID: 11400000, guid: b3a34daed756d4fbb83a6c4958dc5588, type: 2}
     data:
-      id: 
-      name: 
-      displayName: 
-      species: {fileID: 0}
+      id: sporekeeper fox
+      name: sporekeeper fox
+      displayName: The Fox
+      species: {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
       job: {fileID: 0}
       element: 0
       colorPalette: {fileID: 0}
@@ -29,16 +33,96 @@ MonoBehaviour:
       friends: []
       interactions: []
       skills: []
-      abilities: []
-    skills: []
-    abilities: []
+      abilities:
+      - {fileID: 11400000, guid: ce452494eab4649fd9b9626b400584f7, type: 2}
+    skills:
+    - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 698cd37da23344a66a7138631f23d9af, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: f8a4854f523d648b192c33a94fba4e80, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 71c6207e188214dfab32f5c23d138e13, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+      level: 1
+      xp: 0
+    - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+      level: 1
+      xp: 0
+    abilities:
+    - rid: 7888992182463103445
     friends: []
-    moments: []
+    moments:
+    - interaction: {fileID: 11400000, guid: 5aa5b33e58c2149b9ae9267050d6e3ac, type: 2}
+      isComplete: 0
     inventory:
       itemStacks: []
-      maxCapacity: 0
-    energy: 0
+      maxCapacity: 13
+    energy: 100
     isExhausted: 0
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 7888992182463103445
+      type: {class: DashAbilityInstance, ns: , asm: Assembly-CSharp}
+      data:
+        definition: {fileID: 11400000, guid: ce452494eab4649fd9b9626b400584f7, type: 2}
+        unit:
+          template: {fileID: 11400000, guid: b3a34daed756d4fbb83a6c4958dc5588, type: 2}
+          data:
+            id: sporekeeper fox
+            name: sporekeeper fox
+            displayName: The Fox
+            species: {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
+            job: {fileID: 0}
+            element: 0
+            colorPalette: {fileID: 0}
+            scene: 
+            friendshipLevel: 0
+            friendshipXP: 0
+            friends: []
+            interactions: []
+            skills: []
+            abilities:
+            - {fileID: 11400000, guid: ce452494eab4649fd9b9626b400584f7, type: 2}
+          skills:
+          - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+            level: 1
+            xp: 0
+          - skill: {fileID: 11400000, guid: 698cd37da23344a66a7138631f23d9af, type: 2}
+            level: 1
+            xp: 0
+          - skill: {fileID: 11400000, guid: f8a4854f523d648b192c33a94fba4e80, type: 2}
+            level: 1
+            xp: 0
+          - skill: {fileID: 11400000, guid: 71c6207e188214dfab32f5c23d138e13, type: 2}
+            level: 1
+            xp: 0
+          - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+            level: 1
+            xp: 0
+          - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+            level: 1
+            xp: 0
+          abilities:
+          - rid: 7888992182463103445
+          friends: []
+          moments:
+          - interaction: {fileID: 11400000, guid: 5aa5b33e58c2149b9ae9267050d6e3ac,
+              type: 2}
+            isComplete: 0
+          inventory:
+            itemStacks: []
+            maxCapacity: 13
+          energy: 100
+          isExhausted: 0
+        cooldownRemaining: 0
+        isActive: 0
+        currentCharges: 0
+        chargeRegenTimer: 1.6788323
+        isDashing: 0

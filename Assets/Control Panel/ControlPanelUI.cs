@@ -21,8 +21,12 @@ public class ControlPanelUI : MonoBehaviour
         unitDetailUI.OnBackClicked += HandleBackClicked;
         unitDetailUI.OnManualControlClicked += HandleManualControlClicked;
         unitControllerUI.OnBackClicked += HandleControllerBackClicked;
+        unitControllerUI.OnCyclePrevious += HandleCyclePrevious;
+        unitControllerUI.OnCycleNext += HandleCycleNext;
+        unitControllerUI.OnUnitSelected += HandleUnitSelected; // For scroll view mode
 
         controlModeService.OnModeChanged += HandleModeChanged;
+        controlModeService.OnUnitSelected += HandleUnitSelectedForSwitcher;
     }
 
     private void Start()
@@ -36,8 +40,12 @@ public class ControlPanelUI : MonoBehaviour
         unitDetailUI.OnBackClicked -= HandleBackClicked;
         unitDetailUI.OnManualControlClicked -= HandleManualControlClicked;
         unitControllerUI.OnBackClicked -= HandleControllerBackClicked;
+        unitControllerUI.OnCyclePrevious -= HandleCyclePrevious;
+        unitControllerUI.OnCycleNext -= HandleCycleNext;
+        unitControllerUI.OnUnitSelected -= HandleUnitSelected;
 
         controlModeService.OnModeChanged -= HandleModeChanged;
+        controlModeService.OnUnitSelected -= HandleUnitSelectedForSwitcher;
     }
 
     private void HandleUnitSelected(UnitInstance unit)
@@ -58,6 +66,38 @@ public class ControlPanelUI : MonoBehaviour
     private void HandleControllerBackClicked()
     {
         controlModeService.StopManualControl();
+    }
+
+    private void HandleCyclePrevious()
+    {
+        controlModeService.CyclePreviousUnit();
+    }
+
+    private void HandleCycleNext()
+    {
+        controlModeService.CycleNextUnit();
+    }
+
+    private void HandleUnitSelectedForSwitcher(UnitInstance unit)
+    {
+        // Update unit switcher UI (shoulder buttons or scroll view)
+        UpdateUnitSwitcher();
+    }
+
+    private void UpdateUnitSwitcher()
+    {
+        if (controlModeService.IsManualControlActive())
+        {
+            var previousUnit = controlModeService.GetPreviousUnit();
+            var nextUnit = controlModeService.GetNextUnit();
+            var selectedUnit = controlModeService.SelectedUnit;
+
+            // Update shoulder buttons with adjacent units
+            unitControllerUI.UpdateShoulderButtons(previousUnit, nextUnit);
+
+            // Update scroll view with selected unit
+            unitControllerUI.UpdateScrollView(selectedUnit);
+        }
     }
 
     private void HandleModeChanged(ControlModeService.ControlMode mode)
@@ -99,5 +139,6 @@ public class ControlPanelUI : MonoBehaviour
         unitRosterUI.gameObject.SetActive(false);
         unitDetailUI.gameObject.SetActive(false);
         unitControllerUI.gameObject.SetActive(true);
+        UpdateUnitSwitcher();
     }
 }
