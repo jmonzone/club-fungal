@@ -6,7 +6,6 @@ public class CameraRotationController : MonoBehaviour
     [Header("References")]
     public Transform target;
     public CinemachineVirtualCamera vCam;
-    public PlayerService playerReference;
 
     [Header("Component Toggles")]
     public bool enableFollow = true;
@@ -28,35 +27,6 @@ public class CameraRotationController : MonoBehaviour
     private Vector3 settledPosition;
     private bool hasStoredSettledPosition;
     private Vector3 lastPosition;
-
-    void OnEnable()
-    {
-        if (playerReference != null)
-        {
-            playerReference.OnPlayerInitialized += OnPlayerChanged;
-            // Set initial target if player already exists
-            if (playerReference.Player != null)
-            {
-                target = playerReference.Player.transform;
-            }
-        }
-    }
-
-    void OnDisable()
-    {
-        if (playerReference != null)
-        {
-            playerReference.OnPlayerInitialized -= OnPlayerChanged;
-        }
-    }
-
-    void OnPlayerChanged()
-    {
-        if (playerReference != null && playerReference.Player != null)
-        {
-            target = playerReference.Player.transform;
-        }
-    }
 
     void Start()
     {
@@ -118,16 +88,17 @@ public class CameraRotationController : MonoBehaviour
 
     void Update()
     {
-        if (target == null || vCam == null) return;
+        if (vCam == null) return;
+
+        if (inputHandler) inputHandler.HandleInput();
+        if (panComponent) panComponent.ApplyPan();
+
+        if (target == null) return;
 
         // Apply camera behavior
         if (followComponent) followComponent.ApplyFollow(target);
-        if (panComponent) panComponent.ApplyPan();
         if (orbitComponent && zoomComponent) orbitComponent.ApplyRotation(zoomComponent.CurrentDistance, zoomComponent.minDistance, zoomComponent.maxDistance);
         if (zoomComponent) zoomComponent.ApplyZoom();
-
-        // Handle input
-        if (inputHandler) inputHandler.HandleInput();
 
         // Report movement to camera service
         if (cameraService)

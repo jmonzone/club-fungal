@@ -7,6 +7,7 @@ public class UnitDetailUI : MonoBehaviour
 {
     [Header("UI References")]
     [SerializeField] private Button backButton;
+    [SerializeField] private Button manualControlButton;
     [SerializeField] private Image unitImage;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI speciesText;
@@ -17,12 +18,18 @@ public class UnitDetailUI : MonoBehaviour
 
     public UnitInstance UnitInstance => unitInstance;
     public event Action OnBackClicked;
+    public event Action OnManualControlClicked;
 
     private void Awake()
     {
         if (backButton)
         {
             backButton.onClick.AddListener(() => OnBackClicked?.Invoke());
+        }
+
+        if (manualControlButton)
+        {
+            manualControlButton.onClick.AddListener(() => OnManualControlClicked?.Invoke());
         }
     }
 

@@ -16,6 +16,7 @@ public class CameraInputHandler : MonoBehaviour
 
     [Header("Read Only")]
     [SerializeField][ReadOnly] bool canOrbit = true;
+    [SerializeField][ReadOnly] bool canPan = true;
     [SerializeField][ReadOnly] bool dragging;
 
     Vector2 lastMousePos;
@@ -48,16 +49,27 @@ public class CameraInputHandler : MonoBehaviour
     public void SetCanOrbit(bool canOrbit)
     {
         this.canOrbit = canOrbit;
+
+        // Reset dragging state when orbit state changes
+        if (!canOrbit)
+        {
+            dragging = false;
+        }
+    }
+
+    public void SetCanPan(bool canPan)
+    {
+        this.canPan = canPan;
     }
 
     public void HandleInput()
     {
-        if (EventSystem.current.IsPointerOverGameObject()) return;
-        if (Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)) return;
-
-        if (canOrbit) HandleOrbitInput();
         HandleZoomInput();
-        HandlePanInput();
+
+        if (canPan)
+        {
+            HandlePanInput();
+        }
     }
 
     void HandleOrbitInput()
@@ -68,8 +80,11 @@ public class CameraInputHandler : MonoBehaviour
 
         if (Application.isEditor)
         {
+            // Don't start dragging if Shift is held (that's for panning)
+            bool shiftHeld = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+
             // Mouse drag (Editor) -> yaw (and pitch in first-person)
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !shiftHeld)
             {
                 dragging = true;
                 lastMousePos = Input.mousePosition;
@@ -79,7 +94,7 @@ public class CameraInputHandler : MonoBehaviour
                 dragging = false;
             }
 
-            if (dragging)
+            if (dragging && !shiftHeld)
             {
                 Vector2 current = Input.mousePosition;
                 Vector2 delta = current - lastMousePos;
@@ -130,24 +145,46 @@ public class CameraInputHandler : MonoBehaviour
     {
         if (panComponent == null) return;
 
-        // Skip touch panning if virtual joystick is active
-        if (virtualJoystick != null && virtualJoystick) return;
+        // Only skip if virtual joystick is actively being used
+        bool joystickBlockingInput = virtualJoystick != null && virtualJoystick.IsActive;
+        Debug.Log($"[CameraInputHandler] HandlePanInput - joystickBlockingInput: {joystickBlockingInput}, touchCount: {Input.touchCount}, isEditor: {Application.isEditor}");
 
         // One finger swipe -> pan
-        if (Input.touchCount == 1)
+        if (Input.touchCount == 1 && !joystickBlockingInput)
         {
             Touch t = Input.GetTouch(0);
 
             if (t.phase == TouchPhase.Moved)
             {
-                panComponent.AddPan(-t.deltaPosition * panTouchSensitivity, true);
+                Vector2 panDelta = -t.deltaPosition * panTouchSensitivity;
+                Debug.Log($"[CameraInputHandler] Touch pan: delta={panDelta}");
+                panComponent.AddPan(panDelta, true);
             }
         }
-        else if (Application.isEditor && Input.GetMouseButton(0))
+        else if (Application.isEditor && !joystickBlockingInput)
         {
-            // Shift + Left mouse drag (Editor) -> pan
-            Vector2 delta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-            panComponent.AddPan(-delta * panMouseSensitivity, false);
+            // WASD keys for camera panning
+            Vector2 keyboardInput = Vector2.zero;
+            if (Input.GetKey(KeyCode.W)) keyboardInput.y += 1f;
+            if (Input.GetKey(KeyCode.S)) keyboardInput.y -= 1f;
+            if (Input.GetKey(KeyCode.A)) keyboardInput.x -= 1f;
+            if (Input.GetKey(KeyCode.D)) keyboardInput.x += 1f;
+
+            if (keyboardInput.magnitude > 0.01f)
+            {
+                Vector2 panDelta = keyboardInput * panMouseSensitivity * 0.5f;
+                Debug.Log($"[CameraInputHandler] WASD pan: input={keyboardInput}, delta={panDelta}");
+                panComponent.AddPan(panDelta, false);
+            }
+
+            // Left mouse drag -> pan (no modifier needed)
+            if (Input.GetMouseButton(0))
+            {
+                Vector2 delta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+                Vector2 panDelta = -delta * panMouseSensitivity;
+                Debug.Log($"[CameraInputHandler] Mouse drag pan: rawDelta={delta}, panDelta={panDelta}");
+                panComponent.AddPan(panDelta, false);
+            }
         }
     }
 }

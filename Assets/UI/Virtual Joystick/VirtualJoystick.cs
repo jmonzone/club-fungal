@@ -40,6 +40,14 @@ public class VirtualJoystick : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        if (isActive)
+        {
+            HandleJoystickRelease();
+        }
+    }
+
     private int activeTouchIndex = -1; // Tracks the touch index (-1 for mouse)
     private bool IsTouch => activeTouchIndex >= 0;
 

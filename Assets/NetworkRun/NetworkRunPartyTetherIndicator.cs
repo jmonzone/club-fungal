@@ -21,7 +21,7 @@ public class NetworkRunPartyTetherIndicator : MonoBehaviour
     private void Update()
     {
         UpdateIndicatorPosition();
-        HandleClickInput();
+        // HandleClickInput();
     }
 
     private void UpdateIndicatorPosition()

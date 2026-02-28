@@ -10,21 +10,15 @@ public class CameraPanComponent : MonoBehaviour
 
     [Header("Pan Settings")]
     public float panSpeed = 0.5f;
+
     [Header("Pan Axis Mode")]
     public PanAxisMode panAxisMode = PanAxisMode.XY;
-    public float touchDriftDamping = 0.85f;
-    public float mouseDriftDamping = 0.92f;
-
-    [Header("Party Speed")]
-    [SerializeField] private CameraService cameraService;
-    [SerializeField] private bool scaleWithPartySpeed = true;
+    public float touchDriftDamping = 0.95f; // Higher = less damping, more responsive
+    public float mouseDriftDamping = 0.95f; // Higher = less damping, more responsive
 
     [Header("Read Only")]
     [SerializeField][ReadOnly] Vector3 driftVelocityValue;
     [SerializeField][ReadOnly] bool isTouch;
-    [SerializeField][ReadOnly] float currentSpeedMultiplier = 1f;
-
-    public Vector3 driftVelocity => driftVelocityValue;
 
     public void Initialize()
     {
@@ -33,20 +27,10 @@ public class CameraPanComponent : MonoBehaviour
 
     public void ApplyPan()
     {
-        // Update speed multiplier from party
-        if (scaleWithPartySpeed && cameraService != null)
-        {
-            currentSpeedMultiplier = cameraService.SpeedMultiplier;
-        }
-        else
-        {
-            currentSpeedMultiplier = 1f;
-        }
-
         // Apply drift with damping
         if (driftVelocityValue.magnitude > 0.001f)
         {
-            transform.position += driftVelocityValue * currentSpeedMultiplier * Time.deltaTime;
+            transform.position += driftVelocityValue * Time.deltaTime;
             float damping = isTouch ? touchDriftDamping : mouseDriftDamping;
             driftVelocityValue *= damping;
         }
@@ -60,23 +44,16 @@ public class CameraPanComponent : MonoBehaviour
     {
         isTouch = fromTouch;
 
-        // Update speed multiplier
-        float speedMultiplier = 1f;
-        if (scaleWithPartySpeed && cameraService != null)
-        {
-            speedMultiplier = cameraService.SpeedMultiplier;
-        }
-
         Vector3 right = transform.right;
         if (panAxisMode == PanAxisMode.XY)
         {
             Vector3 up = Vector3.up;
-            driftVelocityValue += (right * delta.x + up * delta.y) * panSpeed * speedMultiplier;
+            driftVelocityValue += (right * delta.x + up * delta.y) * panSpeed;
         }
         else // XZ
         {
             Vector3 forward = Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
-            driftVelocityValue += (right * delta.x + forward * delta.y) * panSpeed * speedMultiplier;
+            driftVelocityValue += (right * delta.x + forward * delta.y) * panSpeed;
         }
     }
 }

@@ -1,12 +1,13 @@
 using UnityEngine;
 
 /// <summary>
-/// Handles keyboard input for activating the party leader's ability during network runs.
+/// Handles keyboard input for activating the selected unit's ability.
+/// Now uses ControlModeService to determine which unit's ability to activate.
 /// </summary>
 public class NetworkRunAbilityInput : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private NetworkRunPartyService partyService;
+    [SerializeField] private ControlModeService controlModeService;
 
     [Header("Input Settings")]
     [SerializeField] private KeyCode abilityKey = KeyCode.Space;
@@ -15,19 +16,18 @@ public class NetworkRunAbilityInput : MonoBehaviour
     {
         if (Input.GetKeyDown(abilityKey))
         {
-            ActivatePartyLeaderAbility();
+            ActivateSelectedUnitAbility();
         }
     }
 
-    private void ActivatePartyLeaderAbility()
+    private void ActivateSelectedUnitAbility()
     {
-        if (partyService == null || partyService.PartyLeader == null) return;
+        if (controlModeService == null || controlModeService.SelectedUnit == null) return;
 
-        var leader = partyService.PartyLeader;
-        if (leader.Instance == null) return;
-        if (leader.Instance.Abilities == null || leader.Instance.Abilities.Count == 0) return;
+        var selectedUnit = controlModeService.SelectedUnit;
+        if (selectedUnit.Abilities == null || selectedUnit.Abilities.Count == 0) return;
 
-        var ability = leader.Instance.Abilities[0];
+        var ability = selectedUnit.Abilities[0];
         if (ability != null && ability.CanActivate)
         {
             ability.Activate();

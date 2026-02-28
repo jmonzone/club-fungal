@@ -1,70 +1,103 @@
 using UnityEngine;
+using System;
 
+/// <summary>
+/// Manages visibility of UI panels and relays events to ControlModeService
+/// </summary>
 public class ControlPanelUI : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private ControlModeService controlModeService;
+    [SerializeField] private GameObject renderRoot;
+
     [Header("Views")]
     [SerializeField] private UnitRosterUI unitRosterUI;
     [SerializeField] private UnitDetailUI unitDetailUI;
-
-    private UnitInstance selectedUnit;
+    [SerializeField] private UnitControllerUI unitControllerUI;
 
     private void Awake()
     {
-        if (unitRosterUI)
-        {
-            unitRosterUI.OnUnitSelected += ShowUnitDetail;
-        }
+        unitRosterUI.OnUnitSelected += HandleUnitSelected;
+        unitDetailUI.OnBackClicked += HandleBackClicked;
+        unitDetailUI.OnManualControlClicked += HandleManualControlClicked;
+        unitControllerUI.OnBackClicked += HandleControllerBackClicked;
 
-        if (unitDetailUI)
-        {
-            unitDetailUI.OnBackClicked += ShowRoster;
-        }
+        controlModeService.OnModeChanged += HandleModeChanged;
     }
 
     private void Start()
     {
-        ShowRoster();
+        HandleModeChanged(controlModeService.CurrentMode);
     }
 
     private void OnDestroy()
     {
-        if (unitRosterUI)
-        {
-            unitRosterUI.OnUnitSelected -= ShowUnitDetail;
-        }
+        unitRosterUI.OnUnitSelected -= HandleUnitSelected;
+        unitDetailUI.OnBackClicked -= HandleBackClicked;
+        unitDetailUI.OnManualControlClicked -= HandleManualControlClicked;
+        unitControllerUI.OnBackClicked -= HandleControllerBackClicked;
 
-        if (unitDetailUI)
+        controlModeService.OnModeChanged -= HandleModeChanged;
+    }
+
+    private void HandleUnitSelected(UnitInstance unit)
+    {
+        controlModeService.SelectUnit(unit);
+    }
+
+    private void HandleBackClicked()
+    {
+        controlModeService.DeselectUnit();
+    }
+
+    private void HandleManualControlClicked()
+    {
+        controlModeService.StartManualControl();
+    }
+
+    private void HandleControllerBackClicked()
+    {
+        controlModeService.StopManualControl();
+    }
+
+    private void HandleModeChanged(ControlModeService.ControlMode mode)
+    {
+        switch (mode)
         {
-            unitDetailUI.OnBackClicked -= ShowRoster;
+            case ControlModeService.ControlMode.FreeCamera:
+                ShowRoster();
+                break;
+            case ControlModeService.ControlMode.UnitSelected:
+                ShowUnitDetail(controlModeService.SelectedUnit);
+                break;
+            case ControlModeService.ControlMode.ManualControl:
+                ShowManualControl();
+                break;
         }
     }
 
-    public void ShowRoster()
+    private void ShowRoster()
     {
-        if (unitRosterUI)
-        {
-            unitRosterUI.gameObject.SetActive(true);
-        }
-
-        if (unitDetailUI)
-        {
-            unitDetailUI.gameObject.SetActive(false);
-        }
+        if (renderRoot != null) renderRoot.SetActive(false);
+        unitRosterUI.gameObject.SetActive(true);
+        unitDetailUI.gameObject.SetActive(false);
+        unitControllerUI.gameObject.SetActive(false);
     }
 
-    public void ShowUnitDetail(UnitInstance unit)
+    private void ShowUnitDetail(UnitInstance unit)
     {
-        selectedUnit = unit;
+        if (renderRoot != null) renderRoot.SetActive(true);
+        unitRosterUI.gameObject.SetActive(false);
+        unitDetailUI.SetUnit(unit);
+        unitDetailUI.gameObject.SetActive(true);
+        unitControllerUI.gameObject.SetActive(false);
+    }
 
-        if (unitRosterUI)
-        {
-            unitRosterUI.gameObject.SetActive(false);
-        }
-
-        if (unitDetailUI)
-        {
-            unitDetailUI.SetUnit(unit);
-            unitDetailUI.gameObject.SetActive(true);
-        }
+    private void ShowManualControl()
+    {
+        if (renderRoot != null) renderRoot.SetActive(true);
+        unitRosterUI.gameObject.SetActive(false);
+        unitDetailUI.gameObject.SetActive(false);
+        unitControllerUI.gameObject.SetActive(true);
     }
 }

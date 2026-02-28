@@ -4,13 +4,13 @@ using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
-/// UI button that activates the ability of the selected unit party leader.
-/// Follows the project's service-oriented design pattern.
+/// UI button that activates the ability of the selected unit.
+/// Listens to ControlModeService to track which unit is selected.
 /// </summary>
 public class UnitAbilityButton : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private NetworkRunPartyService partyService;
+    [SerializeField] private ControlModeService controlModeService;
     [SerializeField] private Button button;
     [SerializeField] private TextMeshProUGUI buttonText;
     [SerializeField] private Image cooldownFill;
@@ -27,18 +27,22 @@ public class UnitAbilityButton : MonoBehaviour
 
     private void OnEnable()
     {
-        if (partyService != null)
+        if (controlModeService != null)
         {
-            partyService.OnPartyLeaderChanged += OnPartyLeaderChanged;
+            controlModeService.OnModeChanged += OnModeChanged;
+            controlModeService.OnUnitSelected += OnUnitSelected;
+            controlModeService.OnUnitDeselected += OnUnitDeselected;
         }
         UpdateButtonState();
     }
 
     private void OnDisable()
     {
-        if (partyService != null)
+        if (controlModeService != null)
         {
-            partyService.OnPartyLeaderChanged -= OnPartyLeaderChanged;
+            controlModeService.OnModeChanged -= OnModeChanged;
+            controlModeService.OnUnitSelected -= OnUnitSelected;
+            controlModeService.OnUnitDeselected -= OnUnitDeselected;
         }
     }
 
@@ -47,37 +51,51 @@ public class UnitAbilityButton : MonoBehaviour
         UpdateButtonState();
     }
 
-    private void OnPartyLeaderChanged(UnitController newLeader)
+    private void OnModeChanged(ControlModeService.ControlMode mode)
+    {
+        UpdateButtonState();
+    }
+
+    private void OnUnitSelected(UnitInstance unit)
+    {
+        UpdateButtonState();
+    }
+
+    private void OnUnitDeselected()
     {
         UpdateButtonState();
     }
 
     private void OnButtonClicked()
     {
-        if (partyService == null || partyService.PartyLeader == null) return;
+        if (controlModeService == null || controlModeService.SelectedUnit == null) return;
 
-        ActivateLeaderAbility(partyService.PartyLeader);
+        ActivateSelectedUnitAbility();
     }
 
-    private void ActivateLeaderAbility(UnitController leader)
+    private void ActivateSelectedUnitAbility()
     {
-        leader.Instance.Abilities[0].Activate();
+        var abilities = controlModeService.SelectedUnit.Abilities;
+        if (abilities != null && abilities.Count > 0)
+        {
+            abilities[0].Activate();
+        }
     }
 
     private void UpdateButtonState()
     {
-        if (partyService == null || partyService.PartyLeader == null)
+        if (controlModeService == null || controlModeService.SelectedUnit == null)
         {
             button.interactable = false;
             if (buttonText != null)
             {
-                buttonText.text = "No Leader";
+                buttonText.text = "No Unit";
             }
             HideCooldownUI();
             return;
         }
 
-        var abilities = partyService.PartyLeader.Instance.Abilities;
+        var abilities = controlModeService.SelectedUnit.Abilities;
         if (abilities == null || abilities.Count == 0)
         {
             button.interactable = false;
