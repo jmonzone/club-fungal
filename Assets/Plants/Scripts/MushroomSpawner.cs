@@ -69,11 +69,11 @@ public class MushroomSpawner : NavMeshSpawner
             return;
         }
 
-        if (spawnCollider == null)
-        {
-            Debug.LogWarning("MushroomSpawner: No spawn collider assigned");
-            return;
-        }
+        // if (spawnCollider == null)
+        // {
+        //     Debug.LogWarning("MushroomSpawner: No spawn collider assigned");
+        //     return;
+        // }
 
         List<Vector3> allPositions = GenerateSpawnPositions(spawnCount);
         availableSpawnPositions = new List<Vector3>(allPositions);

@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 
 public abstract class NavMeshSpawner : MonoBehaviour
 {
     [Header("Spawn Area")]
-    [SerializeField] protected Collider spawnCollider;
+    [SerializeField] protected NavMeshSurface navMeshSurface;
     [SerializeField] protected NavMeshAreaConfig navMeshAreaConfig;
 
     [Header("Spawn Settings")]
@@ -30,13 +31,13 @@ public abstract class NavMeshSpawner : MonoBehaviour
     {
         List<Vector3> positions = new List<Vector3>();
 
-        if (spawnCollider == null)
+        if (navMeshSurface == null)
         {
-            Debug.LogWarning($"{GetType().Name}: No spawn collider assigned");
+            Debug.LogWarning($"{GetType().Name}: No NavMeshSurface assigned");
             return positions;
         }
 
-        Bounds bounds = spawnCollider.bounds;
+        Bounds bounds = new Bounds(transform.TransformPoint(navMeshSurface.center), navMeshSurface.size);
         int maxAttempts = count * 10;
         int attempts = 0;
 
@@ -135,10 +136,11 @@ public abstract class NavMeshSpawner : MonoBehaviour
 
     protected virtual void OnDrawGizmosSelected()
     {
-        if (spawnCollider != null)
+        if (navMeshSurface != null)
         {
             Gizmos.color = GetGizmoColor();
-            Gizmos.DrawCube(spawnCollider.bounds.center, spawnCollider.bounds.size);
+            Vector3 center = transform.TransformPoint(navMeshSurface.center);
+            Gizmos.DrawCube(center, navMeshSurface.size);
         }
     }
 

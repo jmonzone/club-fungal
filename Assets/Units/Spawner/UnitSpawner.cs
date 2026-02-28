@@ -49,7 +49,22 @@ public class UnitSpawner : NavMeshSpawner
     {
         List<Vector3> positions = new List<Vector3>();
 
-        Bounds bounds = spawnCollider.bounds;
+        // Get all NavMesh triangulation data to sample from entire surface
+        NavMeshTriangulation triangulation = NavMesh.CalculateTriangulation();
+
+        if (triangulation.vertices.Length == 0)
+        {
+            Debug.LogWarning($"UnitSpawner: No NavMesh found");
+            return positions;
+        }
+
+        // Calculate bounds from all NavMesh vertices
+        Bounds bounds = new Bounds(triangulation.vertices[0], Vector3.zero);
+        foreach (Vector3 vertex in triangulation.vertices)
+        {
+            bounds.Encapsulate(vertex);
+        }
+
         int maxAttempts = count * 10;
         int attempts = 0;
 

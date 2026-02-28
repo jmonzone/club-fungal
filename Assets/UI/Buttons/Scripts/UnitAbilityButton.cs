@@ -91,7 +91,6 @@ public class UnitAbilityButton : MonoBehaviour
 
         var ability = abilities[0];
         button.interactable = ability.CanActivate;
-        Debug.Log($"Updating button for ability: {ability.Definition.DisplayName}, CanActivate={ability.CanActivate}");
 
         if (buttonText != null)
         {
