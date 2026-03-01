@@ -237,12 +237,29 @@ public class UnitController : MonoBehaviour, IInteractable
 
     /// <summary>
     /// Initialize all component instances from their definitions.
+    /// Merges prefab components with species-specific components.
     /// </summary>
     private void InitializeComponents()
     {
         componentInstances.Clear();
 
-        foreach (var definition in componentDefinitions)
+        // Collect all component definitions (prefab + species)
+        var allDefinitions = new List<UnitComponentDefinition>(componentDefinitions);
+
+        // Add species-specific components
+        if (instance?.Species?.Components != null)
+        {
+            foreach (var definition in instance.Species.Components)
+            {
+                if (definition != null && !allDefinitions.Contains(definition))
+                {
+                    allDefinitions.Add(definition);
+                }
+            }
+        }
+
+        // Create instances from all definitions
+        foreach (var definition in allDefinitions)
         {
             if (definition != null)
             {

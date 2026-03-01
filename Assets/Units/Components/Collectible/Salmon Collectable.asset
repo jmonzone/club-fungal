@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0701e99623f7c4281811d44997c74378, type: 3}
-  m_Name: CollectibleComponent
+  m_Name: Salmon Collectable
   m_EditorClassIdentifier: Assembly-CSharp::CollectibleComponentDefinition
-  id: collectiblecomponent
-  displayName: collectiblecomponent
-  description: collectiblecomponent
+  id: salmon collectable
+  displayName: salmon collectable
+  description: salmon collectable
   item: {fileID: 11400000, guid: e893af5162a9e48748a86f3e815a7a78, type: 2}
   amount: 1
   globalInventory: {fileID: 11400000, guid: e9c2fc38b99d8404f8495af08b4889fc, type: 2}

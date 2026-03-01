@@ -31,6 +31,9 @@ public class UnitColorPalette : UnitBehaviour
             }
         }
 
+        // Early return if no texture to work with
+        if (originalCache == null) return;
+
         tex = new Texture2D(originalCache.width, originalCache.height, TextureFormat.RGBA32, false);
         tex.SetPixels32(originalCache.GetPixels32());
         primaryColor = GetTextureColor(0);

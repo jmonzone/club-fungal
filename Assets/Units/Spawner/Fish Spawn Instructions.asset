@@ -15,5 +15,6 @@ MonoBehaviour:
   prefab: {fileID: 7279415898657451363, guid: 3e4e6dfdc14c4461b8ef7d79e8640019, type: 3}
   species:
   - {fileID: 11400000, guid: 6a44b94449e4b4d4891508d458eafec6, type: 2}
+  - {fileID: 11400000, guid: a0c5e16129d1044bf939b6965c8536b3, type: 2}
   spawnCount: 10
   navMeshArea: 6

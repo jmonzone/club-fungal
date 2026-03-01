@@ -13,8 +13,12 @@ public class UnitSpecies : GURUObject
     [SerializeField] private GameObject prefab;
     [SerializeField] private List<DanceMove> moves;
 
+    [Header("Species Components")]
+    [SerializeField] private List<UnitComponentDefinition> components;
+
     public UnitType Type => type;
     public Sprite Sprite => sprite;
     public GameObject Prefab => prefab;
     public List<DanceMove> Moves => moves;
+    public List<UnitComponentDefinition> Components => components;
 }
