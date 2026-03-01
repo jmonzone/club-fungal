@@ -33,10 +33,31 @@ public class NetworkRunPartyTetherIndicator : MonoBehaviour
         // Only update if we have a valid position
         if (partyCenter != Vector3.zero)
         {
-            // Keep indicator on ground even if party leader is jumping/diving
-            Vector3 groundPosition = partyCenter;
-            groundPosition.y = groundY;
-            indicatorObject.transform.position = groundPosition;
+            Vector3 targetPosition = partyCenter;
+
+            // Check if party leader is diving (submerged)
+            bool isSubmerged = false;
+            var partyLeader = networkRunService.PartyService?.PartyLeader;
+            if (partyLeader != null && partyLeader.Instance != null)
+            {
+                var diveAbility = partyLeader.Instance.GetAbility<DiveAbilityInstance>();
+                if (diveAbility != null && diveAbility.IsSubmerged)
+                {
+                    isSubmerged = true;
+                }
+            }
+
+            // If submerged, follow the actual depth; otherwise stay at ground level
+            if (isSubmerged)
+            {
+                targetPosition.y = partyCenter.y;
+            }
+            else
+            {
+                targetPosition.y = groundY;
+            }
+
+            indicatorObject.transform.position = targetPosition;
         }
     }
 

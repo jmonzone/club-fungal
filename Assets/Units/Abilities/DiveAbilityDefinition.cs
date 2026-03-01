@@ -14,6 +14,7 @@ public class DiveAbilityDefinition : AbilityDefinition
     [SerializeField] private float underwaterOffset = -1.5f;
     [SerializeField] private float underwaterSpeedModifier = 0.5f;
     [SerializeField] private NavMeshAreaConfig navMeshAreaConfig;
+    [SerializeField] private bool useWaterShadow = true;
     [SerializeField] private GameObject waterShadowPrefab;
 
     public float DiveDistance => diveDistance;
@@ -23,6 +24,7 @@ public class DiveAbilityDefinition : AbilityDefinition
     public float UnderwaterOffset => underwaterOffset;
     public float UnderwaterSpeedModifier => underwaterSpeedModifier;
     public NavMeshAreaConfig NavMeshAreaConfig => navMeshAreaConfig;
+    public bool UseWaterShadow => useWaterShadow;
     public GameObject WaterShadowPrefab => waterShadowPrefab;
 
     public override AbilityInstance CreateInstance(UnitController controller)
@@ -49,6 +51,7 @@ public class DiveAbilityInstance : AbilityInstance
     public DiveAbilityDefinition DiveDefinition => definition as DiveAbilityDefinition;
     public override bool CanActivate => base.CanActivate && !isDiving;
     public override bool IsControllingMovement => isDiving;
+    public bool IsSubmerged => isSubmerged;
 
     public DiveAbilityInstance(DiveAbilityDefinition definition, UnitController controller)
         : base(definition, controller)
@@ -346,7 +349,7 @@ public class DiveAbilityInstance : AbilityInstance
             }
 
             // Instantiate water shadow at surface position
-            if (DiveDefinition.WaterShadowPrefab != null)
+            if (DiveDefinition.UseWaterShadow && DiveDefinition.WaterShadowPrefab != null)
             {
                 waterShadowInstance = Object.Instantiate(DiveDefinition.WaterShadowPrefab, surfacePosition, Quaternion.identity);
             }
