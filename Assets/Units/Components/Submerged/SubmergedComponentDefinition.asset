@@ -15,10 +15,10 @@ MonoBehaviour:
   id: submergedcomponentdefinition
   displayName: submerged
   description: submerged
-  underwaterOffset: -1.5
-  underwaterSpeedModifier: 0.5
+  underwaterOffset: -1
+  underwaterSpeedModifier: 2.5
   navMeshAreaConfig: {fileID: 11400000, guid: 57edff644ce85440db6cfb3636326d00, type: 2}
-  useWaterShadow: 1
+  useWaterShadow: 0
   waterShadowPrefab: {fileID: 7964039319597876308, guid: a11e47e3d245c4ecba276fc60e5f1a21,
     type: 3}
   startSubmerged: 1

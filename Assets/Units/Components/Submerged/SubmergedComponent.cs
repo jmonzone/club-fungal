@@ -80,6 +80,28 @@ public class SubmergedComponentInstance : UnitComponentInstance
         }
     }
 
+    public override void OnDisable()
+    {
+        base.OnDisable();
+
+        // Hide water shadow when unit is disabled
+        if (waterShadowInstance != null)
+        {
+            waterShadowInstance.SetActive(false);
+        }
+    }
+
+    public override void OnEnable()
+    {
+        base.OnEnable();
+
+        // Show water shadow when unit is re-enabled
+        if (waterShadowInstance != null)
+        {
+            waterShadowInstance.SetActive(true);
+        }
+    }
+
     public override void OnDestroy()
     {
         base.OnDestroy();

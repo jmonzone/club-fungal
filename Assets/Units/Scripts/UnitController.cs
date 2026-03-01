@@ -112,12 +112,20 @@ public class UnitController : MonoBehaviour, IInteractable
 
     protected virtual void OnEnable()
     {
-
+        // Enable all components
+        foreach (var component in componentInstances)
+        {
+            component?.OnEnable();
+        }
     }
 
     protected virtual void OnDisable()
     {
-
+        // Disable all components
+        foreach (var component in componentInstances)
+        {
+            component?.OnDisable();
+        }
     }
 
     protected virtual void OnDestroy()
