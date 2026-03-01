@@ -40,8 +40,8 @@ public class NetworkRunPartyTetherIndicator : MonoBehaviour
             var partyLeader = networkRunService.PartyService?.PartyLeader;
             if (partyLeader != null && partyLeader.Instance != null)
             {
-                var diveAbility = partyLeader.Instance.GetAbility<DiveAbilityInstance>();
-                if (diveAbility != null && diveAbility.IsSubmerged)
+                var submergedComponent = partyLeader.GetComponentInstance<SubmergedComponentInstance>();
+                if (submergedComponent != null && submergedComponent.IsSubmerged)
                 {
                     isSubmerged = true;
                 }

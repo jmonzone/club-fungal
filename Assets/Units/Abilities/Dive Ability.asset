@@ -20,8 +20,6 @@ MonoBehaviour:
   diveHeight: 2
   diveDuration: 0.5
   cooldown: 1
-  underwaterOffset: -1.5
-  underwaterSpeedModifier: 3
   navMeshAreaConfig: {fileID: 11400000, guid: 57edff644ce85440db6cfb3636326d00, type: 2}
-  waterShadowPrefab: {fileID: 7964039319597876308, guid: a11e47e3d245c4ecba276fc60e5f1a21,
-    type: 3}
+  submergedComponentDefinition: {fileID: 11400000, guid: 3320dce2f208b4cfabaa22ec7d9d032b,
+    type: 2}

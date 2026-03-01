@@ -11,21 +11,15 @@ public class DiveAbilityDefinition : AbilityDefinition
     [SerializeField] private float diveHeight = 2f;
     [SerializeField] private float diveDuration = 0.5f;
     [SerializeField] private float cooldown = 2f;
-    [SerializeField] private float underwaterOffset = -1.5f;
-    [SerializeField] private float underwaterSpeedModifier = 0.5f;
     [SerializeField] private NavMeshAreaConfig navMeshAreaConfig;
-    [SerializeField] private bool useWaterShadow = true;
-    [SerializeField] private GameObject waterShadowPrefab;
+    [SerializeField] private SubmergedComponentDefinition submergedComponentDefinition;
 
     public float DiveDistance => diveDistance;
     public float DiveHeight => diveHeight;
     public float DiveDuration => diveDuration;
     public float Cooldown => cooldown;
-    public float UnderwaterOffset => underwaterOffset;
-    public float UnderwaterSpeedModifier => underwaterSpeedModifier;
     public NavMeshAreaConfig NavMeshAreaConfig => navMeshAreaConfig;
-    public bool UseWaterShadow => useWaterShadow;
-    public GameObject WaterShadowPrefab => waterShadowPrefab;
+    public SubmergedComponentDefinition SubmergedComponentDefinition => submergedComponentDefinition;
 
     public override AbilityInstance CreateInstance(UnitController controller)
     {
@@ -41,23 +35,16 @@ public class DiveAbilityDefinition : AbilityDefinition
 public class DiveAbilityInstance : AbilityInstance
 {
     [SerializeField] private bool isDiving;
-    [SerializeField] private bool isSubmerged;
     [SerializeField] private Vector3 directionalInfluence;
-    private GameObject waterShadowInstance;
-    private int originalAreaMask;
-    private float underwaterHapticTimer;
-    private const float UnderwaterHapticInterval = 0.6f; // Frog kick rhythm
 
     public DiveAbilityDefinition DiveDefinition => definition as DiveAbilityDefinition;
     public override bool CanActivate => base.CanActivate && !isDiving;
     public override bool IsControllingMovement => isDiving;
-    public bool IsSubmerged => isSubmerged;
 
     public DiveAbilityInstance(DiveAbilityDefinition definition, UnitController controller)
         : base(definition, controller)
     {
         isDiving = false;
-        isSubmerged = false;
         directionalInfluence = Vector3.zero;
     }
 
@@ -69,44 +56,6 @@ public class DiveAbilityInstance : AbilityInstance
         directionalInfluence = direction;
     }
 
-    /// <summary>
-    /// Update water shadow position to follow unit horizontally.
-    /// </summary>
-    public override void Update(float deltaTime)
-    {
-        base.Update(deltaTime);
-
-        // Keep water shadow at unit's horizontal position but at water surface
-        if (isSubmerged && waterShadowInstance != null && controller != null)
-        {
-            Vector3 shadowPos = controller.transform.position;
-            shadowPos.y = waterShadowInstance.transform.position.y; // Keep at original water surface Y
-            waterShadowInstance.transform.position = shadowPos;
-
-            // Trigger periodic underwater swimming haptics (frog kicks/breaststroke)
-            underwaterHapticTimer += deltaTime;
-            if (underwaterHapticTimer >= UnderwaterHapticInterval)
-            {
-                TriggerUnderwaterSwimHaptic();
-                underwaterHapticTimer = 0f;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Cleanup water shadow when ability is deactivated.
-    /// </summary>
-    public override void Deactivate()
-    {
-        base.Deactivate();
-
-        if (waterShadowInstance != null)
-        {
-            Object.Destroy(waterShadowInstance);
-            waterShadowInstance = null;
-        }
-    }
-
     protected override void ActivateAbility()
     {
         if (!CanActivate) return;
@@ -114,10 +63,11 @@ public class DiveAbilityInstance : AbilityInstance
         isDiving = true;
         cooldownRemaining = DiveDefinition.Cooldown;
 
-        // If already submerged, resurface instead
-        if (isSubmerged)
+        // Check if unit has SubmergedComponent and is submerged
+        var submergedComponent = controller.GetComponentInstance<SubmergedComponentInstance>();
+        if (submergedComponent != null && submergedComponent.IsSubmerged)
         {
-            controller.StartCoroutine(ResurfaceCoroutine());
+            controller.StartCoroutine(ResurfaceCoroutine(submergedComponent));
             Debug.Log($"{unit.DisplayName} is resurfacing!");
         }
         else
@@ -131,30 +81,20 @@ public class DiveAbilityInstance : AbilityInstance
         }
     }
 
-    private System.Collections.IEnumerator ResurfaceCoroutine()
+    private System.Collections.IEnumerator ResurfaceCoroutine(SubmergedComponentInstance submergedComponent)
     {
-        float underwaterOffset = DiveDefinition.UnderwaterOffset;
-
         var agent = controller.GetComponent<UnityEngine.AI.NavMeshAgent>();
         if (agent) agent.enabled = false;
 
-        // Get surface position from water shadow
-        Vector3 surfacePosition;
-        if (waterShadowInstance != null)
-        {
-            surfacePosition = waterShadowInstance.transform.position;
-        }
-        else
-        {
-            // Fallback: add underwater offset magnitude to current position
-            surfacePosition = controller.transform.position + Vector3.up * Mathf.Abs(underwaterOffset);
-        }
-
+        // Get surface position (add offset magnitude to current position)
         Vector3 submergedPosition = controller.transform.position;
+        Vector3 surfacePosition = submergedPosition + Vector3.up * Mathf.Abs(submergedComponent.SubmergedDefinition.UnderwaterOffset);
 
         // Animate rising to surface
         float submergeTime = 0.3f;
         float elapsed = 0f;
+        float underwaterOffset = submergedComponent.SubmergedDefinition.UnderwaterOffset;
+
         while (elapsed < submergeTime)
         {
             elapsed += Time.deltaTime;
@@ -168,51 +108,18 @@ public class DiveAbilityInstance : AbilityInstance
             yield return null;
         }
 
-        controller.Destination.SetYOffset(0f);
         controller.transform.position = surfacePosition;
 
-        isSubmerged = false;
-        isDiving = false;
-        underwaterHapticTimer = 0f;
-
-        // Resurface haptic (soft splash)
-        TriggerResurfaceHaptic();
-
-        // Remove underwater speed modifier
-        var speedModifier = controller.GetComponent<UnitSpeedModifier>();
-        if (speedModifier != null)
-        {
-            speedModifier.RemoveSpeedModifier(DiveDefinition.UnderwaterSpeedModifier);
-        }
-
-        // Restore original area mask and re-enable agent
+        // Re-enable agent before calling Resurface (which uses it)
         if (agent != null)
         {
-            agent.areaMask = originalAreaMask;
-
-            // Sample NavMesh to find correct surface position
-            UnityEngine.AI.NavMeshHit navHit;
-            if (UnityEngine.AI.NavMesh.SamplePosition(surfacePosition, out navHit, 10f, agent.areaMask))
-            {
-                // Warp to valid NavMesh position (handles multi-level NavMesh correctly)
-                agent.Warp(navHit.position);
-            }
-            else
-            {
-                // Fallback: warp to surface position
-                agent.Warp(surfacePosition);
-            }
-
             agent.enabled = true;
-            controller.Destination.SetDestination(agent.transform.position);
         }
 
-        // Destroy water shadow
-        if (waterShadowInstance != null)
-        {
-            Object.Destroy(waterShadowInstance);
-            waterShadowInstance = null;
-        }
+        // Use SubmergedComponent to handle resurfacing
+        submergedComponent.Resurface(surfacePosition);
+
+        isDiving = false;
     }
 
     private System.Collections.IEnumerator DiveCoroutine()
@@ -314,44 +221,31 @@ public class DiveAbilityInstance : AbilityInstance
             Vector3 surfacePosition = controller.transform.position;
             Vector3 submergedPosition = surfacePosition - Vector3.up * 1.5f;
 
-            // Submerge
-            float submergeTime = 0.3f;
-            float submergeElapsed = 0f;
-            while (submergeElapsed < submergeTime)
+            // Get or add SubmergedComponent
+            var submergedComponent = controller.GetComponentInstance<SubmergedComponentInstance>();
+            if (submergedComponent == null && DiveDefinition.SubmergedComponentDefinition != null)
             {
-                submergeElapsed += Time.deltaTime;
-                controller.transform.position = Vector3.Lerp(surfacePosition, submergedPosition, submergeElapsed / submergeTime);
-                yield return null;
+                // Add component dynamically
+                controller.AddComponent(DiveDefinition.SubmergedComponentDefinition);
+                submergedComponent = controller.GetComponentInstance<SubmergedComponentInstance>();
             }
 
-            controller.transform.position = submergedPosition;
-            isSubmerged = true;
-            underwaterHapticTimer = 0f;
-
-            // Water entry haptic (heavier impact for splash)
-            TriggerWaterEntryHaptic();
-
-            // Set underwater offset so unit stays at this depth
-            controller.Destination.SetYOffset(DiveDefinition.UnderwaterOffset);
-
-            // Apply underwater speed modifier
-            var speedModifier = controller.GetComponent<UnitSpeedModifier>();
-            if (speedModifier != null)
+            if (submergedComponent != null)
             {
-                speedModifier.AddSpeedModifier(DiveDefinition.UnderwaterSpeedModifier);
-            }
+                // Animate submerging
+                float submergeTime = 0.3f;
+                float submergeElapsed = 0f;
+                while (submergeElapsed < submergeTime)
+                {
+                    submergeElapsed += Time.deltaTime;
+                    controller.transform.position = Vector3.Lerp(surfacePosition, submergedPosition, submergeElapsed / submergeTime);
+                    yield return null;
+                }
 
-            // Constrain navigation to water terrain only
-            if (agent != null && DiveDefinition.NavMeshAreaConfig != null)
-            {
-                originalAreaMask = agent.areaMask;
-                agent.areaMask = DiveDefinition.NavMeshAreaConfig.WaterTerrainAreaMask;
-            }
+                controller.transform.position = submergedPosition;
 
-            // Instantiate water shadow at surface position
-            if (DiveDefinition.UseWaterShadow && DiveDefinition.WaterShadowPrefab != null)
-            {
-                waterShadowInstance = Object.Instantiate(DiveDefinition.WaterShadowPrefab, surfacePosition, Quaternion.identity);
+                // Use SubmergedComponent to handle underwater state
+                submergedComponent.Submerge(surfacePosition);
             }
         }
 
@@ -367,41 +261,6 @@ public class DiveAbilityInstance : AbilityInstance
         if (iOSHaptics.IsSupported)
         {
             iOSHaptics.Trigger(iOSHaptics.HapticStyle.Medium, 0.8f);
-        }
-    }
-
-    /// <summary>
-    /// Trigger haptic for water entry (splash)
-    /// </summary>
-    private void TriggerWaterEntryHaptic()
-    {
-        if (iOSHaptics.IsSupported)
-        {
-            iOSHaptics.Trigger(iOSHaptics.HapticStyle.Heavy, 1f);
-        }
-    }
-
-    /// <summary>
-    /// Trigger rhythmic underwater swimming haptic (frog kicks/breaststroke)
-    /// Lower bass underwater feel
-    /// </summary>
-    private void TriggerUnderwaterSwimHaptic()
-    {
-        if (iOSHaptics.IsSupported)
-        {
-            // Heavy style for lower bass feel, reduced intensity for underwater damping
-            iOSHaptics.Trigger(iOSHaptics.HapticStyle.Heavy, 0.6f);
-        }
-    }
-
-    /// <summary>
-    /// Trigger haptic for resurfacing
-    /// </summary>
-    private void TriggerResurfaceHaptic()
-    {
-        if (iOSHaptics.IsSupported)
-        {
-            iOSHaptics.Trigger(iOSHaptics.HapticStyle.Soft, 0.7f);
         }
     }
 }

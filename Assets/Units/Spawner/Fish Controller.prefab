@@ -149,6 +149,7 @@ MonoBehaviour:
     type: 2}
   componentDefinitions:
   - {fileID: 11400000, guid: 787d318847ea04854b1e21e89b95cdb4, type: 2}
+  - {fileID: 11400000, guid: d421c634c3e7c4bb491653da04709682, type: 2}
   instance:
     template: {fileID: 11400000, guid: 9f94c43fcb7de4716af0753df9bbdbb3, type: 2}
     data:
@@ -371,6 +372,7 @@ MonoBehaviour:
   baseSpeed: 0
   speedModifiers: []
   currentAreaSpeedMultiplier: 1
+  isTerrainImmune: 0
 --- !u!114 &3034627611542099151
 MonoBehaviour:
   m_ObjectHideFlags: 0
