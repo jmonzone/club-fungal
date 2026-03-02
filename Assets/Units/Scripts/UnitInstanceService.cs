@@ -202,9 +202,11 @@ public class UnitInstanceService : GURUService
 
     public delegate bool UnitQuery(UnitSpecies unit);
 
-    public UnitInstance CreateUnit(UnitQuery query = null, bool register = true)
+    public UnitInstance CreateUnit(UnitQuery query = null, bool register = true, Element? specificElement = null)
     {
-        var (newUnit, newElement) = GenerateNewUnit(query);
+        var (newUnit, newElement) = specificElement.HasValue
+            ? (GenerateNewUnit(query).unit, specificElement.Value)
+            : GenerateNewUnit(query);
 
         var matchingColorPalette = GetColorPaletteByElement(newElement);
 

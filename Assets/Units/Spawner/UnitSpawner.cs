@@ -162,16 +162,18 @@ public class UnitSpawner : NavMeshSpawner
     {
         // Create UnitInstance (not registered so it won't be persisted)
         UnitInstance unitInstance = null;
+        Element? element = instruction.UseRandomElement ? (Element?)null : Element.NONE;
+
         if (instruction.Species != null && instruction.Species.Count > 0)
         {
             // Randomly select a species from the list
             UnitSpecies selectedSpecies = instruction.Species[Random.Range(0, instruction.Species.Count)];
-            unitInstance = unitInstanceService.CreateUnit(species => species == selectedSpecies, register: false);
+            unitInstance = unitInstanceService.CreateUnit(species => species == selectedSpecies, register: false, specificElement: element);
         }
         else
         {
             // Fallback to random unit if no species specified
-            unitInstance = unitInstanceService.CreateUnit(register: false);
+            unitInstance = unitInstanceService.CreateUnit(register: false, specificElement: element);
         }
 
         Transform parent = networkRunService != null && networkRunService.PartyService != null

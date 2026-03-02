@@ -9,6 +9,7 @@ public class UnitSpawnInstruction : ScriptableObject
     [SerializeField] private UnitController prefab;
     [SerializeField] private List<UnitSpecies> species = new List<UnitSpecies>();
     [SerializeField] private int spawnCount = 1;
+    [SerializeField] private bool useRandomElement = false;
 
     [Header("NavMesh Settings")]
     [NavMeshArea]
@@ -17,5 +18,6 @@ public class UnitSpawnInstruction : ScriptableObject
     public UnitController Prefab => prefab;
     public List<UnitSpecies> Species => species;
     public int SpawnCount => spawnCount;
+    public bool UseRandomElement => useRandomElement;
     public int NavMeshArea => navMeshArea;
 }
