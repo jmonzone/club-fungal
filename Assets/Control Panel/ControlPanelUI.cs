@@ -14,6 +14,7 @@ public class ControlPanelUI : MonoBehaviour
     [SerializeField] private UnitRosterUI unitRosterUI;
     [SerializeField] private UnitDetailUI unitDetailUI;
     [SerializeField] private UnitControllerUI unitControllerUI;
+    [SerializeField] private AssignUnitSelectionUI assignUnitSelectionUI;
 
     private void Awake()
     {
@@ -27,6 +28,8 @@ public class ControlPanelUI : MonoBehaviour
 
         controlModeService.OnModeChanged += HandleModeChanged;
         controlModeService.OnUnitSelected += HandleUnitSelectedForSwitcher;
+        controlModeService.OnShowAssignUnitUI += HandleShowAssignUnitUI;
+        controlModeService.OnHideAssignUnitUI += HandleHideAssignUnitUI;
     }
 
     private void Start()
@@ -46,6 +49,8 @@ public class ControlPanelUI : MonoBehaviour
 
         controlModeService.OnModeChanged -= HandleModeChanged;
         controlModeService.OnUnitSelected -= HandleUnitSelectedForSwitcher;
+        controlModeService.OnShowAssignUnitUI -= HandleShowAssignUnitUI;
+        controlModeService.OnHideAssignUnitUI -= HandleHideAssignUnitUI;
     }
 
     private void HandleUnitSelected(UnitInstance unit)
@@ -140,5 +145,29 @@ public class ControlPanelUI : MonoBehaviour
         unitDetailUI.gameObject.SetActive(false);
         unitControllerUI.gameObject.SetActive(true);
         UpdateUnitSwitcher();
+    }
+
+    private void HandleShowAssignUnitUI(UnitController building, AssignUnitAction action)
+    {
+        if (assignUnitSelectionUI == null)
+        {
+            Debug.LogWarning("ControlPanelUI: AssignUnitSelectionUI is not assigned");
+            return;
+        }
+
+        // Show the assign unit UI
+        assignUnitSelectionUI.gameObject.SetActive(true);
+        assignUnitSelectionUI.Initialize(building, action);
+    }
+
+    private void HandleHideAssignUnitUI()
+    {
+        if (assignUnitSelectionUI == null)
+        {
+            return;
+        }
+
+        // Hide the assign unit UI
+        assignUnitSelectionUI.gameObject.SetActive(false);
     }
 }

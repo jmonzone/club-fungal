@@ -1,13 +1,30 @@
 using UnityEngine;
 
 /// <summary>
-/// Base class for proximity actions that can be triggered when player interacts with a unit.
+/// Wrapper for proximity actions that delegates to a UnitAction strategy.
+/// Allows flexible action composition without inheritance.
 /// </summary>
-public abstract class ProximityAction : ScriptableObject
+[CreateAssetMenu(fileName = "ProximityAction", menuName = "Club Fungal/Proximity Actions/Proximity Action")]
+public class ProximityAction : ScriptableObject
 {
+    [SerializeField] private UnitAction action;
+
+    public UnitAction Action => action;
+
     /// <summary>
     /// Called when the proximity action is triggered.
+    /// Delegates to the configured UnitAction.
     /// </summary>
     /// <param name="controller">The unit controller this action is attached to</param>
-    public abstract void Execute(UnitController controller);
+    public void Execute(UnitController controller)
+    {
+        if (action != null)
+        {
+            action.Execute(controller);
+        }
+        else
+        {
+            Debug.LogWarning("ProximityAction: No action assigned");
+        }
+    }
 }

@@ -11,32 +11,26 @@ public class ProximityActionComponentDefinition : UnitComponentDefinition
 {
     [Header("Service References")]
     [SerializeField] private PlayerService playerService;
-    [SerializeField] private InventoryReference globalInventory;
 
     [Header("Proximity Settings")]
     [SerializeField] private float proximityDistance = 3f;
     [SerializeField] private bool requireLineOfSight = false;
 
     [Header("Button Settings")]
-    [SerializeField] private List<Item> costItems = new List<Item>();
-    [SerializeField] private int minCostAmount = 1;
-    [SerializeField] private int maxCostAmount = 3;
+    [SerializeField] private string buttonText = "Interact";
 
     [Header("Action")]
-    [SerializeField] private ProximityAction action;
+    [SerializeField] private UnitAction action;
 
     [Header("UI Prefab")]
     [SerializeField] private GameObject buttonPrefab;
 
     public PlayerService PlayerService => playerService;
-    public InventoryReference GlobalInventory => globalInventory;
     public float ProximityDistance => proximityDistance;
     public bool RequireLineOfSight => requireLineOfSight;
-    public List<Item> CostItems => costItems;
-    public int MinCostAmount => minCostAmount;
-    public int MaxCostAmount => maxCostAmount;
+    public string ButtonText => buttonText;
     public GameObject ButtonPrefab => buttonPrefab;
-    public ProximityAction Action => action;
+    public UnitAction Action => action;
 
     public override UnitComponentInstance CreateInstance(UnitController controller)
     {
@@ -55,10 +49,10 @@ public class ProximityActionComponentInstance : UnitComponentInstance
     private ProximityActionUI proximityActionUI;
     private bool isPlayerNearby;
     private bool isButtonShown;
-    private Item selectedCostItem;
-    private int selectedCostAmount;
+    private UnitController assignedUnit;
 
     public ProximityActionComponentDefinition ProximityDefinition => definition as ProximityActionComponentDefinition;
+    public UnitController AssignedUnit => assignedUnit;
 
     // Event that fires when button is clicked - can be subscribed to for custom behavior
     public event UnityAction OnActionTriggered;
@@ -71,14 +65,6 @@ public class ProximityActionComponentInstance : UnitComponentInstance
     public override void OnInitialize()
     {
         base.OnInitialize();
-
-        // Select random cost item and amount
-        if (ProximityDefinition.CostItems != null && ProximityDefinition.CostItems.Count > 0)
-        {
-            selectedCostItem = ProximityDefinition.CostItems[Random.Range(0, ProximityDefinition.CostItems.Count)];
-            selectedCostAmount = Random.Range(ProximityDefinition.MinCostAmount, ProximityDefinition.MaxCostAmount + 1);
-        }
-
         CreateButtonUI();
         HideButton();
     }
@@ -108,33 +94,13 @@ public class ProximityActionComponentInstance : UnitComponentInstance
             return;
         }
 
-        // Initialize with item icon and click handler
-        Sprite icon = selectedCostItem?.Sprite;
-        proximityActionUI.Initialize("Recruit", icon, OnButtonClicked);
+        // Initialize button with text and click handler
+        string buttonText = ProximityDefinition.ButtonText ?? "Interact";
+        proximityActionUI.Initialize(buttonText, null, OnButtonClicked);
     }
 
     private void OnButtonClicked()
     {
-        // Check if player can afford the cost
-        if (selectedCostItem != null && selectedCostAmount > 0)
-        {
-            if (ProximityDefinition.GlobalInventory == null)
-            {
-                Debug.LogWarning("ProximityActionComponent: GlobalInventory not found");
-                return;
-            }
-
-            int currentAmount = ProximityDefinition.GlobalInventory.GetItemCount(selectedCostItem);
-            if (currentAmount < selectedCostAmount)
-            {
-                Debug.Log($"ProximityActionComponent: Not enough {selectedCostItem.Name}. Need {selectedCostAmount}, have {currentAmount}");
-                return;
-            }
-
-            // Deduct cost
-            ProximityDefinition.GlobalInventory.RemoveItem(selectedCostItem, selectedCostAmount);
-        }
-
         // Execute the action
         if (ProximityDefinition.Action != null)
         {
@@ -144,8 +110,29 @@ public class ProximityActionComponentInstance : UnitComponentInstance
         // Trigger action event (for custom behavior)
         OnActionTriggered?.Invoke();
 
-        // Remove this component from the unit controller
-        controller.RemoveComponent(this);
+        // Only remove component if no unit is assigned (one-time actions like recruit)
+        // For assignment actions, the component persists to show assigned unit
+        if (assignedUnit == null)
+        {
+            controller.RemoveComponent(this);
+        }
+    }
+
+    /// <summary>
+    /// Set the assigned unit for this building.
+    /// Updates the button UI to show the assigned unit.
+    /// </summary>
+    public void SetAssignedUnit(UnitController unit)
+    {
+        assignedUnit = unit;
+
+        if (proximityActionUI != null && unit != null && unit.Instance != null)
+        {
+            // Update UI to show assigned unit
+            Sprite portrait = unit.Instance.Species?.Sprite;
+            string unitName = unit.Instance.DisplayName;
+            proximityActionUI.UpdateToAssignedState(portrait, unitName);
+        }
     }
 
     public override void OnUpdate()
@@ -184,23 +171,6 @@ public class ProximityActionComponentInstance : UnitComponentInstance
         {
             HideButton();
         }
-
-        // Update progress UI if button is shown
-        if (isButtonShown)
-        {
-            UpdateProgressUI();
-        }
-    }
-
-    private void UpdateProgressUI()
-    {
-        if (selectedCostItem == null || selectedCostAmount <= 0) return;
-        if (proximityActionUI == null) return;
-
-        int currentAmount = ProximityDefinition.GlobalInventory?.GetItemCount(selectedCostItem) ?? 0;
-        int requiredAmount = selectedCostAmount;
-
-        proximityActionUI.UpdateProgress(currentAmount, requiredAmount);
     }
 
     private void ShowButton()

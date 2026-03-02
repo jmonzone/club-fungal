@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9691977ba9c7c4f2890a89b76e56ef02, type: 3}
+  m_Name: AssignUnitAction
+  m_EditorClassIdentifier: Assembly-CSharp::AssignUnitAction
+  unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
+    type: 2}
+  unitInstanceService: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2,
+    type: 2}
+  controlModeService: {fileID: 11400000, guid: 67cae198961964ce59ed7a25ac689223, type: 2}
+  assignmentAnchorOffset: {x: 0, y: 0, z: 1}
+  componentToApply: {fileID: 11400000, guid: 40ed500648c294bdbb6fdbc08113686e, type: 2}

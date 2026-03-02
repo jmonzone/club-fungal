@@ -34,6 +34,8 @@ public class ControlModeService : GURUService
     public event UnityAction<ControlMode> OnModeChanged;
     public event UnityAction<UnitInstance> OnUnitSelected;
     public event UnityAction OnUnitDeselected;
+    public event UnityAction<UnitController, AssignUnitAction> OnShowAssignUnitUI;
+    public event UnityAction OnHideAssignUnitUI;
 
     protected override void OnInitialize()
     {
@@ -168,5 +170,23 @@ public class ControlModeService : GURUService
 
         int previousIndex = (currentIndex - 1 + partyUnits.Count) % partyUnits.Count;
         return partyUnits[previousIndex];
+    }
+
+    /// <summary>
+    /// Shows the assign unit UI for a building.
+    /// Called by AssignUnitAction when a building's proximity action is triggered.
+    /// </summary>
+    public void ShowAssignUnitUI(UnitController building, AssignUnitAction action)
+    {
+        OnShowAssignUnitUI?.Invoke(building, action);
+    }
+
+    /// <summary>
+    /// Hides the assign unit UI.
+    /// Called by AssignUnitAction after a unit is assigned.
+    /// </summary>
+    public void HideAssignUnitUI()
+    {
+        OnHideAssignUnitUI?.Invoke();
     }
 }

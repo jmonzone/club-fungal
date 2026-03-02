@@ -15,5 +15,11 @@ MonoBehaviour:
   unitInstanceService: {fileID: 11400000, guid: 558326713f6b14f45ab4db31d34472f2,
     type: 2}
   partyService: {fileID: 11400000, guid: 042e79e25f7d54a5aa70cf2dc6968d11, type: 2}
+  globalInventory: {fileID: 11400000, guid: e9c2fc38b99d8404f8495af08b4889fc, type: 2}
+  costItems:
+  - {fileID: 11400000, guid: e893af5162a9e48748a86f3e815a7a78, type: 2}
+  - {fileID: 11400000, guid: 508acd76342994017b33cbfc9b72a1fa, type: 2}
+  - {fileID: 11400000, guid: ec503a2453c1e4547b234275ed982ca8, type: 2}
+  minCostAmount: 4
+  maxCostAmount: 9
   addToParty: 1
-  destroyAfterRecruit: 0

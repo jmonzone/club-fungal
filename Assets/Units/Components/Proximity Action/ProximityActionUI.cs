@@ -66,4 +66,34 @@ public class ProximityActionUI : MonoBehaviour
             buttonUI.GetComponent<Button>().interactable = canAfford;
         }
     }
+
+    /// <summary>
+    /// Updates the UI to show an assigned unit instead of the action button.
+    /// Used when a building has a worker assigned to it.
+    /// </summary>
+    public void UpdateToAssignedState(Sprite unitPortrait, string unitName)
+    {
+        // Update icon to show unit portrait
+        if (itemIcon != null && unitPortrait != null)
+        {
+            itemIcon.sprite = unitPortrait;
+        }
+
+        // Update button text to show unit name
+        if (buttonUI != null)
+        {
+            buttonUI.Initialize(unitName, null);
+        }
+
+        // Hide progress slider/text as they're no longer needed
+        if (progressSlider != null)
+        {
+            progressSlider.gameObject.SetActive(false);
+        }
+
+        if (progressText != null)
+        {
+            progressText.gameObject.SetActive(false);
+        }
+    }
 }
