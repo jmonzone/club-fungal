@@ -10,18 +10,15 @@ using UnityEngine.Events;
 /// </summary>
 public class AssignUnitSelectionUI : MonoBehaviour
 {
+    [Header("Services")]
+    [SerializeField] private NetworkRunPartyService networkRunPartyService;
+
     [Header("UI References")]
     [SerializeField] private ListUI<AssignUnitItemUI> unitList;
 
     [Header("Runtime")]
     private UnitController buildingController;
     private AssignUnitAction action;
-
-    private void Start()
-    {
-        // Start hidden - will be shown when assignment is requested
-        gameObject.SetActive(false);
-    }
 
     /// <summary>
     /// Initialize the selection UI with building reference and action.
@@ -45,15 +42,14 @@ public class AssignUnitSelectionUI : MonoBehaviour
 
     private void PopulateUnitList()
     {
-        if (action == null || action.UnitControllerService == null)
+        if (networkRunPartyService == null || networkRunPartyService.PartyControllers == null)
         {
-            Debug.LogWarning("AssignUnitSelectionUI: Missing action or unit controller service");
             return;
         }
 
-        // Get all units
-        var allUnits = action.UnitControllerService.Controllers
-            .Where(u => u != null && u.Instance != null && u.Instance.IsFriends)
+        // Get all party units
+        var allUnits = networkRunPartyService.PartyControllers
+            .Where(u => u != null && u.Instance != null)
             .ToList();
 
         // Sort units by suitability

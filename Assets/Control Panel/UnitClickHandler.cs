@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 public class UnitClickHandler : MonoBehaviour
 {
     [SerializeField] private ControlModeService controlModeService;
+    [SerializeField] private NetworkRunPartyService partyService;
     [SerializeField] private VirtualJoystick virtualJoystick;
     [SerializeField] private float raycastDistance = 100f;
     [SerializeField] private float selectionRadius = 1.5f;
@@ -105,7 +106,11 @@ public class UnitClickHandler : MonoBehaviour
         {
             var controller = hit.transform.GetComponentInParent<UnitController>();
 
-            if (controller != null && controller.Instance != null && !controller.IsEnemy)
+            // Only select units that are in the party
+            if (controller != null &&
+                partyService != null &&
+                partyService.PartyControllers != null &&
+                partyService.PartyControllers.Contains(controller))
             {
                 // Find the closest unit if multiple are in range
                 if (hit.distance < closestDistance)

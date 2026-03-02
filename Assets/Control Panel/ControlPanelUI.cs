@@ -151,11 +151,9 @@ public class ControlPanelUI : MonoBehaviour
     {
         if (assignUnitSelectionUI == null)
         {
-            Debug.LogWarning("ControlPanelUI: AssignUnitSelectionUI is not assigned");
             return;
         }
 
-        // Show the assign unit UI
         assignUnitSelectionUI.gameObject.SetActive(true);
         assignUnitSelectionUI.Initialize(building, action);
     }

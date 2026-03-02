@@ -29,7 +29,6 @@ public class AssignUnitAction : UnitAction
     {
         if (buildingController == null)
         {
-            Debug.LogWarning("AssignUnitAction: Building controller is null");
             return;
         }
 
