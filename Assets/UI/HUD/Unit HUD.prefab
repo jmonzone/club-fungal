@@ -787,7 +787,7 @@ PrefabInstance:
     - target: {fileID: 692920615880928586, guid: a89a0a60f102a4d76bdde579df809c6e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -80.3
+      value: -71.8
       objectReference: {fileID: 0}
     - target: {fileID: 1061126411006209537, guid: a89a0a60f102a4d76bdde579df809c6e,
         type: 3}
@@ -807,17 +807,17 @@ PrefabInstance:
     - target: {fileID: 2018594098292128166, guid: a89a0a60f102a4d76bdde579df809c6e,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 71.55
+      value: 67.84
       objectReference: {fileID: 0}
     - target: {fileID: 2018594098292128166, guid: a89a0a60f102a4d76bdde579df809c6e,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 104.4
+      value: 107.549995
       objectReference: {fileID: 0}
     - target: {fileID: 2018594098292128166, guid: a89a0a60f102a4d76bdde579df809c6e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0
+      value: -17
       objectReference: {fileID: 0}
     - target: {fileID: 3153435123435703128, guid: a89a0a60f102a4d76bdde579df809c6e,
         type: 3}
@@ -842,7 +842,7 @@ PrefabInstance:
     - target: {fileID: 3153435123435703128, guid: a89a0a60f102a4d76bdde579df809c6e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -34.100002
+      value: -25.600002
       objectReference: {fileID: 0}
     - target: {fileID: 7195566861261593143, guid: a89a0a60f102a4d76bdde579df809c6e,
         type: 3}
@@ -857,7 +857,12 @@ PrefabInstance:
     - target: {fileID: 7195566861261593143, guid: a89a0a60f102a4d76bdde579df809c6e,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 53.174995
+      value: 55.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 7195566861261593143, guid: a89a0a60f102a4d76bdde579df809c6e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -30.26
       objectReference: {fileID: 0}
     - target: {fileID: 8591003375998954418, guid: a89a0a60f102a4d76bdde579df809c6e,
         type: 3}

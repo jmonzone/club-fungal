@@ -149,13 +149,18 @@ public class ControlPanelUI : MonoBehaviour
 
     private void HandleShowAssignUnitUI(UnitController building, AssignUnitAction action)
     {
+        Debug.Log($"ControlPanelUI.HandleShowAssignUnitUI called - building: {building?.name}, assignUnitSelectionUI: {(assignUnitSelectionUI != null ? "exists" : "NULL")}");
+        
         if (assignUnitSelectionUI == null)
         {
+            Debug.LogWarning("ControlPanelUI: assignUnitSelectionUI is NULL!");
             return;
         }
 
+        Debug.Log($"ControlPanelUI: Setting assignUnitSelectionUI active and initializing...");
         assignUnitSelectionUI.gameObject.SetActive(true);
         assignUnitSelectionUI.Initialize(building, action);
+        Debug.Log($"ControlPanelUI: Done - activeInHierarchy: {assignUnitSelectionUI.gameObject.activeInHierarchy}");
     }
 
     private void HandleHideAssignUnitUI()

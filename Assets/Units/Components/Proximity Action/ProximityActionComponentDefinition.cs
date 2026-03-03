@@ -110,9 +110,10 @@ public class ProximityActionComponentInstance : UnitComponentInstance
         // Trigger action event (for custom behavior)
         OnActionTriggered?.Invoke();
 
-        // Only remove component if no unit is assigned (one-time actions like recruit)
+        // Only remove component for one-time actions (like recruit)
         // For assignment actions, the component persists to show assigned unit
-        if (assignedUnit == null)
+        bool isPersistentAction = ProximityDefinition.Action is AssignUnitAction;
+        if (!isPersistentAction)
         {
             controller.RemoveComponent(this);
         }

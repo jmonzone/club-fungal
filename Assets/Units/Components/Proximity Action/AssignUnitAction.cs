@@ -27,6 +27,7 @@ public class AssignUnitAction : UnitAction
     {
         if (buildingController == null)
         {
+            Debug.LogWarning("AssignUnitAction: buildingController is null");
             return;
         }
 
@@ -35,7 +36,12 @@ public class AssignUnitAction : UnitAction
         // Request UI to be shown via service
         if (controlModeService != null)
         {
+            Debug.Log($"AssignUnitAction: Calling ShowAssignUnitUI for {buildingController.name}");
             controlModeService.ShowAssignUnitUI(buildingController, this);
+        }
+        else
+        {
+            Debug.LogWarning("AssignUnitAction: controlModeService is null!");
         }
     }
 

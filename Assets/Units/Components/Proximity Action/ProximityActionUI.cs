@@ -39,6 +39,11 @@ public class ProximityActionUI : MonoBehaviour
         if (itemIcon != null && icon != null)
         {
             itemIcon.sprite = icon;
+            itemIcon.gameObject.SetActive(true);
+        }
+        else if (itemIcon != null)
+        {
+            itemIcon.gameObject.SetActive(false);
         }
     }
 
@@ -77,15 +82,17 @@ public class ProximityActionUI : MonoBehaviour
         if (itemIcon != null && unitPortrait != null)
         {
             itemIcon.sprite = unitPortrait;
+            itemIcon.gameObject.SetActive(true);
         }
 
         // Update button text to show unit name
         if (buttonUI != null)
         {
             buttonUI.Initialize(unitName, null);
+            buttonUI.gameObject.SetActive(true);
         }
 
-        // Hide progress slider/text as they're no longer needed
+        // Hide progress elements if they exist
         if (progressSlider != null)
         {
             progressSlider.gameObject.SetActive(false);
