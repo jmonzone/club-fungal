@@ -24,6 +24,15 @@ public class UnitBehaviourPriorityService : GURUService
     }
 
     /// <summary>
+    /// Check if a unit is assigned to work (has a work component that keeps them stationary).
+    /// </summary>
+    private bool IsAssignedToWork(UnitController controller)
+    {
+        // Check for any work component that should keep unit stationary
+        return controller.GetComponentInstance<CookingComponentInstance>() != null;
+    }
+
+    /// <summary>
     /// Master method to get priority for any behavior.
     /// Routes to appropriate priority method based on behavior type.
     /// </summary>
@@ -42,6 +51,12 @@ public class UnitBehaviourPriorityService : GURUService
 
         // For non-player units, UnitPlayer behavior should never be active
         if (isPlayerBehavior)
+        {
+            return 0;
+        }
+
+        // Check if unit is assigned to work
+        if (IsAssignedToWork(controller))
         {
             return 0;
         }
