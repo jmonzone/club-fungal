@@ -14,12 +14,10 @@ public class AssignUnitAction : UnitAction
     [SerializeField] private ControlModeService controlModeService;
 
     [Header("Assignment Settings")]
-    [SerializeField] private Vector3 assignmentAnchorOffset = new Vector3(0, 0, 1f);
     [SerializeField] private UnitComponentDefinition componentToApply;
 
     public UnitControllerService UnitControllerService => unitControllerService;
     public UnitInstanceService UnitInstanceService => unitInstanceService;
-    public Vector3 AssignmentAnchorOffset => assignmentAnchorOffset;
     public UnitComponentDefinition ComponentToApply => componentToApply;
 
     // Store the building controller that triggered this action
@@ -75,9 +73,16 @@ public class AssignUnitAction : UnitAction
 
         Debug.Log($"Assigning {workerUnit.name} to {buildingController.name}");
 
-        // Teleport worker to building position with offset
-        Vector3 assignmentPosition = buildingController.transform.position + assignmentAnchorOffset;
-        workerUnit.Teleport(assignmentPosition, buildingController.transform.parent);
+        // Get assignment transform from building controller
+        Transform assignmentTransform = buildingController.transform;
+
+        // Check if building has a custom assignment transform
+        if (buildingController is CookingStationController cookingStation)
+        {
+            assignmentTransform = cookingStation.GetAssignmentTransform();
+        }
+
+        workerUnit.Teleport(assignmentTransform.position, assignmentTransform.parent);
 
         // Apply component to worker (e.g., cooking component)
         if (componentToApply != null)

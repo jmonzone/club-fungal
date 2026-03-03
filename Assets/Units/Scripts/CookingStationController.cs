@@ -8,6 +8,9 @@ using UnityEngine;
 /// </summary>
 public class CookingStationController : UnitController
 {
+    [Header("Assignment")]
+    [SerializeField] private Transform assignmentTransform;
+
     protected override IEnumerator Start()
     {
         // For static buildings without a UnitInstance, manually initialize components
@@ -18,5 +21,13 @@ public class CookingStationController : UnitController
         }
 
         yield return base.Start();
+    }
+
+    /// <summary>
+    /// Get the transform where assigned units should stand.
+    /// </summary>
+    public Transform GetAssignmentTransform()
+    {
+        return assignmentTransform != null ? assignmentTransform : transform;
     }
 }
