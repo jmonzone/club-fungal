@@ -21,6 +21,8 @@ public class ControlModeService : GURUService
 
     [Header("References")]
     [SerializeField] private NetworkRunPartyService partyService;
+    [SerializeField] private UnitControllerService unitControllerService;
+    [SerializeField] private UnitBehaviourPriorityService behaviourPriorityService;
 
     [Header("Current State")]
     [SerializeField] private ControlMode currentMode = ControlMode.FreeCamera;
@@ -61,11 +63,22 @@ public class ControlModeService : GURUService
     {
         selectedUnit = unit;
 
+        // Check if unit is assigned to work - they should never enter manual control
+        bool isAssignedToWork = false;
+        if (unitControllerService != null && behaviourPriorityService != null)
+        {
+            var controller = unitControllerService.Controllers.Find(c => c.Instance == unit);
+            if (controller != null)
+            {
+                isAssignedToWork = behaviourPriorityService.IsAssignedToWork(controller);
+            }
+        }
+
         // If already in manual control, stay in manual control with new unit
-        // Otherwise, check if auto-enter is enabled
+        // Otherwise, check if auto-enter is enabled (but not for assigned units)
         if (currentMode != ControlMode.ManualControl)
         {
-            if (autoEnterManualControl)
+            if (autoEnterManualControl && !isAssignedToWork)
             {
                 TransitionToMode(ControlMode.ManualControl);
             }
@@ -73,6 +86,11 @@ public class ControlModeService : GURUService
             {
                 TransitionToMode(ControlMode.UnitSelected);
             }
+        }
+        else if (isAssignedToWork)
+        {
+            // If we're in manual control but selecting an assigned unit, go to UnitSelected mode
+            TransitionToMode(ControlMode.UnitSelected);
         }
 
         OnUnitSelected?.Invoke(unit);

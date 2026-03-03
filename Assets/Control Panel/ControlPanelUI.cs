@@ -8,6 +8,7 @@ public class ControlPanelUI : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private ControlModeService controlModeService;
+    [SerializeField] private UnitControllerService unitControllerService;
     [SerializeField] private GameObject renderRoot;
 
     [Header("Views")]
@@ -21,6 +22,7 @@ public class ControlPanelUI : MonoBehaviour
         unitRosterUI.OnUnitSelected += HandleUnitSelected;
         unitDetailUI.OnBackClicked += HandleBackClicked;
         unitDetailUI.OnManualControlClicked += HandleManualControlClicked;
+        unitDetailUI.OnUnassignClicked += HandleUnassignClicked;
         unitControllerUI.OnBackClicked += HandleControllerBackClicked;
         unitControllerUI.OnCyclePrevious += HandleCyclePrevious;
         unitControllerUI.OnCycleNext += HandleCycleNext;
@@ -42,6 +44,7 @@ public class ControlPanelUI : MonoBehaviour
         unitRosterUI.OnUnitSelected -= HandleUnitSelected;
         unitDetailUI.OnBackClicked -= HandleBackClicked;
         unitDetailUI.OnManualControlClicked -= HandleManualControlClicked;
+        unitDetailUI.OnUnassignClicked -= HandleUnassignClicked;
         unitControllerUI.OnBackClicked -= HandleControllerBackClicked;
         unitControllerUI.OnCyclePrevious -= HandleCyclePrevious;
         unitControllerUI.OnCycleNext -= HandleCycleNext;
@@ -66,6 +69,32 @@ public class ControlPanelUI : MonoBehaviour
     private void HandleManualControlClicked()
     {
         controlModeService.StartManualControl();
+    }
+
+    private void HandleUnassignClicked()
+    {
+        var selectedUnit = unitDetailUI.UnitInstance;
+        if (selectedUnit == null) return;
+
+        var unitController = unitControllerService.Controllers.Find(c => c.Instance == selectedUnit);
+        if (unitController == null) return;
+
+        // Find the building this unit is assigned to
+        foreach (var controller in unitControllerService.Controllers)
+        {
+            var proximityComponent = controller.GetComponentInstance<ProximityActionComponentInstance>();
+            if (proximityComponent != null && proximityComponent.AssignedUnit == unitController)
+            {
+                // Get the action from the component definition
+                var proximityDef = proximityComponent.Definition as ProximityActionComponentDefinition;
+                if (proximityDef?.Action is AssignUnitAction assignAction)
+                {
+                    assignAction.UnassignUnit(unitController);
+                    controlModeService.DeselectUnit();
+                    break;
+                }
+            }
+        }
     }
 
     private void HandleControllerBackClicked()
@@ -149,18 +178,13 @@ public class ControlPanelUI : MonoBehaviour
 
     private void HandleShowAssignUnitUI(UnitController building, AssignUnitAction action)
     {
-        Debug.Log($"ControlPanelUI.HandleShowAssignUnitUI called - building: {building?.name}, assignUnitSelectionUI: {(assignUnitSelectionUI != null ? "exists" : "NULL")}");
-        
         if (assignUnitSelectionUI == null)
         {
-            Debug.LogWarning("ControlPanelUI: assignUnitSelectionUI is NULL!");
             return;
         }
 
-        Debug.Log($"ControlPanelUI: Setting assignUnitSelectionUI active and initializing...");
         assignUnitSelectionUI.gameObject.SetActive(true);
         assignUnitSelectionUI.Initialize(building, action);
-        Debug.Log($"ControlPanelUI: Done - activeInHierarchy: {assignUnitSelectionUI.gameObject.activeInHierarchy}");
     }
 
     private void HandleHideAssignUnitUI()

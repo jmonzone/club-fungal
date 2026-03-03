@@ -26,7 +26,7 @@ public class UnitBehaviourPriorityService : GURUService
     /// <summary>
     /// Check if a unit is assigned to work (has a work component that keeps them stationary).
     /// </summary>
-    private bool IsAssignedToWork(UnitController controller)
+    public bool IsAssignedToWork(UnitController controller)
     {
         // Check for any work component that should keep unit stationary
         return controller.GetComponentInstance<CookingComponentInstance>() != null;

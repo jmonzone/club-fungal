@@ -5,9 +5,14 @@ using UnityEngine.UI;
 
 public class UnitDetailUI : MonoBehaviour
 {
+    [Header("Services")]
+    [SerializeField] private UnitControllerService unitControllerService;
+    [SerializeField] private UnitBehaviourPriorityService behaviourPriorityService;
+
     [Header("UI References")]
     [SerializeField] private Button backButton;
     [SerializeField] private Button manualControlButton;
+    [SerializeField] private Button unassignButton;
     [SerializeField] private Image unitImage;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI speciesText;
@@ -19,6 +24,7 @@ public class UnitDetailUI : MonoBehaviour
     public UnitInstance UnitInstance => unitInstance;
     public event Action OnBackClicked;
     public event Action OnManualControlClicked;
+    public event Action OnUnassignClicked;
 
     private void Awake()
     {
@@ -31,6 +37,11 @@ public class UnitDetailUI : MonoBehaviour
         {
             manualControlButton.onClick.AddListener(() => OnManualControlClicked?.Invoke());
         }
+
+        if (unassignButton)
+        {
+            unassignButton.onClick.AddListener(() => OnUnassignClicked?.Invoke());
+        }
     }
 
     public void SetUnit(UnitInstance unit)
@@ -39,6 +50,28 @@ public class UnitDetailUI : MonoBehaviour
 
         if (unit != null)
         {
+            // Check if unit is assigned to work
+            bool isAssignedToWork = false;
+            if (unitControllerService != null && behaviourPriorityService != null)
+            {
+                var controller = unitControllerService.Controllers.Find(c => c.Instance == unit);
+                if (controller != null)
+                {
+                    isAssignedToWork = behaviourPriorityService.IsAssignedToWork(controller);
+                }
+            }
+
+            // Show/hide buttons based on assignment status
+            if (manualControlButton)
+            {
+                manualControlButton.gameObject.SetActive(!isAssignedToWork);
+            }
+
+            if (unassignButton)
+            {
+                unassignButton.gameObject.SetActive(isAssignedToWork);
+            }
+
             if (nameText)
             {
                 nameText.text = unit.DisplayName;

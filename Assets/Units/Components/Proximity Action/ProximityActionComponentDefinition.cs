@@ -122,17 +122,27 @@ public class ProximityActionComponentInstance : UnitComponentInstance
     /// <summary>
     /// Set the assigned unit for this building.
     /// Updates the button UI to show the assigned unit.
+    /// Pass null to clear the assignment.
     /// </summary>
     public void SetAssignedUnit(UnitController unit)
     {
         assignedUnit = unit;
 
-        if (proximityActionUI != null && unit != null && unit.Instance != null)
+        if (proximityActionUI != null)
         {
-            // Update UI to show assigned unit
-            Sprite portrait = unit.Instance.Species?.Sprite;
-            string unitName = unit.Instance.DisplayName;
-            proximityActionUI.UpdateToAssignedState(portrait, unitName);
+            if (unit != null && unit.Instance != null)
+            {
+                // Update UI to show assigned unit
+                Sprite portrait = unit.Instance.Species?.Sprite;
+                string unitName = unit.Instance.DisplayName;
+                proximityActionUI.UpdateToAssignedState(portrait, unitName);
+            }
+            else
+            {
+                // Clear assignment - reset button to original state
+                string buttonText = ProximityDefinition.ButtonText ?? "Interact";
+                proximityActionUI.Initialize(buttonText, null, OnButtonClicked);
+            }
         }
     }
 

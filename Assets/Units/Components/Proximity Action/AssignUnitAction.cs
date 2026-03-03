@@ -27,7 +27,6 @@ public class AssignUnitAction : UnitAction
     {
         if (buildingController == null)
         {
-            Debug.LogWarning("AssignUnitAction: buildingController is null");
             return;
         }
 
@@ -36,12 +35,7 @@ public class AssignUnitAction : UnitAction
         // Request UI to be shown via service
         if (controlModeService != null)
         {
-            Debug.Log($"AssignUnitAction: Calling ShowAssignUnitUI for {buildingController.name}");
             controlModeService.ShowAssignUnitUI(buildingController, this);
-        }
-        else
-        {
-            Debug.LogWarning("AssignUnitAction: controlModeService is null!");
         }
     }
 
@@ -58,10 +52,16 @@ public class AssignUnitAction : UnitAction
 
         AssignUnit(workerUnit, currentBuildingController);
 
-        // Hide UI via service
+        // Hide assign UI and show the assigned unit's detail UI
         if (controlModeService != null)
         {
             controlModeService.HideAssignUnitUI();
+
+            // Select the assigned unit to show their detail UI
+            if (workerUnit.Instance != null)
+            {
+                controlModeService.SelectUnit(workerUnit.Instance);
+            }
         }
     }
 
@@ -103,6 +103,51 @@ public class AssignUnitAction : UnitAction
         if (proximityComponent != null)
         {
             proximityComponent.SetAssignedUnit(workerUnit);
+        }
+
+        // Save state
+        if (unitInstanceService != null)
+        {
+            unitInstanceService.SaveData();
+        }
+    }
+
+    /// <summary>
+    /// Unassigns a worker unit from their assigned building.
+    /// Removes work components and clears assignment state.
+    /// </summary>
+    public void UnassignUnit(UnitController workerUnit)
+    {
+        if (workerUnit == null)
+        {
+            Debug.LogWarning("AssignUnitAction: Cannot unassign - null worker unit");
+            return;
+        }
+
+        Debug.Log($"Unassigning {workerUnit.name}");
+
+        // Remove the work component (e.g., CookingComponent)
+        if (componentToApply != null)
+        {
+            var componentInstance = workerUnit.GetComponentInstance<CookingComponentInstance>();
+            if (componentInstance != null)
+            {
+                workerUnit.RemoveComponent(componentInstance);
+            }
+        }
+
+        // Find the building this unit was assigned to and clear the assignment
+        if (unitControllerService != null)
+        {
+            foreach (var controller in unitControllerService.Controllers)
+            {
+                var proximityComponent = controller.GetComponentInstance<ProximityActionComponentInstance>();
+                if (proximityComponent != null && proximityComponent.AssignedUnit == workerUnit)
+                {
+                    proximityComponent.SetAssignedUnit(null);
+                    break;
+                }
+            }
         }
 
         // Save state
