@@ -15,15 +15,19 @@ MonoBehaviour:
   autoEnterManualControl: 1
   autoSelectFirstUnit: 1
   partyService: {fileID: 11400000, guid: 042e79e25f7d54a5aa70cf2dc6968d11, type: 2}
+  unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
+    type: 2}
+  behaviourPriorityService: {fileID: 11400000, guid: 6afebe865a6264c8b834fed8c6189cc2,
+    type: 2}
   currentMode: 2
   previousMode: 0
   selectedUnit:
-    template: {fileID: 11400000, guid: b3a34daed756d4fbb83a6c4958dc5588, type: 2}
+    template: {fileID: 11400000, guid: 9f94c43fcb7de4716af0753df9bbdbb3, type: 2}
     data:
-      id: sporekeeper fox
-      name: sporekeeper fox
-      displayName: The Fox
-      species: {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
+      id: party frog
+      name: party frog
+      displayName: Party Frog
+      species: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
       job: {fileID: 0}
       element: 0
       colorPalette: {fileID: 0}
@@ -34,7 +38,8 @@ MonoBehaviour:
       interactions: []
       skills: []
       abilities:
-      - {fileID: 11400000, guid: ce452494eab4649fd9b9626b400584f7, type: 2}
+      - {fileID: 11400000, guid: 4c941416531a14fcbba7e7c4d1bc31b3, type: 2}
+      - {fileID: 11400000, guid: 44fc7233db50b4873bc41d15c808a0f5, type: 2}
     skills:
     - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
       level: 1
@@ -55,30 +60,31 @@ MonoBehaviour:
       level: 1
       xp: 0
     abilities:
-    - rid: 7888992182463103445
+    - rid: 7888992187434664964
+    - rid: 7888992187434664965
     friends: []
     moments:
-    - interaction: {fileID: 11400000, guid: 5aa5b33e58c2149b9ae9267050d6e3ac, type: 2}
+    - interaction: {fileID: 11400000, guid: 0740db2fd21f44859941442e25af726b, type: 2}
       isComplete: 0
     inventory:
       itemStacks: []
-      maxCapacity: 13
+      maxCapacity: 12
     energy: 100
     isExhausted: 0
   references:
     version: 2
     RefIds:
-    - rid: 7888992182463103445
-      type: {class: DashAbilityInstance, ns: , asm: Assembly-CSharp}
+    - rid: 7888992187434664964
+      type: {class: DiveAbilityInstance, ns: , asm: Assembly-CSharp}
       data:
-        definition: {fileID: 11400000, guid: ce452494eab4649fd9b9626b400584f7, type: 2}
+        definition: {fileID: 11400000, guid: 4c941416531a14fcbba7e7c4d1bc31b3, type: 2}
         unit:
-          template: {fileID: 11400000, guid: b3a34daed756d4fbb83a6c4958dc5588, type: 2}
+          template: {fileID: 11400000, guid: 9f94c43fcb7de4716af0753df9bbdbb3, type: 2}
           data:
-            id: sporekeeper fox
-            name: sporekeeper fox
-            displayName: The Fox
-            species: {fileID: 11400000, guid: 2a167c062e2bd4a4794ccb57da6b587b, type: 2}
+            id: party frog
+            name: party frog
+            displayName: Party Frog
+            species: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
             job: {fileID: 0}
             element: 0
             colorPalette: {fileID: 0}
@@ -89,7 +95,8 @@ MonoBehaviour:
             interactions: []
             skills: []
             abilities:
-            - {fileID: 11400000, guid: ce452494eab4649fd9b9626b400584f7, type: 2}
+            - {fileID: 11400000, guid: 4c941416531a14fcbba7e7c4d1bc31b3, type: 2}
+            - {fileID: 11400000, guid: 44fc7233db50b4873bc41d15c808a0f5, type: 2}
           skills:
           - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
             level: 1
@@ -110,19 +117,78 @@ MonoBehaviour:
             level: 1
             xp: 0
           abilities:
-          - rid: 7888992182463103445
+          - rid: 7888992187434664964
+          - rid: 7888992187434664965
           friends: []
           moments:
-          - interaction: {fileID: 11400000, guid: 5aa5b33e58c2149b9ae9267050d6e3ac,
+          - interaction: {fileID: 11400000, guid: 0740db2fd21f44859941442e25af726b,
               type: 2}
             isComplete: 0
           inventory:
             itemStacks: []
-            maxCapacity: 13
+            maxCapacity: 12
           energy: 100
           isExhausted: 0
         cooldownRemaining: 0
         isActive: 0
-        currentCharges: 0
-        chargeRegenTimer: 1.6788323
-        isDashing: 0
+        isDiving: 0
+        directionalInfluence: {x: -0.5166184, y: 0, z: 0}
+    - rid: 7888992187434664965
+      type: {class: FlyAbilityInstance, ns: , asm: Assembly-CSharp}
+      data:
+        definition: {fileID: 11400000, guid: 44fc7233db50b4873bc41d15c808a0f5, type: 2}
+        unit:
+          template: {fileID: 11400000, guid: 9f94c43fcb7de4716af0753df9bbdbb3, type: 2}
+          data:
+            id: party frog
+            name: party frog
+            displayName: Party Frog
+            species: {fileID: 11400000, guid: d0b7f5aad10214218b7d824e6a30697a, type: 2}
+            job: {fileID: 0}
+            element: 0
+            colorPalette: {fileID: 0}
+            scene: 
+            friendshipLevel: 0
+            friendshipXP: 0
+            friends: []
+            interactions: []
+            skills: []
+            abilities:
+            - {fileID: 11400000, guid: 4c941416531a14fcbba7e7c4d1bc31b3, type: 2}
+            - {fileID: 11400000, guid: 44fc7233db50b4873bc41d15c808a0f5, type: 2}
+          skills:
+          - skill: {fileID: 11400000, guid: 055feb6ef1b924f62ba69761039ea9a4, type: 2}
+            level: 1
+            xp: 0
+          - skill: {fileID: 11400000, guid: 698cd37da23344a66a7138631f23d9af, type: 2}
+            level: 1
+            xp: 0
+          - skill: {fileID: 11400000, guid: f8a4854f523d648b192c33a94fba4e80, type: 2}
+            level: 1
+            xp: 0
+          - skill: {fileID: 11400000, guid: 71c6207e188214dfab32f5c23d138e13, type: 2}
+            level: 1
+            xp: 0
+          - skill: {fileID: 11400000, guid: 665e992f467724aba90a03ce63cefbd0, type: 2}
+            level: 1
+            xp: 0
+          - skill: {fileID: 11400000, guid: 2d61d1523fc4c4cb9beb8ccada914a4e, type: 2}
+            level: 1
+            xp: 0
+          abilities:
+          - rid: 7888992187434664964
+          - rid: 7888992187434664965
+          friends: []
+          moments:
+          - interaction: {fileID: 11400000, guid: 0740db2fd21f44859941442e25af726b,
+              type: 2}
+            isComplete: 0
+          inventory:
+            itemStacks: []
+            maxCapacity: 12
+          energy: 100
+          isExhausted: 0
+        cooldownRemaining: 0
+        isActive: 0
+        isFlying: 0
+        isTransitioning: 0

@@ -47535,9 +47535,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdb9eeea99f4c4c16bae2f16da6042ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitDetailUI
+  unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
+    type: 2}
+  behaviourPriorityService: {fileID: 11400000, guid: 6afebe865a6264c8b834fed8c6189cc2,
+    type: 2}
   backButton: {fileID: 1569312445}
   manualControlButton: {fileID: 1502197745}
-  unassignButton: {fileID: 0}
+  unassignButton: {fileID: 12258466}
   unitImage: {fileID: 1950516326}
   nameText: {fileID: 873549742}
   speciesText: {fileID: 35201619}
@@ -63128,10 +63132,6 @@ MonoBehaviour:
   unitControllerService: {fileID: 11400000, guid: f316f4e453da448c184ced2c667d38fa,
     type: 2}
   renderRoot: {fileID: 1733972528}
-  unitRosterUI: {fileID: 487750822}
-  unitDetailUI: {fileID: 1483821334}
-  unitControllerUI: {fileID: 441081914}
-  assignUnitSelectionUI: {fileID: 1080043835}
 --- !u!114 &2138063779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63145,7 +63145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitClickHandler
   controlModeService: {fileID: 11400000, guid: 67cae198961964ce59ed7a25ac689223, type: 2}
-  partyService: {fileID: 0}
+  partyService: {fileID: 11400000, guid: 042e79e25f7d54a5aa70cf2dc6968d11, type: 2}
   virtualJoystick: {fileID: 1610164947}
   raycastDistance: 100
   selectionRadius: 1.5

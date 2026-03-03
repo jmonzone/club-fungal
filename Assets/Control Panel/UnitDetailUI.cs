@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UnitDetailUI : MonoBehaviour
+public class UnitDetailUI : ControlPanelViewUI
 {
     [Header("Services")]
     [SerializeField] private UnitControllerService unitControllerService;
@@ -21,26 +21,89 @@ public class UnitDetailUI : MonoBehaviour
     [Header("Runtime")]
     [SerializeField] private UnitInstance unitInstance;
 
-    public UnitInstance UnitInstance => unitInstance;
-    public event Action OnBackClicked;
-    public event Action OnManualControlClicked;
-    public event Action OnUnassignClicked;
+    private ControlModeService controlModeService;
 
-    private void Awake()
+    public override ControlModeService.ControlMode[] SupportedModes => new[] { ControlModeService.ControlMode.UnitSelected };
+    public UnitInstance UnitInstance => unitInstance;
+
+    public override void Initialize(ControlModeService controlModeService, UnitControllerService unitControllerService)
     {
+        base.Initialize(controlModeService, unitControllerService);
+        this.controlModeService = controlModeService;
+
         if (backButton)
         {
-            backButton.onClick.AddListener(() => OnBackClicked?.Invoke());
+            backButton.onClick.AddListener(HandleBackClicked);
         }
 
         if (manualControlButton)
         {
-            manualControlButton.onClick.AddListener(() => OnManualControlClicked?.Invoke());
+            manualControlButton.onClick.AddListener(HandleManualControlClicked);
         }
 
         if (unassignButton)
         {
-            unassignButton.onClick.AddListener(() => OnUnassignClicked?.Invoke());
+            unassignButton.onClick.AddListener(HandleUnassignClicked);
+        }
+    }
+
+    public override void OnShown()
+    {
+        base.OnShown();
+        SetUnit(controlModeService?.SelectedUnit);
+    }
+
+    public override void Cleanup()
+    {
+        base.Cleanup();
+
+        if (backButton)
+        {
+            backButton.onClick.RemoveListener(HandleBackClicked);
+        }
+
+        if (manualControlButton)
+        {
+            manualControlButton.onClick.RemoveListener(HandleManualControlClicked);
+        }
+
+        if (unassignButton)
+        {
+            unassignButton.onClick.RemoveListener(HandleUnassignClicked);
+        }
+    }
+
+    private void HandleBackClicked()
+    {
+        controlModeService?.DeselectUnit();
+    }
+
+    private void HandleManualControlClicked()
+    {
+        controlModeService?.StartManualControl();
+    }
+
+    private void HandleUnassignClicked()
+    {
+        if (unitInstance == null || unitControllerService == null) return;
+
+        var unitController = unitControllerService.Controllers.Find(c => c.Instance == unitInstance);
+        if (unitController == null) return;
+
+        // Find the building this unit is assigned to
+        foreach (var controller in unitControllerService.Controllers)
+        {
+            var proximityComponent = controller.GetComponentInstance<ProximityActionComponentInstance>();
+            if (proximityComponent != null && proximityComponent.AssignedUnit == unitController)
+            {
+                var proximityDef = proximityComponent.Definition as ProximityActionComponentDefinition;
+                if (proximityDef?.Action is AssignUnitAction assignAction)
+                {
+                    assignAction.UnassignUnit(unitController);
+                    controlModeService?.DeselectUnit();
+                    break;
+                }
+            }
         }
     }
 

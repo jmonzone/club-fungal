@@ -8,7 +8,7 @@ using UnityEngine.Events;
 /// UI for selecting a unit to assign to a building/station.
 /// Shows all available units sorted by suitability.
 /// </summary>
-public class AssignUnitSelectionUI : MonoBehaviour
+public class AssignUnitSelectionUI : ControlPanelViewUI
 {
     [Header("Services")]
     [SerializeField] private NetworkRunPartyService networkRunPartyService;
@@ -20,16 +20,24 @@ public class AssignUnitSelectionUI : MonoBehaviour
     private UnitController buildingController;
     private AssignUnitAction action;
 
+    // This view is shown via events, not control modes
+    public override ControlModeService.ControlMode[] SupportedModes => new ControlModeService.ControlMode[0];
+
+    public override void Initialize(ControlModeService controlModeService, UnitControllerService unitControllerService)
+    {
+        base.Initialize(controlModeService, unitControllerService);
+        unitList.Initialize(transform);
+    }
+
     /// <summary>
-    /// Initialize the selection UI with building reference and action.
+    /// Show this view with building and action context.
     /// </summary>
-    public void Initialize(UnitController building, AssignUnitAction action)
+    public void ShowForAssignment(UnitController building, AssignUnitAction action)
     {
         this.buildingController = building;
         this.action = action;
-
-        unitList.Initialize(transform);
         PopulateUnitList();
+        Show();
     }
 
     private void OnEnable()

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// UI component for manual control mode.
 /// Managed by ControlPanelUI.
 /// </summary>
-public class UnitControllerUI : MonoBehaviour
+public class UnitControllerUI : ControlPanelViewUI
 {
     public enum UnitSwitcherMode
     {
@@ -24,30 +24,93 @@ public class UnitControllerUI : MonoBehaviour
     [SerializeField] private ShoulderButtonsUI shoulderButtons;
     [SerializeField] private UnitSwitcherScrollUI scrollView;
 
-    public event UnityAction OnBackClicked;
-    public event UnityAction OnCyclePrevious;
-    public event UnityAction OnCycleNext;
-    public event UnityAction<UnitInstance> OnUnitSelected;
+    private ControlModeService controlModeService;
 
-    private void Awake()
+    public override ControlModeService.ControlMode[] SupportedModes => new[] { ControlModeService.ControlMode.ManualControl };
+
+    public override void Initialize(ControlModeService controlModeService, UnitControllerService unitControllerService)
     {
+        base.Initialize(controlModeService, unitControllerService);
+        this.controlModeService = controlModeService;
+
         if (backButton != null)
         {
-            backButton.onClick.AddListener(() => OnBackClicked?.Invoke());
+            backButton.onClick.AddListener(HandleBackClicked);
         }
 
         if (shoulderButtons != null)
         {
-            shoulderButtons.OnCyclePrevious += () => OnCyclePrevious?.Invoke();
-            shoulderButtons.OnCycleNext += () => OnCycleNext?.Invoke();
+            shoulderButtons.OnCyclePrevious += HandleCyclePrevious;
+            shoulderButtons.OnCycleNext += HandleCycleNext;
         }
 
         if (scrollView != null)
         {
-            scrollView.OnUnitSelected += (unit) => OnUnitSelected?.Invoke(unit);
+            scrollView.OnUnitSelected += HandleUnitSelected;
         }
 
         UpdateSwitcherMode();
+    }
+
+    public override void OnShown()
+    {
+        base.OnShown();
+        UpdateSwitcher();
+    }
+
+    public override void Cleanup()
+    {
+        base.Cleanup();
+
+        if (backButton != null)
+        {
+            backButton.onClick.RemoveListener(HandleBackClicked);
+        }
+
+        if (shoulderButtons != null)
+        {
+            shoulderButtons.OnCyclePrevious -= HandleCyclePrevious;
+            shoulderButtons.OnCycleNext -= HandleCycleNext;
+        }
+
+        if (scrollView != null)
+        {
+            scrollView.OnUnitSelected -= HandleUnitSelected;
+        }
+    }
+
+    private void HandleBackClicked()
+    {
+        controlModeService?.StopManualControl();
+    }
+
+    private void HandleCyclePrevious()
+    {
+        controlModeService?.CyclePreviousUnit();
+        UpdateSwitcher();
+    }
+
+    private void HandleCycleNext()
+    {
+        controlModeService?.CycleNextUnit();
+        UpdateSwitcher();
+    }
+
+    private void HandleUnitSelected(UnitInstance unit)
+    {
+        controlModeService?.SelectUnit(unit);
+    }
+
+    private void UpdateSwitcher()
+    {
+        if (controlModeService == null) return;
+
+        var previousUnit = controlModeService.GetPreviousUnit();
+        var nextUnit = controlModeService.GetNextUnit();
+        var selectedUnit = controlModeService.SelectedUnit;
+
+        UpdateShoulderButtons(previousUnit, nextUnit);
+        UpdateScrollView(selectedUnit);
     }
 
     private void UpdateSwitcherMode()

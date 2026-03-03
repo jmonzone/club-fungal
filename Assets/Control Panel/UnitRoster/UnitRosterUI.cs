@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class UnitRosterUI : MonoBehaviour
+public class UnitRosterUI : ControlPanelViewUI
 {
     [Header("References")]
     [SerializeField] private NetworkRunPartyService partyService;
@@ -10,10 +10,14 @@ public class UnitRosterUI : MonoBehaviour
     [Header("Runtime")]
     [SerializeField] private UnitInstance selectedUnit;
 
-    public event Action<UnitInstance> OnUnitSelected;
+    private ControlModeService controlModeService;
 
-    private void Awake()
+    public override ControlModeService.ControlMode[] SupportedModes => new[] { ControlModeService.ControlMode.FreeCamera };
+
+    public override void Initialize(ControlModeService controlModeService, UnitControllerService unitControllerService)
     {
+        base.Initialize(controlModeService, unitControllerService);
+        this.controlModeService = controlModeService;
         partyList.Initialize(transform);
     }
 
@@ -40,7 +44,7 @@ public class UnitRosterUI : MonoBehaviour
 
     private void HandleUnitClicked(UnitInstance unit)
     {
-        OnUnitSelected?.Invoke(unit);
+        controlModeService?.SelectUnit(unit);
     }
 
     public void SetSelectedUnit(UnitInstance unit)
