@@ -52,8 +52,8 @@ public class UnitBehaviourPriorityService : GURUService
         {
             case UnitCombat combat:
                 return GetCombatPriority(combat);
-            case UnitStationaryJob stationaryJob:
-                return GetStationaryJobPriority(stationaryJob);
+            case UnitJobBehaviour jobBehaviour:
+                return jobBehaviour.IsAssigned ? stationaryJobPriority : 0;
             case UnitReturnToParty returnToParty:
                 return GetReturnToPartyPriority(returnToParty, controller);
             case UnitForage forage:
@@ -73,16 +73,6 @@ public class UnitBehaviourPriorityService : GURUService
     {
         // Only active if we have a target
         return combat.CurrentTarget != null ? combatPriority : 0;
-    }
-
-    /// <summary>
-    /// Get priority for UnitStationaryJob behavior.
-    /// Rule: Active when the unit has a job assigned.
-    /// Overrides return-to-party so the unit stays put even while the camera moves.
-    /// </summary>
-    public int GetStationaryJobPriority(UnitStationaryJob stationaryJob)
-    {
-        return stationaryJob.HasJob ? stationaryJobPriority : 0;
     }
 
     /// <summary>

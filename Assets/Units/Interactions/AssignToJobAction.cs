@@ -10,19 +10,17 @@ using UnityEngine.Events;
 [Serializable]
 public class AssignToJobAction : InteractionAction
 {
-    [SerializeField] private ActivityReference activityReference;
-
     public override void Execute(UnitController source, UnitController target, UnityAction onComplete)
     {
-        var stationaryJob = target.GetComponent<UnitStationaryJob>();
-        if (stationaryJob == null)
+        var jobBehaviour = target.GetComponent<UnitJobBehaviour>();
+        if (jobBehaviour == null)
         {
-            Debug.LogWarning($"AssignToJobAction: {target.name} has no UnitStationaryJob component.");
+            Debug.LogWarning($"AssignToJobAction: {target.name} has no UnitJobBehaviour component.");
             onComplete?.Invoke();
             return;
         }
 
-        stationaryJob.Assign(activityReference, target.transform.position);
+        jobBehaviour.Assign(target.transform.position);
         onComplete?.Invoke();
     }
 }

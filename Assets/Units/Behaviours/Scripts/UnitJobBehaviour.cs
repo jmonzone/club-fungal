@@ -2,19 +2,16 @@ using UnityEngine;
 using UnityEngine.AI;
 
 /// <summary>
-/// Behaviour that pins a unit to a stationary job position.
-/// While active: disables NavMesh movement and keeps the unit at the assigned position.
-/// Assign a job via Assign(), remove it via Unassign().
-/// Priority system activates/deactivates this behaviour automatically based on HasJob.
+/// Abstract base class for stationary job behaviours (e.g. cooking, crafting).
+/// Handles NavMesh stop/resume and tracks whether a job is currently assigned.
+/// Subclasses implement OnAssign/OnUnassign for job-specific logic.
 /// </summary>
-public class UnitStationaryJob : UnitBehaviour
+public abstract class UnitJobBehaviour : UnitBehaviour
 {
     private NavMeshAgent navMeshAgent;
-    private ActivityReference assignedActivity;
-    private Vector3 jobPosition;
+    protected Vector3 jobPosition;
 
-    public ActivityReference AssignedActivity => assignedActivity;
-    public bool HasJob => assignedActivity != null;
+    public bool IsAssigned { get; private set; }
 
     protected override void Awake()
     {
@@ -26,10 +23,11 @@ public class UnitStationaryJob : UnitBehaviour
     /// Assign this unit to a stationary job at the given world position.
     /// The priority system will activate this behaviour on the next frame.
     /// </summary>
-    public void Assign(ActivityReference activity, Vector3 position)
+    public void Assign(Vector3 position)
     {
-        assignedActivity = activity;
         jobPosition = position;
+        IsAssigned = true;
+        OnAssign(position);
     }
 
     /// <summary>
@@ -38,9 +36,13 @@ public class UnitStationaryJob : UnitBehaviour
     /// </summary>
     public void Unassign()
     {
-        assignedActivity = null;
+        IsAssigned = false;
         jobPosition = Vector3.zero;
+        OnUnassign();
     }
+
+    protected virtual void OnAssign(Vector3 position) { }
+    protected virtual void OnUnassign() { }
 
     protected override void OnBehaviourStart()
     {

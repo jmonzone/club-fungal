@@ -67,8 +67,8 @@ public class NetworkRunPartyTether : MonoBehaviour
             }
 
             // Skip units assigned to a stationary job - they should not be moved
-            var stationaryJob = controller.GetComponent<UnitStationaryJob>();
-            if (stationaryJob != null && stationaryJob.HasJob)
+            var jobBehaviour = controller.GetComponent<UnitJobBehaviour>();
+            if (jobBehaviour != null && jobBehaviour.IsAssigned)
             {
                 index++;
                 continue;
