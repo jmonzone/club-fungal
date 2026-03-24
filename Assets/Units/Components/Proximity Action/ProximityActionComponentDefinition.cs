@@ -132,10 +132,9 @@ public class ProximityActionComponentInstance : UnitComponentInstance
         {
             if (unit != null && unit.Instance != null)
             {
-                // Update UI to show assigned unit
-                Sprite portrait = unit.Instance.Species?.Sprite;
+                // Update button to show unit name
                 string unitName = unit.Instance.DisplayName;
-                proximityActionUI.UpdateToAssignedState(portrait, unitName);
+                proximityActionUI.Initialize(unitName, null, OnButtonClicked);
             }
             else
             {

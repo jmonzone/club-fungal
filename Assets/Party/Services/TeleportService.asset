@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TeleportService
   partyControllerService: {fileID: 11400000, guid: e9cb4948b4ecc4139a051939aec61d2b,
     type: 2}
+  behaviourPriorityService: {fileID: 11400000, guid: 6afebe865a6264c8b834fed8c6189cc2,
+    type: 2}

@@ -177,7 +177,7 @@ public class UnitController : MonoBehaviour, IInteractable
             return;
 
         var allBehaviours = GetComponents<UnitBehaviour>();
-        UnitBehaviour bestBehaviour = defaultBehaviour;
+        UnitBehaviour bestBehaviour = null;
         int highestPriority = 0;
 
         foreach (var behaviour in allBehaviours)
@@ -188,6 +188,22 @@ public class UnitController : MonoBehaviour, IInteractable
                 highestPriority = priority;
                 bestBehaviour = behaviour;
             }
+        }
+
+        // If no behavior has priority > 0, and no best behavior was found,
+        // fall back to default behavior (for units that haven't been initialized properly)
+        // But if highestPriority is 0, it means all behaviors were explicitly disabled (e.g., assigned to work)
+        // In that case, use null (no behavior)
+        if (bestBehaviour == null && highestPriority == 0)
+        {
+            // Check if unit is assigned to work - if so, no behavior should be active
+            bool isAssignedToWork = behaviourPriorityService.IsAssignedToWork(this);
+            if (!isAssignedToWork)
+            {
+                // Not assigned, use default behavior
+                bestBehaviour = defaultBehaviour;
+            }
+            // else: assigned to work, bestBehaviour stays null
         }
 
         // Switch to best behavior if different from current

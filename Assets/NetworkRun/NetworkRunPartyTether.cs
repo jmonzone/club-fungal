@@ -5,6 +5,7 @@ public class NetworkRunPartyTether : MonoBehaviour
     [SerializeField] private NetworkRunService networkRunService;
     [SerializeField] private UnitControllerService unitControllerService;
     [SerializeField] private CameraService cameraService;
+    [SerializeField] private UnitBehaviourPriorityService behaviourPriorityService;
     [SerializeField] private NavMeshAreaConfig navMeshAreaConfig;
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private float maxDistance = 10f;
@@ -61,6 +62,13 @@ public class NetworkRunPartyTether : MonoBehaviour
 
             // Skip party leader - they don't need a return position
             if (controller == partyLeader)
+            {
+                index++;
+                continue;
+            }
+
+            // Skip units that are assigned to work (e.g., cooking)
+            if (behaviourPriorityService != null && behaviourPriorityService.IsAssignedToWork(controller))
             {
                 index++;
                 continue;

@@ -4,6 +4,7 @@ using UnityEngine;
 public class TeleportService : ScriptableObject
 {
     [SerializeField] private PartyControllerService partyControllerService;
+    [SerializeField] private UnitBehaviourPriorityService behaviourPriorityService;
 
     public void TeleportParty(Vector3 position, Transform parent)
     {
@@ -11,6 +12,12 @@ public class TeleportService : ScriptableObject
         // Teleport all party members
         foreach (var member in partyControllerService.PartyControllers)
         {
+            // Skip units that are assigned to work (e.g., cooking)
+            if (behaviourPriorityService != null && behaviourPriorityService.IsAssignedToWork(member))
+            {
+                continue;
+            }
+
             // Debug.Log($"Teleporting member {member.Instance}.");
             member.Teleport(position, parent);
         }

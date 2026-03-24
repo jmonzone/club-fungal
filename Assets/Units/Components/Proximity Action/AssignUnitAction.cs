@@ -88,7 +88,8 @@ public class AssignUnitAction : UnitAction
             assignmentTransform = cookingStation.GetAssignmentTransform();
         }
 
-        workerUnit.Teleport(assignmentTransform.position, assignmentTransform.parent);
+        // Move unit to assignment position but keep current parent (don't parent under building)
+        workerUnit.Teleport(assignmentTransform.position, workerUnit.transform.parent);
 
         // Apply component to worker (e.g., cooking component)
         if (componentToApply != null)
