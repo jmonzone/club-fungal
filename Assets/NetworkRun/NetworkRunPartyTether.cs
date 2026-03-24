@@ -66,6 +66,14 @@ public class NetworkRunPartyTether : MonoBehaviour
                 continue;
             }
 
+            // Skip units assigned to a stationary job - they should not be moved
+            var stationaryJob = controller.GetComponent<UnitStationaryJob>();
+            if (stationaryJob != null && stationaryJob.HasJob)
+            {
+                index++;
+                continue;
+            }
+
             Vector3 unitPosition = controller.transform.position;
             float currentDistance = Vector3.Distance(unitPosition, partyCenterGround);
 
