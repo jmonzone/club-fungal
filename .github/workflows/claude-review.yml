@@ -30,3 +30,5 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          direct_prompt: |
+            When asked to make changes, implement them directly by editing files and committing the changes to the PR branch. Do not just describe what to do — actually do it.
