@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1a6073149d3d245da86574a64c42496b, type: 3}
-  m_Name: AssignProximityActionComponent
+  m_Name: CookingProximityActionComponent
   m_EditorClassIdentifier: Assembly-CSharp::ProximityActionComponentDefinition
-  id: assign unit
-  displayName: assign unit
-  description: assign unit
+  id: select unit
+  displayName: select unit
+  description: select unit
   playerService: {fileID: 11400000, guid: 746148e8242954418b04a3ab83ac9260, type: 2}
   proximityDistance: 3
-  buttonText: Assign
-  action: {fileID: 11400000, guid: 9dfc07fff509f45cf8a03cb64248e307, type: 2}
-  buttonPrefab: {fileID: 689804084194502617, guid: 725800c3a18ae4e96bdbb549c5097e07,
+  buttonText: Select Unit
+  action: {fileID: 11400000, guid: 2cf915bec52fd427f8d2085fa917715f, type: 2}
+  buttonPrefab: {fileID: 689804084194502617, guid: 4cd8d7d868fe747149fb8531c4a90ad4,
     type: 3}

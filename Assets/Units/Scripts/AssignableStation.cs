@@ -10,8 +10,24 @@ public class AssignableStation : MonoBehaviour
     [SerializeField] private UnitComponentDefinition workerComponent;
     [SerializeField] private Transform assignmentTransform;
 
+    [Header("Proximity Action Components")]
+    [Tooltip("ProximityActionComponent to use when no unit is assigned (shows assignment UI)")]
+    [SerializeField] private ProximityActionComponentDefinition unassignedProximityAction;
+    [Tooltip("ProximityActionComponent to use when unit is assigned (shows worker info/progress)")]
+    [SerializeField] private ProximityActionComponentDefinition assignedProximityAction;
+
+    private UnitController assignedUnit;
+
     public UnitComponentDefinition WorkerComponent => workerComponent;
     public Transform AssignmentTransform => assignmentTransform != null ? assignmentTransform : transform;
+    public ProximityActionComponentDefinition UnassignedProximityAction => unassignedProximityAction;
+    public ProximityActionComponentDefinition AssignedProximityAction => assignedProximityAction;
+    public UnitController AssignedUnit => assignedUnit;
+
+    public void SetAssignedUnit(UnitController unit)
+    {
+        assignedUnit = unit;
+    }
 
     private void Start()
     {

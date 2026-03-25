@@ -47,10 +47,8 @@ public class ProximityActionComponentInstance : UnitComponentInstance
     private ProximityActionUI proximityActionUI;
     private bool isPlayerNearby;
     private bool isButtonShown;
-    private UnitController assignedUnit;
 
     public ProximityActionComponentDefinition ProximityDefinition => definition as ProximityActionComponentDefinition;
-    public UnitController AssignedUnit => assignedUnit;
 
     // Event that fires when button is clicked - can be subscribed to for custom behavior
     public event UnityAction OnActionTriggered;
@@ -109,39 +107,16 @@ public class ProximityActionComponentInstance : UnitComponentInstance
         OnActionTriggered?.Invoke();
 
         // Only remove component for one-time actions (like recruit)
-        // For assignment actions, the component persists to show assigned unit
-        bool isPersistentAction = ProximityDefinition.Action is AssignUnitAction;
+        // Assignment and selection actions persist to keep showing UI
+        bool isPersistentAction = ProximityDefinition.Action is AssignUnitAction ||
+                                   ProximityDefinition.Action is SelectUnitAction;
         if (!isPersistentAction)
         {
             controller.RemoveComponent(this);
         }
     }
 
-    /// <summary>
-    /// Set the assigned unit for this building.
-    /// Updates the button UI to show the assigned unit.
-    /// Pass null to clear the assignment.
-    /// </summary>
-    public void SetAssignedUnit(UnitController unit)
-    {
-        assignedUnit = unit;
 
-        if (proximityActionUI != null)
-        {
-            if (unit != null && unit.Instance != null)
-            {
-                // Update button to show unit name
-                string unitName = unit.Instance.DisplayName;
-                proximityActionUI.Initialize(unitName, null, OnButtonClicked);
-            }
-            else
-            {
-                // Clear assignment - reset button to original state
-                string buttonText = ProximityDefinition.ButtonText ?? "Interact";
-                proximityActionUI.Initialize(buttonText, null, OnButtonClicked);
-            }
-        }
-    }
 
     public override void OnUpdate()
     {

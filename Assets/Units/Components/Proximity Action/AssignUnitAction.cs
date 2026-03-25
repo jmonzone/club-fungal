@@ -95,12 +95,27 @@ public class AssignUnitAction : UnitAction
             componentInstance.OnInitialize();
         }
 
-        // Get the proximity action component from the building and update it
-        var proximityComponent = buildingController.GetComponentInstance<ProximityActionComponentInstance>();
-        if (proximityComponent != null)
+        // Swap proximity action component on the building
+        // Remove unassigned proximity action (assignment UI)
+        if (station.UnassignedProximityAction != null)
         {
-            proximityComponent.SetAssignedUnit(workerUnit);
+            var unassignedComponent = buildingController.GetComponentInstance<ProximityActionComponentInstance>();
+            if (unassignedComponent != null && unassignedComponent.Definition == station.UnassignedProximityAction)
+            {
+                buildingController.RemoveComponent(unassignedComponent);
+            }
         }
+
+        // Add assigned proximity action (worker info/progress UI)
+        if (station.AssignedProximityAction != null)
+        {
+            var assignedComponent = station.AssignedProximityAction.CreateInstance(buildingController);
+            buildingController.ComponentInstances.Add(assignedComponent);
+            assignedComponent.OnInitialize();
+        }
+
+        // Update station with assigned unit reference
+        station.SetAssignedUnit(workerUnit);
 
         // Save state
         if (unitInstanceService != null)
@@ -123,27 +138,27 @@ public class AssignUnitAction : UnitAction
 
         Debug.Log($"Unassigning {workerUnit.name}");
 
-        // Find the building this unit was assigned to
+        // Find the building this unit was assigned to via AssignableStation
         UnitController assignedBuilding = null;
+        AssignableStation station = null;
         if (unitControllerService != null)
         {
             foreach (var controller in unitControllerService.Controllers)
             {
-                var proximityComponent = controller.GetComponentInstance<ProximityActionComponentInstance>();
-                if (proximityComponent != null && proximityComponent.AssignedUnit == workerUnit)
+                var stationComponent = controller.GetComponent<AssignableStation>();
+                if (stationComponent != null && stationComponent.AssignedUnit == workerUnit)
                 {
                     assignedBuilding = controller;
-                    proximityComponent.SetAssignedUnit(null);
+                    station = stationComponent;
                     break;
                 }
             }
         }
 
         // Remove the work component from worker
-        if (assignedBuilding != null)
+        if (assignedBuilding != null && station != null)
         {
-            var station = assignedBuilding.GetComponent<AssignableStation>();
-            if (station != null && station.WorkerComponent != null)
+            if (station.WorkerComponent != null)
             {
                 // Find and remove the component instance that matches the station's worker component type
                 var componentToRemove = workerUnit.ComponentInstances
@@ -153,6 +168,28 @@ public class AssignUnitAction : UnitAction
                     workerUnit.RemoveComponent(componentToRemove);
                 }
             }
+
+            // Swap proximity action component back on the building
+            // Remove assigned proximity action (worker info UI)
+            if (station.AssignedProximityAction != null)
+            {
+                var assignedComponent = assignedBuilding.GetComponentInstance<ProximityActionComponentInstance>();
+                if (assignedComponent != null && assignedComponent.Definition == station.AssignedProximityAction)
+                {
+                    assignedBuilding.RemoveComponent(assignedComponent);
+                }
+            }
+
+            // Add back unassigned proximity action (assignment UI)
+            if (station.UnassignedProximityAction != null)
+            {
+                var unassignedComponent = station.UnassignedProximityAction.CreateInstance(assignedBuilding);
+                assignedBuilding.ComponentInstances.Add(unassignedComponent);
+                unassignedComponent.OnInitialize();
+            }
+
+            // Clear assigned unit reference
+            station.SetAssignedUnit(null);
         }
 
         // Save state

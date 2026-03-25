@@ -4,27 +4,21 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 /// <summary>
-/// UI component for proximity actions showing progress, item icon, and recruit button.
+/// UI component for proximity actions showing item icon and button.
 /// </summary>
 public class ProximityActionUI : MonoBehaviour
 {
     [Header("UI Components")]
     [SerializeField] private ButtonUI buttonUI;
-    [SerializeField] private Slider progressSlider;
     [SerializeField] private Image itemIcon;
-    [SerializeField] private TextMeshProUGUI progressText;
 
     public ButtonUI ButtonUI => buttonUI;
-    public Slider ProgressSlider => progressSlider;
     public Image ItemIcon => itemIcon;
-    public TextMeshProUGUI ProgressText => progressText;
 
     private void Awake()
     {
         if (buttonUI == null) buttonUI = GetComponent<ButtonUI>();
-        if (progressSlider == null) progressSlider = GetComponentInChildren<Slider>();
         if (itemIcon == null) itemIcon = transform.Find("Icon")?.GetComponent<Image>();
-        if (progressText == null) progressText = GetComponentInChildren<TextMeshProUGUI>();
     }
 
     public void Initialize(string actionName, Sprite icon, UnityAction onButtonClick)
@@ -47,31 +41,6 @@ public class ProximityActionUI : MonoBehaviour
         }
     }
 
-    public void UpdateProgress(int current, int required)
-    {
-        bool canAfford = current >= required;
-
-        // Update slider
-        if (progressSlider != null)
-        {
-            progressSlider.minValue = 0;
-            progressSlider.maxValue = required;
-            progressSlider.value = current;
-        }
-
-        // Update text
-        if (progressText != null)
-        {
-            progressText.text = $"{current}/{required}";
-        }
-
-        // Enable/disable button
-        if (buttonUI != null && buttonUI.GetComponent<Button>() != null)
-        {
-            buttonUI.GetComponent<Button>().interactable = canAfford;
-        }
-    }
-
     /// <summary>
     /// Updates the UI to show an assigned unit instead of the action button.
     /// Used when a building has a worker assigned to it.
@@ -90,17 +59,6 @@ public class ProximityActionUI : MonoBehaviour
         {
             buttonUI.Initialize(unitName, null);
             buttonUI.gameObject.SetActive(true);
-        }
-
-        // Hide progress elements if they exist
-        if (progressSlider != null)
-        {
-            progressSlider.gameObject.SetActive(false);
-        }
-
-        if (progressText != null)
-        {
-            progressText.gameObject.SetActive(false);
         }
     }
 }

@@ -58906,7 +58906,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -76418,6 +76418,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AssignableStation
   workerComponent: {fileID: 11400000, guid: 40ed500648c294bdbb6fdbc08113686e, type: 2}
   assignmentTransform: {fileID: 1431958090}
+  unassignedProximityAction: {fileID: 11400000, guid: 493118eb750b14a04a0f8df7c9663e47,
+    type: 2}
+  assignedProximityAction: {fileID: 11400000, guid: c6ef957b5a8774431b5abd0622eae3da,
+    type: 2}
 --- !u!222 &8453316813236413650
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -90,18 +90,23 @@ public class UnitDetailUI : ControlPanelViewUI
         var unitController = unitControllerService.Controllers.Find(c => c.Instance == unitInstance);
         if (unitController == null) return;
 
-        // Find the building this unit is assigned to
+        // Find the building this unit is assigned to via AssignableStation
         foreach (var controller in unitControllerService.Controllers)
         {
-            var proximityComponent = controller.GetComponentInstance<ProximityActionComponentInstance>();
-            if (proximityComponent != null && proximityComponent.AssignedUnit == unitController)
+            var station = controller.GetComponent<AssignableStation>();
+            if (station != null && station.AssignedUnit == unitController)
             {
-                var proximityDef = proximityComponent.Definition as ProximityActionComponentDefinition;
-                if (proximityDef?.Action is AssignUnitAction assignAction)
+                // Find the AssignUnitAction from either proximity action
+                var proximityComponent = controller.GetComponentInstance<ProximityActionComponentInstance>();
+                if (proximityComponent != null)
                 {
-                    assignAction.UnassignUnit(unitController);
-                    controlModeService?.DeselectUnit();
-                    break;
+                    var proximityDef = proximityComponent.Definition as ProximityActionComponentDefinition;
+                    if (proximityDef?.Action is AssignUnitAction assignAction)
+                    {
+                        assignAction.UnassignUnit(unitController);
+                        controlModeService?.DeselectUnit();
+                        break;
+                    }
                 }
             }
         }
