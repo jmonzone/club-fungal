@@ -14,7 +14,6 @@ public class ProximityActionComponentDefinition : UnitComponentDefinition
 
     [Header("Proximity Settings")]
     [SerializeField] private float proximityDistance = 3f;
-    [SerializeField] private bool requireLineOfSight = false;
 
     [Header("Button Settings")]
     [SerializeField] private string buttonText = "Interact";
@@ -27,7 +26,6 @@ public class ProximityActionComponentDefinition : UnitComponentDefinition
 
     public PlayerService PlayerService => playerService;
     public float ProximityDistance => proximityDistance;
-    public bool RequireLineOfSight => requireLineOfSight;
     public string ButtonText => buttonText;
     public GameObject ButtonPrefab => buttonPrefab;
     public UnitAction Action => action;
@@ -161,16 +159,6 @@ public class ProximityActionComponentInstance : UnitComponentInstance
         // Check distance to player
         float distance = Vector3.Distance(controller.transform.position, ProximityDefinition.PlayerService.Player.transform.position);
         isPlayerNearby = distance <= ProximityDefinition.ProximityDistance;
-
-        // Check line of sight if required
-        if (isPlayerNearby && ProximityDefinition.RequireLineOfSight)
-        {
-            Vector3 direction = ProximityDefinition.PlayerService.Player.transform.position - controller.transform.position;
-            if (Physics.Raycast(controller.transform.position, direction, distance))
-            {
-                isPlayerNearby = false;
-            }
-        }
 
         // Show/hide button based on proximity
         if (isPlayerNearby && !isButtonShown)

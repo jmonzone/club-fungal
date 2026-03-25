@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -13,12 +14,8 @@ public class AssignUnitAction : UnitAction
     [SerializeField] private UnitInstanceService unitInstanceService;
     [SerializeField] private ControlModeService controlModeService;
 
-    [Header("Assignment Settings")]
-    [SerializeField] private UnitComponentDefinition componentToApply;
-
     public UnitControllerService UnitControllerService => unitControllerService;
     public UnitInstanceService UnitInstanceService => unitInstanceService;
-    public UnitComponentDefinition ComponentToApply => componentToApply;
 
     // Store the building controller that triggered this action
     private UnitController currentBuildingController;
@@ -79,22 +76,21 @@ public class AssignUnitAction : UnitAction
 
         Debug.Log($"Assigning {workerUnit.name} to {buildingController.name}");
 
-        // Get assignment transform from building controller
-        Transform assignmentTransform = buildingController.transform;
-
-        // Check if building has a custom assignment transform
-        if (buildingController is CookingStationController cookingStation)
+        // Get assignable station component from building
+        var station = buildingController.GetComponent<AssignableStation>();
+        if (station == null)
         {
-            assignmentTransform = cookingStation.GetAssignmentTransform();
+            Debug.LogWarning($"AssignUnitAction: Building {buildingController.name} missing AssignableStation component");
+            return;
         }
 
         // Move unit to assignment position but keep current parent (don't parent under building)
-        workerUnit.Teleport(assignmentTransform.position, workerUnit.transform.parent);
+        workerUnit.Teleport(station.AssignmentTransform.position, workerUnit.transform.parent);
 
         // Apply component to worker (e.g., cooking component)
-        if (componentToApply != null)
+        if (station.WorkerComponent != null)
         {
-            var componentInstance = componentToApply.CreateInstance(workerUnit);
+            var componentInstance = station.WorkerComponent.CreateInstance(workerUnit);
             workerUnit.ComponentInstances.Add(componentInstance);
             componentInstance.OnInitialize();
         }
@@ -127,17 +123,8 @@ public class AssignUnitAction : UnitAction
 
         Debug.Log($"Unassigning {workerUnit.name}");
 
-        // Remove the work component (e.g., CookingComponent)
-        if (componentToApply != null)
-        {
-            var componentInstance = workerUnit.GetComponentInstance<CookingComponentInstance>();
-            if (componentInstance != null)
-            {
-                workerUnit.RemoveComponent(componentInstance);
-            }
-        }
-
-        // Find the building this unit was assigned to and clear the assignment
+        // Find the building this unit was assigned to
+        UnitController assignedBuilding = null;
         if (unitControllerService != null)
         {
             foreach (var controller in unitControllerService.Controllers)
@@ -145,8 +132,25 @@ public class AssignUnitAction : UnitAction
                 var proximityComponent = controller.GetComponentInstance<ProximityActionComponentInstance>();
                 if (proximityComponent != null && proximityComponent.AssignedUnit == workerUnit)
                 {
+                    assignedBuilding = controller;
                     proximityComponent.SetAssignedUnit(null);
                     break;
+                }
+            }
+        }
+
+        // Remove the work component from worker
+        if (assignedBuilding != null)
+        {
+            var station = assignedBuilding.GetComponent<AssignableStation>();
+            if (station != null && station.WorkerComponent != null)
+            {
+                // Find and remove the component instance that matches the station's worker component type
+                var componentToRemove = workerUnit.ComponentInstances
+                    .FirstOrDefault(c => c.Definition == station.WorkerComponent);
+                if (componentToRemove != null)
+                {
+                    workerUnit.RemoveComponent(componentToRemove);
                 }
             }
         }

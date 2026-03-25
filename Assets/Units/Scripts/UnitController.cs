@@ -263,7 +263,7 @@ public class UnitController : MonoBehaviour, IInteractable
     /// Initialize all component instances from their definitions.
     /// Merges prefab components with species-specific components.
     /// </summary>
-    protected void InitializeComponents()
+    public void InitializeComponents()
     {
         componentInstances.Clear();
 
