@@ -92,7 +92,7 @@ public class ProximityActionComponentInstance : UnitComponentInstance
 
         // Initialize button with text and click handler
         string buttonText = ProximityDefinition.ButtonText ?? "Interact";
-        proximityActionUI.Initialize(buttonText, null, OnButtonClicked);
+        proximityActionUI.Initialize(buttonText, OnButtonClicked);
     }
 
     private void OnButtonClicked()

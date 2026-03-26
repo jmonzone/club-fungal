@@ -12,8 +12,16 @@ public class CookingActionUI : MonoBehaviour
     [SerializeField] private Slider progressSlider;
     [SerializeField] private TextMeshProUGUI progressText;
 
+    [Header("Recipe Display")]
+    [SerializeField] private Image inputItemIcon;
+    [SerializeField] private TextMeshProUGUI inputItemText;
+    [SerializeField] private Image outputItemIcon;
+    [SerializeField] private TextMeshProUGUI outputItemText;
+    [SerializeField] private GameObject recipeDisplay;
+
     private UnitController buildingController;
     private CookingComponentInstance cookingComponent;
+    private CookingRecipe lastDisplayedRecipe;
 
     private void Awake()
     {
@@ -51,6 +59,10 @@ public class CookingActionUI : MonoBehaviour
             {
                 progressSlider.gameObject.SetActive(false);
             }
+            if (recipeDisplay != null)
+            {
+                recipeDisplay.SetActive(false);
+            }
             return;
         }
 
@@ -78,6 +90,54 @@ public class CookingActionUI : MonoBehaviour
                     progressText.text = "Idle";
                 }
             }
+
+            // Update recipe display
+            UpdateRecipeDisplay(cookingComponent.CurrentRecipe);
+        }
+    }
+
+    /// <summary>
+    /// Updates the recipe display to show input and output items.
+    /// </summary>
+    private void UpdateRecipeDisplay(CookingRecipe recipe)
+    {
+        // Only update if recipe changed
+        if (recipe == lastDisplayedRecipe) return;
+        lastDisplayedRecipe = recipe;
+
+        if (recipeDisplay != null)
+        {
+            recipeDisplay.SetActive(recipe != null);
+        }
+
+        if (recipe == null) return;
+
+        // Update input item display
+        if (inputItemIcon != null && recipe.InputItem != null)
+        {
+            inputItemIcon.sprite = recipe.InputItem.Sprite;
+            inputItemIcon.enabled = recipe.InputItem.Sprite != null;
+        }
+
+        if (inputItemText != null && recipe.InputItem != null)
+        {
+            inputItemText.text = recipe.InputAmount > 1
+                ? $"{recipe.InputAmount}x {recipe.InputItem.Name}"
+                : recipe.InputItem.Name;
+        }
+
+        // Update output item display
+        if (outputItemIcon != null && recipe.OutputItem != null)
+        {
+            outputItemIcon.sprite = recipe.OutputItem.Sprite;
+            outputItemIcon.enabled = recipe.OutputItem.Sprite != null;
+        }
+
+        if (outputItemText != null && recipe.OutputItem != null)
+        {
+            outputItemText.text = recipe.OutputAmount > 1
+                ? $"{recipe.OutputAmount}x {recipe.OutputItem.Name}"
+                : recipe.OutputItem.Name;
         }
     }
 }
