@@ -66,18 +66,18 @@ public class CameraControlModeController : MonoBehaviour
             cameraRotationController.target = controller.transform;
         }
 
-        // Update player assignment if in manual control mode
+        // Set as party leader in both UnitSelected and ManualControl modes
+        if (partyService != null)
+        {
+            partyService.SetPartyLeader(controller);
+        }
+
+        // Only set player assignment if in manual control mode
         if (controlModeService.IsManualControlActive())
         {
             if (playerService != null)
             {
                 playerService.SetPlayer(controller);
-            }
-
-            // Set as party leader when in manual control
-            if (partyService != null)
-            {
-                partyService.SetPartyLeader(controller);
             }
         }
     }
@@ -107,17 +107,23 @@ public class CameraControlModeController : MonoBehaviour
         cameraInputHandler.SetCanOrbit(true);
         cameraInputHandler.SetCanPan(true);
 
-        // Follow selected unit
+        // Follow selected unit and set as party leader
         if (controlModeService.SelectedUnit != null && unitControllerService != null && cameraRotationController != null)
         {
             var controller = unitControllerService.Controllers.Find(c => c.Instance == controlModeService.SelectedUnit);
             if (controller != null)
             {
                 cameraRotationController.target = controller.transform;
+
+                // Set as party leader so other units follow
+                if (partyService != null)
+                {
+                    partyService.SetPartyLeader(controller);
+                }
             }
         }
 
-        // Unassign player when returning from manual control
+        // Unassign player when returning from manual control (no manual control in this mode)
         if (playerService != null)
         {
             playerService.SetPlayer(null);

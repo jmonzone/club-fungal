@@ -111,6 +111,15 @@ public class AssignUnitAction : UnitAction
         // Update station with assigned unit reference
         station.SetAssignedUnit(workerUnit);
 
+        // If this unit was in manual control mode, transition to UnitSelected mode
+        // (keep them selected but disable manual control while assigned)
+        if (controlModeService != null && 
+            controlModeService.IsManualControlActive() && 
+            controlModeService.SelectedUnit == workerUnit.Instance)
+        {
+            controlModeService.SelectUnit(workerUnit.Instance);
+        }
+
         // Save state
         if (unitInstanceService != null)
         {
@@ -129,8 +138,6 @@ public class AssignUnitAction : UnitAction
             Debug.LogWarning("AssignUnitAction: Cannot unassign - null worker unit");
             return;
         }
-
-        Debug.Log($"Unassigning {workerUnit.name}");
 
         // Find the building this unit was assigned to via AssignableStation
         UnitController assignedBuilding = null;
@@ -159,6 +166,12 @@ public class AssignUnitAction : UnitAction
                     .FirstOrDefault(c => c.Definition == station.WorkerComponent);
                 if (componentToRemove != null)
                 {
+                    // Cancel any ongoing work before removing the component
+                    if (componentToRemove is CookingComponentInstance cookingComponent)
+                    {
+                        cookingComponent.CancelCooking();
+                    }
+
                     workerUnit.RemoveComponent(componentToRemove);
                 }
             }

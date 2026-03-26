@@ -96,15 +96,15 @@ public class UnitDetailUI : ControlPanelViewUI
             var station = controller.GetComponent<AssignableStation>();
             if (station != null && station.AssignedUnit == unitController)
             {
-                // Find the AssignUnitAction from either proximity action
-                var proximityComponent = controller.GetComponentInstance<ProximityActionComponentInstance>();
-                if (proximityComponent != null)
+                // Get the AssignUnitAction from the station's UnassignedProximityAction definition
+                // (not from the current proximity component which is the assigned one)
+                if (station.UnassignedProximityAction is ProximityActionComponentDefinition proximityDef)
                 {
-                    var proximityDef = proximityComponent.Definition as ProximityActionComponentDefinition;
-                    if (proximityDef?.Action is AssignUnitAction assignAction)
+                    if (proximityDef.Action is AssignUnitAction assignAction)
                     {
                         assignAction.UnassignUnit(unitController);
-                        controlModeService?.DeselectUnit();
+                        // Transition to manual control mode after unassigning
+                        controlModeService?.StartManualControl();
                         break;
                     }
                 }
