@@ -134,7 +134,7 @@ public class CookingComponentInstance : UnitComponentInstance
             return;
         }
 
-        // Find first recipe with available ingredients
+        // Find first recipe with available ingredients and start cooking
         foreach (var recipe in CookingDefinition.Recipes)
         {
             if (recipe.CanCook(inventory))
@@ -142,6 +142,13 @@ public class CookingComponentInstance : UnitComponentInstance
                 StartCooking(recipe);
                 return;
             }
+        }
+
+        // If no recipe has ingredients, select the first recipe anyway to show what's needed
+        if (CookingDefinition.Recipes.Count > 0 && currentRecipe == null)
+        {
+            currentRecipe = CookingDefinition.Recipes[0];
+            isCooking = false;
         }
     }
 

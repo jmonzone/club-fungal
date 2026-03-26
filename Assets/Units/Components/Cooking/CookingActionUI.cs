@@ -85,6 +85,11 @@ public class CookingActionUI : MonoBehaviour
                 {
                     progressText.text = $"Cooking {cookingComponent.CurrentRecipe.OutputItem.Name}...";
                 }
+                else if (cookingComponent.CurrentRecipe != null && !cookingComponent.IsCooking)
+                {
+                    // Has a recipe but not cooking - missing ingredients
+                    progressText.text = $"Missing Ingredients";
+                }
                 else
                 {
                     progressText.text = "Idle";
@@ -115,8 +120,11 @@ public class CookingActionUI : MonoBehaviour
         // Update input item display
         if (inputItemIcon != null && recipe.InputItem != null)
         {
-            inputItemIcon.sprite = recipe.InputItem.Sprite;
-            inputItemIcon.enabled = recipe.InputItem.Sprite != null;
+            if (recipe.InputItem.Sprite != null)
+            {
+                inputItemIcon.sprite = recipe.InputItem.Sprite;
+            }
+            inputItemIcon.enabled = true;
         }
 
         if (inputItemText != null && recipe.InputItem != null)
@@ -129,8 +137,11 @@ public class CookingActionUI : MonoBehaviour
         // Update output item display
         if (outputItemIcon != null && recipe.OutputItem != null)
         {
-            outputItemIcon.sprite = recipe.OutputItem.Sprite;
-            outputItemIcon.enabled = recipe.OutputItem.Sprite != null;
+            if (recipe.OutputItem.Sprite != null)
+            {
+                outputItemIcon.sprite = recipe.OutputItem.Sprite;
+            }
+            outputItemIcon.enabled = true;
         }
 
         if (outputItemText != null && recipe.OutputItem != null)
