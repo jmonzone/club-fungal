@@ -49,16 +49,10 @@ public class AssignUnitAction : UnitAction
 
         AssignUnit(workerUnit, currentBuildingController);
 
-        // Hide assign UI and show the assigned unit's detail UI
+        // Hide assign UI
         if (controlModeService != null)
         {
             controlModeService.HideAssignUnitUI();
-
-            // Select the assigned unit to show their detail UI
-            if (workerUnit.Instance != null)
-            {
-                controlModeService.SelectUnit(workerUnit.Instance);
-            }
         }
     }
 
